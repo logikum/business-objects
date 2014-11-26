@@ -1,12 +1,12 @@
-console.log('Testing data-types/boolean.js...');
+console.log('Testing data-types/decimal.js...');
 
-var Boolean = require('../../source/data-types/boolean.js');
+var Decimal = require('../../source/data-types/decimal.js');
 var DataType = require('../../source/data-types/data-type.js');
 
-describe('Boolean type', function() {
-  var dt = new Boolean();
+describe('Decimal type', function() {
+  var dt = new Decimal();
 
-  it('create method returns a data type', function() {
+  it('constructor returns a data type', function() {
 
     expect(dt).toEqual(jasmine.any(DataType));
   });
@@ -14,10 +14,10 @@ describe('Boolean type', function() {
   it('has one read-only property', function() {
     dt.name = '---';
 
-    expect(dt.name).toBe('Boolean');
+    expect(dt.name).toBe('Decimal');
   });
 
-  it('check method expects Boolean', function() {
+  it('check method expects decimal', function() {
     function fn() {}
 
     function check01() { dt.check(); }
@@ -34,9 +34,9 @@ describe('Boolean type', function() {
 
     expect(check01).toThrow();
     expect(check02).not.toThrow();
-    expect(check03).not.toThrow();
-    expect(check04).toThrow();
-    expect(check05).toThrow();
+    expect(check03).toThrow();
+    expect(check04).not.toThrow();
+    expect(check05).not.toThrow();
     expect(check06).toThrow();
     expect(check07).toThrow();
     expect(check08).toThrow();
@@ -50,7 +50,9 @@ describe('Boolean type', function() {
 
     expect(hasValue1).toThrow();
     expect(dt.hasValue(null)).toBe(false);
-    expect(dt.hasValue(false)).toBe(true);
-    expect(dt.hasValue(true)).toBe(true);
+    expect(dt.hasValue(0)).toBe(true);
+    expect(dt.hasValue(1024)).toBe(true);
+    expect(dt.hasValue(3.1415926)).toBe(true);
+    expect(dt.hasValue(-45672.78)).toBe(true);
   });
 });

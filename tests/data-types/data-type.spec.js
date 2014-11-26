@@ -3,7 +3,7 @@ console.log('Testing data-types/data-type.js...');
 var DataType = require('../../source/data-types/data-type.js');
 
 describe('Base data type', function() {
-  var dt = DataType.create('name');
+  var dt = new DataType('name');
 
   it('has one property', function() {
 

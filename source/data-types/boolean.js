@@ -1,27 +1,22 @@
+var util = require('util');
 var DataType = require('./data-type.js');
 var DataTypeError = require('../shared/data-type-error.js');
 
-var Boolean = {
+function Boolean () {
+  Boolean.super_.call(this, 'Boolean');
 
-  create: function (ruleName) {
+  Object.freeze(this);
+}
+util.inherits(Boolean, DataType);
 
-    var dataType = DataType.create.call(this, 'Boolean').extend({
+Boolean.prototype.check = function (value) {
+  if (value !== null && typeof value !== 'boolean')
+    throw new DataTypeError('The passed value is not Boolean.');
+};
 
-      check: function (value) {
-        if (value !== null && typeof value !== 'boolean')
-          throw new DataTypeError('The passed value is not Boolean.')
-      },
-
-      hasValue: function (value) {
-        this.check(value);
-        return value != undefined && value != null;
-      }
-    });
-
-    Object.freeze(dataType);
-
-    return dataType;
-  }
+Boolean.prototype.hasValue = function (value) {
+  this.check(value);
+  return value != undefined && value != null;
 };
 
 module.exports = Boolean;
