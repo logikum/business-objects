@@ -1,0 +1,21 @@
+{
+  "name": "business-objects",
+  "version": "0.0.0",
+  "description": "A software development framework that helps you build a reusable, maintainable object-oriented business layer for your app.",
+  "keywords": ["business objects"],
+  "license" : "MIT",
+  "author": "Mármarosi József <marmarosi@logikum.hu>",
+  "main": "source/index.js",
+  "scripts": {
+    "test": "jasmine-node ./tests"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "jasmine-node": "~1.14.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marmarosi/business-objects.git"
+  }
+}
