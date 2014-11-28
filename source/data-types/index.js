@@ -1,3 +1,5 @@
+'use strict';
+
 var Boolean = require('./boolean.js');
 var Text = require('./text.js');
 var Integer = require('./integer.js');

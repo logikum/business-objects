@@ -1,8 +1,12 @@
+'use strict';
+
+var ensureArgument = require('../shared/ensure-argument.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
 function DataType (ruleName) {
 
-  this.name = ruleName;
+  this.name = ensureArgument.isMandatoryString(ruleName,
+      'The ruleName argument of DataType constructor must be a string or null.');
 }
 
 DataType.prototype.check = function () {

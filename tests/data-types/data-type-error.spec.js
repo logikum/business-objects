@@ -1,6 +1,6 @@
-console.log('Testing shared/data-type-error.js...');
+console.log('Testing data-types/data-type-error.js...');
 
-var DataTypeError = require('../../source/shared/data-type-error.js');
+var DataTypeError = require('../../source/data-types/data-type-error.js');
 
 describe('Data type error', function() {
 

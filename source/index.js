@@ -1,9 +1,9 @@
-var objectExtensions = require('./library/object-extensions.js');
-var blueprint = require('./library/blueprint.js');
+'use strict';
 
-var public = {
-  objectExtensions: objectExtensions,
-  blueprint: blueprint
+var dataTypes = require('./data-types/index.js');
+
+var businessObjects = {
+  dataTypes: dataTypes
 };
 
-module.exports = public;
+module.exports = businessObjects;

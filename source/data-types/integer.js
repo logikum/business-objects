@@ -1,6 +1,8 @@
+'use strict';
+
 var util = require('util');
 var DataType = require('./data-type.js');
-var DataTypeError = require('../shared/data-type-error.js');
+var DataTypeError = require('./data-type-error.js');
 
 function Integer() {
   Integer.super_.call(this, 'Integer');
