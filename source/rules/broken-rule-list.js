@@ -15,8 +15,8 @@ var BrokenRuleList = function (modelName) {
   var length = 0;
 
   this.add = function (brokenRule) {
-    if (!(brokenRule instanceof BrokenRule))
-      throw new Error('The brokenRule argument of BrokenRuleList.add method must be a BrokenRule object.');
+    brokenRule = ensureArgument.isMandatoryType(brokenRule, BrokenRule,
+      'The brokenRule argument of BrokenRuleList.add method must be a BrokenRule object.');
 
     if (items[brokenRule.propertyName])
       items[brokenRule.propertyName].push(brokenRule);
@@ -74,8 +74,8 @@ var BrokenRuleList = function (modelName) {
 
   this.output = function (namespace) {
 
-    if (namespace && typeof namespace !== 'string')
-      throw new Error('The namespace argument of BrokenRuleList.output method must be a string.');
+    namespace = ensureArgument.isOptionalString(namespace,
+      'The namespace argument of BrokenRuleList.output method must be a string or null.');
 
     var data = null;
 

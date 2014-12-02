@@ -6,6 +6,12 @@ var ensureArgument = {
 
   //region String
 
+  isString: function (value, message) {
+    if (typeof value !== 'string')
+      throw new ArgumentError(message || 'The argument must be a string.');
+    return value;
+  },
+
   isOptionalString: function (value, message) {
     if (value === undefined)
       value = null;
