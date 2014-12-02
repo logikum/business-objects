@@ -90,6 +90,20 @@ var ensureArgument = {
     if (!(value instanceof type))
       throw new ArgumentError(message || 'The argument must be a ' + type + ' object.');
     return value;
+  },
+
+  //endregion
+
+  //region EnumMember
+
+  isEnumMember: function (value, type, defaultValue, message) {
+    if (!type || typeof type.check !== 'function')
+      throw new ArgumentError('The ' + type + ' is not an enumeration type.');
+    if (defaultValue && (value === null || value === undefined))
+      value = defaultValue;
+    type.check(value,
+        message || 'The argument must be a member of ' + type + ' enumeration.');
+    return value;
   }
 
   //endregion

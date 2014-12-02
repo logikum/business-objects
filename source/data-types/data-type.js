@@ -3,10 +3,10 @@
 var ensureArgument = require('../shared/ensure-argument.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
-function DataType (ruleName) {
+function DataType (name) {
 
-  this.name = ensureArgument.isMandatoryString(ruleName,
-      'The ruleName argument of DataType constructor must be a string or null.');
+  this.name = ensureArgument.isMandatoryString(name,
+      'The name argument of DataType constructor must be a non-empty string.');
 }
 
 DataType.prototype.check = function () {
