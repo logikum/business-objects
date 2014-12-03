@@ -64,7 +64,6 @@ function ValidationRule(ruleName) {
     var result = new ValidationResult(this.ruleName, this.primaryProperty.name, message);
     result.severity = ensureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
       'The severity argument of ValidationRule.result method must be a RuleSeverity value.');
-    result.severity = severity;
     result.stopsProcessing = this.stopsProcessing;
     result.isPreserved = false;
     result.affectedProperties = affectedProperties;

@@ -4,6 +4,16 @@ var ArgumentError = require('./argument-error.js');
 
 var ensureArgument = {
 
+  //region Generic
+
+  hasValue: function (value, message) {
+    if (value === null || value === undefined)
+      throw new ArgumentError(message || 'The argument must is required.');
+    return value;
+  },
+
+  //endregion
+
   //region String
 
   isString: function (value, message) {
@@ -23,6 +33,42 @@ var ensureArgument = {
   isMandatoryString: function (value, message) {
     if (typeof value !== 'string' || value.trim().length === 0)
       throw new ArgumentError(message || 'The argument must be a non-empty string.');
+    return value;
+  },
+
+  //endregion
+
+  //region Number
+
+  isOptionalNumber: function (value, message) {
+    if (value === undefined)
+      value = null;
+    if (value !== null && typeof value !== 'number')
+      throw new ArgumentError(message || 'The argument must be a number value or null.');
+    return value;
+  },
+
+  isMandatoryNumber: function (value, message) {
+    if (typeof value !== 'number')
+      throw new ArgumentError(message || 'The argument must be a number value.');
+    return value;
+  },
+
+  //endregion
+
+  //region Integer
+
+  isOptionalInteger: function (value, message) {
+    if (value === undefined)
+      value = null;
+    if (value !== null && (typeof value !== 'number' || value % 1 !== 0))
+      throw new ArgumentError(message || 'The argument must be an integer value or null.');
+    return value;
+  },
+
+  isMandatoryInteger: function (value, message) {
+    if (typeof value !== 'number' || value % 1 !== 0)
+      throw new ArgumentError(message || 'The argument must be an integer value.');
     return value;
   },
 
