@@ -15,10 +15,10 @@ var InformationRule = require('./information-rule.js');
 var NullResultOption = require('./null-result-option.js');
 
 var index = {
-  isInRoleRule: function (action, target, roles, message, priority, stopsProcessing) {
+  isInRole: function (action, target, roles, message, priority, stopsProcessing) {
     return new IsInRoleRule(action, target, roles, message, priority, stopsProcessing);
   },
-  isNotInRoleRule: function (action, target, roles, message, priority, stopsProcessing) {
+  isNotInRole: function (action, target, roles, message, priority, stopsProcessing) {
     return new IsNotInRoleRule(action, target, roles, message, priority, stopsProcessing);
   },
 
@@ -49,6 +49,7 @@ var index = {
   information: function (primaryProperty, message, priority, stopsProcessing) {
     return new InformationRule(primaryProperty, message, priority, stopsProcessing);
   },
+
   nullResultOption: NullResultOption
 };
 

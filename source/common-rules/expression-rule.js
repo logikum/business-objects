@@ -32,7 +32,7 @@ ExpressionRule.prototype.execute = function (inputs) {
     ruleIsSatisfied = (this.option === NullResultOption.returnTrue);
   } else {
     // the value is not null, so run the regular expression
-    ruleIsSatisfied = this.regex.text(value.toString());
+    ruleIsSatisfied = this.regex.test(value.toString());
   }
 
   if (!ruleIsSatisfied)

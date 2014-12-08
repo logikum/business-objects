@@ -6,7 +6,7 @@ var ValidationRule = require('../rules/validation-rule.js');
 var RuleSeverity = require('../rules/rule-severity.js');
 
 function InformationRule(primaryProperty, message, priority, stopsProcessing) {
-  MinValueRule.super_.call(this, 'Information');
+  InformationRule.super_.call(this, 'Information');
 
   this.initialize(primaryProperty, message, priority || 1, stopsProcessing || false);
 
