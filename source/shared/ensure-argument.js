@@ -8,7 +8,7 @@ var ensureArgument = {
 
   hasValue: function (value, message) {
     if (value === null || value === undefined)
-      throw new ArgumentError(message || 'The argument must is required.');
+      throw new ArgumentError(message || 'The argument is required.');
     return value;
   },
 
@@ -97,13 +97,13 @@ var ensureArgument = {
   isOptionalObject: function (value, message) {
     if (value === undefined)
       value = null;
-    if (value !== null && typeof value !== 'object')
+    if (typeof value !== 'object')
       throw new ArgumentError(message || 'The argument must be an object or null.');
     return value;
   },
 
   isMandatoryObject: function (value, message) {
-    if (typeof value !== 'object')
+    if (typeof value !== 'object' || value === null)
       throw new ArgumentError(message || 'The argument must be an object.');
     return value;
   },

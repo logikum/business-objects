@@ -25,24 +25,6 @@ describe('Common rule index', function() {
   var di = new PropertyInfo('dependent', new Text());
   var re = new RegExp('[-+]?[0-9]*\.?[0-9]+', 'g');
 
-  it('has four properties', function () {
-
-    expect(cr.isInRole).toBeDefined();
-    expect(cr.isNotInRole).toBeDefined();
-
-    expect(cr.required).toBeDefined();
-    expect(cr.maxLength).toBeDefined();
-    expect(cr.minLength).toBeDefined();
-    expect(cr.lengthIs).toBeDefined();
-    expect(cr.maxValue).toBeDefined();
-    expect(cr.minValue).toBeDefined();
-    expect(cr.expression).toBeDefined();
-    expect(cr.dependency).toBeDefined();
-    expect(cr.information).toBeDefined();
-
-    expect(cr.nullResultOption).toBeDefined();
-  });
-
   it('properties return correct rules', function() {
 
     expect(cr.isInRole(AuthorizationAction.createObject, null, 'developers')).toEqual(jasmine.any(IsInRoleRule));
