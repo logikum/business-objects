@@ -34,10 +34,11 @@ describe('Authorization rule', function () {
     expect(rule).toEqual(jasmine.any(RuleBase));
   });
 
-  it('has four properties', function() {
+  it('has five properties', function() {
     var rule = new AuthorizationRule('ruleName');
 
     expect(rule.ruleName).toBe('ruleName');
+    expect(rule.ruleId).toBeNull();
     expect(rule.message).toBeNull();
     expect(rule.priority).toBe(10);
     expect(rule.stopsProcessing).toBe(false);
@@ -53,16 +54,19 @@ describe('Authorization rule', function () {
     rule3.initialize(AuthorizationAction.updateObject, null, 'message #3', 13, true);
 
     expect(rule1.ruleName).toBe('ruleName #1');
+    expect(rule1.ruleId).toBe('readProperty.property');
     expect(rule1.message).toBe('message #1');
     expect(rule1.priority).toBe(19);
     expect(rule1.stopsProcessing).toBe(true);
 
     expect(rule2.ruleName).toBe('ruleName #2');
+    expect(rule2.ruleId).toBe('executeMethod.getByName');
     expect(rule2.message).toBe('message #2');
     expect(rule2.priority).toBe(17);
     expect(rule2.stopsProcessing).toBe(false);
 
     expect(rule3.ruleName).toBe('ruleName #3');
+    expect(rule3.ruleId).toBe('updateObject');
     expect(rule3.message).toBe('message #3');
     expect(rule3.priority).toBe(13);
     expect(rule3.stopsProcessing).toBe(true);

@@ -37,27 +37,22 @@ describe('Authorization context', function () {
     expect(build06).not.toThrow();
   });
 
-  it('has two properties', function() {
+  it('has three properties', function() {
     var ctx = new AuthorizationContext(AuthorizationAction.writeProperty, 'property', user, brokenRules);
 
     expect(ctx.user).toBe(user);
     expect(ctx.brokenRules).toBe(brokenRules);
+    expect(ctx.ruleId).toBe('writeProperty.property');
   });
 
   it('has read-only properties', function() {
     var ctx = new AuthorizationContext(AuthorizationAction.writeProperty, 'property', user, brokenRules);
     ctx.user = null;
     ctx.brokenRules = null;
+    ctx.ruleId = null;
 
     expect(ctx.user).not.toBeNull();
     expect(ctx.brokenRules).not.toBeNull();
-  });
-
-  it('getRuleId method returns the expected identity', function() {
-    var ctx1 = new AuthorizationContext(AuthorizationAction.writeProperty, 'property', user, brokenRules);
-    var ctx2 = new AuthorizationContext(AuthorizationAction.fetchObject, '', user, brokenRules);
-
-    expect(ctx1.getRuleId()).toBe('1.property');
-    expect(ctx2.getRuleId()).toBe('2');
+    expect(ctx.ruleId).not.toBeNull();
   });
 });

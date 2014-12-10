@@ -6,7 +6,6 @@ var RuleBase = require('./rule-base.js');
 var RuleSeverity = require('./rule-severity.js');
 var ValidationResult = require('./validation-result.js');
 var PropertyInfo = require('../shared/property-info.js');
-var PropertyManager = require('../shared/property-manager.js');
 
 function ValidationRule(ruleName) {
   ValidationRule.super_.call(this);
@@ -46,15 +45,15 @@ function ValidationRule(ruleName) {
     return affectedProperties;
   };
 
-  this.getInputValues = function (properties) {
-    properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'Argument properties of ValidationRule.getInputValues method must be a PropertyManager object.');
+  this.getInputValues = function (getValue) {
+    getValue = ensureArgument.isMandatoryFunction(getValue,
+      'The getValue argument of ValidationRule.getInputValues method must be a function.');
 
     var inputValues = {};
     var combined = new Array(this.primaryProperty).concat(inputProperties);
     for (var j = 0; j < combined.length; j++) {
       var property = combined[j];
-      inputValues[property.name] = properties.getValue(property);
+      inputValues[property.name] = getValue(property);
     }
     return inputValues;
   };

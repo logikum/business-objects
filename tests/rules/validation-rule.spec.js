@@ -114,7 +114,7 @@ describe('Validation rule', function () {
     rule.initialize(primary, 'message', 19, true);
     rule.addInputProperty(secondary);
 
-    expect(rule.getInputValues(pm)).toEqual({
+    expect(rule.getInputValues(pm.getValue)).toEqual({
       primary: 'turtle',
       secondary: 'beach'
     });

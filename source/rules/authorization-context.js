@@ -17,12 +17,9 @@ function AuthorizationContext(action, targetName, user, brokenRules) {
   this.brokenRules = ensureArgument.isMandatoryType(brokenRules, BrokenRuleList,
     'The brokenRules argument of AuthorizationContext constructor must be a BrokenRuleList object.');
 
-  this.getRuleId = function () {
-    if (targetName)
-      return action.toString() + '.' + targetName;
-    else
-      return action.toString();
-  };
+  this.ruleId = AuthorizationAction.getName(action);
+  if (targetName)
+    this.ruleId += '.' + targetName;
 
   // Immutable object.
   Object.freeze(this);

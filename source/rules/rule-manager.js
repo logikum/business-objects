@@ -2,9 +2,11 @@
 
 var ensureArgument = require('../shared/ensure-argument.js');
 var RuleList = require('./rule-list.js');
-//var ValidationRule = require('./validation-rule.js');
-//var AuthorizationRule = require('./authorization-rule.js');
+var ValidationRule = require('./validation-rule.js');
+var ValidationContext = require('./validation-context.js');
+var AuthorizationRule = require('./authorization-rule.js');
 var NoAccessBehavior = require('./no-access-behavior.js');
+var PropertyInfo = require('../shared/property-info.js');
 
 var RuleManager = function () {
 
@@ -13,39 +15,53 @@ var RuleManager = function () {
   var authorizationRules = new RuleList();
   var noAccessBehavior = null;
 
-  var args = Array.prototype.slice.call(arguments);
-  args.forEach(function (arg) {
-    self.add(arg);
-  });
-
   Object.defineProperty(this, 'noAccessBehavior', {
     get: function () {
       return noAccessBehavior;
     },
     set: function (value) {
-      NoAccessBehavior.check(value,
+      noAccessBehavior = ensureArgument.isEnumMember(value, NoAccessBehavior, NoAccessBehavior.throwError,
         'The value of RuleManager.noAccessBehavior property must be a NoAccessBehavior item.');
-      noAccessBehavior = value;
     },
     enumeration: true
   });
 
   this.initialize = function (defaultBehavior) {
+    this.noAccessBehavior = defaultBehavior;
     validationRules.sort();
     authorizationRules.sort();
-    authorizationRules.setNoAccessBehavior(noAccessBehavior || defaultBehavior);
+
+    for (var id in authorizationRules) {
+      if (authorizationRules.hasOwnProperty(id) && authorizationRules[id] instanceof Array) {
+        authorizationRules[id].forEach(function (rule) {
+          rule.setNoAccessBehavior(noAccessBehavior);
+        });
+      }
+    }
   };
 
   this.add = function (rule) {
+
     if (rule instanceof ValidationRule) {
+      if (!rule.primaryProperty)
+        throw new Error('The rule argument of RuleManager.add method is not initialized.');
       validationRules.add(rule.primaryProperty.name, rule);
+
     } else if (rule instanceof AuthorizationRule) {
-      authorizationRules.add(rule.getRuleId(), rule);
+      if (!rule.ruleId)
+        throw new Error('The rule argument of RuleManager.add method is not initialized.');
+      authorizationRules.add(rule.ruleId, rule);
+
     } else
       throw new Error('The rule argument of RuleManager.add method must be a Rule object.');
   };
 
   this.validate = function (property, context) {
+    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+      'The property argument of RuleManager.validate method must be a PropertyInfo object.');
+    context = ensureArgument.isMandatoryType(context, ValidationContext,
+      'The context argument of RuleManager.validate method must be a ValidationContext object.');
+
     context.brokenRules.clear(property);
 
     var rules = validationRules[property.name];
@@ -53,7 +69,7 @@ var RuleManager = function () {
       for (var i = 0; i < rules.length; i++) {
         var rule = rules[i];
 
-        var result = rule.execute(rule.getInputValues(context.propertyManager));
+        var result = rule.execute(rule.getInputValues(context.getProperty));
 
         if (result) {
           context.brokenRules.add(result.toBrokenRule());
@@ -73,7 +89,7 @@ var RuleManager = function () {
   this.hasPermission = function (context) {
     var isAllowed = true;
 
-    var rules = authorizationRules[context.getRuleId()];
+    var rules = authorizationRules[context.ruleId];
     if (rules) {
       for (var i = 0; i < rules.length; i++) {
 
@@ -89,6 +105,11 @@ var RuleManager = function () {
     }
     return isAllowed;
   };
+
+  var args = Array.prototype.slice.call(arguments);
+  args.forEach(function (arg) {
+    self.add(arg);
+  });
 
   // Immutable object.
   Object.freeze(this);
