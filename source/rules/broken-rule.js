@@ -9,7 +9,7 @@ function BrokenRule(ruleName, isPreserved, propertyName, message, severity) {
       'The ruleName argument of BrokenRule constructor must be a non-empty string.');
   this.isPreserved = ensureArgument.isMandatoryBoolean(isPreserved || false,
       'The isPreserved argument of BrokenRule constructor must be a Boolean value.');
-  this.propertyName = ensureArgument.isOptionalString(propertyName || '',
+  this.propertyName = ensureArgument.isString(propertyName || '',
       'The propertyName argument of BrokenRule constructor must be a string.');
   this.message = ensureArgument.isMandatoryString(message,
       'The message argument of BrokenRule constructor must be a non-empty string.');

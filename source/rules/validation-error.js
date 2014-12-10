@@ -11,14 +11,13 @@ function ValidationError(brokenRules, message) {
 
   this.name = 'ValidationError';
   this.status = 422;
-  this.message = message || 'The model is invalid.';
   this.message = ensureArgument.isString(message || 'The model is invalid.',
     'The message argument of BrokenRuleList.toError method must be a string.');
   this.data = {};
   this.count = 0;
 
   for (var property in brokenRules) {
-    if (brokenRules.hasOwnProperty(property)) {
+    if (brokenRules.hasOwnProperty(property) && brokenRules[property] instanceof Array) {
       var errors = brokenRules[property].filter(function (brokenRule) {
         return brokenRule.severity === RuleSeverity.error;
       });

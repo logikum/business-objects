@@ -535,7 +535,7 @@ describe('Argument checking object', function () {
     expect(call01).toThrow();
     expect(call02).toThrow();
     expect(call03).toThrow();
-    expect(call04).toThrow();
+    expect(call04).not.toThrow();
     expect(call05).toThrow();
     expect(call06).toThrow();
     expect(call07).toThrow();
