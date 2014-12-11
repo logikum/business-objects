@@ -27,8 +27,8 @@ ExpressionRule.prototype.execute = function (inputs) {
     value = '';
   }
   if (value === null) {
-    // if the value is null at this point
-    // then return the pre-defined result value
+    // If the value is null at this point,
+    // then return the pre-defined result value.
     ruleIsSatisfied = (this.option === NullResultOption.returnTrue);
   } else {
     // the value is not null, so run the regular expression

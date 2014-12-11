@@ -6,6 +6,7 @@ var Enumeration = require('../shared/enumeration.js');
 function AuthorizationAction() {
   AuthorizationAction.super_.call(this);
 
+  // Define enumeration members.
   this.readProperty = 0;
   this.writeProperty = 1;
 
@@ -16,6 +17,7 @@ function AuthorizationAction() {
 
   this.executeMethod = 6;
 
+  // Immutable object.
   Object.freeze(this);
 }
 util.inherits(AuthorizationAction, Enumeration);

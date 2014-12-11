@@ -6,12 +6,14 @@ var Enumeration = require('./shared/enumeration.js');
 function ModelState() {
   ModelState.super_.call(this);
 
+  // Define enumeration members.
   this.pristine = 0;
   this.created = 1;
   this.changed = 2;
   this.markedForRemoval = 3;
   this.removed = 4;
 
+  // Immutable object.
   Object.freeze(this);
 }
 util.inherits(ModelState, Enumeration);
