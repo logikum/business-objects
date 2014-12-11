@@ -14,7 +14,7 @@ var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
 
-var MODEL_STATE = new Enumeration('pristine', 'created', 'changed', 'markedForRemoval', 'removed');
+var MODEL_STATE = require('./model-state.js');
 
 module.exports = function(properties, rules, extensions) {
 
