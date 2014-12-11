@@ -1,58 +1,55 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var ensureArgument = require('../shared/ensure-argument.js');
 var EnumerationError = require('./enumeration-error.js');
 
-var Enumeration = function (items) {
+function Enumeration () {
+}
 
-  var self = this;
-  var count;
-
-  for (count = 0; count < arguments.length; count++) {
-    var item = ensureArgument.isMandatoryString(arguments[count],
-        'All arguments of Enumeration constructor must be a non-empty string.');
-    this[item] = count;
-  }
-  if (count === 0)
-    throw new Error('Enumeration constructor requires at least one item.');
-
-  function getName(value, throwError) {
-    for (var property in self) {
-      if (self.hasOwnProperty(property)) {
-        if (self[property] === value)
-          return property;
-      }
+Enumeration.prototype.count = function () {
+  var count = 0;
+  for (var propertyName in this) {
+    if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
+      count++;
     }
-    if (throwError)
-      throw new EnumerationError('The passed value is not an enumeration item.');
-    else
-      return null;
   }
+  return count;
+};
 
-  this.count = function() {
-    return count;
-  };
+Enumeration.prototype.getName = function (value) {
+  value = ensureArgument.isMandatoryNumber(value,
+      'The value argument of Enumeration.getName method must be a number value.');
 
-  this.getName = function(value) {
-    return getName(value, true);
-  };
-
-  this.getValue = function(name) {
-    for (var property in this) {
-      if (this.hasOwnProperty(property)) {
-        if (property === name)
-          return this[name];
-      }
+  for (var propertyName in this) {
+    if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
+      if (this[propertyName] === value)
+        return propertyName;
     }
-    throw new EnumerationError('The passed name is not an enumeration item.')
-  };
+  }
+  throw new EnumerationError('The passed value (' + value + ') is not an enumeration item.');
+};
 
-  this.check = function(value, message) {
-    if (typeof value !== 'number' || getName(value, false) === null)
-      throw new EnumerationError(message || 'The passed value is not an enumeration item.')
-  };
+Enumeration.prototype.getValue = function (name) {
+  name = ensureArgument.isMandatoryString(name,
+      'The name argument of Enumeration.getValue method must be a non-empty string.');
 
-  Object.freeze(this);
+  for (var propertyName in this) {
+    if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
+      if (propertyName === name)
+        return this[propertyName];
+    }
+  }
+  throw new EnumerationError('The passed name (' + name + ') is not an enumeration item.');
+};
+
+Enumeration.prototype.check = function (value, message) {
+  for (var propertyName in this) {
+    if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
+      if (this[propertyName] === value)
+        return;
+    }
+  }
+  throw new EnumerationError(message || 'The passed value (' + value + ') is not an enumeration item.');
 };
 
 module.exports = Enumeration;
