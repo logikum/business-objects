@@ -1,4 +1,8 @@
-var EditableModel = require('./editable-model.js');
+'use strict';
+
+var util = require('util');
+var ModelBase = require('./model-base.js');
+//var EditableModel = require('./editable-model.js');
 
 module.exports = function(name, itemType) {
 
@@ -10,7 +14,7 @@ module.exports = function(name, itemType) {
   if (typeof itemType !== 'function')
     throw new Error('Argument itemType of EditableCollection constructor must be an EditableModel type.');
 
-  var ModelCollection = function (parent) {
+  var EditableCollection = function (parent) {
 
     var self = this;
     var items = new Array();
@@ -104,6 +108,7 @@ module.exports = function(name, itemType) {
     // Immutable object.
     Object.freeze(this);
   };
+  util.inherits(EditableCollection, ModelBase);
 
-  return ModelCollection;
+  return EditableCollection;
 };

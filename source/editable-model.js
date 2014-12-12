@@ -1,4 +1,8 @@
-var config = require('bo/shared/config-reader.js');
+'use strict';
+
+var util = require('util');
+var ModelBase = require('./model-base.js');
+var config = require('./shared/config-reader.js');
 
 var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
@@ -27,7 +31,7 @@ module.exports = function(properties, rules, extensions) {
   if (!(extensions instanceof ExtensionManager))
     throw new Error('Argument extensions of EditableModel constructor must be an ExtensionManager object.');
 
-  var Model = function() {
+  var EditableModel = function() {
 
     var self = this;
     var parent = null;
@@ -606,16 +610,17 @@ module.exports = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
+  util.inherits(EditableModel, ModelBase);
 
   // Factory remove.
-  Model.remove = function(key) {
+  EditableModel.remove = function(key) {
     if (parent)
       throw new Error('Use remove method of instance to delete a child element.');
 
-    var instance = new Model(key);
+    var instance = new EditableModel(key);
     instance.remove();
     instance.save();
   };
 
-  return Model;
+  return EditableModel;
 };

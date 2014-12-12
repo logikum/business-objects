@@ -3,6 +3,9 @@ console.log('Testing main.js...');
 var AuthorizationRule = require('../../source/rules/authorization-rule.js');
 var RuleBase = require('../../source/rules/rule-base.js');
 var AuthorizationAction = require('../../source/rules/authorization-action.js');
+var AuthorizationResult = require('../../source/rules/authorization-result.js');
+var RuleSeverity = require('../../source/rules/rule-severity.js');
+var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
 var PropertyInfo = require('../../source/shared/property-info.js');
 var Text = require('../../source/data-types/text.js');
 
@@ -34,11 +37,12 @@ describe('Authorization rule', function () {
     expect(rule).toEqual(jasmine.any(RuleBase));
   });
 
-  it('has five properties', function() {
+  it('has six properties', function() {
     var rule = new AuthorizationRule('ruleName');
 
     expect(rule.ruleName).toBe('ruleName');
     expect(rule.ruleId).toBeNull();
+    expect(rule.noAccessBehavior).toBe(NoAccessBehavior.throwError);
     expect(rule.message).toBeNull();
     expect(rule.priority).toBe(10);
     expect(rule.stopsProcessing).toBe(false);
@@ -72,4 +76,26 @@ describe('Authorization rule', function () {
     expect(rule3.stopsProcessing).toBe(true);
   });
 
+  it('result method works', function() {
+    var property = new PropertyInfo('property', new Text(), true);
+    var rule1 = new AuthorizationRule('ruleName #1');
+    rule1.initialize(AuthorizationAction.readProperty, property, 'message #1', 19, true);
+    //var result = rule1.result('final message', RuleSeverity.warning);
+    var result1 = function() { return rule1.result('final message', RuleSeverity.warning); };
+
+    var rule2 = new AuthorizationRule('ruleName #2');
+    rule2.initialize(AuthorizationAction.updateObject, null, 'message #2', 13, true);
+    rule2.noAccessBehavior = NoAccessBehavior.showError;
+    var result2 = rule2.result();
+
+    expect(result1).toThrow('final message');
+
+    expect(result2).toEqual(jasmine.any(AuthorizationResult));
+    expect(result2.ruleName).toBe('ruleName #2');
+    expect(result2.propertyName).toBe('');
+    expect(result2.message).toBe('message #2');
+    expect(result2.severity).toBe(RuleSeverity.error);
+    expect(result2.stopsProcessing).toBe(true);
+    expect(result2.isPreserved).toBe(true);
+  });
 });

@@ -34,7 +34,7 @@ var RuleManager = function () {
     for (var id in authorizationRules) {
       if (authorizationRules.hasOwnProperty(id) && authorizationRules[id] instanceof Array) {
         authorizationRules[id].forEach(function (rule) {
-          rule.setNoAccessBehavior(noAccessBehavior);
+          rule.noAccessBehavior = noAccessBehavior;
         });
       }
     }
