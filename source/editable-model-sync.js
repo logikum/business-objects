@@ -310,7 +310,7 @@ module.exports = function(properties, rules, extensions) {
           child.load(dto[property.name]);
         } else {
           // Child element.
-          child.data_fetch(dto[property.name]);
+          child.fetch(dto[property.name]);
         }
       });
     }
@@ -342,8 +342,10 @@ module.exports = function(properties, rules, extensions) {
 
     function data_create () {
       if (extensions.dataCreate) {
+        // Custom create.
         extensions.dataCreate.call(self, getDataContext());
       } else {
+        // Standard create.
         var dto = dao.create();
         fromDto.call(self, dto);
       }
@@ -351,10 +353,13 @@ module.exports = function(properties, rules, extensions) {
     }
 
     function data_fetch (key, method) {
+      // Check permissions.
       if (canDo(AuthorizationAction.fetchObject)) {
         if (extensions.dataFetch) {
+          // Custom fetch.
           extensions.dataFetch.call(self, getDataContext(), key, method);
         } else {
+          // Standard fetch.
           var dto = null;
           if (parent) {
             // Child element gets data from parent.
@@ -365,6 +370,7 @@ module.exports = function(properties, rules, extensions) {
           }
           fromDto.call(self, dto);
         }
+        // Fetch children as well.
         fetchChildren(dto);
         markAsPristine();
       }

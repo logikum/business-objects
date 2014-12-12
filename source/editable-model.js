@@ -302,19 +302,23 @@ module.exports = function(properties, rules, extensions) {
 
     //region Child methods
 
-    function fetchChildren(dto) {
+    function fetchChildren(dto, callback) {
       var count = 0;
       var error = null;
 
       children.forEach(function(property) {
         var child = getProperty(property);
-        if (child['load']) {
-          // Child collection.
-          child.load(dto[property.name]);
-        } else {
-          // Child element.
-          child.data_fetch(dto[property.name]);
-        }
+        var fetchLoad = child['load'] ?
+          child.load :               // Child collection.
+          child.fetch;               // Child element.
+        fetchLoad(dto[property.name], function (err) {
+          error = error || err;
+          count++;
+          // Check if all children is done.
+          if (count === children.length) {
+            callback(error);
+          }
+        });
       });
     }
 
@@ -353,32 +357,72 @@ module.exports = function(properties, rules, extensions) {
 
     function data_create (callback) {
       if (extensions.dataCreate) {
-        extensions.dataCreate.call(self, getDataContext());
+        // Custom create.
+        extensions.dataCreate.call(self, getDataContext(), function (err) {
+          if (err)
+            callback(err);
+          else {
+            markAsCreated();
+            callback(null, self);
+          }
+        });
       } else {
-        var dto = dao.create();
-        fromDto.call(self, dto);
+        // Standard create.
+        dao.create(function (err, dto) {
+          if (err)
+            callback(err);
+          else {
+            fromDto.call(self, dto);
+            markAsCreated();
+            callback(null, self);
+          }
+        });
       }
-      markAsCreated();
     }
 
-    function data_fetch (key, method) {
+    function data_fetch (key, method, callback) {
+      // Helper function for post-fetch actions.
+      function finish (dto) {
+        // Fetch children as well.
+        fetchChildren(dto, function (err) {
+          if (err) {
+            callback(err);
+          } else {
+            markAsPristine();
+            callback(null, self);
+          }
+        });
+      }
+      // Check permissions.
       if (canDo(AuthorizationAction.fetchObject)) {
         if (extensions.dataFetch) {
-          extensions.dataFetch.call(self, getDataContext(), key, method);
+          // Custom fetch.
+          extensions.dataFetch.call(self, getDataContext(), key, method,function (err, dto) {
+            if (err)
+              callback(err);
+            else
+              finish(dto);
+          });
         } else {
-          var dto = null;
+          // Standard fetch.
           if (parent) {
             // Child element gets data from parent.
-            dto = key;
+            fromDto.call(self, key);
+            finish(dto);
           } else {
             // Root element fetches data from repository.
-            dto = dao[method](key);
+            dao[method](key, function (err, dto) {
+              if (err) {
+                callback(err);
+              } else {
+                fromDto.call(self, dto);
+                finish(dto);
+              }
+            });
           }
-          fromDto.call(self, dto);
         }
-        fetchChildren(dto);
-        markAsPristine();
-      }
+      } else
+        callback(null, self);
     }
 
     function data_insert (callback) {
@@ -500,12 +544,12 @@ module.exports = function(properties, rules, extensions) {
 
     //region Actions
 
-    this.create = function() {
-      data_create();
+    this.create = function(callback) {
+      data_create(callback);
     };
 
-    this.fetch = function(key, method) {
-      data_fetch(key, method || 'fetch');
+    this.fetch = function(key, method, callback) {
+      data_fetch(key, method || 'fetch', callback);
     };
 
     this.save = function(callback) {
@@ -682,23 +726,38 @@ module.exports = function(properties, rules, extensions) {
 
   //region Factory methods
 
-  EditableModel.create = function(parent) {
+  EditableModel.create = function(parent, callback) {
     var instance = new EditableModel(parent);
-    instance.create();
-    return instance;
+    instance.create(function (err) {
+      if (err)
+        callback(err);
+      else
+        callback(null, instance);
+    });
   };
 
   EditableModel.fetch = function(key, method) {
     var instance = new EditableModel();
-    instance.fetch(key, method);
-    return instance;
+    instance.fetch(key, method, function (err) {
+      if (err)
+        callback(err);
+      else
+        callback(null, instance);
+    });
   };
 
   EditableModel.remove = function(key, method) {
     var instance = new EditableModel();
-    instance.fetch(key, method);
-    instance.remove();
-    instance.save();
+    instance.fetch(key, method, function (err) {
+      if (err) {
+        callback(err);
+      }
+      else {
+        instance.remove();
+        instance.save();
+        callback(null);
+      }
+    });
   };
 
   //endregion
