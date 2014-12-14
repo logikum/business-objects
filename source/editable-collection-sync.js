@@ -1,35 +1,32 @@
 'use strict';
 
 var util = require('util');
-var ModelBase = require('./model-base.js');
-//var EditableModel = require('./editable-model.js');
+var ensureArgument = require('./shared/ensure-argument.js');
+var CollectionBase = require('./collection-base.js');
 
-module.exports = function(name, itemType) {
+var EditableCollectionSyncBuilder = function(name, itemType) {
 
-  if (typeof name !== 'string')
-    throw new Error('The name argument of EditableCollection constructor must be a string.');
-  if (name.trim().length === 0)
-    throw new Error('The name argument of EditableCollection constructor is required.');
-
-  if (typeof itemType !== 'function')
-    throw new Error('Argument itemType of EditableCollection constructor must be an EditableModel type.');
+  name = ensureArgument.isMandatoryString(name,
+    'The name argument of EditableCollectionSyncBuilder constructor must be a non-empty string.');
+  itemType = ensureArgument.isMandatoryFunction(itemType,
+    'The itemType argument of EditableCollectionSyncBuilder constructor must be an EditableModelSync type.');
 
   var EditableCollectionSync = function (parent) {
 
     var self = this;
-    var items = new Array();
+    var items = [];
 
     //region Model properties and methods
 
     this.name = name;
 
     this.create = function () {
-      var item = new itemType(parent, null);
+      var item = new itemType(parent);
       items.push(item);
       return item;
     };
 
-    this.load = function (data) {
+    this.fetch = function (data) {
       if (data instanceof Array) {
         data.forEach(function (dto) {
           var item = new itemType(parent, dto);
@@ -108,7 +105,9 @@ module.exports = function(name, itemType) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableCollectionSync, ModelBase);
+  util.inherits(EditableCollectionSync, CollectionBase);
 
   return EditableCollectionSync;
 };
+
+module.exports = EditableCollectionSyncBuilder;

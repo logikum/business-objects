@@ -8,7 +8,7 @@ var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
 var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
-var ExtensionManager = require('./shared/extension-manager.js');
+var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var UserInfo = require('./shared/user-info.js');
 var DataContext = require('./shared/data-context.js');
 var RuleManager = require('./rules/rule-manager.js');
@@ -23,13 +23,13 @@ var MODEL_STATE = require('./model-state.js');
 module.exports = function(properties, rules, extensions) {
 
   if (!(properties instanceof PropertyManager))
-    throw new Error('Argument properties of EditableModel constructor must be a PropertyManager object.');
+    throw new Error('Argument properties of EditableModelSync constructor must be a PropertyManager object.');
 
   if (!(rules instanceof RuleManager))
-    throw new Error('Argument rules of EditableModel constructor must be a RuleManager object.');
+    throw new Error('Argument rules of EditableModelSync constructor must be a RuleManager object.');
 
-  if (!(extensions instanceof ExtensionManager))
-    throw new Error('Argument extensions of EditableModel constructor must be an ExtensionManager object.');
+  if (!(extensions instanceof ExtensionManagerSync))
+    throw new Error('Argument extensions of EditableModelSync constructor must be an ExtensionManagerSync object.');
 
   var EditableModelSync = function() {
 
@@ -354,7 +354,7 @@ module.exports = function(properties, rules, extensions) {
 
     function data_fetch (key, method) {
       // Check permissions.
-      if (canDo(AuthorizationAction.fetchObject)) {
+      if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
         if (extensions.dataFetch) {
           // Custom fetch.
           extensions.dataFetch.call(self, getDataContext(), key, method);
@@ -629,13 +629,6 @@ module.exports = function(properties, rules, extensions) {
     var instance = new EditableModelSync();
     instance.fetch(key, method);
     return instance;
-  };
-
-  EditableModelSync.remove = function(key, method) {
-    var instance = new EditableModelSync();
-    instance.fetch(key, method);
-    instance.remove();
-    instance.save();
   };
 
   //endregion

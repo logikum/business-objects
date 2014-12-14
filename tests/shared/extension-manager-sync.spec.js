@@ -1,27 +1,26 @@
-console.log('Testing shared/extension-methods.js...');
+console.log('Testing shared/extension-manager-sync.js...');
 
-var ExtensionManager = require('../../source/shared/extension-manager.js');
+var ExtensionManagerSync = require('../../source/shared/extension-manager-sync.js');
 
 describe('Extension manager', function() {
-  var em = new ExtensionManager('data_source', '/model/path');
+  var em = new ExtensionManagerSync('data_source', '/model/path');
   function fn0 () {}
   function fn1 (a) {}
   function fn2 (a, b) {}
   function fn3 (a, b, c) {}
   function fn4 (a, b, c, d) {}
-  function fn5 (a, b, c, d, e) {}
 
   it('constructor expects two non-empty string arguments', function() {
-    function create01() { return new ExtensionManager(); }
-    function create02() { return new ExtensionManager(1987); }
-    function create03() { return new ExtensionManager(true); }
-    function create04() { return new ExtensionManager(new Date()); }
-    function create05() { return new ExtensionManager({}); }
-    function create06() { return new ExtensionManager(['data_source', '/model/path']); }
-    function create07() { return new ExtensionManager('data_source'); }
-    function create08() { return new ExtensionManager('data_source', ''); }
-    function create09() { return new ExtensionManager('', '/model/path'); }
-    function create10() { return new ExtensionManager('data_source', '/model/path'); }
+    function create01() { return new ExtensionManagerSync(); }
+    function create02() { return new ExtensionManagerSync(1987); }
+    function create03() { return new ExtensionManagerSync(true); }
+    function create04() { return new ExtensionManagerSync(new Date()); }
+    function create05() { return new ExtensionManagerSync({}); }
+    function create06() { return new ExtensionManagerSync(['data_source', '/model/path']); }
+    function create07() { return new ExtensionManagerSync('data_source'); }
+    function create08() { return new ExtensionManagerSync('data_source', ''); }
+    function create09() { return new ExtensionManagerSync('', '/model/path'); }
+    function create10() { return new ExtensionManagerSync('data_source', '/model/path'); }
 
     expect(create01).toThrow();
     expect(create02).toThrow();
@@ -122,13 +121,11 @@ describe('Extension manager', function() {
     function set2() { em.dataCreate = fn0; }
     function set3() { em.dataCreate = fn1; }
     function set4() { em.dataCreate = fn2; }
-    function set5() { em.dataCreate = fn3; }
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).toThrow();
-    expect(set4).not.toThrow();
-    expect(set5).toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
   });
 
   it('dataFetch property works', function() {
@@ -138,15 +135,13 @@ describe('Extension manager', function() {
     function set4() { em.dataFetch = fn2; }
     function set5() { em.dataFetch = fn3; }
     function set6() { em.dataFetch = fn4; }
-    function set7() { em.dataFetch = fn5; }
 
     expect(set1).toThrow();
     expect(set2).toThrow();
     expect(set3).toThrow();
     expect(set4).toThrow();
-    expect(set5).toThrow();
-    expect(set6).not.toThrow();
-    expect(set7).toThrow();
+    expect(set5).not.toThrow();
+    expect(set6).toThrow();
   });
 
   it('dataInsert property works', function() {
@@ -154,13 +149,11 @@ describe('Extension manager', function() {
     function set2() { em.dataInsert = fn0; }
     function set3() { em.dataInsert = fn1; }
     function set4() { em.dataInsert = fn2; }
-    function set5() { em.dataInsert = fn3; }
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).toThrow();
-    expect(set4).not.toThrow();
-    expect(set5).toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
   });
 
   it('dataUpdate property works', function() {
@@ -168,13 +161,11 @@ describe('Extension manager', function() {
     function set2() { em.dataUpdate = fn0; }
     function set3() { em.dataUpdate = fn1; }
     function set4() { em.dataUpdate = fn2; }
-    function set5() { em.dataUpdate = fn3; }
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).toThrow();
-    expect(set4).not.toThrow();
-    expect(set5).toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
   });
 
   it('dataRemove property works', function() {
@@ -182,12 +173,10 @@ describe('Extension manager', function() {
     function set2() { em.dataRemove = fn0; }
     function set3() { em.dataRemove = fn1; }
     function set4() { em.dataRemove = fn2; }
-    function set5() { em.dataRemove = fn3; }
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).toThrow();
-    expect(set4).not.toThrow();
-    expect(set5).toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
   });
 });

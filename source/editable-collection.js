@@ -1,41 +1,45 @@
 'use strict';
 
 var util = require('util');
-var ModelBase = require('./model-base.js');
-//var EditableModel = require('./editable-model.js');
+var ensureArgument = require('./shared/ensure-argument.js');
+var CollectionBase = require('./collection-base.js');
 
-module.exports = function(name, itemType) {
+var EditableCollectionBuilder = function(name, itemType) {
 
-  if (typeof name !== 'string')
-    throw new Error('The name argument of EditableCollection constructor must be a string.');
-  if (name.trim().length === 0)
-    throw new Error('The name argument of EditableCollection constructor is required.');
-
-  if (typeof itemType !== 'function')
-    throw new Error('Argument itemType of EditableCollection constructor must be an EditableModel type.');
+  name = ensureArgument.isMandatoryString(name,
+    'The name argument of EditableCollectionBuilder constructor must be a non-empty string.');
+  itemType = ensureArgument.isMandatoryFunction(itemType,
+    'The itemType argument of EditableCollectionBuilder constructor must be an EditableModel type.');
 
   var EditableCollection = function (parent) {
 
     var self = this;
-    var items = new Array();
+    var items = [];
 
     //region Model properties and methods
 
     this.name = name;
 
-    this.create = function () {
-      var item = new itemType(parent, null);
-      items.push(item);
-      return item;
+    this.create = function (callback) {
+      var item = new itemType(parent);
+      item.create(function (err, item) {
+        if (err)
+          callback(err);
+        else {
+          items.push(item);
+          callback(null, item);
+        }
+      });
     };
 
-    this.load = function (data) {
+    this.fetch = function (data, callback) {
       if (data instanceof Array) {
         data.forEach(function (dto) {
           var item = new itemType(parent, dto);
           items.push(item);
         });
       }
+      callback(null);
     };
 
     this.remove = function () {
@@ -44,9 +48,18 @@ module.exports = function(name, itemType) {
       });
     };
 
-    this.save = function () {
+    this.save = function (callback) {
+      var count = 0;
+      var error = null;
       items.forEach(function (item) {
-        item.save();
+        item.save(function (err) {
+          error = error || err;
+          count++;
+          // Check if all items are done.
+          if (count === items.length) {
+            callback(error);
+          }
+        });
       });
     };
 
@@ -108,7 +121,9 @@ module.exports = function(name, itemType) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableCollection, ModelBase);
+  util.inherits(EditableCollection, CollectionBase);
 
   return EditableCollection;
 };
+
+module.exports = EditableCollectionBuilder;

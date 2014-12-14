@@ -314,7 +314,7 @@ module.exports = function(properties, rules, extensions) {
         fetchLoad(dto[property.name], function (err) {
           error = error || err;
           count++;
-          // Check if all children is done.
+          // Check if all children are done.
           if (count === children.length) {
             callback(error);
           }
@@ -340,10 +340,10 @@ module.exports = function(properties, rules, extensions) {
 
       children.forEach(function(property) {
         var child = getProperty(property);
-        child.save(function (err, result) {
+        child.save(function (err) {
           error = error || err;
           count++;
-          // Check if all children is done.
+          // Check if all children are done.
           if (count === children.length) {
             callback(error);
           }
@@ -394,10 +394,10 @@ module.exports = function(properties, rules, extensions) {
         });
       }
       // Check permissions.
-      if (canDo(AuthorizationAction.fetchObject)) {
+      if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
         if (extensions.dataFetch) {
           // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), key, method,function (err, dto) {
+          extensions.dataFetch.call(self, getDataContext(), key, method, function (err, dto) {
             if (err)
               callback(err);
             else
@@ -743,20 +743,6 @@ module.exports = function(properties, rules, extensions) {
         callback(err);
       else
         callback(null, instance);
-    });
-  };
-
-  EditableModel.remove = function(key, method) {
-    var instance = new EditableModel();
-    instance.fetch(key, method, function (err) {
-      if (err) {
-        callback(err);
-      }
-      else {
-        instance.remove();
-        instance.save();
-        callback(null);
-      }
     });
   };
 
