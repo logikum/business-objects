@@ -17,9 +17,9 @@ describe('Configuration reader object', function() {
     expect(ConfigReader.userReader).not.toThrow();
 
     expect(user).toEqual(jasmine.any(Object));
-    expect(user.userCode).toBe('marmarosi');
-    expect(user.userName).toBe('Mármarosi József');
-    expect(user.email).toBe('marmarosi@logikum.hu');
+    expect(user.userCode).toBe('ada-lovelace');
+    expect(user.userName).toBe('Ada Lovelace');
+    expect(user.email).toBe('ada.lovelace@computer.net');
     expect(user.roles).toContain('administrators');
   });
 

@@ -6,7 +6,7 @@ var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
 var Extensions = bo.shared.ExtensionManager;
 var Property = bo.shared.PropertyInfo;
-var dt = bo.shared.dataTypes;
+var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
 var Address = require('./address.js');

@@ -2,6 +2,8 @@
 
 var ensureArgument = require('./ensure-argument.js');
 var PropertyInfo = require('./property-info.js');
+var CollectionBase = require('../collection-base.js');
+var ModelBase = require('../model-base.js');
 
 function PropertyManager() {
 
@@ -55,6 +57,10 @@ function PropertyManager() {
     items.forEach(callback);
   };
 
+  this.map = function (callback) {
+    items.map(callback);
+  };
+
   //endregion
 
   //region Value handling
@@ -62,10 +68,10 @@ function PropertyManager() {
   this.initValue = function (property, value) {
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
         'The property argument of PropertyManager.initValue method must be a PropertyInfo object.');
-    if (value !== null && typeof value !== 'object')
-      throw new Error('The value argument of PropertyManager.initValue method must be null or a model.');
+    value = ensureArgument.isOptionalType(value, [ CollectionBase, ModelBase ],
+        'The value argument of PropertyManager.initValue method must be null or a model.');
 
-    data[property.name] = value || null;
+    data[property.name] = value;
   };
 
   this.getValue = function (property) {

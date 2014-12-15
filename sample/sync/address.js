@@ -4,9 +4,9 @@ var bo = require('../../source/index.js');
 
 var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
-var Extensions = bo.shared.ExtensionManager;
+var Extensions = bo.shared.ExtensionManagerSync;
 var Property = bo.shared.PropertyInfo;
-var dt = bo.shared.dataTypes;
+var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
 var addressKey = new Property('addressKey', dt.Integer, false);

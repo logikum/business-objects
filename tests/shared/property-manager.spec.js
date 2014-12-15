@@ -3,6 +3,8 @@ console.log('Testing shared/property-manager.js...');
 var PropertyManager = require('../../source/shared/property-manager.js');
 var PropertyInfo = require('../../source/shared/property-info.js');
 var Text = require('../../source/data-types/text.js');
+var util = require('util');
+var ModelBase = require('../../source/model-base.js');
 
 describe('Property manager', function () {
 
@@ -130,20 +132,21 @@ describe('Property manager', function () {
   it('initValue method works', function() {
     var pm = new PropertyManager('list');
     var property = pm.create('name', new Text(), true);
-    var name = {
+    var model = {
       name: 'name',
       type: new Text(),
       writable: true
     };
+    util.inherits(model, ModelBase);
 
     function initValue1() { pm.initValue(); }
     function initValue2() { pm.initValue(property); }
     function initValue3() { pm.initValue(property, null); }
-    function initValue4() { pm.initValue(name, null); }
-    function initValue5() { pm.initValue(property, name); }
+    function initValue4() { pm.initValue(model, null); }
+    function initValue5() { pm.initValue(property, model); }
 
     expect(initValue1).toThrow();
-    expect(initValue2).toThrow();
+    expect(initValue2).not.toThrow();
     expect(initValue3).not.toThrow();
     expect(initValue4).toThrow();
     expect(initValue5).not.toThrow();
@@ -160,10 +163,10 @@ describe('Property manager', function () {
 
     function setValue1() { pm.setValue(); }
     function setValue2() { pm.setValue(property); }
-    function setValue3() { pm.setValue('Mármarosi József'); }
+    function setValue3() { pm.setValue('Ada Lovelace'); }
     function setValue4() { pm.setValue(property, 6000); }
-    function setValue5() { pm.setValue(name, 'Mármarosi József'); }
-    function setValue6() { pm.setValue(property, 'Mármarosi József'); }
+    function setValue5() { pm.setValue(name, 'Ada Lovelace'); }
+    function setValue6() { pm.setValue(property, 'Ada Lovelace'); }
 
     expect(setValue1).toThrow();
     expect(setValue2).toThrow();
@@ -181,11 +184,11 @@ describe('Property manager', function () {
       type: new Text(),
       writable: true
     };
-    pm.setValue(property, 'Mármarosi József');
+    pm.setValue(property, 'Ada Lovelace');
 
     function getValue1() { var v = pm.getValue(); }
     function getValue2() { var v = pm.getValue(6000); }
-    function getValue3() { var v = pm.getValue('Mármarosi József'); }
+    function getValue3() { var v = pm.getValue('Ada Lovelace'); }
     function getValue4() { var v = pm.getValue(true); }
     function getValue5() { var v = pm.getValue(name); }
 
@@ -194,7 +197,7 @@ describe('Property manager', function () {
     expect(getValue3).toThrow();
     expect(getValue4).toThrow();
     expect(getValue5).toThrow();
-    expect(pm.getValue(property)).toBe('Mármarosi József');
+    expect(pm.getValue(property)).toBe('Ada Lovelace');
   });
 
   //endregion

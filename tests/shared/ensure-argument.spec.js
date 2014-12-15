@@ -468,6 +468,7 @@ describe('Argument checking object', function () {
     var any05 = ensureArgument.isOptionalType(new Date(), Date);
     var any06 = ensureArgument.isOptionalType(new RegExp('[0-9]+'), RegExp);
     var any07 = ensureArgument.isOptionalType(function() {}, Function);
+    var any08 = ensureArgument.isOptionalType({ x: 0 }, [ Function, Object ]);
 
     expect(call01).toThrow();
     expect(call02).toThrow();
@@ -482,6 +483,7 @@ describe('Argument checking object', function () {
     expect(any05).toBeDefined();
     expect(any06).toBeDefined();
     expect(any07).toBeDefined();
+    expect(any08).toBeDefined();
   });
 
   it('isMandatoryType method works', function () {
@@ -498,6 +500,7 @@ describe('Argument checking object', function () {
     var any03 = ensureArgument.isMandatoryType(new Date(), Date);
     var any04 = ensureArgument.isMandatoryType(new RegExp('[0-9]+'), RegExp);
     var any05 = ensureArgument.isMandatoryType(function() {}, Function);
+    var any06 = ensureArgument.isOptionalType({ x: 0 }, [ Function, Object ]);
 
     expect(call01).toThrow();
     expect(call02).toThrow();
@@ -512,6 +515,7 @@ describe('Argument checking object', function () {
     expect(any03).toBeDefined();
     expect(any04).toBeDefined();
     expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
   });
 
   it('isEnumMember method works', function () {

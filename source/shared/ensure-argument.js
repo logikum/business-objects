@@ -133,13 +133,19 @@ var ensureArgument = {
   isOptionalType: function (value, type, message) {
     if (value === undefined)
       value = null;
-    if (value !== null && !(value instanceof type))
-      throw new ArgumentError(message || 'The argument must be a ' + type + ' object or null.');
+    var types = type instanceof Array ? type : [ type ];
+    if (value !== null && !(types.some(function (option) {
+        return value instanceof option || value.super_ === option;
+      })))
+      throw new ArgumentError(message || 'The argument must be a ' + types.join() + ' object or null.');
     return value;
   },
 
   isMandatoryType: function (value, type, message) {
-    if (!(value instanceof type))
+    var types = type instanceof Array ? type : [ type ];
+    if (!(types.some(function (option) {
+        return value instanceof option || value.super_ === option;
+      })))
       throw new ArgumentError(message || 'The argument must be a ' + type + ' object.');
     return value;
   },
