@@ -380,7 +380,7 @@ module.exports = function(properties, rules, extensions) {
       }
     }
 
-    function data_fetch (key, method, callback) {
+    function data_fetch (filter, method, callback) {
       // Helper function for post-fetch actions.
       function finish (dto) {
         // Fetch children as well.
@@ -397,7 +397,7 @@ module.exports = function(properties, rules, extensions) {
       if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
         if (extensions.dataFetch) {
           // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), key, method, function (err, dto) {
+          extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
             if (err)
               callback(err);
             else
@@ -407,11 +407,11 @@ module.exports = function(properties, rules, extensions) {
           // Standard fetch.
           if (parent) {
             // Child element gets data from parent.
-            fromDto.call(self, key);
+            fromDto.call(self, filter);
             finish(dto);
           } else {
             // Root element fetches data from repository.
-            dao[method](key, function (err, dto) {
+            dao[method](filter, function (err, dto) {
               if (err) {
                 callback(err);
               } else {
@@ -528,8 +528,8 @@ module.exports = function(properties, rules, extensions) {
             extensions.dataRemove.call(self, getDataContext(), cb);
           } else {
             // Standard removal.
-            var key = toDto.call(self, true);
-            dao.remove(key, cb);
+            var filter = toDto.call(self, true);
+            dao.remove(filter, cb);
           }
         });
       } else
@@ -736,9 +736,9 @@ module.exports = function(properties, rules, extensions) {
     });
   };
 
-  EditableModel.fetch = function(key, method) {
+  EditableModel.fetch = function(filter, method) {
     var instance = new EditableModel();
-    instance.fetch(key, method, function (err) {
+    instance.fetch(filter, method, function (err) {
       if (err)
         callback(err);
       else

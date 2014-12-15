@@ -352,21 +352,21 @@ module.exports = function(properties, rules, extensions) {
       markAsCreated();
     }
 
-    function data_fetch (key, method) {
+    function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
         if (extensions.dataFetch) {
           // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), key, method);
+          extensions.dataFetch.call(self, getDataContext(), filter, method);
         } else {
           // Standard fetch.
           var dto = null;
           if (parent) {
             // Child element gets data from parent.
-            dto = key;
+            dto = filter;
           } else {
             // Root element fetches data from repository.
-            dto = dao[method](key);
+            dto = dao[method](filter);
           }
           fromDto.call(self, dto);
         }
@@ -422,8 +422,8 @@ module.exports = function(properties, rules, extensions) {
           extensions.dataRemove.call(self, getDataContext());
         } else {
           // Standard removal.
-          var key = toDto.call(self, true);
-          dao.remove(key);
+          var filter = toDto.call(self, true);
+          dao.remove(filter);
         }
         markAsRemoved();
       }
@@ -625,9 +625,9 @@ module.exports = function(properties, rules, extensions) {
     return instance;
   };
 
-  EditableModelSync.fetch = function(key, method) {
+  EditableModelSync.fetch = function(filter, method) {
     var instance = new EditableModelSync();
-    instance.fetch(key, method);
+    instance.fetch(filter, method);
     return instance;
   };
 
