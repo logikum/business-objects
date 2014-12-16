@@ -10,6 +10,7 @@ var UserInfo = require('./user-info.js');
 var configuration = require('./config-reader.js');
 var ensureArgument = require('./ensure-argument.js');
 var Enumeration = require('./enumeration.js');
+var PropertyFlag = require('./property-flag.js');
 
 var ArgumentError = require('./argument-error.js');
 var EnumerationError = require('./enumeration-error.js');
@@ -26,6 +27,7 @@ var shared = {
   configuration: configuration,
   ensureArgument: ensureArgument,
   Enumeration: Enumeration,
+  PropertyFlag: PropertyFlag,
 
   ArgumentError: ArgumentError,
   EnumerationError: EnumerationError,

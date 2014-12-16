@@ -8,7 +8,7 @@ var ValidationResult = require('../../source/rules/validation-result.js');
 var RuleSeverity = require('../../source/rules/rule-severity.js');
 
 describe('Required rule', function () {
-  var pi = new PropertyInfo('property', new Text(), true);
+  var pi = new PropertyInfo('property', new Text());
 
   it('constructor expects one-to-four arguments', function () {
     var build01 = function () { return new RequiredRule(); };

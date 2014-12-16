@@ -17,7 +17,7 @@ describe('Rule manager', function () {
   var ar0 = new AuthorizationRule('ruleName');
 
   var vr = new ValidationRule('ruleName');
-  var property = new PropertyInfo('property', new Text(), true);
+  var property = new PropertyInfo('property', new Text());
   vr.initialize(property, 'message', 19, true);
 
   var ar = new AuthorizationRule('ruleName');

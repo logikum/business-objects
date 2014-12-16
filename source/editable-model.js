@@ -448,6 +448,18 @@ module.exports = function(properties, rules, extensions) {
           });
         } else {
           // Standard insert.
+          if (parent) {
+            // Copy the values of parent keys.
+            var references = properties.filter(function (property) {
+              return property.isParentKey;
+            });
+            for (var i = 0; i < references.length; i++) {
+              var referenceProperty = references[i];
+              var parentValue = parent[referenceProperty.name];
+              if (parentValue !== undefined)
+                setProperty(referenceProperty, parentValue);
+            }
+          }
           var dto = toDto.call(self);
           dao.insert(dto, function (err, dto) {
             if (err) {
@@ -670,7 +682,7 @@ module.exports = function(properties, rules, extensions) {
             return readProperty(property);
           },
           set: function (value) {
-            if (property.readOnly)
+            if (property.isReadOnly)
               throw new Error(properties.name + '.' + property.name + ' property is read-only.');
             writeProperty(property, value);
           },

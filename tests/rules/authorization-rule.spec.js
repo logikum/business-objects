@@ -49,7 +49,7 @@ describe('Authorization rule', function () {
   });
 
   it('initialize method works', function() {
-    var property = new PropertyInfo('property', new Text(), true);
+    var property = new PropertyInfo('property', new Text());
     var rule1 = new AuthorizationRule('ruleName #1');
     rule1.initialize(AuthorizationAction.readProperty, property, 'message #1', 19, true);
     var rule2 = new AuthorizationRule('ruleName #2');
@@ -77,7 +77,7 @@ describe('Authorization rule', function () {
   });
 
   it('result method works', function() {
-    var property = new PropertyInfo('property', new Text(), true);
+    var property = new PropertyInfo('property', new Text());
     var rule1 = new AuthorizationRule('ruleName #1');
     rule1.initialize(AuthorizationAction.readProperty, property, 'message #1', 19, true);
     //var result = rule1.result('final message', RuleSeverity.warning);

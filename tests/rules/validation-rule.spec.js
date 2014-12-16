@@ -48,7 +48,7 @@ describe('Validation rule', function () {
 
   it('initialize method works', function() {
     var rule = new ValidationRule('ruleName');
-    var property = new PropertyInfo('property', new Text(), true);
+    var property = new PropertyInfo('property', new Text());
     rule.initialize(property, 'message', 19, true);
 
     expect(rule.ruleName).toBe('ruleName');
@@ -60,7 +60,7 @@ describe('Validation rule', function () {
 
   it('addInputProperty method expects a property info object', function() {
     var rule = new ValidationRule('ruleName');
-    var property = new PropertyInfo('property', new Text(), true);
+    var property = new PropertyInfo('property', new Text());
 
     var add01 = function () { rule.addInputProperty(); };
     var add02 = function () { rule.addInputProperty(1356.2468); };
@@ -81,7 +81,7 @@ describe('Validation rule', function () {
 
   it('addAffectedProperty method expects a property info object', function() {
     var rule = new ValidationRule('ruleName');
-    var property = new PropertyInfo('property', new Text(), true);
+    var property = new PropertyInfo('property', new Text());
 
     var add01 = function () { rule.addAffectedProperty(); };
     var add02 = function () { rule.addAffectedProperty(1356.2468); };
@@ -101,8 +101,8 @@ describe('Validation rule', function () {
   });
 
   it('getInputValues method works', function() {
-    var primary = new PropertyInfo('primary', new Text(), true);
-    var secondary = new PropertyInfo('secondary', new Text(), true);
+    var primary = new PropertyInfo('primary', new Text());
+    var secondary = new PropertyInfo('secondary', new Text());
     var pm = new PropertyManager('sample');
     var rule = new ValidationRule('ruleName');
 
@@ -122,8 +122,8 @@ describe('Validation rule', function () {
 
   it('result method works', function() {
     var rule = new ValidationRule('ruleName');
-    var primary = new PropertyInfo('primary', new Text(), true);
-    var affected = new PropertyInfo('affected', new Text(), true);
+    var primary = new PropertyInfo('primary', new Text());
+    var affected = new PropertyInfo('affected', new Text());
     rule.initialize(primary, 'message', 19, true);
     rule.addAffectedProperty(affected);
     var result = rule.result('final message', RuleSeverity.warning);

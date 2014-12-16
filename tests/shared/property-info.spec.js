@@ -1,6 +1,7 @@
 console.log('Testing shared/property-info.js...');
 
 var PropertyInfo = require('../../source/shared/property-info.js');
+var F = require('../../source/shared/property-flag.js');
 var DataType = require('../../source/data-types/data-type.js');
 var Text = require('../../source/data-types/text.js');
 
@@ -8,7 +9,7 @@ describe('Property description', function() {
   function newType () {
     return {};
   }
-  var pi = new PropertyInfo('property', new Text(), true);
+  var pi = new PropertyInfo('property', new Text());
 
   it('constructor expects two or three arguments', function() {
     function create1() { return new PropertyInfo(); }
@@ -18,8 +19,8 @@ describe('Property description', function() {
 
     var pi1 = new PropertyInfo('property', newType);
     var pi2 = new PropertyInfo('property', new Text());
-    var pi3 = new PropertyInfo('property', newType, false);
-    var pi4 = new PropertyInfo('property', new Text(), true);
+    var pi3 = new PropertyInfo('property', newType, F.readOnly);
+    var pi4 = new PropertyInfo('property', new Text(), F.key | F.notOnCto);
 
     expect(create1).toThrow();
     expect(create2).toThrow();
@@ -32,20 +33,32 @@ describe('Property description', function() {
     expect(pi4.name).toBe('property');
   });
 
-  it('has three properties', function() {
+  it('has seven properties', function() {
 
     expect(pi.name).toBe('property');
     expect(pi.type).toEqual(jasmine.any(DataType));
-    expect(pi.readOnly).toBe(false);
+    expect(pi.isReadOnly).toBe(false);
+    expect(pi.isKey).toBe(false);
+    expect(pi.isParentKey).toBe(false);
+    expect(pi.isOnDto).toBe(true);
+    expect(pi.isOnCto).toBe(true);
   });
 
   it('has read-only properties', function() {
     pi.name = null;
     pi.type = null;
-    pi.readOnly = null;
+    pi.isReadOnly = true;
+    pi.isKey = true;
+    pi.isParentKey = true;
+    pi.isOnDto = false;
+    pi.isOnCto = false;
 
     expect(pi.name).not.toBeNull();
     expect(pi.type).not.toBeNull();
-    expect(pi.readOnly).not.toBeNull();
+    expect(pi.isReadOnly).toBe(false);
+    expect(pi.isKey).toBe(false);
+    expect(pi.isParentKey).toBe(false);
+    expect(pi.isOnDto).toBe(true);
+    expect(pi.isOnCto).toBe(true);
   });
 });

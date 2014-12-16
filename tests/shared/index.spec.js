@@ -11,8 +11,6 @@ var ExtensionManagerSync = require('../../source/shared/extension-manager-sync.j
 var DataContext = require('../../source/shared/data-context.js');
 var UserInfo = require('../../source/shared/user-info.js');
 
-var configuration = require('../../source/shared/config-reader.js');
-var ensureArgument = require('../../source/shared/ensure-argument.js');
 var Enumeration = require('../../source/shared/enumeration.js');
 
 var ArgumentError = require('../../source/shared/argument-error.js');
@@ -31,7 +29,7 @@ describe('Shared component index', function () {
 
   it('properties return correct components', function() {
 
-    expect(new shared.PropertyInfo('property', new Text(), true)).toEqual(jasmine.any(PropertyInfo));
+    expect(new shared.PropertyInfo('property', new Text())).toEqual(jasmine.any(PropertyInfo));
     expect(new shared.PropertyManager('list')).toEqual(jasmine.any(PropertyManager));
     expect(new shared.ExtensionManager('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManager));
     expect(new shared.ExtensionManagerSync('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManagerSync));
@@ -41,6 +39,7 @@ describe('Shared component index', function () {
     expect(shared.configuration).toEqual(jasmine.any(Object));
     expect(shared.ensureArgument).toEqual(jasmine.any(Object));
     expect(new shared.Enumeration('item')).toEqual(jasmine.any(Enumeration));
+    expect(shared.PropertyFlag).toEqual(jasmine.any(Object));
 
     expect(new shared.ArgumentError('message')).toEqual(jasmine.any(ArgumentError));
     expect(new shared.EnumerationError('message')).toEqual(jasmine.any(EnumerationError));

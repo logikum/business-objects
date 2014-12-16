@@ -27,8 +27,8 @@ function PropertyManager() {
         'The property argument of PropertyManager.push method must be a PropertyInfo object.'));
   };
 
-  this.create = function (name, type, writable) {
-    var property = new PropertyInfo(name, type, writable);
+  this.create = function (name, type, flags) {
+    var property = new PropertyInfo(name, type, flags);
     items.push(property);
     return property;
   };
@@ -53,12 +53,20 @@ function PropertyManager() {
     throw new Error(message || 'The PropertyManager has no element named ' + name + '.');
   };
 
+  //endregion
+
+  //region Public array methods
+
   this.forEach = function (callback) {
     items.forEach(callback);
   };
 
   this.map = function (callback) {
     items.map(callback);
+  };
+
+  this.filter = function (callback) {
+    return items.filter(callback);
   };
 
   //endregion

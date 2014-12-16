@@ -21,7 +21,7 @@ var InformationRule = require('../../source/common-rules/information-rule.js');
 var NullResultOption = require('../../source/common-rules/null-result-option.js');
 
 describe('Common rule index', function() {
-  var pi = new PropertyInfo('property', new Text(), true);
+  var pi = new PropertyInfo('property', new Text());
   var di = new PropertyInfo('dependent', new Text());
   var re = new RegExp('[-+]?[0-9]*\.?[0-9]+', 'g');
 

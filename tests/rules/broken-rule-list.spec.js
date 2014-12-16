@@ -84,7 +84,7 @@ describe('Broken rule list', function () {
     var br2 = new BrokenRule('name #2', true, 'property', 'message #2', RuleSeverity.error);
     brl.add(br1);
     brl.add(br2);
-    var pi = new PropertyInfo('property', new Text(), true);
+    var pi = new PropertyInfo('property', new Text());
 
     brl.clear(pi);
     var brs = brl.output();

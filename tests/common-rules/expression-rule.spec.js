@@ -9,7 +9,7 @@ var ValidationResult = require('../../source/rules/validation-result.js');
 var RuleSeverity = require('../../source/rules/rule-severity.js');
 
 describe('Expression rule', function () {
-  var pi = new PropertyInfo('property', new Text(), true);
+  var pi = new PropertyInfo('property', new Text());
   var re = new RegExp('[-+]?[0-9]*\.?[0-9]+', 'g');
 
   it('constructor expects three-to-six arguments', function () {

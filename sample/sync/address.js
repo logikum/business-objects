@@ -6,11 +6,12 @@ var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
 var Extensions = bo.shared.ExtensionManagerSync;
 var Property = bo.shared.PropertyInfo;
+var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var addressKey = new Property('addressKey', dt.Integer, false);
-var orderKey = new Property('orderKey', dt.Integer, false);
+var addressKey = new Property('addressKey', dt.Integer, F.key | F.readOnly);
+var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly);
 var country = new Property('country', dt.Text);
 var state = new Property('state', dt.Text);
 var city = new Property('city', dt.Text);

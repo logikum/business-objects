@@ -2,6 +2,7 @@ console.log('Testing shared/property-manager.js...');
 
 var PropertyManager = require('../../source/shared/property-manager.js');
 var PropertyInfo = require('../../source/shared/property-info.js');
+var F = require('../../source/shared/property-flag.js');
 var Text = require('../../source/data-types/text.js');
 var util = require('util');
 var ModelBase = require('../../source/model-base.js');
@@ -9,7 +10,7 @@ var ModelBase = require('../../source/model-base.js');
 describe('Property manager', function () {
 
   it('constructor expects a non-empty string and optional properties', function() {
-    var property = new PropertyInfo('name', new Text(), true);
+    var property = new PropertyInfo('name', new Text(), F.key);
 
     function create1() { return new PropertyManager(); }
     function create2() { return new PropertyManager(null); }
@@ -53,7 +54,7 @@ describe('Property manager', function () {
       pm.add(email);
     }
     function add2() {
-      var email = new PropertyInfo('email', new Text(), true);
+      var email = new PropertyInfo('email', new Text(), F.readOnly);
       pm.add(email);
     }
 
@@ -63,14 +64,14 @@ describe('Property manager', function () {
 
   it('create method works', function() {
     var pm = new PropertyManager('list');
-    var property = pm.create('name', new Text(), true);
+    var property = pm.create('name', new Text(), 0);
 
     expect(property).toEqual(jasmine.any(PropertyInfo));
   });
 
   it('contains method works', function() {
-    var propertyName = new PropertyInfo('name', new Text(), true);
-    var propertyEmail = new PropertyInfo('email', new Text(), false);
+    var propertyName = new PropertyInfo('name', new Text(), F.key | F.notOnCto);
+    var propertyEmail = new PropertyInfo('email', new Text());
     var pm = new PropertyManager('list', propertyName);
 
     function contains1() {
@@ -89,7 +90,7 @@ describe('Property manager', function () {
 
   it('getByName method works', function() {
     var pm = new PropertyManager('list');
-    var property = pm.create('name', new Text(), true);
+    var property = pm.create('name', new Text());
 
     function getByName1() { var p = pm.getByName(); }
     function getByName2() { var p = pm.getByName(null); }
@@ -110,8 +111,8 @@ describe('Property manager', function () {
   });
 
   it('forEach method works', function() {
-    var propertyName = new PropertyInfo('name', new Text(), true);
-    var propertyEmail = new PropertyInfo('email', new Text(), false);
+    var propertyName = new PropertyInfo('name', new Text(), F.key);
+    var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
     var pm = new PropertyManager('list', propertyName, propertyEmail);
     var count = 0;
     var names = '';
@@ -131,7 +132,7 @@ describe('Property manager', function () {
 
   it('initValue method works', function() {
     var pm = new PropertyManager('list');
-    var property = pm.create('name', new Text(), true);
+    var property = pm.create('name', new Text(), F.key);
     var model = {
       name: 'name',
       type: new Text(),
@@ -154,7 +155,7 @@ describe('Property manager', function () {
 
   it('setValue method works', function() {
     var pm = new PropertyManager('list');
-    var property = pm.create('name', new Text(), true);
+    var property = pm.create('name', new Text());
     var name = {
       name: 'name',
       type: new Text(),
@@ -178,7 +179,7 @@ describe('Property manager', function () {
 
   it('getValue method works', function() {
     var pm = new PropertyManager('list');
-    var property = pm.create('name', new Text(), true);
+    var property = pm.create('name', new Text());
     var name = {
       name: 'name',
       type: new Text(),

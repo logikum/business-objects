@@ -2,15 +2,16 @@ console.log('Testing common-rules/dependency-rule.js...');
 
 var DependencyRule = require('../../source/common-rules/dependency-rule.js');
 var PropertyInfo = require('../../source/shared/property-info.js');
+var F = require('../../source/shared/property-flag.js');
 var Text = require('../../source/data-types/text.js');
 var ValidationRule = require('../../source/rules/validation-rule.js');
 var ValidationResult = require('../../source/rules/validation-result.js');
 var RuleSeverity = require('../../source/rules/rule-severity.js');
 
 describe('Dependency rule', function () {
-  var pi = new PropertyInfo('property', new Text(), true);
+  var pi = new PropertyInfo('property', new Text(), F.key);
   var di = new PropertyInfo('dependent', new Text());
-  var di2 = new PropertyInfo('calculated', new Text(), false);
+  var di2 = new PropertyInfo('calculated', new Text(), F.readOnly);
 
   it('constructor expects two-to-five arguments', function () {
     var build01 = function () { return new DependencyRule(); };
