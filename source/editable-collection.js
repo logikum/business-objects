@@ -21,14 +21,11 @@ var EditableCollectionBuilder = function(name, itemType) {
     this.name = name;
 
     this.create = function (callback) {
-      var item = new itemType(parent);
-      item.create(function (err, item) {
+      itemType.create(parent, function (err, item) {
         if (err)
           callback(err);
-        else {
-          items.push(item);
-          callback(null, item);
-        }
+        items.push(item);
+        callback(null, item);
       });
     };
 

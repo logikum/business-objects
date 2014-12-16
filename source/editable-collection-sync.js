@@ -21,7 +21,7 @@ var EditableCollectionSyncBuilder = function(name, itemType) {
     this.name = name;
 
     this.create = function () {
-      var item = new itemType(parent);
+      var item = itemType.create(parent);
       items.push(item);
       return item;
     };

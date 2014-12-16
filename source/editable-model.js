@@ -223,11 +223,9 @@ module.exports = function(properties, rules, extensions) {
 
     //region Show object state
 
-    Object.defineProperty(this, 'state', {
-      get: function () {
-        return MODEL_STATE.getName(state);
-      }
-    });
+    this.getModelState = function () {
+      return MODEL_STATE.getName(state);
+    };
 
     //Object.defineProperty(this, 'isPristine', {
     //  get: function () {
@@ -681,7 +679,12 @@ module.exports = function(properties, rules, extensions) {
 
       } else {
         // Child item/collection
-        properties.initValue(property, new property.type(self));
+        if (property.type.create)
+        // Item
+          properties.initValue(property, property.type.create(self));
+        else
+        // Collection
+          properties.initValue(property, new property.type(self));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -727,6 +730,10 @@ module.exports = function(properties, rules, extensions) {
   //region Factory methods
 
   EditableModel.create = function(parent, callback) {
+    if (!callback) {
+      callback = parent;
+      parent = undefined;
+    }
     var instance = new EditableModel(parent);
     instance.create(function (err) {
       if (err)
@@ -748,5 +755,6 @@ module.exports = function(properties, rules, extensions) {
 
   //endregion
 
+  EditableModel.prototype.name = properties.name;
   return EditableModel;
 };

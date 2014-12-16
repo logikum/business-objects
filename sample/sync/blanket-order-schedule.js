@@ -30,8 +30,8 @@ var rules = new Rules(
     new cr.required(productName),
     new cr.required(quantity),
     new cr.required(mass),
-    new cr.required(shipDate),
-    new cr.required(required)
+    new cr.required(required),
+    new cr.required(shipDate)
 );
 
 var extensions = new Extensions('dao', __filename);

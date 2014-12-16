@@ -17,7 +17,7 @@ var obsolete = new Property('obsolete', dt.Boolean);
 var expiry = new Property('expiry', dt.DateTime);
 var quantity = new Property('quantity', dt.Integer);
 var unitPrice = new Property('unitPrice', dt.Decimal);
-var schedules = new Property('unitPrice', BlanketOrderScheduleList);
+var schedules = new Property('schedules', BlanketOrderScheduleList);
 
 var properties = new Properties(
     'BlanketOrderItem',

@@ -52,8 +52,8 @@ var BlanketOrderFactory = {
   get: function (key) {
     return BlanketOrder.get(key);
   },
-  getByName: function (key) {
-    return BlanketOrder.get(key, 'fetchByName');
+  getByName: function (name) {
+    return BlanketOrder.fetch(name, 'fetchByName');
   },
   remove: function (key) {
     BlanketOrder.remove(key);

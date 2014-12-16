@@ -223,11 +223,9 @@ module.exports = function(properties, rules, extensions) {
 
     //region Show object state
 
-    Object.defineProperty(this, 'state', {
-      get: function () {
-        return MODEL_STATE.getName(state);
-      }
-    });
+    this.getModelState = function () {
+      return MODEL_STATE.getName(state);
+    };
 
     //Object.defineProperty(this, 'isPristine', {
     //  get: function () {
@@ -574,7 +572,12 @@ module.exports = function(properties, rules, extensions) {
 
       } else {
         // Child item/collection
-        properties.initValue(property, new property.type(self));
+        if (property.type.create)
+          // Item
+          properties.initValue(property, property.type.create(self));
+        else
+          // Collection
+          properties.initValue(property, new property.type(self));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -633,5 +636,6 @@ module.exports = function(properties, rules, extensions) {
 
   //endregion
 
+  EditableModelSync.prototype.name = properties.name;
   return EditableModelSync;
 };
