@@ -8,13 +8,22 @@ var NullResultOption = require('./null-result-option.js');
 function ExpressionRule(primaryProperty, regex, option, message, priority, stopsProcessing) {
   ExpressionRule.super_.call(this, 'Expression');
 
-  this.initialize(primaryProperty, message, priority, stopsProcessing);
+  var defaultMessage = 'Property ' + primaryProperty.name + ' is invalid.';
+
+  // Initialize base properties.
+  this.initialize(
+      primaryProperty,
+      message || defaultMessage,
+      priority,
+      stopsProcessing
+  );
 
   this.regex = ensureArgument.isMandatoryType(regex, RegExp,
     'The regex argument of ExpressionRule constructor must be a RegExp object.');
   this.option = ensureArgument.isEnumMember(option, NullResultOption, null,
     'The option argument of ExpressionRule constructor must be a NullResultOption value.');
 
+  // Immutable object.
   Object.freeze(this);
 }
 util.inherits(ExpressionRule, ValidationRule);

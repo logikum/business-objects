@@ -54,6 +54,7 @@ function AuthorizationRule(ruleName) {
         throw new Error('The target argument of AuthorizationRule.initialize method must be null.');
     }
 
+    // Initialize base properties.
     RuleBase.prototype.initialize.call(this, message, priority, stopsProcessing);
   };
 

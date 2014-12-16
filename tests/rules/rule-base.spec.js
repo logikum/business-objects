@@ -34,7 +34,7 @@ describe('Rule base', function () {
     var init19 = function () { rb.initialize([]); };
     var init20 = function () { rb.initialize(null, null, null); };
 
-    expect(init01).not.toThrow();
+    expect(init01).toThrow();
     expect(init02).not.toThrow();
     expect(init03).not.toThrow();
     expect(init04).not.toThrow();

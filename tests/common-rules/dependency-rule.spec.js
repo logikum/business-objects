@@ -58,60 +58,38 @@ describe('Dependency rule', function () {
     var call01 = function () { rule1.execute(); };
     var result01 = rule1.execute({ property: null });
     var result02 = rule1.execute({ property: '' });
-    var result03 = rule1.execute({ property: 'z' });
-    var result04 = rule1.execute({ property: 'value' });
+    var result03 = rule1.execute({ property: 'value' });
 
     expect(call01).toThrow();
-    expect(result03).toBeUndefined();
-    expect(result04).toBeUndefined();
+    expect(result01).toBeUndefined();
+    expect(result02).toBeUndefined();
 
-    expect(result01).toEqual(jasmine.any(ValidationResult));
-    expect(result02).toEqual(jasmine.any(ValidationResult));
+    expect(result03).toEqual(jasmine.any(ValidationResult));
 
-    expect(result01.ruleName).toBe('Dependency');
-    expect(result01.propertyName).toBe('property');
-    expect(result01.message).toBe('message #1');
-    expect(result01.severity).toBe(RuleSeverity.error);
-    expect(result01.stopsProcessing).toBe(true);
-    expect(result01.isPreserved).toBe(false);
-    expect(result01.affectedProperties.length).toBe(1);
-    expect(result01.affectedProperties[0]).toBe(di);
-
-    expect(result02.ruleName).toBe('Dependency');
-    expect(result02.propertyName).toBe('property');
-    expect(result02.message).toBe('message #1');
-    expect(result02.severity).toBe(RuleSeverity.error);
-    expect(result02.stopsProcessing).toBe(true);
-    expect(result02.isPreserved).toBe(false);
-    expect(result02.affectedProperties.length).toBe(1);
-    expect(result02.affectedProperties[0]).toBe(di);
+    expect(result03.ruleName).toBe('Dependency');
+    expect(result03.propertyName).toBe('property');
+    expect(result03.message).toBe('message #1');
+    expect(result03.severity).toBe(RuleSeverity.success);
+    expect(result03.stopsProcessing).toBe(true);
+    expect(result03.isPreserved).toBe(false);
+    expect(result03.affectedProperties.length).toBe(1);
+    expect(result03.affectedProperties[0]).toBe(di);
 
     var call02 = function () { rule2.execute(); };
-    var result05 = rule2.execute({ property: null });
-    var result06 = rule2.execute({ property: '' });
-    var result07 = rule2.execute({ property: 'z' });
-    var result08 = rule2.execute({ property: 'value' });
+    var result04 = rule2.execute({ property: null });
+    var result05 = rule2.execute({ property: '' });
+    var result06 = rule2.execute({ property: 'value' });
 
     expect(call02).toThrow();
-    expect(result07).toBeUndefined();
-    expect(result08).toBeUndefined();
+    expect(result04).toBeUndefined();
+    expect(result05).toBeUndefined();
 
-    expect(result05).toEqual(jasmine.any(ValidationResult));
     expect(result06).toEqual(jasmine.any(ValidationResult));
-
-    expect(result05.ruleName).toBe('Dependency');
-    expect(result05.propertyName).toBe('property');
-    expect(result05.message).toBe('message #2');
-    expect(result05.severity).toBe(RuleSeverity.error);
-    expect(result05.stopsProcessing).toBe(false);
-    expect(result05.isPreserved).toBe(false);
-    expect(result05.affectedProperties.length).toBe(1);
-    expect(result05.affectedProperties[0]).toBe(di2);
 
     expect(result06.ruleName).toBe('Dependency');
     expect(result06.propertyName).toBe('property');
     expect(result06.message).toBe('message #2');
-    expect(result06.severity).toBe(RuleSeverity.error);
+    expect(result06.severity).toBe(RuleSeverity.success);
     expect(result06.stopsProcessing).toBe(false);
     expect(result06.isPreserved).toBe(false);
     expect(result06.affectedProperties.length).toBe(1);

@@ -7,11 +7,20 @@ var ValidationRule = require('../rules/validation-rule.js');
 function MinValueRule(primaryProperty, minValue, message, priority, stopsProcessing) {
   MinValueRule.super_.call(this, 'MinValue');
 
-  this.initialize(primaryProperty, message, priority, stopsProcessing);
+  var defaultMessage ='The value of property ' + primaryProperty.name + ' has to be ' +  minValue + ' at least.';
+
+  // Initialize base properties.
+  this.initialize(
+      primaryProperty,
+      message || defaultMessage,
+      priority,
+      stopsProcessing
+  );
 
   this.minValue = ensureArgument.hasValue(minValue,
     'The minValue argument of MinValueRule constructor is required.');
 
+  // Immutable object.
   Object.freeze(this);
 }
 util.inherits(MinValueRule, ValidationRule);

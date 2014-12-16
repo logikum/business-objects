@@ -19,6 +19,7 @@ function ValidationRule(ruleName) {
     this.primaryProperty = ensureArgument.isMandatoryType(primaryProperty, PropertyInfo,
       'The primaryProperty argument of ValidationRule.initialize method must be a PropertyInfo object.');
 
+    // Initialize base properties.
     RuleBase.prototype.initialize.call(this, message, priority, stopsProcessing);
   };
 
@@ -41,9 +42,9 @@ function ValidationRule(ruleName) {
     addProperty(affectedProperties, property,
       'The property argument of ValidationRule.addAffectedProperty method must be a property info object.');
   };
-  this.getAffectedProperties = function () {
-    return affectedProperties;
-  };
+  //this.getAffectedProperties = function () {
+  //  return affectedProperties;
+  //};
 
   this.getInputValues = function (getValue) {
     getValue = ensureArgument.isMandatoryFunction(getValue,

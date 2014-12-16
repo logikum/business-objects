@@ -6,8 +6,17 @@ var ValidationRule = require('../rules/validation-rule.js');
 function RequiredRule(primaryProperty, message, priority, stopsProcessing) {
   RequiredRule.super_.call(this, 'Required');
 
-  this.initialize(primaryProperty, message, priority || 100, stopsProcessing);
+  var defaultMessage = 'Property ' + primaryProperty.name + ' is required.';
 
+  // Initialize base properties.
+  this.initialize(
+      primaryProperty,
+      message || defaultMessage,
+      priority || 100,
+      stopsProcessing
+  );
+
+  // Immutable object.
   Object.freeze(this);
 }
 util.inherits(RequiredRule, ValidationRule);

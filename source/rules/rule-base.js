@@ -1,5 +1,6 @@
 'use strict';
 
+var ensureArgument = require('../shared/ensure-argument.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
 var RuleBase = function () {
@@ -38,6 +39,8 @@ RuleBase.prototype.initialize = function () {
       }
     }
   }
+  ensureArgument.isMandatoryString(this.message,
+      'The message argument of Rule.initialize method must be a non-empty string.');
 };
 
 RuleBase.prototype.execute = function () {

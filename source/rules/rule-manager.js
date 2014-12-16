@@ -5,6 +5,7 @@ var RuleList = require('./rule-list.js');
 var ValidationRule = require('./validation-rule.js');
 var ValidationContext = require('./validation-context.js');
 var AuthorizationRule = require('./authorization-rule.js');
+var RuleSeverity = require('./rule-severity.js');
 var NoAccessBehavior = require('./no-access-behavior.js');
 var PropertyInfo = require('../shared/property-info.js');
 
@@ -72,8 +73,9 @@ var RuleManager = function () {
         var result = rule.execute(rule.getInputValues(context.getProperty));
 
         if (result) {
-          context.brokenRules.add(result.toBrokenRule());
-
+          if (result.severity !== RuleSeverity.success) {
+            context.brokenRules.add(result.toBrokenRule());
+          }
           if (result.affectedProperties) {
             result.affectedProperties.forEach(function (affectedProperty) {
               self.validate(affectedProperty, context);

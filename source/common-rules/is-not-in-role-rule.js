@@ -8,7 +8,16 @@ var UserInfo = require('../shared/user-info.js');
 function IsNotInRoleRule(action, target, roles, message, priority, stopsProcessing) {
   IsNotInRoleRule.super_.call(this, 'IsNotInRole');
 
-  this.initialize(action, target, message, priority, stopsProcessing);
+  var defaultMessage = 'The user is member of ' + roles + ' role.';
+
+  // Initialize base properties.
+  this.initialize(
+      action,
+      target,
+      message || defaultMessage,
+      priority,
+      stopsProcessing
+  );
 
   var msgRoles = 'The roles argument of IsNotInRoleRule constructor must be a non-empty string or an array of non-empty strings.';
   if (typeof roles === 'string') {
@@ -23,6 +32,7 @@ function IsNotInRoleRule(action, target, roles, message, priority, stopsProcessi
     throw new Error(msgRoles);
   this.roles = roles;
 
+  // Immutable object.
   Object.freeze(this);
 }
 util.inherits(IsNotInRoleRule, AuthorizationRule);

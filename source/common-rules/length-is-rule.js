@@ -7,11 +7,22 @@ var ValidationRule = require('../rules/validation-rule.js');
 function LengthIsRule(primaryProperty, length, message, priority, stopsProcessing) {
   LengthIsRule.super_.call(this, 'LengthIs');
 
-  this.initialize(primaryProperty, message, priority, stopsProcessing);
+  var defaultMessage = length > 1 ?
+      'The length of property ' + primaryProperty.name + ' has to be ' +  length + ' characters.' :
+      'The length of property ' + primaryProperty.name + ' has to be ' +  length + ' character.';
+
+  // Initialize base properties.
+  this.initialize(
+      primaryProperty,
+      message || defaultMessage,
+      priority,
+      stopsProcessing
+  );
 
   this.length = ensureArgument.isMandatoryInteger(length,
     'The length argument of LengthIsRule constructor must be an integer value.');
 
+  // Immutable object.
   Object.freeze(this);
 }
 util.inherits(LengthIsRule, ValidationRule);
