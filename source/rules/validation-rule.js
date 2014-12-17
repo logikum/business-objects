@@ -42,9 +42,6 @@ function ValidationRule(ruleName) {
     addProperty(affectedProperties, property,
       'The property argument of ValidationRule.addAffectedProperty method must be a property info object.');
   };
-  //this.getAffectedProperties = function () {
-  //  return affectedProperties;
-  //};
 
   this.getInputValues = function (getValue) {
     getValue = ensureArgument.isMandatoryFunction(getValue,
@@ -52,8 +49,8 @@ function ValidationRule(ruleName) {
 
     var inputValues = {};
     var combined = new Array(this.primaryProperty).concat(inputProperties);
-    for (var j = 0; j < combined.length; j++) {
-      var property = combined[j];
+    for (var i = 0; i < combined.length; i++) {
+      var property = combined[i];
       inputValues[property.name] = getValue(property);
     }
     return inputValues;

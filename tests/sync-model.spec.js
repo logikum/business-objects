@@ -74,12 +74,59 @@ describe('Synchronous data portal method', function () {
     address = order.address;
 
     expect(address.addressKey).toBe(1);
+    expect(address.orderKey).toBe(1);
     expect(address.country).toBe('Canada');
     expect(address.state).toBe('Ontario');
     expect(address.city).toBe('Toronto');
     expect(address.line1).toBe('100 Front Street W');
     expect(address.line2).toBe('');
     expect(address.postalCode).toBe('M5J 1E3');
+
+    expect(order.items.count).toBe(2);
+
+    item1 = order.items.at(0);
+
+    expect(item1.orderItemKey).toBe(1);
+    expect(item1.orderKey).toBe(1);
+    expect(item1.productName).toBe('Tablet Creek 7');
+    expect(item1.obsolete).toBe(false);
+    expect(item1.expiry).toBe(expiry1);
+    expect(item1.quantity).toBe(2);
+    expect(item1.unitPrice).toBe(200);
+
+    item2 = order.items.at(1);
+
+    expect(item2.orderItemKey).toBe(2);
+    expect(item2.orderKey).toBe(1);
+    expect(item2.productName).toBe('USB 3.0 cable');
+    expect(item2.obsolete).toBe(false);
+    expect(item2.expiry).toBe(expiry2);
+    expect(item2.quantity).toBe(5);
+    expect(item2.unitPrice).toBe(19.5);
+
+    expect(item1.schedules.count).toBe(0);
+
+    expect(item2.schedules.count).toBe(2);
+
+    schedule1 = item2.schedules.at(0);
+
+    expect(schedule1.orderScheduleKey).toBe(1);
+    expect(schedule1.orderItemKey).toBe(2);
+    expect(schedule1.productName).toBe('USB 3.0 cable');
+    expect(schedule1.quantity).toBe(2);
+    expect(schedule1.mass).toBe(0.12);
+    expect(schedule1.required).toBe(true);
+    expect(schedule1.shipDate).toBe(shipDate1);
+
+    schedule2 = item2.schedules.at(1);
+
+    expect(schedule2.orderScheduleKey).toBe(2);
+    expect(schedule2.orderItemKey).toBe(2);
+    expect(schedule2.productName).toBe('USB 3.0 cable');
+    expect(schedule2.quantity).toBe(3);
+    expect(schedule2.mass).toBe(0.12);
+    expect(schedule2.required).toBe(true);
+    expect(schedule2.shipDate).toBe(shipDate2);
   });
 
   it('special fetch', function () {

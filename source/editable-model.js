@@ -9,9 +9,10 @@ var Enumeration = require('./shared/enumeration.js');
 var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
 var ExtensionManager = require('./shared/extension-manager.js');
-var UserInfo = require('./shared/user-info.js');
+var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
+var UserInfo = require('./shared/user-info.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
@@ -38,6 +39,7 @@ module.exports = function(properties, rules, extensions) {
     var parent = null;
     var state = null;
     var isDirty = false;
+    var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
     var isValidated = false;
     var children = [];
@@ -675,24 +677,24 @@ module.exports = function(properties, rules, extensions) {
     //region Properties
 
     function getPropertyValue(property) {
-      return properties.getValue(property);
+      return store.getValue(property);
     }
 
     function setPropertyValue(property, value) {
-      if (properties.setValue(property, value))
+      if (store.setValue(property, value))
         markAsChanged(true);
     }
 
     function readPropertyValue(property) {
       if (canBeRead(property))
-        return properties.getValue(property);
+        return store.getValue(property);
       else
         return null;
     }
 
     function writePropertyValue(property, value) {
       if (canBeWritten(property)) {
-        if (properties.setValue(property, value))
+        if (store.setValue(property, value))
           markAsChanged(true);
       }
     }
@@ -701,7 +703,7 @@ module.exports = function(properties, rules, extensions) {
 
       if (property.type instanceof DataType) {
         // Normal property
-        properties.initValue(property);
+        store.initValue(property);
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -717,12 +719,10 @@ module.exports = function(properties, rules, extensions) {
 
       } else {
         // Child item/collection
-        if (property.type.create)
-        // Item
-          properties.initValue(property, property.type.create(self));
-        else
-        // Collection
-          properties.initValue(property, new property.type(self));
+        if (property.type.create) // Item
+          store.initValue(property, property.type.create(self));
+        else                      // Collection
+          store.initValue(property, new property.type(self));
 
         Object.defineProperty(self, property.name, {
           get: function () {

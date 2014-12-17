@@ -28,9 +28,12 @@ var EditableCollectionSyncBuilder = function(name, itemType) {
     //region Model methods
 
     this.create = function () {
-      var item = itemType.create(parent);
-      items.push(item);
-      return item;
+      //var item = itemType.create(parent);
+      //items.push(item);
+      //return item;
+
+      items.push(itemType.create(parent));
+      return items[items.length - 1];
     };
 
     this.fetch = function (data) {
@@ -75,6 +78,10 @@ var EditableCollectionSyncBuilder = function(name, itemType) {
     //endregion
 
     //region Public array methods
+
+    this.at = function (index) {
+      return items[index];
+    };
 
     this.forEach = function (callback) {
       items.forEach(callback);

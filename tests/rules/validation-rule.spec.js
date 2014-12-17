@@ -4,6 +4,7 @@ var ValidationRule = require('../../source/rules/validation-rule.js');
 var RuleBase = require('../../source/rules/rule-base.js');
 var ValidationResult = require('../../source/rules/validation-result.js');
 var RuleSeverity = require('../../source/rules/rule-severity.js');
+var DataStore = require('../../source/shared/data-store.js');
 var PropertyInfo = require('../../source/shared/property-info.js');
 var PropertyManager = require('../../source/shared/property-manager.js');
 var Text = require('../../source/data-types/text.js');
@@ -105,16 +106,17 @@ describe('Validation rule', function () {
     var secondary = new PropertyInfo('secondary', new Text());
     var pm = new PropertyManager('sample');
     var rule = new ValidationRule('ruleName');
+    var store = new DataStore();
 
     pm.add(primary);
     pm.add(secondary);
-    pm.setValue(primary, 'turtle');
-    pm.setValue(secondary, 'beach');
+    store.setValue(primary, 'turtle');
+    store.setValue(secondary, 'beach');
 
     rule.initialize(primary, 'message', 19, true);
     rule.addInputProperty(secondary);
 
-    expect(rule.getInputValues(pm.getValue)).toEqual({
+    expect(rule.getInputValues(store.getValue)).toEqual({
       primary: 'turtle',
       secondary: 'beach'
     });

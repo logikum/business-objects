@@ -16,9 +16,16 @@ var EditableCollectionBuilder = function(name, itemType) {
     var self = this;
     var items = [];
 
-    //region Model properties and methods
-
     this.name = name;
+
+    Object.defineProperty(self, 'count', {
+      get: function () {
+        return items.length;
+      },
+      enumerable: false
+    });
+
+    //region Model methods
 
     this.create = function (callback) {
       itemType.create(parent, function (err, item) {
@@ -80,14 +87,11 @@ var EditableCollectionBuilder = function(name, itemType) {
 
     //endregion
 
-    //region Public array properties and methods
+    //region Public array methods
 
-    Object.defineProperty(self, 'count', {
-      get: function () {
-        return items.length;
-      },
-      enumerable: false
-    });
+    this.at = function (index) {
+      return items[index];
+    };
 
     this.forEach = function (callback) {
       items.forEach(callback);

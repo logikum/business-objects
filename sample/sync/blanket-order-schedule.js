@@ -6,10 +6,12 @@ var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
 var Extensions = bo.shared.ExtensionManagerSync;
 var Property = bo.shared.PropertyInfo;
+var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var orderScheduleKey = new Property('orderScheduleKey', dt.Integer, false);
+var orderScheduleKey = new Property('orderScheduleKey', dt.Integer, F.key | F.readOnly);
+var orderItemKey = new Property('orderItemKey', dt.Integer, F.parentKey | F.readOnly);
 var productName = new Property('productName', dt.Text);
 var quantity = new Property('quantity', dt.Integer);
 var mass = new Property('mass', dt.Decimal);
@@ -19,6 +21,7 @@ var shipDate = new Property('shipDate', dt.DateTime);
 var properties = new Properties(
     'BlanketOrderSchedule',
     orderScheduleKey,
+    orderItemKey,
     productName,
     quantity,
     mass,
