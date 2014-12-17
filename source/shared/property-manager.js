@@ -2,6 +2,7 @@
 
 var ensureArgument = require('./ensure-argument.js');
 var PropertyInfo = require('./property-info.js');
+var DataType = require('../data-types/data-type.js');
 var CollectionBase = require('../collection-base.js');
 var ModelBase = require('../model-base.js');
 
@@ -53,6 +54,12 @@ function PropertyManager() {
     throw new Error(message || 'The PropertyManager has no element named ' + name + '.');
   };
 
+  this.toArray = function () {
+    return items.filter(function (item) {
+      return item.type instanceof DataType;
+    });
+  };
+
   //endregion
 
   //region Public array methods
@@ -61,12 +68,12 @@ function PropertyManager() {
     items.forEach(callback);
   };
 
-  this.map = function (callback) {
-    items.map(callback);
-  };
-
   this.filter = function (callback) {
     return items.filter(callback);
+  };
+
+  this.map = function (callback) {
+    return items.map(callback);
   };
 
   //endregion

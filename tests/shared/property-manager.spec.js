@@ -64,7 +64,7 @@ describe('Property manager', function () {
 
   it('create method works', function() {
     var pm = new PropertyManager('list');
-    var property = pm.create('name', new Text(), 0);
+    var property = pm.create('name', new Text());
 
     expect(property).toEqual(jasmine.any(PropertyInfo));
   });
@@ -110,6 +110,23 @@ describe('Property manager', function () {
     expect(result).toBe(property);
   });
 
+  it('toArray method works', function() {
+    var propertyName = new PropertyInfo('name', new Text(), F.key);
+    var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
+    var pm = new PropertyManager('list', propertyName, propertyEmail);
+
+    var properties = pm.toArray();
+
+    expect(properties).toEqual(jasmine.any(Array));
+    expect(properties.length).toBe(2);
+    expect(properties[0]).toBe(propertyName);
+    expect(properties[1]).toBe(propertyEmail);
+  });
+
+  //endregion
+
+  //region Public array methods
+
   it('forEach method works', function() {
     var propertyName = new PropertyInfo('name', new Text(), F.key);
     var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
@@ -124,6 +141,33 @@ describe('Property manager', function () {
 
     expect(count).toBe(2);
     expect(names).toBe('name, email');
+  });
+
+  it('filter method works', function() {
+    var propertyName = new PropertyInfo('name', new Text(), F.key);
+    var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
+    var pm = new PropertyManager('list', propertyName, propertyEmail);
+
+    var names = pm.filter(function (item) {
+      return item.isReadOnly;
+    });
+
+    expect(names.length).toBe(1);
+    expect(names[0]).toBe(propertyEmail);
+  });
+
+  it('map method works', function() {
+    var propertyName = new PropertyInfo('name', new Text(), F.key);
+    var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
+    var pm = new PropertyManager('list', propertyName, propertyEmail);
+
+    var names = pm.map(function (item) {
+      return item.name;
+    });
+
+    expect(names.length).toBe(2);
+    expect(names[0]).toBe('name');
+    expect(names[1]).toBe('email');
   });
 
   //endregion
@@ -153,30 +197,6 @@ describe('Property manager', function () {
     expect(initValue5).not.toThrow();
   });
 
-  it('setValue method works', function() {
-    var pm = new PropertyManager('list');
-    var property = pm.create('name', new Text());
-    var name = {
-      name: 'name',
-      type: new Text(),
-      writable: true
-    };
-
-    function setValue1() { pm.setValue(); }
-    function setValue2() { pm.setValue(property); }
-    function setValue3() { pm.setValue('Ada Lovelace'); }
-    function setValue4() { pm.setValue(property, 6000); }
-    function setValue5() { pm.setValue(name, 'Ada Lovelace'); }
-    function setValue6() { pm.setValue(property, 'Ada Lovelace'); }
-
-    expect(setValue1).toThrow();
-    expect(setValue2).toThrow();
-    expect(setValue3).toThrow();
-    expect(setValue4).toThrow();
-    expect(setValue5).toThrow();
-    expect(setValue6).not.toThrow();
-  });
-
   it('getValue method works', function() {
     var pm = new PropertyManager('list');
     var property = pm.create('name', new Text());
@@ -199,6 +219,30 @@ describe('Property manager', function () {
     expect(getValue4).toThrow();
     expect(getValue5).toThrow();
     expect(pm.getValue(property)).toBe('Ada Lovelace');
+  });
+
+  it('setValue method works', function() {
+    var pm = new PropertyManager('list');
+    var property = pm.create('name', new Text());
+    var name = {
+      name: 'name',
+      type: new Text(),
+      writable: true
+    };
+
+    function setValue1() { pm.setValue(); }
+    function setValue2() { pm.setValue(property); }
+    function setValue3() { pm.setValue('Ada Lovelace'); }
+    function setValue4() { pm.setValue(property, 6000); }
+    function setValue5() { pm.setValue(name, 'Ada Lovelace'); }
+    function setValue6() { pm.setValue(property, 'Ada Lovelace'); }
+
+    expect(setValue1).toThrow();
+    expect(setValue2).toThrow();
+    expect(setValue3).toThrow();
+    expect(setValue4).toThrow();
+    expect(setValue5).toThrow();
+    expect(setValue6).not.toThrow();
   });
 
   //endregion

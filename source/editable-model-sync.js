@@ -11,6 +11,7 @@ var PropertyManager = require('./shared/property-manager.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var UserInfo = require('./shared/user-info.js');
 var DataContext = require('./shared/data-context.js');
+var TransferContext = require('./shared/transfer-context.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
@@ -43,7 +44,7 @@ module.exports = function(properties, rules, extensions) {
     var dao = null;
     var user = null;
 
-    //region Extension methods for transfer objects
+    //region Transfer objects methods
 
     function msgNoProperty(name) {
       return properties.name + ' model has no property named ' + name + '.';
@@ -52,66 +53,91 @@ module.exports = function(properties, rules, extensions) {
     function baseToDto() {
       var dto = {};
       properties.forEach(function (property) {
-        if (property instanceof PropertyInfo && property.type instanceof DataType) {
-          dto[property.name] = getProperty(property);
+        if (property.type instanceof DataType && property.isOnDto) {
+          dto[property.name] = getPropertyValue(property);
         }
       });
       return dto;
     }
 
-    function baseFromDto(dto) {
-      for (var name in dto) {
-        if (dto.hasOwnProperty(name) && typeof dto[name] !== 'function') {
-          var property = properties.getByName(name, msgNoProperty(name));
-          if (property.type instanceof DataType) {
-            setProperty(property, dto[name]);
-          }
-        }
-      }
+    function toDto () {
+      if (extensions.toDto)
+        return extensions.toDto(
+            new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue)
+          );
+      else
+        return baseToDto();
     }
 
-    var toDto = extensions.toDto ? extensions.toDto : baseToDto;
-    var fromDto = extensions.fromDto ? extensions.fromDto : baseFromDto;
+    function baseFromDto(dto) {
+      properties.forEach(function (property) {
+        if (property.type instanceof DataType && property.isOnDto) {
+          if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
+            setPropertyValue(property, dto[property.name]);
+          }
+        }
+      });
+    }
+
+    function fromDto (dto) {
+      if (extensions.fromDto)
+        extensions.fromDto(
+            new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue),
+            dto
+          );
+      else
+        baseFromDto(dto);
+    }
 
     function baseToCto() {
       var cto = {};
       properties.forEach(function (property) {
-        if (property instanceof PropertyInfo && property.type instanceof DataType) {
-          cto[property.name] = readProperty(property);
+        if (property.type instanceof DataType && property.isOnCto) {
+          cto[property.name] = readPropertyValue(property);
         }
       });
       return cto;
     }
 
+    this.toCto = function () {
+      var cto = {};
+      if (extensions.toCto)
+        cto = extensions.toCto(
+          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue)
+        );
+      else
+        cto = baseToCto();
+
+      children.forEach(function(property) {
+        var child = getPropertyValue(property);
+        cto[property.name] = child.toCto();
+      });
+      return cto;
+    };
+
     function baseFromCto(cto) {
       if (cto && typeof cto === 'object') {
-        for (var name in cto) {
-          if (cto.hasOwnProperty(name) && typeof cto[name] !== 'function') {
-            var property = properties.getByName(name, msgNoProperty(name));
-            if (property.type instanceof DataType) {
-              writeProperty(property, cto[name]);
+        properties.forEach(function (property) {
+          if (property.type instanceof DataType && property.isOnCto) {
+            if (cto.hasOwnProperty(property.name) && typeof cto[property.name] !== 'function') {
+              writePropertyValue(property, cto[property.name]);
             }
           }
-        }
+        });
       }
     }
 
-    this.toCto = function () {
-      var fn = extensions.toCto ? extensions.toCto : baseToCto;
-      var cto = fn();
-
-      children.forEach(function(property) {
-        var child = getProperty(property);
-        cto[property.name] = child.toCto();
-      });
-    };
-
     this.fromCto = function (cto) {
-      var fn = extensions.fromCto ? extensions.fromCto : baseFromCto;
-      fn(cto);
+      if (extensions.fromCto)
+        extensions.fromCto(
+          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue),
+          cto
+        );
+      else
+        baseFromCto(cto);
 
       children.forEach(function(property) {
-        var child = getProperty(property);
+        var child = getPropertyValue(property);
         if (cto[property.name]) {
           child.fromCto(cto[property.name]);
         }
@@ -214,7 +240,7 @@ module.exports = function(properties, rules, extensions) {
 
     function propagateRemoval() {
       children.forEach(function(property) {
-        var child = getProperty(property);
+        var child = getPropertyValue(property);
         child.remove();
       });
     }
@@ -302,7 +328,7 @@ module.exports = function(properties, rules, extensions) {
 
     function fetchChildren(dto) {
       children.forEach(function(property) {
-        var child = getProperty(property);
+        var child = getPropertyValue(property);
         if (child['load']) {
           // Child collection.
           child.load(dto[property.name]);
@@ -315,21 +341,21 @@ module.exports = function(properties, rules, extensions) {
 
     function insertChildren() {
       children.forEach(function(property) {
-        var child = getProperty(property);
+        var child = getPropertyValue(property);
         child.save();
       });
     }
 
     function updateChildren() {
       children.forEach(function(property) {
-        var child = getProperty(property);
+        var child = getPropertyValue(property);
         child.save();
       });
     }
 
     function removeChildren() {
       children.forEach(function(property) {
-        var child = getProperty(property);
+        var child = getPropertyValue(property);
         child.save();
       });
     }
@@ -391,7 +417,7 @@ module.exports = function(properties, rules, extensions) {
               var referenceProperty = references[i];
               var parentValue = parent[referenceProperty.name];
               if (parentValue !== undefined)
-                setProperty(referenceProperty, parentValue);
+                setPropertyValue(referenceProperty, parentValue);
             }
           }
           var dto = toDto.call(self);
@@ -498,7 +524,7 @@ module.exports = function(properties, rules, extensions) {
     };
 
     function validate(property) {
-      rules.validate(property, new ValidationContext(getProperty, brokenRules));
+      rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
     }
 
     this.getBrokenRules = function(namespace) {
@@ -541,23 +567,23 @@ module.exports = function(properties, rules, extensions) {
 
     //region Properties
 
-    function getProperty(property) {
+    function getPropertyValue(property) {
       return properties.getValue(property);
     }
 
-    function setProperty(property, value) {
+    function setPropertyValue(property, value) {
       if (properties.setValue(property, value))
         markAsChanged(true);
     }
 
-    function readProperty(property) {
+    function readPropertyValue(property) {
       if (canBeRead(property))
         return properties.getValue(property);
       else
         return null;
     }
 
-    function writeProperty(property, value) {
+    function writePropertyValue(property, value) {
       if (canBeWritten(property)) {
         if (properties.setValue(property, value))
           markAsChanged(true);
@@ -572,12 +598,12 @@ module.exports = function(properties, rules, extensions) {
 
         Object.defineProperty(self, property.name, {
           get: function () {
-            return readProperty(property);
+            return readPropertyValue(property);
           },
           set: function (value) {
             if (property.isReadOnly)
               throw new Error(properties.name + '.' + property.name + ' property is read-only.');
-            writeProperty(property, value);
+            writePropertyValue(property, value);
           },
           enumerable: true
         });
@@ -593,7 +619,7 @@ module.exports = function(properties, rules, extensions) {
 
         Object.defineProperty(self, property.name, {
           get: function () {
-            return readProperty(property);
+            return readPropertyValue(property);
           },
           set: function (value) {
             throw new Error('Property ' + properties.name + '.' + property.name + ' is read-only.');
