@@ -12,15 +12,6 @@ var AddressDao = function() {
 
   this.fetch = function(filter) {
     console.log('--- Blanket order address DAO.fetch');
-    //var addresses = [];
-    //for (var key in global.addresses) {
-    //  if (global.addresses.hasOwnProperty(key)) {
-    //    var data = global.addresses[key];
-    //    if (data.orderKey === filter)
-    //      addresses.push(data);
-    //  }
-    //}
-    //return addresses;
     for (var key in global.addresses) {
       if (global.addresses.hasOwnProperty(key)) {
         var data = global.addresses[key];

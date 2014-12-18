@@ -1,11 +1,15 @@
 'use strict';
 
 var daoAddressCtor = require('./address.dao.js');
+var daoOrderItemCtor = require('./blanket-order-item.dao.js');
+var daoOrderScheduleCtor = require('./blanket-order-schedule.dao.js');
 
 global.orderKey = 0;
 global.orders = {};
 
 var daoAddress = new daoAddressCtor();
+var daoOrderItem = new daoOrderItemCtor();
+var daoOrderSchedule = new daoOrderScheduleCtor();
 
 var BlanketOrderDao = function() {
 
@@ -22,6 +26,11 @@ var BlanketOrderDao = function() {
 
     var order = global.orders[key];
     order.address = daoAddress.fetch(order.orderKey);
+    order.items = daoOrderItem.fetchForOrder(order.orderKey);
+    for (var i = 0; i < order.items.length; i++) {
+      var item = order.items[i];
+      item.schedules = daoOrderSchedule.fetchForItem(item.orderItemKey);
+    }
 
     return order;
   };
@@ -34,6 +43,11 @@ var BlanketOrderDao = function() {
         if (order.vendorName === filter) {
 
           order.address = daoAddress.fetch(order.orderKey);
+          order.items = daoOrderItem.fetchForOrder(order.orderKey);
+          for (var i = 0; i < order.items.length; i++) {
+            var item = order.items[i];
+            item.schedules = daoOrderSchedule.fetchForItem(item.orderItemKey);
+          }
 
           return order;
         }

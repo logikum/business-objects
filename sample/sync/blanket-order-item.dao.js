@@ -17,6 +17,19 @@ var BlanketOrderItemDao = function() {
     return global.items[filter];
   };
 
+  this.fetchForOrder = function(filter) {
+    console.log('--- Blanket order item DAO.fetchForOrder');
+    var items = [];
+    for (var key in global.items) {
+      if (global.items.hasOwnProperty(key)) {
+        var item = global.items[key];
+        if (item.orderKey === filter)
+          items.push(item);
+      }
+    }
+    return items;
+  };
+
   this.insert = function(data) {
     console.log('--- Blanket order item DAO.insert');
     data.orderItemKey = ++global.itemKey;

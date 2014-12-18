@@ -40,6 +40,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var Address = new bo.EditableModelSync(properties, rules, extensions);
+var Address = bo.EditableModelSync(properties, rules, extensions);
 
 module.exports = Address;

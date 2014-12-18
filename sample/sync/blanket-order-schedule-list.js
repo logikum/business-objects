@@ -4,7 +4,7 @@ var bo = require('../../source/index.js');
 
 var BlanketOrderSchedule = require('./blanket-order-schedule.js');
 
-var BlanketOrderScheduleList = new bo.EditableCollectionSync(
+var BlanketOrderScheduleList = bo.EditableCollectionSync(
     'BlanketOrderScheduleList',
     BlanketOrderSchedule
 );

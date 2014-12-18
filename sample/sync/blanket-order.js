@@ -43,14 +43,14 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrder = new bo.EditableModelSync(properties, rules, extensions);
+var BlanketOrder = bo.EditableModelSync(properties, rules, extensions);
 
 var BlanketOrderFactory = {
   create: function () {
     return BlanketOrder.create();
   },
   get: function (key) {
-    return BlanketOrder.get(key);
+    return BlanketOrder.fetch(key);
   },
   getByName: function (name) {
     return BlanketOrder.fetch(name, 'fetchByName');

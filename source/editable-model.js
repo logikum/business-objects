@@ -3,6 +3,7 @@
 var util = require('util');
 var ModelBase = require('./model-base.js');
 var config = require('./shared/config-reader.js');
+var ensureArgument = require('./shared/ensure-argument.js');
 
 var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
@@ -22,21 +23,20 @@ var ValidationContext = require('./rules/validation-context.js');
 
 var MODEL_STATE = require('./model-state.js');
 
-module.exports = function(properties, rules, extensions) {
+var EditableModelCreator = function(properties, rules, extensions) {
 
   if (!(properties instanceof PropertyManager))
-    throw new Error('Argument properties of EditableModel constructor must be a PropertyManager object.');
+    throw new Error('Argument properties of EditableModelCreator must be a PropertyManager object.');
 
   if (!(rules instanceof RuleManager))
-    throw new Error('Argument rules of EditableModel constructor must be a RuleManager object.');
+    throw new Error('Argument rules of EditableModelCreator must be a RuleManager object.');
 
   if (!(extensions instanceof ExtensionManager))
-    throw new Error('Argument extensions of EditableModel constructor must be an ExtensionManager object.');
+    throw new Error('Argument extensions of EditableModelCreator must be an ExtensionManager object.');
 
   var EditableModel = function() {
 
     var self = this;
-    var parent = null;
     var state = null;
     var isDirty = false;
     var store = new DataStore();
@@ -45,6 +45,25 @@ module.exports = function(properties, rules, extensions) {
     var children = [];
     var dao = null;
     var user = null;
+
+    // Determine if root or child element.
+    var parent = ensureArgument.isOptionalType(arguments[0], ModelBase,
+        'Argument parent of EditableModel constructor must be an EditableModel object.');
+
+    // Set up business rules.
+    rules.initialize(config.noAccessBehavior);
+
+    // Get data access object.
+    if (extensions.daoBuilder)
+      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
+    else
+      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+
+    // Get principal.
+    if (config.userReader) {
+      user = ensureArgument.isOptionalType(config.userReader(), UserInfo,
+          'The userReader method of business objects configuration must return a UserInfo instance.');
+    }
 
     //region Transfer objects methods
 
@@ -334,10 +353,7 @@ module.exports = function(properties, rules, extensions) {
 
       children.forEach(function(property) {
         var child = getPropertyValue(property);
-        var fetchLoad = child['load'] ?
-          child.load :               // Child collection.
-          child.fetch;               // Child element.
-        fetchLoad(dto[property.name], function (err) {
+        child.fetch(dto[property.name], function (err) {
           error = error || err;
           count++;
           // Check if all children are done.
@@ -586,8 +602,8 @@ module.exports = function(properties, rules, extensions) {
       data_create(callback);
     };
 
-    this.fetch = function(key, method, callback) {
-      data_fetch(key, method || 'fetch', callback);
+    this.fetch = function(filter, method, callback) {
+      data_fetch(filter, method || 'fetch', callback);
     };
 
     this.save = function(callback) {
@@ -740,30 +756,12 @@ module.exports = function(properties, rules, extensions) {
 
     //endregion
 
-    //region Initialization
-
-    rules.initialize(config.noAccessBehavior);
-
-    if (extensions.daoBuilder)
-      dao = new extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-    else
-      dao = new config.daoBuilder(extensions.dataSource, extensions.modelPath);
-
-    if (config.userReader) {
-      user = config.userReader();
-      if (user && !(user instanceof UserInfo))
-        throw new Error('The userReader method of BusinessObjects configuration must return a UserInfo instance.');
-    }
-
-    // Determine if root or child element.
-    parent = arguments.length > 0 ? arguments[0] : null;
-
-    //endregion
-
     // Immutable object.
     Object.freeze(this);
   };
   util.inherits(EditableModel, ModelBase);
+
+  EditableModel.prototype.name = properties.name;
 
   //region Factory methods
 
@@ -781,7 +779,11 @@ module.exports = function(properties, rules, extensions) {
     });
   };
 
-  EditableModel.fetch = function(filter, method) {
+  EditableModel.fetch = function(filter, method, callback) {
+    if (!callback) {
+      callback = method;
+      method = undefined;
+    }
     var instance = new EditableModel();
     instance.fetch(filter, method, function (err) {
       if (err)
@@ -791,8 +793,19 @@ module.exports = function(properties, rules, extensions) {
     });
   };
 
+  EditableModel.load = function(parent, data, callback) {
+    var instance = new EditableModel(parent);
+    instance.fetch(data, undefined, function (err) {
+      if (err)
+        callback(err);
+      else
+        callback(null, instance);
+    });
+  };
+
   //endregion
 
-  EditableModel.prototype.name = properties.name;
   return EditableModel;
 };
+
+module.exports = EditableModelCreator;

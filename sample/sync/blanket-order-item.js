@@ -43,6 +43,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderItem = new bo.EditableModelSync(properties, rules, extensions);
+var BlanketOrderItem = bo.EditableModelSync(properties, rules, extensions);
 
 module.exports = BlanketOrderItem;

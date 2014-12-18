@@ -17,6 +17,19 @@ var BlanketOrderScheduleDao = function() {
     return global.schedules[filter];
   };
 
+  this.fetchForItem = function(filter) {
+    console.log('--- Blanket order schedule DAO.fetchForItem');
+    var schedules = [];
+    for (var key in global.schedules) {
+      if (global.schedules.hasOwnProperty(key)) {
+        var schedule = global.schedules[key];
+        if (schedule.orderItemKey === filter)
+          schedules.push(schedule);
+      }
+    }
+    return schedules;
+  };
+
   this.insert = function(data) {
     console.log('--- Blanket order schedule DAO.insert');
     data.orderScheduleKey = ++global.scheduleKey;

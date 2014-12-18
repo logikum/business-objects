@@ -1,15 +1,15 @@
 'use strict';
 
 var util = require('util');
-var ensureArgument = require('./shared/ensure-argument.js');
 var CollectionBase = require('./collection-base.js');
+var ensureArgument = require('./shared/ensure-argument.js');
 
-var EditableCollectionSyncBuilder = function(name, itemType) {
+var EditableCollectionSyncCreator = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
-    'The name argument of EditableCollectionSyncBuilder constructor must be a non-empty string.');
+    'The name argument of EditableCollectionSyncCreator must be a non-empty string.');
   itemType = ensureArgument.isMandatoryFunction(itemType,
-    'The itemType argument of EditableCollectionSyncBuilder constructor must be an EditableModelSync type.');
+    'The itemType argument of EditableCollectionSyncCreator must be an EditableModelSync type.');
 
   var EditableCollectionSync = function (parent) {
 
@@ -28,18 +28,15 @@ var EditableCollectionSyncBuilder = function(name, itemType) {
     //region Model methods
 
     this.create = function () {
-      //var item = itemType.create(parent);
-      //items.push(item);
-      //return item;
-
-      items.push(itemType.create(parent));
-      return items[items.length - 1];
+      var item = itemType.create(parent);
+      items.push(item);
+      return item;
     };
 
     this.fetch = function (data) {
       if (data instanceof Array) {
         data.forEach(function (dto) {
-          var item = new itemType(parent, dto);
+          var item = itemType.load(parent, dto);
           items.push(item);
         });
       }
@@ -117,4 +114,4 @@ var EditableCollectionSyncBuilder = function(name, itemType) {
   return EditableCollectionSync;
 };
 
-module.exports = EditableCollectionSyncBuilder;
+module.exports = EditableCollectionSyncCreator;

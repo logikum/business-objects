@@ -1,15 +1,15 @@
 'use strict';
 
 var util = require('util');
-var ensureArgument = require('./shared/ensure-argument.js');
 var CollectionBase = require('./collection-base.js');
+var ensureArgument = require('./shared/ensure-argument.js');
 
-var EditableCollectionBuilder = function(name, itemType) {
+var EditableCollectionCreator = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
-    'The name argument of EditableCollectionBuilder constructor must be a non-empty string.');
+    'The name argument of EditableCollectionCreator must be a non-empty string.');
   itemType = ensureArgument.isMandatoryFunction(itemType,
-    'The itemType argument of EditableCollectionBuilder constructor must be an EditableModel type.');
+    'The itemType argument of EditableCollectionCreator must be an EditableModel type.');
 
   var EditableCollection = function (parent) {
 
@@ -38,12 +38,23 @@ var EditableCollectionBuilder = function(name, itemType) {
 
     this.fetch = function (data, callback) {
       if (data instanceof Array) {
+        var count = 0;
+        var error = null;
         data.forEach(function (dto) {
-          var item = new itemType(parent, dto);
-          items.push(item);
+          itemType.load(parent, dto, function (err, item) {
+            if (err)
+              error = error || err;
+            else
+              items.push(item);
+            count++;
+            // Check if all items are done.
+            if (count === data.length) {
+              callback(error);
+            }
+          });
         });
-      }
-      callback(null);
+      } else
+        callback(null);
     };
 
     this.remove = function () {
@@ -127,4 +138,4 @@ var EditableCollectionBuilder = function(name, itemType) {
   return EditableCollection;
 };
 
-module.exports = EditableCollectionBuilder;
+module.exports = EditableCollectionCreator;
