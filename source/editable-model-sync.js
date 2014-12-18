@@ -507,7 +507,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
             return this;
           case MODEL_STATE.markedForRemoval:
             data_remove();
-            return;
+            return null;
           default:
             return this;
         }

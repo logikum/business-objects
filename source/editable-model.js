@@ -567,7 +567,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
           callback(err);
         } else {
           markAsRemoved();
-          callback(null);
+          callback(null, null);
         }
       }
       // Check permissions.

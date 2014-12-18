@@ -4,6 +4,8 @@ var util = require('util');
 var CollectionBase = require('./collection-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
+var MODEL_STATE = require('./model-state.js');
+
 var EditableCollectionSyncCreator = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
@@ -49,8 +51,12 @@ var EditableCollectionSyncCreator = function(name, itemType) {
     };
 
     this.save = function () {
-      items.forEach(function (item) {
-        item.save();
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        item = item.save();
+      }
+      items = items.filter(function (item) {
+        return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
       });
     };
 
