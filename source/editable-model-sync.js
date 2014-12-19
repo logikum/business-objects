@@ -42,7 +42,6 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
     var isValidated = false;
-    var children = [];
     var dao = null;
     var user = null;
 
@@ -129,7 +128,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
       else
         cto = baseToCto();
 
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         cto[property.name] = child.toCto();
       });
@@ -157,7 +156,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
       else
         baseFromCto(cto);
 
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         if (cto[property.name]) {
           child.fromCto(cto[property.name]);
@@ -260,7 +259,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     };
 
     function propagateRemoval() {
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.remove();
       });
@@ -348,28 +347,28 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     //region Child methods
 
     function fetchChildren(dto) {
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.fetch(dto[property.name]);
       });
     }
 
     function insertChildren() {
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.save();
       });
     }
 
     function updateChildren() {
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.save();
       });
     }
 
     function removeChildren() {
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.save();
       });
@@ -639,8 +638,6 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
           },
           enumerable: false
         });
-
-        children.push(property);
       }
     });
 

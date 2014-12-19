@@ -7,6 +7,8 @@ var DataType = require('../data-types/data-type.js');
 function PropertyManager() {
 
   var items = [];
+  var changed = false;
+  var children = [];
   var args = Array.prototype.slice.call(arguments);
 
   var name = args.shift() || '';
@@ -16,6 +18,7 @@ function PropertyManager() {
   args.forEach(function (arg) {
     items.push(ensureArgument.isMandatoryType(arg, PropertyInfo,
         'All arguments of PropertyManager constructor but the first must be a PropertyInfo object.'));
+    changed = true;
   });
 
   //region Item management
@@ -23,11 +26,13 @@ function PropertyManager() {
   this.add = function (property) {
     items.push(ensureArgument.isMandatoryType(property, PropertyInfo,
         'The property argument of PropertyManager.push method must be a PropertyInfo object.'));
+    changed = true;
   };
 
   this.create = function (name, type, flags) {
     var property = new PropertyInfo(name, type, flags);
     items.push(property);
+    changed = true;
     return property;
   };
 
@@ -71,6 +76,29 @@ function PropertyManager() {
 
   this.map = function (callback) {
     return items.map(callback);
+  };
+
+  //endregion
+
+  //region Children
+
+  function checkChildren () {
+    if (changed) {
+      children = items.filter(function (item) {
+        return !(item.type instanceof DataType);
+      });
+      changed = false;
+    }
+  }
+
+  this.children = function () {
+    checkChildren();
+    return children;
+  };
+
+  this.childCount = function () {
+    checkChildren();
+    return children.length;
   };
 
   //endregion

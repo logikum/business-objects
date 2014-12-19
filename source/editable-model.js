@@ -42,7 +42,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
     var isValidated = false;
-    var children = [];
     var dao = null;
     var user = null;
 
@@ -129,7 +128,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
       else
         cto = baseToCto();
 
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         cto[property.name] = child.toCto();
       });
@@ -157,7 +156,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
       else
         baseFromCto(cto);
 
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         if (cto[property.name]) {
           child.fromCto(cto[property.name]);
@@ -260,7 +259,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
     };
 
     function propagateRemoval() {
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.remove();
       });
@@ -351,13 +350,13 @@ var EditableModelCreator = function(properties, rules, extensions) {
       var count = 0;
       var error = null;
 
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.fetch(dto[property.name], function (err) {
           error = error || err;
           count++;
           // Check if all children are done.
-          if (count === children.length) {
+          if (count === properties.childCount()) {
             callback(error);
           }
         });
@@ -380,13 +379,13 @@ var EditableModelCreator = function(properties, rules, extensions) {
       var count = 0;
       var error = null;
 
-      children.forEach(function(property) {
+      properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.save(function (err) {
           error = error || err;
           count++;
           // Check if all children are done.
-          if (count === children.length) {
+          if (count === properties.childCount()) {
             callback(error);
           }
         });
@@ -749,8 +748,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
           },
           enumerable: false
         });
-
-        children.push(property);
       }
     });
 
