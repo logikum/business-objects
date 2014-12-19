@@ -77,6 +77,8 @@ describe('Synchronous data portal method', function () {
     expect(order.totalPrice).toBe(497.5);
     expect(order.schedules).toBe(2);
     expect(order.enabled).toBe(true);
+    expect(order.createdDate.getDate()).toBe(new Date().getDate());
+    expect(order.modifiedDate).toBeNull();
 
     address = order.address;
 
@@ -151,6 +153,8 @@ describe('Synchronous data portal method', function () {
     expect(order.totalPrice).toBe(497.5);
     expect(order.schedules).toBe(2);
     expect(order.enabled).toBe(true);
+    expect(order.createdDate.getDate()).toBe(new Date().getDate());
+    expect(order.modifiedDate).toBeNull();
 
     var address = order.address;
 
@@ -283,6 +287,8 @@ describe('Synchronous data portal method', function () {
     expect(order.totalPrice).toBe(672.5);
     expect(order.schedules).toBe(3);
     expect(order.enabled).toBe(false);
+    expect(order.createdDate.getDate()).toBe(new Date().getDate());
+    expect(order.modifiedDate.getDate()).toBe(new Date().getDate());
 
     expect(order.items.count).toBe(2);
 

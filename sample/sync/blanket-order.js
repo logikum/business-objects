@@ -6,13 +6,14 @@ var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
 var Extensions = bo.shared.ExtensionManagerSync;
 var Property = bo.shared.PropertyInfo;
+var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
 var Address = require('./address.js');
 var BlanketOrderItemList = require('./blanket-order-item-list.js');
 
-var orderKey = new Property('orderKey', dt.Integer, false);
+var orderKey = new Property('orderKey', dt.Integer, F.readOnly);
 var vendorName = new Property('vendorName', dt.Text);
 var contractDate = new Property('contractDate', dt.DateTime);
 var totalPrice = new Property('totalPrice', dt.Decimal);
@@ -20,6 +21,8 @@ var schedules = new Property('schedules', dt.Integer);
 var enabled = new Property('enabled', dt.Boolean);
 var address = new Property('address', Address);
 var items = new Property('items', BlanketOrderItemList);
+var createdDate = new Property('createdDate', dt.DateTime, F.readOnly);
+var modifiedDate = new Property('modifiedDate', dt.DateTime, F.readOnly);
 
 var properties = new Properties(
     'BlanketOrder',
@@ -30,7 +33,9 @@ var properties = new Properties(
     schedules,
     enabled,
     address,
-    items
+    items,
+    createdDate,
+    modifiedDate
 );
 
 var rules = new Rules(
