@@ -59,9 +59,6 @@ var BlanketOrderFactory = {
   },
   getByName: function (name) {
     return BlanketOrder.fetch(name, 'fetchByName');
-  },
-  remove: function (key) {
-    BlanketOrder.remove(key);
   }
 };
 

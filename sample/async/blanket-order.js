@@ -33,7 +33,7 @@ var properties = new Properties(
     schedules,
     enabled,
     address,
-    items,
+    //items,
     createdDate,
     modifiedDate
 );
@@ -51,17 +51,14 @@ var extensions = new Extensions('dao', __filename);
 var BlanketOrder = bo.EditableModel(properties, rules, extensions);
 
 var BlanketOrderFactory = {
-  create: function () {
-    return BlanketOrder.create();
+  create: function (callback) {
+    BlanketOrder.create(callback);
   },
   get: function (key) {
-    return BlanketOrder.fetch(key);
+    BlanketOrder.fetch(key, null, callback);
   },
   getByName: function (name) {
-    return BlanketOrder.fetch(name, 'fetchByName');
-  },
-  remove: function (key) {
-    BlanketOrder.remove(key);
+    BlanketOrder.fetch(name, 'fetchByName', callback);
   }
 };
 

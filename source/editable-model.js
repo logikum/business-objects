@@ -379,17 +379,20 @@ var EditableModelCreator = function(properties, rules, extensions) {
       var count = 0;
       var error = null;
 
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        child.save(function (err) {
-          error = error || err;
-          count++;
-          // Check if all children are done.
-          if (count === properties.childCount()) {
-            callback(error);
-          }
+      if (properties.childCount()) {
+        properties.children().forEach(function (property) {
+          var child = getPropertyValue(property);
+          child.save(function (err) {
+            error = error || err;
+            count++;
+            // Check if all children are done.
+            if (count === properties.childCount()) {
+              callback(error);
+            }
+          });
         });
-      });
+      } else
+        callback(null);
     }
 
     //endregion
@@ -735,7 +738,9 @@ var EditableModelCreator = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          store.initValue(property, property.type.create(self));
+          property.type.create(self, function (err, item) {
+            store.initValue(property, item);
+          });
         else                      // Collection
           store.initValue(property, new property.type(self));
 

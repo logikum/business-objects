@@ -85,7 +85,7 @@ var BlanketOrderDao = function() {
   this.insert = function(data, callback) {
     console.log('--- Blanket order DAO.insert');
     data.orderKey = ++global.orderKey;
-    data.createdDate = Date.now();
+    data.createdDate = new Date();
     var key = 'key' + data.orderKey;
     global.orders[key] = data;
     callback(null, data);
@@ -96,7 +96,7 @@ var BlanketOrderDao = function() {
     var key = 'key' + data.orderKey;
     if (!global.orders[key])
       throw new Error('Blanket order not found.');
-    data.modifiedDate = Date.now();
+    data.modifiedDate = new Date();
     global.orders[key] = data;
     callback(null, data);
   };
