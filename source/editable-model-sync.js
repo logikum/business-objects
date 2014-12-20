@@ -393,12 +393,12 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
+        var dto = null;
         if (extensions.dataFetch) {
           // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), filter, method);
+          dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
         } else {
           // Standard fetch.
-          var dto = null;
           if (parent) {
             // Child element gets data from parent.
             dto = filter;

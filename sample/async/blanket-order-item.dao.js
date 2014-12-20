@@ -14,7 +14,8 @@ var BlanketOrderItemDao = function() {
     console.log('--- Blanket order item DAO.fetch');
     if (!global.items[filter])
       callback(new Error('Blanket order item not found.'));
-    callback(null, global.items[filter]);
+    else
+      callback(null, global.items[filter]);
   };
 
   this.fetchForOrder = function(filter, callback) {
@@ -41,8 +42,10 @@ var BlanketOrderItemDao = function() {
     console.log('--- Blanket order item DAO.update');
     if (!global.items[data.orderItemKey])
       callback(new Error('Blanket order item not found.'));
-    global.items[data.orderItemKey] = data;
-    callback(null, data);
+    else {
+      global.items[data.orderItemKey] = data;
+      callback(null, data);
+    }
   };
 
   this.remove = function(filter, callback) {

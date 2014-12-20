@@ -14,7 +14,8 @@ var BlanketOrderScheduleDao = function() {
     console.log('--- Blanket order schedule DAO.fetch');
     if (!global.schedules[filter])
       callback(new Error('Blanket order schedule not found.'));
-    callback(null, global.schedules[filter]);
+    else
+      callback(null, global.schedules[filter]);
   };
 
   this.fetchForItem = function(filter, callback) {
@@ -41,8 +42,10 @@ var BlanketOrderScheduleDao = function() {
     console.log('--- Blanket order schedule DAO.update');
     if (!global.schedules[data.orderScheduleKey])
       callback(new Error('Blanket order schedule not found.'));
-    global.schedules[data.orderScheduleKey] = data;
-    callback(null, data);
+    else {
+      global.schedules[data.orderScheduleKey] = data;
+      callback(null, data);
+    }
   };
 
   this.remove = function(filter, callback) {

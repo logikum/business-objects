@@ -15,8 +15,10 @@ var AddressDao = function() {
     for (var key in global.addresses) {
       if (global.addresses.hasOwnProperty(key)) {
         var data = global.addresses[key];
-        if (data.orderKey === filter)
+        if (data.orderKey === filter){
           callback(null, data);
+          return;
+        }
       }
     }
     callback(null, {});
@@ -35,8 +37,10 @@ var AddressDao = function() {
     var key = 'key' + data.addressKey;
     if (!global.addresses[key])
       callback(new Error('Blanket order address not found.'));
-    global.addresses[key] = data;
-    callback(null, data);
+    else {
+      global.addresses[key] = data;
+      callback(null, data);
+    }
   };
 
   this.remove = function(filter, callback) {

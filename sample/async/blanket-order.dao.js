@@ -21,23 +21,34 @@ var BlanketOrderDao = function() {
   this.fetch = function(filter, callback) {
     console.log('--- Blanket order DAO.fetch');
     var key = 'key' + filter;
-    if (!global.orders[key])
+    if (!global.orders[key]) {
       callback(new Error('Blanket order not found.'));
+      return;
+    }
 
     var order = global.orders[key];
     daoAddress.fetch(order.orderKey, function (err, address) {
-      if (err) callback(err);
+      if (err) {
+        callback(err);
+        return;
+      }
       order.address = address;
 
       daoOrderItem.fetchForOrder(order.orderKey, function (err, items) {
-        if (err) callback(err);
+        if (err) {
+          callback(err);
+          return;
+        }
         order.items = items;
 
         var count = 0;
         for (var i = 0; i < order.items.length; i++) {
           var item = order.items[i];
           daoOrderSchedule.fetchForItem(item.orderItemKey, function (err, schedules) {
-            if (err) callback(err);
+            if (err) {
+              callback(err);
+              return;
+            }
             item.schedules = schedules;
             if (++count === order.items.length) {
               callback(null, order);
@@ -50,24 +61,35 @@ var BlanketOrderDao = function() {
 
   this.fetchByName = function(filter, callback) {
     console.log('--- Blanket order DAO.fetchByName');
+    var found = false;
     for (var key in global.orders) {
       if (global.orders.hasOwnProperty(key)) {
         var order = global.orders[key];
         if (order.vendorName === filter) {
+          found = true;
 
           daoAddress.fetch(order.orderKey, function (err, address) {
-            if (err) callback(err);
+            if (err) {
+              callback(err);
+              return;
+            }
             order.address = address;
 
             daoOrderItem.fetchForOrder(order.orderKey, function (err, items) {
-              if (err) callback(err);
+              if (err) {
+                callback(err);
+                return;
+              }
               order.items = items;
 
               var count = 0;
               for (var i = 0; i < order.items.length; i++) {
                 var item = order.items[i];
                 daoOrderSchedule.fetchForItem(item.orderItemKey, function (err, schedules) {
-                  if (err) callback(err);
+                  if (err) {
+                    callback(err);
+                    return;
+                  }
                   item.schedules = schedules;
                   if (++count === order.items.length) {
                     callback(null, order);
@@ -76,10 +98,12 @@ var BlanketOrderDao = function() {
               }
             });
           });
+          return;
         }
       }
     }
-    callback(new Error('Blanket order not found.'));
+    if (!found)
+      callback(new Error('Blanket order not found.'));
   };
 
   this.insert = function(data, callback) {
@@ -95,10 +119,12 @@ var BlanketOrderDao = function() {
     console.log('--- Blanket order DAO.update');
     var key = 'key' + data.orderKey;
     if (!global.orders[key])
-      throw new Error('Blanket order not found.');
-    data.modifiedDate = new Date();
-    global.orders[key] = data;
-    callback(null, data);
+      callback(new Error('Blanket order not found.'));
+    else {
+      data.modifiedDate = new Date();
+      global.orders[key] = data;
+      callback(null, data);
+    }
   };
 
   this.remove = function(filter, callback) {

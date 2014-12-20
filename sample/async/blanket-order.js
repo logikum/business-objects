@@ -33,7 +33,7 @@ var properties = new Properties(
     schedules,
     enabled,
     address,
-    //items,
+    items,
     createdDate,
     modifiedDate
 );
@@ -54,10 +54,10 @@ var BlanketOrderFactory = {
   create: function (callback) {
     BlanketOrder.create(callback);
   },
-  get: function (key) {
+  get: function (key, callback) {
     BlanketOrder.fetch(key, null, callback);
   },
-  getByName: function (name) {
+  getByName: function (name, callback) {
     BlanketOrder.fetch(name, 'fetchByName', callback);
   }
 };

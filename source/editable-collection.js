@@ -39,7 +39,7 @@ var EditableCollectionCreator = function(name, itemType) {
     };
 
     this.fetch = function (data, callback) {
-      if (data instanceof Array) {
+      if (data instanceof Array && data.length) {
         var count = 0;
         var error = null;
         data.forEach(function (dto) {
@@ -48,9 +48,8 @@ var EditableCollectionCreator = function(name, itemType) {
               error = error || err;
             else
               items.push(item);
-            count++;
             // Check if all items are done.
-            if (count === data.length) {
+            if (++count === data.length) {
               callback(error);
             }
           });
@@ -68,19 +67,21 @@ var EditableCollectionCreator = function(name, itemType) {
     this.save = function (callback) {
       var count = 0;
       var error = null;
-      items.forEach(function (item) {
-        item.save(function (err) {
-          error = error || err;
-          count++;
-          // Check if all items are done.
-          if (count === items.length) {
-            items = items.filter(function (item) {
-              return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
-            });
-            callback(error);
-          }
+      if (items.length) {
+        items.forEach(function (item) {
+          item.save(function (err) {
+            error = error || err;
+            // Check if all items are done.
+            if (++count === items.length) {
+              items = items.filter(function (item) {
+                return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
+              });
+              callback(error);
+            }
+          });
         });
-      });
+      } else
+        callback(null);
     };
 
     this.toCto = function () {

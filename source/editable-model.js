@@ -350,17 +350,23 @@ var EditableModelCreator = function(properties, rules, extensions) {
       var count = 0;
       var error = null;
 
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        child.fetch(dto[property.name], function (err) {
-          error = error || err;
-          count++;
-          // Check if all children are done.
-          if (count === properties.childCount()) {
-            callback(error);
-          }
+      function finish (err) {
+        error = error || err;
+        // Check if all children are done.
+        if (++count === properties.childCount()) {
+          callback(error);
+        }
+      }
+      if (properties.childCount()) {
+        properties.children().forEach(function(property) {
+          var child = getPropertyValue(property);
+          if (child instanceof ModelBase)
+            child.fetch(dto[property.name], undefined, finish);
+          else
+            child.fetch(dto[property.name], finish);
         });
-      });
+      } else
+        callback(null);
     }
 
     function insertChildren(callback) {
@@ -384,9 +390,8 @@ var EditableModelCreator = function(properties, rules, extensions) {
           var child = getPropertyValue(property);
           child.save(function (err) {
             error = error || err;
-            count++;
             // Check if all children are done.
-            if (count === properties.childCount()) {
+            if (++count === properties.childCount()) {
               callback(error);
             }
           });
@@ -452,7 +457,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
           if (parent) {
             // Child element gets data from parent.
             fromDto.call(self, filter);
-            finish(dto);
+            finish(filter);
           } else {
             // Root element fetches data from repository.
             dao[method](filter, function (err, dto) {
