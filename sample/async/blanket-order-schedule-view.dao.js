@@ -2,14 +2,15 @@
 
 var BlanketOrderScheduleViewDao = function() {
 
-  this.fetch = function(filter) {
+  this.fetch = function(filter, callback) {
     console.log('--- Blanket order schedule view DAO.fetch');
     if (!global.schedules[filter])
-      throw new Error('Blanket order schedule not found.');
-    return global.schedules[filter];
+      callback(new Error('Blanket order schedule not found.'));
+    else
+      callback(null, global.schedules[filter]);
   };
 
-  this.fetchForItem = function(filter) {
+  this.fetchForItem = function(filter, callback) {
     console.log('--- Blanket order schedule view DAO.fetchForItem');
     var schedules = [];
     for (var key in global.schedules) {
@@ -19,7 +20,7 @@ var BlanketOrderScheduleViewDao = function() {
           schedules.push(schedule);
       }
     }
-    return schedules;
+    callback(null, schedules);
   };
 
 };

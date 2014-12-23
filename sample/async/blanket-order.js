@@ -13,7 +13,7 @@ var cr = bo.commonRules;
 var Address = require('./address.js');
 var BlanketOrderItemList = require('./blanket-order-item-list.js');
 
-var orderKey = new Property('orderKey', dt.Integer, F.readOnly);
+var orderKey = new Property('orderKey', dt.Integer, F.key | F.readOnly);
 var vendorName = new Property('vendorName', dt.Text);
 var contractDate = new Property('contractDate', dt.DateTime);
 var totalPrice = new Property('totalPrice', dt.Decimal);

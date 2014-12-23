@@ -3,6 +3,7 @@
 console.log('Testing data portal methods of asynchronous models.js...');
 
 var BlanketOrder = require('../sample/async/blanket-order.js');
+var BlanketOrderView = require('../sample/async/blanket-order-view.js');
 
 var contractDate = new Date(2014, 12, 15, 15, 26);
 var contractDate_u = new Date(2014, 12, 20, 8, 40);
@@ -13,7 +14,7 @@ var shipDate2 = new Date(2015, 2, 28, 16, 30);
 
 describe('Asynchronous data portal method', function () {
 
-  it('create action works', function (done) {
+  it('create of editable model', function (done) {
     console.log('\n*** Asynchronous CREATE');
 
     BlanketOrder.create(function (err, order) {
@@ -161,7 +162,7 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('special fetch', function (done) {
+  it('special fetch of editable model', function (done) {
     console.log('\n*** Asynchronous GET_BY_NAME');
 
     BlanketOrder.getByName('Acme Corp.', function (err, order) {
@@ -241,7 +242,159 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('update', function () {
+  it('fetch of read-only model', function (done) {
+    console.log('\n*** Asynchronous GET');
+
+    BlanketOrderView.get(1, function (err, orderView) {
+      if (err) throw err;
+
+      //region Check data
+
+      expect(orderView.orderKey).toBe(1);
+      expect(orderView.vendorName).toBe('Acme Corp.');
+      expect(orderView.contractDate).toBe(contractDate);
+      expect(orderView.totalPrice).toBe(497.5);
+      expect(orderView.schedules).toBe(2);
+      expect(orderView.enabled).toBe(true);
+      expect(orderView.createdDate.getDate()).toBe(new Date().getDate());
+      expect(orderView.modifiedDate).toBeNull();
+
+      var addressView = orderView.address;
+
+      expect(addressView.addressKey).toBe(1);
+      expect(addressView.orderKey).toBe(1);
+      expect(addressView.country).toBe('Canada');
+      expect(addressView.state).toBe('Ontario');
+      expect(addressView.city).toBe('Toronto');
+      expect(addressView.line1).toBe('100 Front Street W');
+      expect(addressView.line2).toBe('');
+      expect(addressView.postalCode).toBe('M5J 1E3');
+
+      expect(orderView.items.count).toBe(2);
+
+      var itemView1 = orderView.items.at(0);
+
+      expect(itemView1.orderItemKey).toBe(1);
+      expect(itemView1.orderKey).toBe(1);
+      expect(itemView1.productName).toBe('Tablet Creek 7');
+      expect(itemView1.obsolete).toBe(false);
+      expect(itemView1.expiry).toBe(expiry1);
+      expect(itemView1.quantity).toBe(2);
+      expect(itemView1.unitPrice).toBe(200);
+
+      var itemView2 = orderView.items.at(1);
+
+      expect(itemView2.orderItemKey).toBe(2);
+      expect(itemView2.orderKey).toBe(1);
+      expect(itemView2.productName).toBe('USB 3.0 cable');
+      expect(itemView2.obsolete).toBe(false);
+      expect(itemView2.expiry).toBe(expiry2);
+      expect(itemView2.quantity).toBe(5);
+      expect(itemView2.unitPrice).toBe(19.5);
+
+      expect(itemView1.schedules.count).toBe(0);
+
+      expect(itemView2.schedules.count).toBe(2);
+
+      var scheduleView1 = itemView2.schedules.at(0);
+
+      expect(scheduleView1.orderScheduleKey).toBe(1);
+      expect(scheduleView1.orderItemKey).toBe(2);
+      expect(scheduleView1.quantity).toBe(2);
+      expect(scheduleView1.totalMass).toBe(0.24);
+      expect(scheduleView1.required).toBe(true);
+      expect(scheduleView1.shipTo).toBe('Madrid');
+      expect(scheduleView1.shipDate).toBe(shipDate1);
+
+      var scheduleView2 = itemView2.schedules.at(1);
+
+      expect(scheduleView2.orderScheduleKey).toBe(2);
+      expect(scheduleView2.orderItemKey).toBe(2);
+      expect(scheduleView2.quantity).toBe(3);
+      expect(scheduleView2.totalMass).toBe(0.36);
+      expect(scheduleView2.required).toBe(true);
+      expect(scheduleView2.shipTo).toBe('Copenhagen');
+      expect(scheduleView2.shipDate).toBe(shipDate2);
+
+      //endregion
+
+      //region Check write protection
+
+      function write11 () { orderView.orderKey = 111; }
+      function write12 () { orderView.vendorName = 'Purple Cactus, Ltd.'; }
+      function write13 () { orderView.contractDate = expiry1; }
+      function write14 () { orderView.totalPrice = 6508.2; }
+      function write15 () { orderView.schedules = 7; }
+      function write16 () { orderView.enabled = false; }
+      function write17 () { orderView.createdDate = shipDate1; }
+      function write18 () { orderView.modifiedDate = shipDate2; }
+
+      function write21 () { addressView.addressKey = 222; }
+      function write22 () { addressView.orderKey = 111; }
+      function write23 () { addressView.country = 'USA'; }
+      function write24 () { addressView.state = 'Massachusetts'; }
+      function write25 () { addressView.city = 'Boston'; }
+      function write26 () { addressView.line1 = '32 King Road'; }
+      function write27 () { addressView.line2 = 'Floor 6, apt. 34'; }
+      function write28 () { addressView.postalCode = 'ABC 123'; }
+
+      function write31 () { itemView1.orderItemKey = 333; }
+      function write32 () { itemView1.orderKey = 111; }
+      function write33 () { itemView1.productName = 'Yellow T-shirt'; }
+      function write34 () { itemView1.obsolete = true; }
+      function write35 () { itemView1.expiry = contractDate; }
+      function write36 () { itemView1.quantity = 100; }
+      function write37 () { itemView1.unitPrice = 7.85; }
+
+      function write41 () { scheduleView1.orderScheduleKey = 444; }
+      function write42 () { scheduleView1.orderItemKey = 333; }
+      function write43 () { scheduleView1.quantity = 13; }
+      function write44 () { scheduleView1.totalMass = 1.22; }
+      function write45 () { scheduleView1.required = false; }
+      function write46 () { scheduleView1.shipTo = 'Helsinki'; }
+      function write47 () { scheduleView1.shipDate = expiry2; }
+
+      expect(write11).toThrow('BlanketOrderView.orderKey property is read-only.');
+      expect(write12).toThrow('BlanketOrderView.vendorName property is read-only.');
+      expect(write13).toThrow('BlanketOrderView.contractDate property is read-only.');
+      expect(write14).toThrow('BlanketOrderView.totalPrice property is read-only.');
+      expect(write15).toThrow('BlanketOrderView.schedules property is read-only.');
+      expect(write16).toThrow('BlanketOrderView.enabled property is read-only.');
+      expect(write17).toThrow('BlanketOrderView.createdDate property is read-only.');
+      expect(write18).toThrow('BlanketOrderView.modifiedDate property is read-only.');
+
+      expect(write21).toThrow('AddressView.addressKey property is read-only.');
+      expect(write22).toThrow('AddressView.orderKey property is read-only.');
+      expect(write23).toThrow('AddressView.country property is read-only.');
+      expect(write24).toThrow('AddressView.state property is read-only.');
+      expect(write25).toThrow('AddressView.city property is read-only.');
+      expect(write26).toThrow('AddressView.line1 property is read-only.');
+      expect(write27).toThrow('AddressView.line2 property is read-only.');
+      expect(write28).toThrow('AddressView.postalCode property is read-only.');
+
+      expect(write31).toThrow('BlanketOrderItemView.orderItemKey property is read-only.');
+      expect(write32).toThrow('BlanketOrderItemView.orderKey property is read-only.');
+      expect(write33).toThrow('BlanketOrderItemView.productName property is read-only.');
+      expect(write34).toThrow('BlanketOrderItemView.obsolete property is read-only.');
+      expect(write35).toThrow('BlanketOrderItemView.expiry property is read-only.');
+      expect(write36).toThrow('BlanketOrderItemView.quantity property is read-only.');
+      expect(write37).toThrow('BlanketOrderItemView.unitPrice property is read-only.');
+
+      expect(write41).toThrow('BlanketOrderScheduleView.orderScheduleKey property is read-only.');
+      expect(write42).toThrow('BlanketOrderScheduleView.orderItemKey property is read-only.');
+      expect(write43).toThrow('BlanketOrderScheduleView.quantity property is read-only.');
+      expect(write44).toThrow('BlanketOrderScheduleView.totalMass property is read-only.');
+      expect(write45).toThrow('BlanketOrderScheduleView.required property is read-only.');
+      expect(write46).toThrow('BlanketOrderScheduleView.shipTo property is read-only.');
+      expect(write47).toThrow('BlanketOrderScheduleView.shipDate property is read-only.');
+
+      //endregion
+
+      done();
+    });
+  });
+
+  it('update of editable model', function () {
     console.log('\n*** Asynchronous SAVE');
 
     BlanketOrder.get(1, function (err, order) {
@@ -383,7 +536,7 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('delete', function () {
+  it('delete of editable model', function () {
     console.log('\n*** Synchronous REMOVE');
 
     BlanketOrder.get(1, function (err, order) {

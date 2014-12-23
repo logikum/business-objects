@@ -8,7 +8,7 @@ var daoAddressView = new daoAddressViewCtor();
 var daoOrderItemView = new daoOrderItemViewCtor();
 var daoOrderScheduleView = new daoOrderScheduleViewCtor();
 
-var BlanketOrderDao = function() {
+var BlanketOrderViewDao = function() {
 
   this.fetch = function(filter) {
     console.log('--- Blanket order view DAO.fetch');
@@ -50,4 +50,4 @@ var BlanketOrderDao = function() {
 
 };
 
-module.exports = BlanketOrderDao;
+module.exports = BlanketOrderViewDao;

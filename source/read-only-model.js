@@ -9,7 +9,7 @@ var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
 var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
-var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var ExtensionManager = require('./shared/extension-manager.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
@@ -20,18 +20,18 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
-var EditableModelSyncCreator = function(properties, rules, extensions) {
+var EditableModelCreator = function(properties, rules, extensions) {
 
   if (!(properties instanceof PropertyManager))
-    throw new Error('Argument properties of EditableModelSyncCreator must be a PropertyManager object.');
+    throw new Error('Argument properties of EditableModelCreator must be a PropertyManager object.');
 
   if (!(rules instanceof RuleManager))
-    throw new Error('Argument rules of EditableModelSyncCreator must be a RuleManager object.');
+    throw new Error('Argument rules of EditableModelCreator must be a RuleManager object.');
 
-  if (!(extensions instanceof ExtensionManagerSync))
-    throw new Error('Argument extensions of EditableModelSyncCreator must be an ExtensionManagerSync object.');
+  if (!(extensions instanceof ExtensionManager))
+    throw new Error('Argument extensions of EditableModelCreator must be an ExtensionManager object.');
 
-  var EditableModelSync = function() {
+  var EditableModel = function() {
 
     var self = this;
     var store = new DataStore();
@@ -41,7 +41,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     // Determine if root or child element.
     var parent = ensureArgument.isOptionalType(arguments[0], ModelBase,
-      'Argument parent of EditableModelSync constructor must be an EditableModelSync object.');
+      'Argument parent of EditableModel constructor must be an EditableModel object.');
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -94,7 +94,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
       var cto = {};
       if (extensions.toCto)
         cto = extensions.toCto(
-          new TransferContext(properties.toArray(), readPropertyValue, null /*writePropertyValue*/)
+          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue)
         );
       else
         cto = baseToCto();
@@ -110,38 +110,74 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     //region Child methods
 
-    function fetchChildren(dto) {
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        child.fetch(dto[property.name]);
-      });
+    function fetchChildren(dto, callback) {
+      var count = 0;
+      var error = null;
+
+      function finish (err) {
+        error = error || err;
+        // Check if all children are done.
+        if (++count === properties.childCount()) {
+          callback(error);
+        }
+      }
+      if (properties.childCount()) {
+        properties.children().forEach(function(property) {
+          var child = getPropertyValue(property);
+          if (child instanceof ModelBase)
+            child.fetch(dto[property.name], undefined, finish);
+          else
+            child.fetch(dto[property.name], finish);
+        });
+      } else
+        callback(null);
     }
 
     //endregion
 
     //region Data portal methods
 
-    function data_fetch (filter, method) {
+    function data_fetch (filter, method, callback) {
+      // Helper function for post-fetch actions.
+      function finish (dto) {
+        // Fetch children as well.
+        fetchChildren(dto, function (err) {
+          if (err)
+            callback(err);
+          else
+            callback(null, self);
+        });
+      }
       // Check permissions.
       if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
-        var dto = null;
         if (extensions.dataFetch) {
           // Custom fetch.
-          dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
+          extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
+            if (err)
+              callback(err);
+            else
+              finish(dto);
+          });
         } else {
           // Standard fetch.
           if (parent) {
             // Child element gets data from parent.
-            dto = filter;
+            fromDto.call(self, filter);
+            finish(filter);
           } else {
             // Root element fetches data from repository.
-            dto = dao[method](filter);
+            dao[method](filter, function (err, dto) {
+              if (err) {
+                callback(err);
+              } else {
+                fromDto.call(self, dto);
+                finish(dto);
+              }
+            });
           }
-          fromDto.call(self, dto);
         }
-        // Fetch children as well.
-        fetchChildren(dto);
-      }
+      } else
+        callback(null, self);
     }
 
     function getDataContext() {
@@ -152,8 +188,8 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     //region Actions
 
-    this.fetch = function(filter, method) {
-      data_fetch(filter, method || 'fetch');
+    this.fetch = function(filter, method, callback) {
+      data_fetch(filter, method || 'fetch', callback);
     };
 
     //endregion
@@ -199,9 +235,9 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     }
 
     function setPropertyValue(property, value) {
+      store.setValue(property, value);
       //if (store.setValue(property, value))
       //  markAsChanged(true);
-      store.setValue(property, value);
     }
 
     function readPropertyValue(property) {
@@ -230,7 +266,9 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          store.initValue(property, property.type.create(self));
+          property.type.create(self, function (err, item) {
+            store.initValue(property, item);
+          });
         else                      // Collection
           store.initValue(property, new property.type(self));
 
@@ -251,27 +289,39 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableModelSync, ModelBase);
+  util.inherits(EditableModel, ModelBase);
 
-  EditableModelSync.prototype.name = properties.name;
+  EditableModel.prototype.name = properties.name;
 
   //region Factory methods
 
-  EditableModelSync.fetch = function(filter, method) {
-    var instance = new EditableModelSync();
-    instance.fetch(filter, method);
-    return instance;
+  EditableModel.fetch = function(filter, method, callback) {
+    if (!callback) {
+      callback = method;
+      method = undefined;
+    }
+    var instance = new EditableModel();
+    instance.fetch(filter, method, function (err) {
+      if (err)
+        callback(err);
+      else
+        callback(null, instance);
+    });
   };
 
-  EditableModelSync.load = function(parent, data) {
-    var instance = new EditableModelSync(parent);
-    instance.fetch(data);
-    return instance;
+  EditableModel.load = function(parent, data, callback) {
+    var instance = new EditableModel(parent);
+    instance.fetch(data, undefined, function (err) {
+      if (err)
+        callback(err);
+      else
+        callback(null, instance);
+    });
   };
 
   //endregion
 
-  return EditableModelSync;
+  return EditableModel;
 };
 
-module.exports = EditableModelSyncCreator;
+module.exports = EditableModelCreator;

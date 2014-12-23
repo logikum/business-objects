@@ -8,6 +8,8 @@ describe('Business object index', function() {
 
     expect(index.EditableModel).toEqual(jasmine.any(Function));
     expect(index.EditableCollection).toEqual(jasmine.any(Function));
+    expect(index.ReadOnlyModel).toEqual(jasmine.any(Function));
+    expect(index.ReadOnlyCollection).toEqual(jasmine.any(Function));
 
     expect(index.EditableModelSync).toEqual(jasmine.any(Function));
     expect(index.EditableCollectionSync).toEqual(jasmine.any(Function));

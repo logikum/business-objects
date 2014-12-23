@@ -2,6 +2,8 @@
 
 var EditableModel = require('./editable-model.js');
 var EditableCollection = require('./editable-collection.js');
+var ReadOnlyModel = require('./read-only-model.js');
+var ReadOnlyCollection = require('./read-only-collection.js');
 
 var EditableModelSync = require('./editable-model-sync.js');
 var EditableCollectionSync = require('./editable-collection-sync.js');
@@ -17,6 +19,8 @@ var rules = require('./rules/index.js');
 var businessObjects = {
   EditableModel: EditableModel,
   EditableCollection: EditableCollection,
+  ReadOnlyModel: ReadOnlyModel,
+  ReadOnlyCollection: ReadOnlyCollection,
 
   EditableModelSync: EditableModelSync,
   EditableCollectionSync: EditableCollectionSync,

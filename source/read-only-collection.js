@@ -4,14 +4,14 @@ var util = require('util');
 var CollectionBase = require('./collection-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
-var EditableCollectionSyncCreator = function(name, itemType) {
+var EditableCollectionCreator = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
-    'The name argument of EditableCollectionSyncCreator must be a non-empty string.');
+    'The name argument of EditableCollectionCreator must be a non-empty string.');
   itemType = ensureArgument.isMandatoryFunction(itemType,
-    'The itemType argument of EditableCollectionSyncCreator must be an EditableModelSync type.');
+    'The itemType argument of EditableCollectionCreator must be an EditableModel type.');
 
-  var EditableCollectionSync = function (parent) {
+  var EditableCollection = function (parent) {
 
     var self = this;
     var items = [];
@@ -27,13 +27,24 @@ var EditableCollectionSyncCreator = function(name, itemType) {
 
     //region Model methods
 
-    this.fetch = function (data) {
-      if (data instanceof Array) {
+    this.fetch = function (data, callback) {
+      if (data instanceof Array && data.length) {
+        var count = 0;
+        var error = null;
         data.forEach(function (dto) {
-          var item = itemType.load(parent, dto);
-          items.push(item);
+          itemType.load(parent, dto, function (err, item) {
+            if (err)
+              error = error || err;
+            else
+              items.push(item);
+            // Check if all items are done.
+            if (++count === data.length) {
+              callback(error);
+            }
+          });
         });
-      }
+      } else
+        callback(null);
     };
 
     this.toCto = function () {
@@ -81,9 +92,9 @@ var EditableCollectionSyncCreator = function(name, itemType) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableCollectionSync, CollectionBase);
+  util.inherits(EditableCollection, CollectionBase);
 
-  return EditableCollectionSync;
+  return EditableCollection;
 };
 
-module.exports = EditableCollectionSyncCreator;
+module.exports = EditableCollectionCreator;
