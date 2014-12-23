@@ -9,7 +9,7 @@ var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
 var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
-var ExtensionManager = require('./shared/extension-manager.js');
+var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
@@ -19,35 +19,35 @@ var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
-var ValidationContext = require('./rules/validation-context.js');
+//var ValidationContext = require('./rules/validation-context.js');
 
 var MODEL_STATE = require('./model-state.js');
 
-var EditableModelCreator = function(properties, rules, extensions) {
+var EditableModelSyncCreator = function(properties, rules, extensions) {
 
   if (!(properties instanceof PropertyManager))
-    throw new Error('Argument properties of EditableModelCreator must be a PropertyManager object.');
+    throw new Error('Argument properties of EditableModelSyncCreator must be a PropertyManager object.');
 
   if (!(rules instanceof RuleManager))
-    throw new Error('Argument rules of EditableModelCreator must be a RuleManager object.');
+    throw new Error('Argument rules of EditableModelSyncCreator must be a RuleManager object.');
 
-  if (!(extensions instanceof ExtensionManager))
-    throw new Error('Argument extensions of EditableModelCreator must be an ExtensionManager object.');
+  if (!(extensions instanceof ExtensionManagerSync))
+    throw new Error('Argument extensions of EditableModelSyncCreator must be an ExtensionManagerSync object.');
 
-  var EditableModel = function() {
+  var EditableModelSync = function() {
 
     var self = this;
-    var state = null;
-    var isDirty = false;
+    //var state = null;
+    //var isDirty = false;
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
-    var isValidated = false;
+    //var isValidated = false;
     var dao = null;
     var user = null;
 
     // Determine if root or child element.
     var parent = ensureArgument.isOptionalType(arguments[0], ModelBase,
-        'Argument parent of EditableModel constructor must be an EditableModel object.');
+      'Argument parent of EditableModelSync constructor must be an EditableModelSync object.');
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -61,7 +61,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
     // Get principal.
     if (config.userReader) {
       user = ensureArgument.isOptionalType(config.userReader(), UserInfo,
-          'The userReader method of business objects configuration must return a UserInfo instance.');
+        'The userReader method of business objects configuration must return a UserInfo instance.');
     }
 
     //region Transfer objects methods
@@ -69,7 +69,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
     //function msgNoProperty(name) {
     //  return properties.name + ' model has no property named ' + name + '.';
     //}
-
+/*
     function baseToDto() {
       var dto = {};
       properties.forEach(function (property) {
@@ -87,7 +87,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
         );
       else
         return baseToDto();
-    }
+    }*/
 
     function baseFromDto(dto) {
       properties.forEach(function (property) {
@@ -123,7 +123,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
       var cto = {};
       if (extensions.toCto)
         cto = extensions.toCto(
-          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue)
+          new TransferContext(properties.toArray(), readPropertyValue, null /*writePropertyValue*/)
         );
       else
         cto = baseToCto();
@@ -134,7 +134,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
       });
       return cto;
     };
-
+/*
     function baseFromCto(cto) {
       if (cto && typeof cto === 'object') {
         properties.forEach(function (property) {
@@ -162,7 +162,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
           child.fromCto(cto[property.name]);
         }
       });
-    };
+    };*/
 
     //endregion
 
@@ -190,7 +190,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
      *   o  :  no change, no action
      *   N  :  impossible start up, throws exception
      */
-
+/*
     function markAsPristine() {
       if (state === MODEL_STATE.markedForRemoval || state === MODEL_STATE.removed)
         illegal(MODEL_STATE.pristine);
@@ -263,12 +263,12 @@ var EditableModelCreator = function(properties, rules, extensions) {
         var child = getPropertyValue(property);
         child.remove();
       });
-    }
+    }*/
 
     //endregion
 
     //region Show object state
-
+/*
     this.getModelState = function () {
       return MODEL_STATE.getName(state);
     };
@@ -341,162 +341,85 @@ var EditableModelCreator = function(properties, rules, extensions) {
         return auth && self.isDirty() && self.isValid();
       }
     });
-
+*/
     //endregion
 
     //region Child methods
 
-    function fetchChildren(dto, callback) {
-      var count = 0;
-      var error = null;
-
-      function finish (err) {
-        error = error || err;
-        // Check if all children are done.
-        if (++count === properties.childCount()) {
-          callback(error);
-        }
-      }
-      if (properties.childCount()) {
-        properties.children().forEach(function(property) {
-          var child = getPropertyValue(property);
-          if (child instanceof ModelBase)
-            child.fetch(dto[property.name], undefined, finish);
-          else
-            child.fetch(dto[property.name], finish);
-        });
-      } else
-        callback(null);
+    function fetchChildren(dto) {
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        child.fetch(dto[property.name]);
+      });
+    }
+/*
+    function insertChildren() {
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        child.save();
+      });
     }
 
-    function insertChildren(callback) {
-      saveChildren(callback);
+    function updateChildren() {
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        child.save();
+      });
     }
 
-    function updateChildren(callback) {
-      saveChildren(callback);
-    }
-
-    function removeChildren(callback) {
-      saveChildren(callback);
-    }
-
-    function saveChildren(callback) {
-      var count = 0;
-      var error = null;
-
-      if (properties.childCount()) {
-        properties.children().forEach(function (property) {
-          var child = getPropertyValue(property);
-          child.save(function (err) {
-            error = error || err;
-            // Check if all children are done.
-            if (++count === properties.childCount()) {
-              callback(error);
-            }
-          });
-        });
-      } else
-        callback(null);
-    }
+    function removeChildren() {
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        child.save();
+      });
+    }*/
 
     //endregion
 
     //region Data portal methods
-
-    function data_create (callback) {
+/*
+    function data_create () {
       if (extensions.dataCreate) {
         // Custom create.
-        extensions.dataCreate.call(self, getDataContext(), function (err) {
-          if (err)
-            callback(err);
-          else {
-            markAsCreated();
-            callback(null, self);
-          }
-        });
+        extensions.dataCreate.call(self, getDataContext());
       } else {
         // Standard create.
-        dao.create(function (err, dto) {
-          if (err)
-            callback(err);
-          else {
-            fromDto.call(self, dto);
-            markAsCreated();
-            callback(null, self);
-          }
-        });
+        var dto = dao.create();
+        fromDto.call(self, dto);
       }
-    }
+      markAsCreated();
+    }*/
 
-    function data_fetch (filter, method, callback) {
-      // Helper function for post-fetch actions.
-      function finish (dto) {
-        // Fetch children as well.
-        fetchChildren(dto, function (err) {
-          if (err) {
-            callback(err);
-          } else {
-            markAsPristine();
-            callback(null, self);
-          }
-        });
-      }
+    function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
+        var dto = null;
         if (extensions.dataFetch) {
           // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
-            if (err)
-              callback(err);
-            else
-              finish(dto);
-          });
+          dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
         } else {
           // Standard fetch.
           if (parent) {
             // Child element gets data from parent.
-            fromDto.call(self, filter);
-            finish(filter);
+            dto = filter;
           } else {
             // Root element fetches data from repository.
-            dao[method](filter, function (err, dto) {
-              if (err) {
-                callback(err);
-              } else {
-                fromDto.call(self, dto);
-                finish(dto);
-              }
-            });
+            dto = dao[method](filter);
           }
+          fromDto.call(self, dto);
         }
-      } else
-        callback(null, self);
-    }
-
-    function data_insert (callback) {
-      // Helper function for post-insert actions.
-      function finish () {
-        // Insert children as well.
-        insertChildren(function (err) {
-          if (err) {
-            callback(err);
-          } else {
-            markAsPristine();
-            callback(null, self);
-          }
-        });
+        // Fetch children as well.
+        fetchChildren(dto);
+        /*** markAsPristine(); ***/
       }
+    }
+/*
+    function data_insert () {
       // Check permissions.
       if (canDo(AuthorizationAction.createObject)) {
         if (extensions.dataInsert) {
           // Custom insert.
-          extensions.dataInsert.call(self, getDataContext(), function (err) {
-            if (err)
-              callback(err);
-            else
-              finish();
-          });
+          extensions.dataInsert.call(self, getDataContext());
         } else {
           // Standard insert.
           if (parent) {
@@ -512,90 +435,49 @@ var EditableModelCreator = function(properties, rules, extensions) {
             }
           }
           var dto = toDto.call(self);
-          dao.insert(dto, function (err, dto) {
-            if (err) {
-              callback(err);
-            } else {
-              fromDto.call(self, dto);
-              finish();
-            }
-          });
+          dto = dao.insert(dto);
+          fromDto.call(self, dto);
         }
-      } else
-        callback(null, self);
+        // Insert children as well.
+        insertChildren();
+        markAsPristine();
+      }
     }
 
-    function data_update (callback) {
-      // Helper function for post-update actions.
-      function finish () {
-        // Update children as well.
-        updateChildren(function (err) {
-          if (err) {
-            callback(err);
-          } else {
-            markAsPristine();
-            callback(null, self);
-          }
-        });
-      }
+    function data_update () {
       // Check permissions.
       if (canDo(AuthorizationAction.updateObject)) {
         if (extensions.dataUpdate) {
           // Custom update.
-          extensions.dataUpdate.call(self, getDataContext(), function (err) {
-            if (err)
-              callback(err);
-            else
-              finish();
-          });
+          extensions.dataUpdate.call(self, getDataContext());
         } else if (isDirty) {
           // Standard update.
           var dto = toDto.call(self);
-          dao.update(dto, function (err, dto) {
-            if (err) {
-              callback(err);
-            } else {
-              fromDto.call(self, dto);
-              finish();
-            }
-          });
-        } else {
-          // Update children only.
-          finish();
+          dto = dao.update(dto);
+          fromDto.call(self, dto);
         }
-      } else
-        callback(null, self);
+        // Update children as well.
+        updateChildren();
+        markAsPristine();
+      }
     }
 
-    function data_remove (callback) {
-      // Helper callback for post-removal actions.
-      function cb (err) {
-        if (err) {
-          callback(err);
-        } else {
-          markAsRemoved();
-          callback(null, null);
-        }
-      }
+    function data_remove () {
       // Check permissions.
       if (canDo(AuthorizationAction.removeObject)) {
         // Remove children first.
-        removeChildren(function (err) {
-          if (err)
-            callback(err);
-
-          if (extensions.dataRemove) {
-            // Custom removal.
-            extensions.dataRemove.call(self, getDataContext(), cb);
-          } else {
-            // Standard removal.
-            var filter = toDto.call(self, true);
-            dao.remove(filter, cb);
-          }
-        });
-      } else
-        callback(null);
-    }
+        removeChildren();
+        if (extensions.dataRemove) {
+          // Custom removal.
+          extensions.dataRemove.call(self, getDataContext());
+        } else {
+          // Standard removal.
+          var filter = toDto.call(self, true);
+          dao.remove(filter);
+        }
+        markAsRemoved();
+      }
+    }*/
 
     function getDataContext() {
       return new DataContext(dao, user, isDirty, toDto, fromDto);
@@ -605,40 +487,40 @@ var EditableModelCreator = function(properties, rules, extensions) {
 
     //region Actions
 
-    this.create = function(callback) {
-      data_create(callback);
+    //this.create = function() {
+    //  data_create();
+    //};
+
+    this.fetch = function(filter, method) {
+      data_fetch(filter, method || 'fetch');
     };
 
-    this.fetch = function(filter, method, callback) {
-      data_fetch(filter, method || 'fetch', callback);
-    };
-
-    this.save = function(callback) {
-      if (this.isValid()) {
-        switch (state) {
-          case MODEL_STATE.created:
-            data_insert(callback);
-            break;
-          case MODEL_STATE.changed:
-            data_update(callback);
-            break;
-          case MODEL_STATE.markedForRemoval:
-            data_remove(callback);
-            break;
-          default:
-            callback(null, this);
-        }
-      }
-    };
-
-    this.remove = function() {
-      markForRemoval();
-    };
+    //this.save = function() {
+    //  if (this.isValid()) {
+    //    switch (state) {
+    //      case MODEL_STATE.created:
+    //        data_insert();
+    //        return this;
+    //      case MODEL_STATE.changed:
+    //        data_update();
+    //        return this;
+    //      case MODEL_STATE.markedForRemoval:
+    //        data_remove();
+    //        return null;
+    //      default:
+    //        return this;
+    //    }
+    //  }
+    //};
+    //
+    //this.remove = function() {
+    //  markForRemoval();
+    //};
 
     //endregion
 
     //region Validation
-
+/*
     this.isValid = function() {
       if (!isValidated)
         this.checkRules();
@@ -662,7 +544,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
     this.getBrokenRules = function(namespace) {
       return brokenRules.output(namespace);
     };
-
+*/
     //endregion
 
     //region Permissions
@@ -673,11 +555,11 @@ var EditableModelCreator = function(properties, rules, extensions) {
       );
     }
 
-    function canBeWritten (property) {
-      return rules.hasPermission(
-        getAuthorizationContext(AuthorizationAction.writeProperty, property.name)
-      );
-    }
+    //function canBeWritten (property) {
+    //  return rules.hasPermission(
+    //    getAuthorizationContext(AuthorizationAction.writeProperty, property.name)
+    //  );
+    //}
 
     function canDo (action) {
       return rules.hasPermission(
@@ -704,8 +586,9 @@ var EditableModelCreator = function(properties, rules, extensions) {
     }
 
     function setPropertyValue(property, value) {
-      if (store.setValue(property, value))
-        markAsChanged(true);
+      //if (store.setValue(property, value))
+      //  markAsChanged(true);
+      store.setValue(property, value);
     }
 
     function readPropertyValue(property) {
@@ -715,12 +598,12 @@ var EditableModelCreator = function(properties, rules, extensions) {
         return null;
     }
 
-    function writePropertyValue(property, value) {
-      if (canBeWritten(property)) {
-        if (store.setValue(property, value))
-          markAsChanged(true);
-      }
-    }
+    //function writePropertyValue(property, value) {
+    //  if (canBeWritten(property)) {
+    //    if (store.setValue(property, value))
+    //      markAsChanged(true);
+    //  }
+    //}
 
     properties.map(function(property) {
 
@@ -733,9 +616,9 @@ var EditableModelCreator = function(properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            if (property.isReadOnly)
+            //if (property.isReadOnly)
               throw new Error(properties.name + '.' + property.name + ' property is read-only.');
-            writePropertyValue(property, value);
+            //writePropertyValue(property, value);
           },
           enumerable: true
         });
@@ -743,9 +626,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, function (err, item) {
-            store.initValue(property, item);
-          });
+          store.initValue(property, property.type.create(self));
         else                      // Collection
           store.initValue(property, new property.type(self));
 
@@ -766,53 +647,33 @@ var EditableModelCreator = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableModel, ModelBase);
+  util.inherits(EditableModelSync, ModelBase);
 
-  EditableModel.prototype.name = properties.name;
+  EditableModelSync.prototype.name = properties.name;
 
   //region Factory methods
 
-  EditableModel.create = function(parent, callback) {
-    if (!callback) {
-      callback = parent;
-      parent = undefined;
-    }
-    var instance = new EditableModel(parent);
-    instance.create(function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  //EditableModelSync.create = function(parent) {
+  //  var instance = new EditableModelSync(parent);
+  //  instance.create();
+  //  return instance;
+  //};
+
+  EditableModelSync.fetch = function(filter, method) {
+    var instance = new EditableModelSync();
+    instance.fetch(filter, method);
+    return instance;
   };
 
-  EditableModel.fetch = function(filter, method, callback) {
-    if (!callback) {
-      callback = method;
-      method = undefined;
-    }
-    var instance = new EditableModel();
-    instance.fetch(filter, method, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
-  };
-
-  EditableModel.load = function(parent, data, callback) {
-    var instance = new EditableModel(parent);
-    instance.fetch(data, undefined, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  EditableModelSync.load = function(parent, data) {
+    var instance = new EditableModelSync(parent);
+    instance.fetch(data);
+    return instance;
   };
 
   //endregion
 
-  return EditableModel;
+  return EditableModelSync;
 };
 
-module.exports = EditableModelCreator;
+module.exports = EditableModelSyncCreator;

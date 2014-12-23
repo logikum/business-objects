@@ -1,0 +1,57 @@
+'use strict';
+
+var bo = require('../../source/index.js');
+
+var Properties = bo.shared.PropertyManager;
+var Rules = bo.rules.RuleManager;
+var Extensions = bo.shared.ExtensionManagerSync;
+var Property = bo.shared.PropertyInfo;
+var F = bo.shared.PropertyFlag;
+var dt = bo.dataTypes;
+var cr = bo.commonRules;
+
+var AddressView = require('./address-view.js');
+var BlanketOrderItemListView = require('./blanket-order-item-list-view.js');
+
+var orderKey = new Property('orderKey', dt.Integer, F.key);
+var vendorName = new Property('vendorName', dt.Text);
+var contractDate = new Property('contractDate', dt.DateTime);
+var totalPrice = new Property('totalPrice', dt.Decimal);
+var schedules = new Property('schedules', dt.Integer);
+var enabled = new Property('enabled', dt.Boolean);
+var address = new Property('address', AddressView);
+var items = new Property('items', BlanketOrderItemListView);
+var createdDate = new Property('createdDate', dt.DateTime);
+var modifiedDate = new Property('modifiedDate', dt.DateTime);
+
+var properties = new Properties(
+  'BlanketOrderView',
+  orderKey,
+  vendorName,
+  contractDate,
+  totalPrice,
+  schedules,
+  enabled,
+  address,
+  items,
+  createdDate,
+  modifiedDate
+);
+
+var rules = new Rules(
+);
+
+var extensions = new Extensions('dao', __filename);
+
+var BlanketOrderView = bo.ReadOnlyModelSync(properties, rules, extensions);
+
+var BlanketOrderViewFactory = {
+  get: function (key) {
+    return BlanketOrderView.fetch(key);
+  },
+  getByName: function (name) {
+    return BlanketOrderView.fetch(name, 'fetchByName');
+  }
+};
+
+module.exports = BlanketOrderViewFactory;

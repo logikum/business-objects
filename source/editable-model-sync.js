@@ -66,9 +66,9 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     //region Transfer objects methods
 
-    function msgNoProperty(name) {
-      return properties.name + ' model has no property named ' + name + '.';
-    }
+    //function msgNoProperty(name) {
+    //  return properties.name + ' model has no property named ' + name + '.';
+    //}
 
     function baseToDto() {
       var dto = {};

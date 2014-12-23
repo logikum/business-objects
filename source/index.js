@@ -5,6 +5,8 @@ var EditableCollection = require('./editable-collection.js');
 
 var EditableModelSync = require('./editable-model-sync.js');
 var EditableCollectionSync = require('./editable-collection-sync.js');
+var ReadOnlyModelSync = require('./read-only-model-sync.js');
+var ReadOnlyCollectionSync = require('./read-only-collection-sync.js');
 
 var dataTypes = require('./data-types/index.js');
 var commonRules = require('./common-rules/index.js');
@@ -18,6 +20,8 @@ var businessObjects = {
 
   EditableModelSync: EditableModelSync,
   EditableCollectionSync: EditableCollectionSync,
+  ReadOnlyModelSync: ReadOnlyModelSync,
+  ReadOnlyCollectionSync: ReadOnlyCollectionSync,
 
   dataTypes: dataTypes,
   commonRules: commonRules,
