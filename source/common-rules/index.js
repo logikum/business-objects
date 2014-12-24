@@ -18,8 +18,8 @@ var InformationRule = require('./information-rule.js');
 var NullResultOption = require('./null-result-option.js');
 
 var index = {
-  isInRole: function (action, target, roles, message, priority, stopsProcessing) {
-    return new IsInRoleRule(action, target, roles, message, priority, stopsProcessing);
+  isInRole: function (action, target, role, message, priority, stopsProcessing) {
+    return new IsInRoleRule(action, target, role, message, priority, stopsProcessing);
   },
   isInAnyRole: function (action, target, roles, message, priority, stopsProcessing) {
     return new IsInAnyRoleRule(action, target, roles, message, priority, stopsProcessing);
@@ -27,8 +27,8 @@ var index = {
   isInAllRoles: function (action, target, roles, message, priority, stopsProcessing) {
     return new IsInAllRolesRule(action, target, roles, message, priority, stopsProcessing);
   },
-  isNotInRole: function (action, target, roles, message, priority, stopsProcessing) {
-    return new IsNotInRoleRule(action, target, roles, message, priority, stopsProcessing);
+  isNotInRole: function (action, target, role, message, priority, stopsProcessing) {
+    return new IsNotInRoleRule(action, target, role, message, priority, stopsProcessing);
   },
   isNotInAnyRole: function (action, target, roles, message, priority, stopsProcessing) {
     return new IsNotInAnyRoleRule(action, target, roles, message, priority, stopsProcessing);

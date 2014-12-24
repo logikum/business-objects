@@ -32,10 +32,10 @@ var properties = new Properties(
 );
 
 var rules = new Rules(
-    new cr.required(country),
-    new cr.required(city),
-    new cr.required(line1),
-    new cr.required(postalCode)
+    cr.required(country),
+    cr.required(city),
+    cr.required(line1),
+    cr.required(postalCode)
 );
 
 var extensions = new Extensions('dao', __filename);

@@ -34,11 +34,11 @@ var properties = new Properties(
 );
 
 var rules = new Rules(
-    new cr.required(productName),
-    new cr.required(obsolete),
-    new cr.required(expiry),
-    new cr.required(quantity),
-    new cr.required(unitPrice)
+    cr.required(productName),
+    cr.required(obsolete),
+    cr.required(expiry),
+    cr.required(quantity),
+    cr.required(unitPrice)
 );
 
 var extensions = new Extensions('dao', __filename);

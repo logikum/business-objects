@@ -4,6 +4,7 @@ var bo = require('../../source/index.js');
 
 var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
+var Action = bo.rules.AuthorizationAction;
 var Extensions = bo.shared.ExtensionManager;
 var Property = bo.shared.PropertyInfo;
 var F = bo.shared.PropertyFlag;
@@ -39,11 +40,15 @@ var properties = new Properties(
 );
 
 var rules = new Rules(
-    new cr.required(vendorName),
-    new cr.required(contractDate),
-    new cr.required(totalPrice),
-    new cr.required(schedules),
-    new cr.required(enabled)
+    cr.required(vendorName),
+    cr.required(contractDate),
+    cr.required(totalPrice),
+    cr.required(schedules),
+    cr.required(enabled),
+    cr.isInRole(Action.fetchObject, null, 'developers', 'You are not authorized to retrieve blanket order.'),
+    cr.isInRole(Action.createObject, null, 'developers', 'You are not authorized to create blanket order.'),
+    cr.isInRole(Action.updateObject, null, 'developers', 'You are not authorized to modify blanket order.'),
+    cr.isInRole(Action.removeObject, null, 'developers', 'You are not authorized to delete blanket order.')
 );
 
 var extensions = new Extensions('dao', __filename);
