@@ -2,6 +2,7 @@
 
 var util = require('util');
 var ModelBase = require('./model-base.js');
+var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
@@ -20,18 +21,18 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
-var EditableModelCreator = function(properties, rules, extensions) {
+var ReadOnlyModelCreator = function(properties, rules, extensions) {
 
   if (!(properties instanceof PropertyManager))
-    throw new Error('Argument properties of EditableModelCreator must be a PropertyManager object.');
+    throw new Error('Argument properties of ReadOnlyModelCreator must be a PropertyManager object.');
 
   if (!(rules instanceof RuleManager))
-    throw new Error('Argument rules of EditableModelCreator must be a RuleManager object.');
+    throw new Error('Argument rules of ReadOnlyModelCreator must be a RuleManager object.');
 
   if (!(extensions instanceof ExtensionManager))
-    throw new Error('Argument extensions of EditableModelCreator must be an ExtensionManager object.');
+    throw new Error('Argument extensions of ReadOnlyModelCreator must be an ExtensionManager object.');
 
-  var EditableModel = function() {
+  var ReadOnlyModel = function() {
 
     var self = this;
     var store = new DataStore();
@@ -40,17 +41,19 @@ var EditableModelCreator = function(properties, rules, extensions) {
     var user = null;
 
     // Determine if root or child element.
-    var parent = ensureArgument.isOptionalType(arguments[0], ModelBase,
-      'Argument parent of EditableModel constructor must be an EditableModel object.');
+    var parent = ensureArgument.isOptionalType(arguments[0], [ ModelBase, CollectionBase ],
+      'Argument parent of ReadOnlyModel constructor must be a read-only model or collection object.');
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
 
     // Get data access object.
-    if (extensions.daoBuilder)
-      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-    else
-      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+    if (!parent || parent instanceof ModelBase) {
+      if (extensions.daoBuilder)
+        dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
+      else
+        dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+    }
 
     // Get principal.
     if (config.userReader) {
@@ -289,18 +292,18 @@ var EditableModelCreator = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableModel, ModelBase);
+  util.inherits(ReadOnlyModel, ModelBase);
 
-  EditableModel.prototype.name = properties.name;
+  ReadOnlyModel.prototype.name = properties.name;
 
   //region Factory methods
 
-  EditableModel.fetch = function(filter, method, callback) {
+  ReadOnlyModel.fetch = function(filter, method, callback) {
     if (!callback) {
       callback = method;
       method = undefined;
     }
-    var instance = new EditableModel();
+    var instance = new ReadOnlyModel();
     instance.fetch(filter, method, function (err) {
       if (err)
         callback(err);
@@ -309,8 +312,8 @@ var EditableModelCreator = function(properties, rules, extensions) {
     });
   };
 
-  EditableModel.load = function(parent, data, callback) {
-    var instance = new EditableModel(parent);
+  ReadOnlyModel.load = function(parent, data, callback) {
+    var instance = new ReadOnlyModel(parent);
     instance.fetch(data, undefined, function (err) {
       if (err)
         callback(err);
@@ -321,7 +324,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
 
   //endregion
 
-  return EditableModel;
+  return ReadOnlyModel;
 };
 
-module.exports = EditableModelCreator;
+module.exports = ReadOnlyModelCreator;

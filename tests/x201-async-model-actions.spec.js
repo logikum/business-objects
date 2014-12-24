@@ -4,6 +4,7 @@ console.log('Testing data portal methods of asynchronous models.js...');
 
 var BlanketOrder = require('../sample/async/blanket-order.js');
 var BlanketOrderView = require('../sample/async/blanket-order-view.js');
+var BlanketOrderList = require('../sample/async/blanket-order-list.js');
 
 var contractDate = new Date(2014, 12, 15, 15, 26);
 var contractDate_u = new Date(2014, 12, 20, 8, 40);
@@ -391,6 +392,53 @@ describe('Asynchronous data portal method', function () {
       //endregion
 
       done();
+    });
+  });
+
+  it('fetch of read-only collection', function () {
+    console.log('\n*** Synchronous GET_ALL');
+
+    BlanketOrderList.getAll(function (err, orderList) {
+      if (err) throw err;
+
+      //region Check data
+
+      expect(orderList.count).toBe(1);
+
+      var orderListItem = orderList.at(0);
+
+      expect(orderListItem.orderKey).toBe(1);
+      expect(orderListItem.vendorName).toBe('Acme Corp.');
+      expect(orderListItem.contractDate).toBe(contractDate);
+      expect(orderListItem.totalPrice).toBe(497.5);
+      expect(orderListItem.schedules).toBe(2);
+      expect(orderListItem.enabled).toBe(true);
+      expect(orderListItem.createdDate.getDate()).toBe(new Date().getDate());
+      expect(orderListItem.modifiedDate).toBeNull();
+
+      //endregion
+
+      //region Check write protection
+
+      function write1 () { orderListItem.orderKey = 111; }
+      function write2 () { orderListItem.vendorName = 'Purple Cactus, Ltd.'; }
+      function write3 () { orderListItem.contractDate = expiry1; }
+      function write4 () { orderListItem.totalPrice = 6508.2; }
+      function write5 () { orderListItem.schedules = 7; }
+      function write6 () { orderListItem.enabled = false; }
+      function write7 () { orderListItem.createdDate = shipDate1; }
+      function write8 () { orderListItem.modifiedDate = shipDate2; }
+
+      expect(write1).toThrow('BlanketOrderListItem.orderKey property is read-only.');
+      expect(write2).toThrow('BlanketOrderListItem.vendorName property is read-only.');
+      expect(write3).toThrow('BlanketOrderListItem.contractDate property is read-only.');
+      expect(write4).toThrow('BlanketOrderListItem.totalPrice property is read-only.');
+      expect(write5).toThrow('BlanketOrderListItem.schedules property is read-only.');
+      expect(write6).toThrow('BlanketOrderListItem.enabled property is read-only.');
+      expect(write7).toThrow('BlanketOrderListItem.createdDate property is read-only.');
+      expect(write8).toThrow('BlanketOrderListItem.modifiedDate property is read-only.');
+
+      //endregion
     });
   });
 

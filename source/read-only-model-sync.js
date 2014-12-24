@@ -2,6 +2,7 @@
 
 var util = require('util');
 var ModelBase = require('./model-base.js');
+var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
@@ -20,18 +21,18 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
-var EditableModelSyncCreator = function(properties, rules, extensions) {
+var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
 
   if (!(properties instanceof PropertyManager))
-    throw new Error('Argument properties of EditableModelSyncCreator must be a PropertyManager object.');
+    throw new Error('Argument properties of ReadOnlyModelSyncCreator must be a PropertyManager object.');
 
   if (!(rules instanceof RuleManager))
-    throw new Error('Argument rules of EditableModelSyncCreator must be a RuleManager object.');
+    throw new Error('Argument rules of ReadOnlyModelSyncCreator must be a RuleManager object.');
 
   if (!(extensions instanceof ExtensionManagerSync))
-    throw new Error('Argument extensions of EditableModelSyncCreator must be an ExtensionManagerSync object.');
+    throw new Error('Argument extensions of ReadOnlyModelSyncCreator must be an ExtensionManagerSync object.');
 
-  var EditableModelSync = function() {
+  var ReadOnlyModelSync = function() {
 
     var self = this;
     var store = new DataStore();
@@ -40,17 +41,19 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     var user = null;
 
     // Determine if root or child element.
-    var parent = ensureArgument.isOptionalType(arguments[0], ModelBase,
-      'Argument parent of EditableModelSync constructor must be an EditableModelSync object.');
+    var parent = ensureArgument.isOptionalType(arguments[0], [ ModelBase, CollectionBase ],
+      'Argument parent of ReadOnlyModelSync constructor must be a read-only model or collection object.');
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
 
     // Get data access object.
-    if (extensions.daoBuilder)
-      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-    else
-      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+    if (!parent || parent instanceof ModelBase) {
+      if (extensions.daoBuilder)
+        dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
+      else
+        dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+    }
 
     // Get principal.
     if (config.userReader) {
@@ -251,27 +254,27 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableModelSync, ModelBase);
+  util.inherits(ReadOnlyModelSync, ModelBase);
 
-  EditableModelSync.prototype.name = properties.name;
+  ReadOnlyModelSync.prototype.name = properties.name;
 
   //region Factory methods
 
-  EditableModelSync.fetch = function(filter, method) {
-    var instance = new EditableModelSync();
+  ReadOnlyModelSync.fetch = function(filter, method) {
+    var instance = new ReadOnlyModelSync();
     instance.fetch(filter, method);
     return instance;
   };
 
-  EditableModelSync.load = function(parent, data) {
-    var instance = new EditableModelSync(parent);
+  ReadOnlyModelSync.load = function(parent, data) {
+    var instance = new ReadOnlyModelSync(parent);
     instance.fetch(data);
     return instance;
   };
 
   //endregion
 
-  return EditableModelSync;
+  return ReadOnlyModelSync;
 };
 
-module.exports = EditableModelSyncCreator;
+module.exports = ReadOnlyModelSyncCreator;
