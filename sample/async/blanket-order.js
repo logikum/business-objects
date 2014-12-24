@@ -11,7 +11,7 @@ var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
 var Address = require('./address.js');
-var BlanketOrderItemList = require('./blanket-order-item-list.js');
+var BlanketOrderItems = require('./blanket-order-items.js');
 
 var orderKey = new Property('orderKey', dt.Integer, F.key | F.readOnly);
 var vendorName = new Property('vendorName', dt.Text);
@@ -20,7 +20,7 @@ var totalPrice = new Property('totalPrice', dt.Decimal);
 var schedules = new Property('schedules', dt.Integer);
 var enabled = new Property('enabled', dt.Boolean);
 var address = new Property('address', Address);
-var items = new Property('items', BlanketOrderItemList);
+var items = new Property('items', BlanketOrderItems);
 var createdDate = new Property('createdDate', dt.DateTime, F.readOnly);
 var modifiedDate = new Property('modifiedDate', dt.DateTime, F.readOnly);
 

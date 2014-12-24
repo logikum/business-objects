@@ -4,9 +4,9 @@ var bo = require('../../source/index.js');
 
 var BlanketOrderSchedule = require('./blanket-order-schedule.js');
 
-var BlanketOrderScheduleList = bo.EditableCollection(
-    'BlanketOrderScheduleList',
+var BlanketOrderSchedules = bo.EditableCollection(
+    'BlanketOrderSchedules',
     BlanketOrderSchedule
 );
 
-module.exports = BlanketOrderScheduleList;
+module.exports = BlanketOrderSchedules;

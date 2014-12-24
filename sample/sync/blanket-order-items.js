@@ -4,9 +4,9 @@ var bo = require('../../source/index.js');
 
 var BlanketOrderItem = require('./blanket-order-item.js');
 
-var BlanketOrderItemList = bo.EditableCollectionSync(
-    'BlanketOrderItemList',
+var BlanketOrderItems = bo.EditableCollectionSync(
+    'BlanketOrderItems',
     BlanketOrderItem
 );
 
-module.exports = BlanketOrderItemList;
+module.exports = BlanketOrderItems;

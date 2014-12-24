@@ -10,7 +10,7 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var BlanketOrderScheduleListView = require('./blanket-order-schedule-list-view.js');
+var BlanketOrderSchedulesView = require('./blanket-order-schedules-view.js');
 
 var orderItemKey = new Property('orderItemKey', dt.Integer, F.key);
 var orderKey = new Property('orderKey', dt.Integer, F.parentKey);
@@ -19,7 +19,7 @@ var obsolete = new Property('obsolete', dt.Boolean);
 var expiry = new Property('expiry', dt.DateTime);
 var quantity = new Property('quantity', dt.Integer);
 var unitPrice = new Property('unitPrice', dt.Decimal);
-var schedules = new Property('schedules', BlanketOrderScheduleListView);
+var schedules = new Property('schedules', BlanketOrderSchedulesView);
 
 var properties = new Properties(
   'BlanketOrderItemView',
