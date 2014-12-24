@@ -7,7 +7,10 @@ var Text = require('../../source/data-types/text.js');
 var AuthorizationAction = require('../../source/rules/authorization-action.js');
 
 var IsInRoleRule = require('../../source/common-rules/is-in-role-rule.js');
+var IsInAnyRoleRule = require('../../source/common-rules/is-in-any-role-rule.js');
+var IsInAllRolesRule = require('../../source/common-rules/is-in-all-roles-rule.js');
 var IsNotInRoleRule = require('../../source/common-rules/is-not-in-role-rule.js');
+var IsNotInAnyRoleRule = require('../../source/common-rules/is-not-in-any-role-rule.js');
 
 var RequiredRule = require('../../source/common-rules/required-rule.js');
 var MaxLengthRule = require('../../source/common-rules/max-length-rule.js');
@@ -28,7 +31,10 @@ describe('Common rule index', function() {
   it('properties return correct rules', function() {
 
     expect(cr.isInRole(AuthorizationAction.createObject, null, 'developers')).toEqual(jasmine.any(IsInRoleRule));
-    expect(cr.isNotInRole(AuthorizationAction.removeObject, null, 'developers')).toEqual(jasmine.any(IsNotInRoleRule));
+    expect(cr.isInAnyRole(AuthorizationAction.createObject, null, ['managers', 'engineers'])).toEqual(jasmine.any(IsInAnyRoleRule));
+    expect(cr.isInAllRoles(AuthorizationAction.createObject, null, ['designers', 'testers'])).toEqual(jasmine.any(IsInAllRolesRule));
+    expect(cr.isNotInRole(AuthorizationAction.removeObject, null, 'salesmen')).toEqual(jasmine.any(IsNotInRoleRule));
+    expect(cr.isNotInAnyRole(AuthorizationAction.removeObject, null, ['contractors', 'guests'])).toEqual(jasmine.any(IsNotInAnyRoleRule));
 
     expect(cr.required(pi)).toEqual(jasmine.any(RequiredRule));
     expect(cr.maxLength(pi, 64)).toEqual(jasmine.any(MaxLengthRule));

@@ -1,7 +1,10 @@
 'use strict';
 
 var IsInRoleRule = require('./is-in-role-rule.js');
+var IsInAnyRoleRule = require('./is-in-any-role-rule.js');
+var IsInAllRolesRule = require('./is-in-all-roles-rule.js');
 var IsNotInRoleRule = require('./is-not-in-role-rule.js');
+var IsNotInAnyRoleRule = require('./is-not-in-any-role-rule.js');
 
 var RequiredRule = require('./required-rule.js');
 var MaxLengthRule = require('./max-length-rule.js');
@@ -18,8 +21,17 @@ var index = {
   isInRole: function (action, target, roles, message, priority, stopsProcessing) {
     return new IsInRoleRule(action, target, roles, message, priority, stopsProcessing);
   },
+  isInAnyRole: function (action, target, roles, message, priority, stopsProcessing) {
+    return new IsInAnyRoleRule(action, target, roles, message, priority, stopsProcessing);
+  },
+  isInAllRoles: function (action, target, roles, message, priority, stopsProcessing) {
+    return new IsInAllRolesRule(action, target, roles, message, priority, stopsProcessing);
+  },
   isNotInRole: function (action, target, roles, message, priority, stopsProcessing) {
     return new IsNotInRoleRule(action, target, roles, message, priority, stopsProcessing);
+  },
+  isNotInAnyRole: function (action, target, roles, message, priority, stopsProcessing) {
+    return new IsNotInAnyRoleRule(action, target, roles, message, priority, stopsProcessing);
   },
 
   required: function (primaryProperty, message, priority, stopsProcessing) {

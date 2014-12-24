@@ -26,7 +26,7 @@ describe('Is-not-in-role rule', function () {
     expect(build06).not.toThrow();
     expect(build07).not.toThrow();
     expect(build08).not.toThrow();
-    expect(build09).not.toThrow();
+    expect(build09).toThrow();
   });
 
   it('inherits authorization rule type', function() {
@@ -48,7 +48,7 @@ describe('Is-not-in-role rule', function () {
     var john = new User('john', 'John Smith', 'john@company.com', ['salesmen']);
     var paul = new User('paul', 'Paul Smith', 'paul@company.com', ['testers', 'developers']);
     var rule_1 = new IsNotInRoleRule(AuthorizationAction.createObject, null, 'developers', 'message', 100, true);
-    var rule_2 = new IsNotInRoleRule(AuthorizationAction.removeObject, null, ['salesmen', 'managers'], 'message', 100, true);
+    var rule_2 = new IsNotInRoleRule(AuthorizationAction.removeObject, null, 'salesmen', 'message', 100, true);
 
     var call01 = function () { rule_1.execute(); };
     var call02 = function () { rule_1.execute(paul); };
