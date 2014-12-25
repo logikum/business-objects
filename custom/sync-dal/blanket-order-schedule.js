@@ -1,8 +1,5 @@
 'use strict';
 
-global.scheduleKey = 0;
-global.schedules = {};
-
 var BlanketOrderScheduleDao = function() {
 
   this.create = function() {

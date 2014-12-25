@@ -1,8 +1,8 @@
 console.log('Testing data portal methods of custom synchronous models.js...');
 
-var BlanketOrder = require('../sample/sync/blanket-order.js');
-var BlanketOrderView = require('../sample/sync/blanket-order-view.js');
-var BlanketOrderList = require('../sample/sync/blanket-order-list.js');
+var BlanketOrder = require('../custom/sync-models/blanket-order.js');
+var BlanketOrderView = require('../custom/sync-models/blanket-order-view.js');
+var BlanketOrderList = require('../custom/sync-models/blanket-order-list.js');
 
 var contractDate = new Date(2014, 12, 15, 15, 26);
 var contractDate_u = new Date(2014, 12, 20, 8, 40);
@@ -73,7 +73,7 @@ describe('Synchronous data portal method', function () {
 
     //region Check data
 
-    expect(order.orderKey).toBe(2);
+    expect(order.orderKey).toBe(3);
     expect(order.vendorName).toBe('Acme Corp.');
     expect(order.contractDate).toBe(contractDate);
     expect(order.totalPrice).toBe(497.5);
@@ -84,8 +84,8 @@ describe('Synchronous data portal method', function () {
 
     address = order.address;
 
-    expect(address.addressKey).toBe(2);
-    expect(address.orderKey).toBe(2);
+    expect(address.addressKey).toBe(3);
+    expect(address.orderKey).toBe(3);
     expect(address.country).toBe('Canada');
     expect(address.state).toBe('Ontario');
     expect(address.city).toBe('Toronto');
@@ -97,8 +97,8 @@ describe('Synchronous data portal method', function () {
 
     item1 = order.items.at(0);
 
-    expect(item1.orderItemKey).toBe(4);
-    expect(item1.orderKey).toBe(2);
+    expect(item1.orderItemKey).toBe(7);
+    expect(item1.orderKey).toBe(3);
     expect(item1.productName).toBe('Tablet Creek 7');
     expect(item1.obsolete).toBe(false);
     expect(item1.expiry).toBe(expiry1);
@@ -107,8 +107,8 @@ describe('Synchronous data portal method', function () {
 
     item2 = order.items.at(1);
 
-    expect(item2.orderItemKey).toBe(5);
-    expect(item2.orderKey).toBe(2);
+    expect(item2.orderItemKey).toBe(8);
+    expect(item2.orderKey).toBe(3);
     expect(item2.productName).toBe('USB 3.0 cable');
     expect(item2.obsolete).toBe(false);
     expect(item2.expiry).toBe(expiry2);
@@ -121,8 +121,8 @@ describe('Synchronous data portal method', function () {
 
     schedule1 = item2.schedules.at(0);
 
-    expect(schedule1.orderScheduleKey).toBe(5);
-    expect(schedule1.orderItemKey).toBe(5);
+    expect(schedule1.orderScheduleKey).toBe(9);
+    expect(schedule1.orderItemKey).toBe(8);
     expect(schedule1.quantity).toBe(2);
     expect(schedule1.totalMass).toBe(0.24);
     expect(schedule1.required).toBe(true);
@@ -131,8 +131,8 @@ describe('Synchronous data portal method', function () {
 
     schedule2 = item2.schedules.at(1);
 
-    expect(schedule2.orderScheduleKey).toBe(6);
-    expect(schedule2.orderItemKey).toBe(5);
+    expect(schedule2.orderScheduleKey).toBe(10);
+    expect(schedule2.orderItemKey).toBe(8);
     expect(schedule2.quantity).toBe(3);
     expect(schedule2.totalMass).toBe(0.36);
     expect(schedule2.required).toBe(true);
@@ -149,7 +149,7 @@ describe('Synchronous data portal method', function () {
 
     //region Check data
 
-    expect(order.orderKey).toBe(2);
+    expect(order.orderKey).toBe(3);
     expect(order.vendorName).toBe('Acme Corp.');
     expect(order.contractDate).toBe(contractDate);
     expect(order.totalPrice).toBe(497.5);
@@ -160,8 +160,8 @@ describe('Synchronous data portal method', function () {
 
     var address = order.address;
 
-    expect(address.addressKey).toBe(2);
-    expect(address.orderKey).toBe(2);
+    expect(address.addressKey).toBe(3);
+    expect(address.orderKey).toBe(3);
     expect(address.country).toBe('Canada');
     expect(address.state).toBe('Ontario');
     expect(address.city).toBe('Toronto');
@@ -173,8 +173,8 @@ describe('Synchronous data portal method', function () {
 
     var item1 = order.items.at(0);
 
-    expect(item1.orderItemKey).toBe(4);
-    expect(item1.orderKey).toBe(2);
+    expect(item1.orderItemKey).toBe(7);
+    expect(item1.orderKey).toBe(3);
     expect(item1.productName).toBe('Tablet Creek 7');
     expect(item1.obsolete).toBe(false);
     expect(item1.expiry).toBe(expiry1);
@@ -183,8 +183,8 @@ describe('Synchronous data portal method', function () {
 
     var item2 = order.items.at(1);
 
-    expect(item2.orderItemKey).toBe(5);
-    expect(item2.orderKey).toBe(2);
+    expect(item2.orderItemKey).toBe(8);
+    expect(item2.orderKey).toBe(3);
     expect(item2.productName).toBe('USB 3.0 cable');
     expect(item2.obsolete).toBe(false);
     expect(item2.expiry).toBe(expiry2);
@@ -197,8 +197,8 @@ describe('Synchronous data portal method', function () {
 
     var schedule1 = item2.schedules.at(0);
 
-    expect(schedule1.orderScheduleKey).toBe(5);
-    expect(schedule1.orderItemKey).toBe(5);
+    expect(schedule1.orderScheduleKey).toBe(9);
+    expect(schedule1.orderItemKey).toBe(8);
     expect(schedule1.quantity).toBe(2);
     expect(schedule1.totalMass).toBe(0.24);
     expect(schedule1.required).toBe(true);
@@ -207,8 +207,8 @@ describe('Synchronous data portal method', function () {
 
     var schedule2 = item2.schedules.at(1);
 
-    expect(schedule2.orderScheduleKey).toBe(6);
-    expect(schedule2.orderItemKey).toBe(5);
+    expect(schedule2.orderScheduleKey).toBe(10);
+    expect(schedule2.orderItemKey).toBe(8);
     expect(schedule2.quantity).toBe(3);
     expect(schedule2.totalMass).toBe(0.36);
     expect(schedule2.required).toBe(true);
@@ -221,11 +221,11 @@ describe('Synchronous data portal method', function () {
   it('fetch of custom read-only model', function () {
     console.log('\n*** Synchronous GET');
 
-    var orderView = BlanketOrderView.get(2);
+    var orderView = BlanketOrderView.get(3);
 
     //region Check data
 
-    expect(orderView.orderKey).toBe(2);
+    expect(orderView.orderKey).toBe(3);
     expect(orderView.vendorName).toBe('Acme Corp.');
     expect(orderView.contractDate).toBe(contractDate);
     expect(orderView.totalPrice).toBe(497.5);
@@ -236,8 +236,8 @@ describe('Synchronous data portal method', function () {
 
     var addressView = orderView.address;
 
-    expect(addressView.addressKey).toBe(2);
-    expect(addressView.orderKey).toBe(2);
+    expect(addressView.addressKey).toBe(3);
+    expect(addressView.orderKey).toBe(3);
     expect(addressView.country).toBe('Canada');
     expect(addressView.state).toBe('Ontario');
     expect(addressView.city).toBe('Toronto');
@@ -249,8 +249,8 @@ describe('Synchronous data portal method', function () {
 
     var itemView1 = orderView.items.at(0);
 
-    expect(itemView1.orderItemKey).toBe(4);
-    expect(itemView1.orderKey).toBe(2);
+    expect(itemView1.orderItemKey).toBe(7);
+    expect(itemView1.orderKey).toBe(3);
     expect(itemView1.productName).toBe('Tablet Creek 7');
     expect(itemView1.obsolete).toBe(false);
     expect(itemView1.expiry).toBe(expiry1);
@@ -259,8 +259,8 @@ describe('Synchronous data portal method', function () {
 
     var itemView2 = orderView.items.at(1);
 
-    expect(itemView2.orderItemKey).toBe(5);
-    expect(itemView2.orderKey).toBe(2);
+    expect(itemView2.orderItemKey).toBe(8);
+    expect(itemView2.orderKey).toBe(3);
     expect(itemView2.productName).toBe('USB 3.0 cable');
     expect(itemView2.obsolete).toBe(false);
     expect(itemView2.expiry).toBe(expiry2);
@@ -273,8 +273,8 @@ describe('Synchronous data portal method', function () {
 
     var scheduleView1 = itemView2.schedules.at(0);
 
-    expect(scheduleView1.orderScheduleKey).toBe(5);
-    expect(scheduleView1.orderItemKey).toBe(5);
+    expect(scheduleView1.orderScheduleKey).toBe(9);
+    expect(scheduleView1.orderItemKey).toBe(8);
     expect(scheduleView1.quantity).toBe(2);
     expect(scheduleView1.totalMass).toBe(0.24);
     expect(scheduleView1.required).toBe(true);
@@ -283,8 +283,8 @@ describe('Synchronous data portal method', function () {
 
     var scheduleView2 = itemView2.schedules.at(1);
 
-    expect(scheduleView2.orderScheduleKey).toBe(6);
-    expect(scheduleView2.orderItemKey).toBe(5);
+    expect(scheduleView2.orderScheduleKey).toBe(10);
+    expect(scheduleView2.orderItemKey).toBe(8);
     expect(scheduleView2.quantity).toBe(3);
     expect(scheduleView2.totalMass).toBe(0.36);
     expect(scheduleView2.required).toBe(true);
@@ -377,7 +377,7 @@ describe('Synchronous data portal method', function () {
 
     var orderListItem = orderList.at(0);
 
-    expect(orderListItem.orderKey).toBe(2);
+    expect(orderListItem.orderKey).toBe(3);
     expect(orderListItem.vendorName).toBe('Acme Corp.');
     expect(orderListItem.contractDate).toBe(contractDate);
     expect(orderListItem.totalPrice).toBe(497.5);
@@ -414,7 +414,7 @@ describe('Synchronous data portal method', function () {
   it('update of custom editable model', function () {
     console.log('\n*** Synchronous SAVE');
 
-    var order = BlanketOrder.get(2);
+    var order = BlanketOrder.get(3);
 
     //region Update data
 
@@ -476,7 +476,7 @@ describe('Synchronous data portal method', function () {
 
     //region Check data
 
-    expect(order.orderKey).toBe(2);
+    expect(order.orderKey).toBe(3);
     expect(order.vendorName).toBe('Summit Ltd.');
     expect(order.contractDate).toBe(contractDate_u);
     expect(order.totalPrice).toBe(672.5);
@@ -489,8 +489,8 @@ describe('Synchronous data portal method', function () {
 
     item1 = order.items.at(0);
 
-    expect(item1.orderItemKey).toBe(5);
-    expect(item1.orderKey).toBe(2);
+    expect(item1.orderItemKey).toBe(8);
+    expect(item1.orderKey).toBe(3);
     expect(item1.productName).toBe('USB 3.0 hub');
     expect(item1.obsolete).toBe(true);
     expect(item1.expiry).toBe(expiry1);
@@ -499,8 +499,8 @@ describe('Synchronous data portal method', function () {
 
     item2 = order.items.at(1);
 
-    expect(item2.orderItemKey).toBe(6);
-    expect(item2.orderKey).toBe(2);
+    expect(item2.orderItemKey).toBe(9);
+    expect(item2.orderKey).toBe(3);
     expect(item2.productName).toBe('DataExpert 32GB pen drive');
     expect(item2.obsolete).toBe(false);
     expect(item2.expiry).toBe(expiry2);
@@ -511,8 +511,8 @@ describe('Synchronous data portal method', function () {
 
     schedule1 = item1.schedules.at(0);
 
-    expect(schedule1.orderScheduleKey).toBe(6);
-    expect(schedule1.orderItemKey).toBe(5);
+    expect(schedule1.orderScheduleKey).toBe(10);
+    expect(schedule1.orderItemKey).toBe(8);
     expect(schedule1.quantity).toBe(4);
     expect(schedule1.totalMass).toBe(0.48);
     expect(schedule1.required).toBe(false);
@@ -521,8 +521,8 @@ describe('Synchronous data portal method', function () {
 
     schedule2 = item1.schedules.at(1);
 
-    expect(schedule2.orderScheduleKey).toBe(7);
-    expect(schedule2.orderItemKey).toBe(5);
+    expect(schedule2.orderScheduleKey).toBe(11);
+    expect(schedule2.orderItemKey).toBe(8);
     expect(schedule2.quantity).toBe(7);
     expect(schedule2.totalMass).toBe(0.84);
     expect(schedule2.required).toBe(true);
@@ -533,8 +533,8 @@ describe('Synchronous data portal method', function () {
 
     schedule3 = item2.schedules.at(0);
 
-    expect(schedule3.orderScheduleKey).toBe(8);
-    expect(schedule3.orderItemKey).toBe(6);
+    expect(schedule3.orderScheduleKey).toBe(12);
+    expect(schedule3.orderItemKey).toBe(9);
     expect(schedule3.quantity).toBe(4);
     expect(schedule3.totalMass).toBe(0.06);
     expect(schedule3.required).toBe(true);
@@ -547,7 +547,7 @@ describe('Synchronous data portal method', function () {
   it('delete of custom editable model', function () {
     console.log('\n*** Synchronous REMOVE');
 
-    var order = BlanketOrder.get(2);
+    var order = BlanketOrder.get(3);
     order.remove();
     var result = order.save();
 

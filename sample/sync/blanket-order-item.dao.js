@@ -1,8 +1,5 @@
 'use strict';
 
-global.itemKey = 0;
-global.items = {};
-
 var BlanketOrderItemDao = function() {
 
   this.create = function() {

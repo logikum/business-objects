@@ -4,9 +4,6 @@ var daoAddressCtor = require('./address.dao.js');
 var daoOrderItemCtor = require('./blanket-order-item.dao.js');
 var daoOrderScheduleCtor = require('./blanket-order-schedule.dao.js');
 
-global.orderKey = 0;
-global.orders = {};
-
 var daoAddress = new daoAddressCtor();
 var daoOrderItem = new daoOrderItemCtor();
 var daoOrderSchedule = new daoOrderScheduleCtor();

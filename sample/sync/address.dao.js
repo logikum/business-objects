@@ -1,8 +1,5 @@
 'use strict';
 
-global.addressKey = 0;
-global.addresses = {};
-
 var AddressDao = function() {
 
   this.create = function() {
