@@ -35,8 +35,38 @@ var properties = new Properties(
 var rules = new Rules(
 );
 
+//region Transfer object methods
+
+function fromDto (ctx, dto) {
+  ctx.setValue('addressKey',  dto.addressKey);
+  ctx.setValue('orderKey',    dto.orderKey);
+  ctx.setValue('country',     dto.country);
+  ctx.setValue('state',       dto.state);
+  ctx.setValue('city',        dto.city);
+  ctx.setValue('line1',       dto.line1);
+  ctx.setValue('line2',       dto.line2);
+  ctx.setValue('postalCode',  dto.postalCode);
+}
+
+function toCto (ctx) {
+  return {
+    addressKey:     this.addressKey,
+    orderKey:   this.orderKey,
+    country: this.country,
+    state:   this.state,
+    city:    this.city,
+    line1:      this.line1,
+    line2:  this.line2,
+    postalCode: this.postalCode
+  };
+}
+
+//endregion
+
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
+extensions.fromDto = fromDto;
+extensions.toCto = toCto;
 
 var AddressView = bo.ReadOnlyModelSync(properties, rules, extensions);
 

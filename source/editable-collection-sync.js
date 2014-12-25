@@ -27,7 +27,29 @@ var EditableCollectionSyncCreator = function(name, itemType) {
       enumerable: false
     });
 
-    //region Model methods
+    //region Transfer object methods
+
+    this.toCto = function () {
+      var cto = [];
+      items.forEach(function (item) {
+        cto.push(item.toCto());
+      });
+      return cto;
+    };
+
+    this.fromCto = function (data) {
+      if (data instanceof Array) {
+        data.forEach(function (cto) {
+          var item = new itemType(parent);
+          item.fromCto(cto);
+          items.push(item);
+        });
+      }
+    };
+
+    //endregion
+
+    //region Actions
 
     this.create = function () {
       var item = itemType.create(parent);
@@ -58,24 +80,6 @@ var EditableCollectionSyncCreator = function(name, itemType) {
       items = items.filter(function (item) {
         return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
       });
-    };
-
-    this.toCto = function () {
-      var cto = [];
-      items.forEach(function (item) {
-        cto.push(item.toCto());
-      });
-      return cto;
-    };
-
-    this.fromCto = function (data) {
-      if (data instanceof Array) {
-        data.forEach(function (cto) {
-          var item = new itemType(parent);
-          item.fromCto(cto);
-          items.push(item);
-        });
-      }
     };
 
     //endregion

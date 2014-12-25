@@ -27,7 +27,29 @@ var EditableCollectionCreator = function(name, itemType) {
       enumerable: false
     });
 
-    //region Model methods
+    //region Transfer object methods
+
+    this.toCto = function () {
+      var cto = [];
+      items.forEach(function (item) {
+        cto.push(item.toCto());
+      });
+      return cto;
+    };
+
+    this.fromCto = function (data) {
+      if (data instanceof Array) {
+        data.forEach(function (cto) {
+          var item = new itemType(parent);
+          item.fromCto(cto);
+          items.push(item);
+        });
+      }
+    };
+
+    //endregion
+
+    //region Actions
 
     this.create = function (callback) {
       itemType.create(parent, function (err, item) {
@@ -82,24 +104,6 @@ var EditableCollectionCreator = function(name, itemType) {
         });
       } else
         callback(null);
-    };
-
-    this.toCto = function () {
-      var cto = [];
-      items.forEach(function (item) {
-        cto.push(item.toCto());
-      });
-      return cto;
-    };
-
-    this.fromCto = function (data) {
-      if (data instanceof Array) {
-        data.forEach(function (cto) {
-          var item = new itemType(parent);
-          item.fromCto(cto);
-          items.push(item);
-        });
-      }
     };
 
     //endregion

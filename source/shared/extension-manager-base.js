@@ -33,10 +33,10 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
   var methods = {};
   var definitions = [
     { name: 'daoBuilder', length: 2 },
-    { name: 'toDto',      length: 0 },
-    { name: 'fromDto',    length: 1 },
-    { name: 'toCto',      length: 0 },
-    { name: 'fromCto',    length: 1 },
+    { name: 'toDto',      length: 1 },
+    { name: 'fromDto',    length: 2 },
+    { name: 'toCto',      length: 1 },
+    { name: 'fromCto',    length: 2 },
     { name: 'dataCreate', length: 0 + addArgs },
     { name: 'dataFetch',  length: 2 + addArgs },
     { name: 'dataInsert', length: 0 + addArgs },

@@ -25,7 +25,19 @@ var ReadOnlyCollectionSyncCreator = function(name, itemType) {
       enumerable: false
     });
 
-    //region Model methods
+    //region Transfer object methods
+
+    this.toCto = function () {
+      var cto = [];
+      items.forEach(function (item) {
+        cto.push(item.toCto());
+      });
+      return cto;
+    };
+
+    //endregion
+
+    //region Actions
 
     this.fetch = function (data) {
       if (data instanceof Array) {
@@ -34,14 +46,6 @@ var ReadOnlyCollectionSyncCreator = function(name, itemType) {
           items.push(item);
         });
       }
-    };
-
-    this.toCto = function () {
-      var cto = [];
-      items.forEach(function (item) {
-        cto.push(item.toCto());
-      });
-      return cto;
     };
 
     //endregion

@@ -61,7 +61,7 @@ var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
         'The userReader method of business objects configuration must return a UserInfo instance.');
     }
 
-    //region Transfer objects methods
+    //region Transfer object methods
 
     function baseFromDto(dto) {
       properties.filter(function (property) {
@@ -75,7 +75,8 @@ var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
 
     function fromDto (dto) {
       if (extensions.fromDto)
-        extensions.fromDto(
+        extensions.fromDto.call(
+          self,
           new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue),
           dto
         );
@@ -96,7 +97,8 @@ var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
     this.toCto = function () {
       var cto = {};
       if (extensions.toCto)
-        cto = extensions.toCto(
+        cto = extensions.toCto.call(
+          self,
           new TransferContext(properties.toArray(), readPropertyValue, null /*writePropertyValue*/)
         );
       else

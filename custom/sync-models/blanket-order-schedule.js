@@ -20,26 +20,78 @@ var shipTo = new Property('shipTo', dt.Text);
 var shipDate = new Property('shipDate', dt.DateTime);
 
 var properties = new Properties(
-    'BlanketOrderSchedule',
-    orderScheduleKey,
-    orderItemKey,
-    quantity,
-    totalMass,
-    required,
-    shipTo,
-    shipDate
+  'BlanketOrderSchedule',
+  orderScheduleKey,
+  orderItemKey,
+  quantity,
+  totalMass,
+  required,
+  shipTo,
+  shipDate
 );
 
 var rules = new Rules(
-    cr.required(quantity),
-    cr.required(totalMass),
-    cr.required(required),
-    cr.required(shipTo),
-    cr.required(shipDate)
+  cr.required(quantity),
+  cr.required(totalMass),
+  cr.required(required),
+  cr.required(shipTo),
+  cr.required(shipDate)
 );
+
+//region Transfer object methods
+
+function toDto (ctx) {
+  return {
+    orderScheduleKey: ctx.getValue('orderScheduleKey'),
+    orderItemKey:     ctx.getValue('orderItemKey'),
+    quantity:         ctx.getValue('quantity'),
+    totalMass:        ctx.getValue('totalMass'),
+    required:         ctx.getValue('required'),
+    shipTo:           ctx.getValue('shipTo'),
+    shipDate:         ctx.getValue('shipDate')
+  };
+}
+
+function fromDto (ctx, dto) {
+  ctx.setValue('orderScheduleKey',  dto.orderScheduleKey);
+  ctx.setValue('orderItemKey',      dto.orderItemKey);
+  ctx.setValue('quantity',          dto.quantity);
+  ctx.setValue('totalMass',         dto.totalMass);
+  ctx.setValue('required',          dto.required);
+  ctx.setValue('shipTo',            dto.shipTo);
+  ctx.setValue('shipDate',          dto.shipDate);
+}
+
+function toCto (ctx) {
+  return {
+    orderScheduleKey: this.orderScheduleKey,
+    orderItemKey:     this.orderItemKey,
+    quantity:         this.quantity,
+    totalMass:        this.totalMass,
+    required:         this.required,
+    shipTo:           this.shipTo,
+    shipDate:         this.shipDate
+  };
+}
+
+function fromCto (ctx, dto) {
+  this.orderScheduleKey = dto.orderScheduleKey;
+  this.orderItemKey =     dto.orderItemKey;
+  this.quantity =         dto.quantity;
+  this.totalMass =        dto.totalMass;
+  this.required =         dto.required;
+  this.shipTo =           dto.shipTo;
+  this.shipDate =         dto.shipDate;
+}
+
+//endregion
 
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
+extensions.toDto = toDto;
+extensions.fromDto = fromDto;
+extensions.toCto = toCto;
+extensions.fromCto = fromCto;
 
 var BlanketOrderSchedule = bo.EditableModelSync(properties, rules, extensions);
 

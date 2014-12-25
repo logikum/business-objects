@@ -47,7 +47,7 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
       enumerable: false
     });
 
-    //region Transfer objects methods
+    //region Transfer object methods
 
     this.toCto = function () {
       var cto = [];

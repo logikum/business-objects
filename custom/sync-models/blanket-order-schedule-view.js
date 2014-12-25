@@ -33,8 +33,36 @@ var properties = new Properties(
 var rules = new Rules(
 );
 
+//region Transfer object methods
+
+function fromDto (ctx, dto) {
+  ctx.setValue('orderScheduleKey',  dto.orderScheduleKey);
+  ctx.setValue('orderItemKey',      dto.orderItemKey);
+  ctx.setValue('quantity',          dto.quantity);
+  ctx.setValue('totalMass',         dto.totalMass);
+  ctx.setValue('required',          dto.required);
+  ctx.setValue('shipTo',            dto.shipTo);
+  ctx.setValue('shipDate',          dto.shipDate);
+}
+
+function toCto (ctx) {
+  return {
+    orderScheduleKey: this.orderScheduleKey,
+    orderItemKey:     this.orderItemKey,
+    quantity:         this.quantity,
+    totalMass:        this.totalMass,
+    required:         this.required,
+    shipTo:           this.shipTo,
+    shipDate:         this.shipDate
+  };
+}
+
+//endregion
+
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
+extensions.fromDto = fromDto;
+extensions.toCto = toCto;
 
 var BlanketOrderScheduleView = bo.ReadOnlyModelSync(properties, rules, extensions);
 

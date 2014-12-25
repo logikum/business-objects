@@ -46,8 +46,38 @@ var rules = new Rules(
       'You are not authorized to view the totalPrice of the blanket order.')
 );
 
+//region Transfer object methods
+
+function fromDto (ctx, dto) {
+  ctx.setValue('orderKey',     dto.orderKey);
+  ctx.setValue('vendorName',   dto.vendorName);
+  ctx.setValue('contractDate', dto.contractDate);
+  ctx.setValue('totalPrice',   dto.totalPrice);
+  ctx.setValue('schedules',    dto.schedules);
+  ctx.setValue('enabled',      dto.enabled);
+  ctx.setValue('createdDate',  dto.createdDate);
+  ctx.setValue('modifiedDate', dto.modifiedDate);
+}
+
+function toCto (ctx) {
+  return {
+    orderKey:     this.orderKey,
+    vendorName:   this.vendorName,
+    contractDate: this.contractDate,
+    totalPrice:   this.totalPrice,
+    schedules:    this.schedules,
+    enabled:      this.enabled,
+    createdDate:  this.createdDate,
+    modifiedDate: this.modifiedDate
+  };
+}
+
+//endregion
+
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
+extensions.fromDto = fromDto;
+extensions.toCto = toCto;
 
 var BlanketOrderView = bo.ReadOnlyModelSync(properties, rules, extensions);
 

@@ -76,10 +76,12 @@ describe('Extension manager', function() {
     function set1() { em.toDto = '?'; }
     function set2() { em.toDto = fn0; }
     function set3() { em.toDto = fn1; }
+    function set4() { em.toDto = fn2; }
 
     expect(set1).toThrow();
-    expect(set2).not.toThrow();
-    expect(set3).toThrow();
+    expect(set2).toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
   });
 
   it('fromDto property works', function() {
@@ -87,21 +89,25 @@ describe('Extension manager', function() {
     function set2() { em.fromDto = fn0; }
     function set3() { em.fromDto = fn1; }
     function set4() { em.fromDto = fn2; }
+    function set5() { em.fromDto = fn3; }
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).not.toThrow();
-    expect(set4).toThrow();
+    expect(set3).toThrow();
+    expect(set4).not.toThrow();
+    expect(set5).toThrow();
   });
 
   it('toCto property works', function() {
     function set1() { em.toCto = new Date; }
     function set2() { em.toCto = fn0; }
     function set3() { em.toCto = fn1; }
+    function set4() { em.toCto = fn2; }
 
     expect(set1).toThrow();
-    expect(set2).not.toThrow();
-    expect(set3).toThrow();
+    expect(set2).toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
   });
 
   it('fromCto property works', function() {
@@ -109,11 +115,13 @@ describe('Extension manager', function() {
     function set2() { em.fromCto = fn0; }
     function set3() { em.fromCto = fn1; }
     function set4() { em.fromCto = fn2; }
+    function set5() { em.fromCto = fn3; }
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).not.toThrow();
-    expect(set4).toThrow();
+    expect(set3).toThrow();
+    expect(set4).not.toThrow();
+    expect(set5).toThrow();
   });
 
   it('dataCreate property works', function() {

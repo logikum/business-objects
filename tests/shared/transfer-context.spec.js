@@ -6,11 +6,12 @@ var Text = require('../../source/data-types/text.js');
 
 describe('Transfer context', function() {
   var pi = new PropertyInfo('property', new Text());
-  function getValue () {
-    return 1;
+  var propertyValue = 125;
+  function getValue (property) {
+    return property.name === 'property' ? propertyValue : null;
   }
-  function setValue (value) {
-    var x = setValue;
+  function setValue (property, value) {
+    propertyValue = property.name === 'property' ? value : null;
   }
   var ctx = new TransferContext([ pi ], getValue, setValue);
 
@@ -34,20 +35,27 @@ describe('Transfer context', function() {
     expect(create8).toThrow();
   });
 
-  it('has three properties', function() {
+  it('has one property', function() {
 
     expect(ctx.properties).toEqual(jasmine.any(Array));
-    expect(ctx.getValue).toBe(getValue);
-    expect(ctx.setValue).toBe(setValue);
   });
 
-  it('has read-only properties', function() {
+  it('has a read-only property', function() {
     ctx.properties = null;
     ctx.getValue = null;
     ctx.setValue = null;
 
     expect(ctx.properties).not.toBeNull();
-    expect(ctx.getValue).not.toBeNull();
-    expect(ctx.setValue).not.toBeNull();
+  });
+
+  it('getValue method works', function() {
+
+    expect(ctx.getValue('property')).toBe(125);
+  });
+
+  it('setValue method works', function() {
+    ctx.setValue('property', 216);
+
+    expect(ctx.getValue('property')).toBe(216);
   });
 });

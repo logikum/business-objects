@@ -52,8 +52,64 @@ var rules = new Rules(
     cr.isInRole(Action.removeObject, null, 'developers', 'You are not authorized to delete blanket order.')
 );
 
+//region Transfer object methods
+
+function toDto (ctx) {
+  return {
+    orderKey:     ctx.getValue('orderKey'),
+    vendorName:   ctx.getValue('vendorName'),
+    contractDate: ctx.getValue('contractDate'),
+    totalPrice:   ctx.getValue('totalPrice'),
+    schedules:    ctx.getValue('schedules'),
+    enabled:      ctx.getValue('enabled'),
+    createdDate:  ctx.getValue('createdDate'),
+    modifiedDate: ctx.getValue('modifiedDate')
+  };
+}
+
+function fromDto (ctx, dto) {
+  ctx.setValue('orderKey',     dto.orderKey);
+  ctx.setValue('vendorName',   dto.vendorName);
+  ctx.setValue('contractDate', dto.contractDate);
+  ctx.setValue('totalPrice',   dto.totalPrice);
+  ctx.setValue('schedules',    dto.schedules);
+  ctx.setValue('enabled',      dto.enabled);
+  ctx.setValue('createdDate',  dto.createdDate);
+  ctx.setValue('modifiedDate', dto.modifiedDate);
+}
+
+function toCto (ctx) {
+  return {
+    orderKey:     this.orderKey,
+    vendorName:   this.vendorName,
+    contractDate: this.contractDate,
+    totalPrice:   this.totalPrice,
+    schedules:    this.schedules,
+    enabled:      this.enabled,
+    createdDate:  this.createdDate,
+    modifiedDate: this.modifiedDate
+  };
+}
+
+function fromCto (ctx, dto) {
+  this.orderKey =     dto.orderKey;
+  this.vendorName =   dto.vendorName;
+  this.contractDate = dto.contractDate;
+  this.totalPrice =   dto.totalPrice;
+  this.schedules =    dto.schedules;
+  this.enabled =      dto.enabled;
+  this.createdDate =  dto.createdDate;
+  this.modifiedDate = dto.modifiedDate;
+}
+
+//endregion
+
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
+extensions.toDto = toDto;
+extensions.fromDto = fromDto;
+extensions.toCto = toCto;
+extensions.fromCto = fromCto;
 
 var BlanketOrder = bo.EditableModel(properties, rules, extensions);
 

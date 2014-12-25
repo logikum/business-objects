@@ -64,7 +64,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
           'The userReader method of business objects configuration must return a UserInfo instance.');
     }
 
-    //region Transfer objects methods
+    //region Transfer object methods
 
     function baseToDto() {
       var dto = {};
@@ -78,9 +78,10 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function toDto () {
       if (extensions.toDto)
-        return extensions.toDto(
-            new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue)
-          );
+        return extensions.toDto.call(
+          self,
+          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue)
+        );
       else
         return baseToDto();
     }
@@ -97,10 +98,11 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function fromDto (dto) {
       if (extensions.fromDto)
-        extensions.fromDto(
-            new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue),
-            dto
-          );
+        extensions.fromDto.call(
+          self,
+          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue),
+          dto
+        );
       else
         baseFromDto(dto);
     }
@@ -118,7 +120,8 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     this.toCto = function () {
       var cto = {};
       if (extensions.toCto)
-        cto = extensions.toCto(
+        cto = extensions.toCto.call(
+          self,
           new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue)
         );
       else
@@ -145,7 +148,8 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     this.fromCto = function (cto) {
       if (extensions.fromCto)
-        extensions.fromCto(
+        extensions.fromCto.call(
+          self,
           new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue),
           cto
         );
