@@ -7,6 +7,9 @@ var Text = require('../../source/data-types/text.js');
 var DateTime = require('../../source/data-types/date-time.js');
 
 describe('Property manager', function () {
+  function getPropertyValue (property) {
+    return property.name;
+  }
 
   it('constructor expects a non-empty string and optional properties', function() {
     var OrderList = function () {};
@@ -211,6 +214,68 @@ describe('Property manager', function () {
     expect(pm.children()[2]).toEqual(account);
     expect(pm.children()[2].name).toBe('account');
     expect(pm.childCount()).toBe(3);
+  });
+
+  //endregion
+
+  //region Key
+
+  it('getKey method works - no keys', function() {
+    var Figures = function () {};
+    var one = new PropertyInfo('uno', new Text());
+    var two = new PropertyInfo('due', Figures);
+    var three = new PropertyInfo('tre', new Text());
+    var four = new PropertyInfo('quattro', new Text());
+    var pm = new PropertyManager('Numbers', one, two, three, four);
+
+    var object = {
+      uno: 'uno',
+      tre: 'tre',
+      quattro: 'quattro'
+    };
+
+    var key = pm.getKey(getPropertyValue);
+
+    expect(key).toEqual(object);
+  });
+
+  it('getKey method works - one key', function() {
+    var Figures = function () {};
+    var one = new PropertyInfo('uno', new Text());
+    var two = new PropertyInfo('due', Figures);
+    var three = new PropertyInfo('tre', new Text(), F.key);
+    var four = new PropertyInfo('quattro', new Text());
+    var pm = new PropertyManager('Numbers', one, two, three, four);
+
+    var key = pm.getKey(getPropertyValue);
+
+    expect(key).toBe('tre');
+  });
+
+  it('getKey method works - more keys', function() {
+    var Figures = function () {};
+    var one = new PropertyInfo('uno', new Text(), F.key);
+    var two = new PropertyInfo('due', Figures);
+    var three = new PropertyInfo('tre', new Text());
+    var four = new PropertyInfo('quattro', new Text(), F.key);
+    var pm = new PropertyManager('Numbers', one, two, three, four);
+
+    var object = {
+      uno: 'uno',
+      quattro: 'quattro'
+    };
+
+    var key = pm.getKey(getPropertyValue);
+
+    expect(key).toEqual(object);
+  });
+
+  it('getKey method works - no properties', function() {
+    var pm = new PropertyManager('Numbers');
+
+    var key = pm.getKey(getPropertyValue);
+
+    expect(key).toBeUndefined();
   });
 
   //endregion

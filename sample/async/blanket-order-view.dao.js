@@ -12,7 +12,7 @@ var BlanketOrderViewDao = function() {
 
   this.fetch = function(filter, callback) {
     console.log('--- Blanket order view DAO.fetch');
-    var key = 'key' + filter;
+    var key = filter;
     if (!global.orders[key]) {
       callback(new Error('Blanket order not found.'));
       return;

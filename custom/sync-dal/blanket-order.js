@@ -1,8 +1,8 @@
 'use strict';
 
-var daoAddressCtor = require('./address.dao.js');
-var daoOrderItemCtor = require('./blanket-order-item.dao.js');
-var daoOrderScheduleCtor = require('./blanket-order-schedule.dao.js');
+var daoAddressCtor = require('./address.js');
+var daoOrderItemCtor = require('./blanket-order-item.js');
+var daoOrderScheduleCtor = require('./blanket-order-schedule.js');
 
 global.orderKey = 0;
 global.orders = {};

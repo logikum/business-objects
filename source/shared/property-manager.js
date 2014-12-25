@@ -7,8 +7,10 @@ var DataType = require('../data-types/data-type.js');
 function PropertyManager() {
 
   var items = [];
-  var changed = false;
+  var changed_c = false;  // for children
+  var changed_k = false;  // for key
   var children = [];
+  var key;
   var args = Array.prototype.slice.call(arguments);
 
   var name = args.shift() || '';
@@ -18,7 +20,8 @@ function PropertyManager() {
   args.forEach(function (arg) {
     items.push(ensureArgument.isMandatoryType(arg, PropertyInfo,
         'All arguments of PropertyManager constructor but the first must be a PropertyInfo object.'));
-    changed = true;
+    changed_c = true;
+    changed_k = true;
   });
 
   //region Item management
@@ -26,13 +29,15 @@ function PropertyManager() {
   this.add = function (property) {
     items.push(ensureArgument.isMandatoryType(property, PropertyInfo,
         'The property argument of PropertyManager.push method must be a PropertyInfo object.'));
-    changed = true;
+    changed_c = true;
+    changed_k = true;
   };
 
   this.create = function (name, type, flags) {
     var property = new PropertyInfo(name, type, flags);
     items.push(property);
-    changed = true;
+    changed_c = true;
+    changed_k = true;
     return property;
   };
 
@@ -83,11 +88,11 @@ function PropertyManager() {
   //region Children
 
   function checkChildren () {
-    if (changed) {
+    if (changed_c) {
       children = items.filter(function (item) {
         return !(item.type instanceof DataType);
       });
-      changed = false;
+      changed_c = false;
     }
   }
 
@@ -99,6 +104,47 @@ function PropertyManager() {
   this.childCount = function () {
     checkChildren();
     return children.length;
+  };
+
+  //endregion
+
+  //region Keys
+
+  function checkKeys (getPropertyValue) {
+    if (changed_k) {
+      // Get key properties.
+      var keys = items.filter(function (item) {
+        return item.isKey;
+      });
+      // Evaluate result.
+      switch (keys.length) {
+        case 0:
+          // No keys: dto will be used.
+          key = {};
+          items.forEach(function (item) {
+            if (item.isOnDto)
+              key[item.name] = getPropertyValue(item);
+          });
+          break;
+        case 1:
+          // One key: key value will be used.
+          key = getPropertyValue(keys[0]);
+          break;
+        default:
+          // More keys: key object will be used.
+          key = {};
+          keys.forEach(function (item) {
+            key[item.name] = getPropertyValue(item);
+          });
+      }
+      // Done.
+      changed_k = false;
+    }
+  }
+
+  this.getKey = function (getPropertyValue) {
+    checkKeys(getPropertyValue);
+    return key;
   };
 
   //endregion

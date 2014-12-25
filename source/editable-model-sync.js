@@ -66,10 +66,6 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     //region Transfer objects methods
 
-    //function msgNoProperty(name) {
-    //  return properties.name + ' model has no property named ' + name + '.';
-    //}
-
     function baseToDto() {
       var dto = {};
       properties.forEach(function (property) {
@@ -472,7 +468,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
           extensions.dataRemove.call(self, getDataContext());
         } else {
           // Standard removal.
-          var filter = toDto.call(self, true);
+          var filter = properties.getKey(getPropertyValue);
           dao.remove(filter);
         }
         markAsRemoved();

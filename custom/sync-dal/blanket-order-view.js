@@ -1,8 +1,8 @@
 'use strict';
 
-var daoAddressViewCtor = require('./address-view.dao.js');
-var daoOrderItemViewCtor = require('./blanket-order-item-view.dao.js');
-var daoOrderScheduleViewCtor = require('./blanket-order-schedule-view.dao.js');
+var daoAddressViewCtor = require('./address-view.js');
+var daoOrderItemViewCtor = require('./blanket-order-item-view.js');
+var daoOrderScheduleViewCtor = require('./blanket-order-schedule-view.js');
 
 var daoAddressView = new daoAddressViewCtor();
 var daoOrderItemView = new daoOrderItemViewCtor();

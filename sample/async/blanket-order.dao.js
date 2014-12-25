@@ -20,7 +20,7 @@ var BlanketOrderDao = function() {
 
   this.fetch = function(filter, callback) {
     console.log('--- Blanket order DAO.fetch');
-    var key = 'key' + filter;
+    var key = filter;
     if (!global.orders[key]) {
       callback(new Error('Blanket order not found.'));
       return;
@@ -110,14 +110,14 @@ var BlanketOrderDao = function() {
     console.log('--- Blanket order DAO.insert');
     data.orderKey = ++global.orderKey;
     data.createdDate = new Date();
-    var key = 'key' + data.orderKey;
+    var key = data.orderKey;
     global.orders[key] = data;
     callback(null, data);
   };
 
   this.update = function(data, callback) {
     console.log('--- Blanket order DAO.update');
-    var key = 'key' + data.orderKey;
+    var key = data.orderKey;
     if (!global.orders[key])
       callback(new Error('Blanket order not found.'));
     else {
@@ -129,7 +129,7 @@ var BlanketOrderDao = function() {
 
   this.remove = function(filter, callback) {
     console.log('--- Blanket order DAO.remove');
-    var key = 'key' + filter;
+    var key = filter;
     if (global.orders[key])
       delete global.orders[key];
     callback(null);

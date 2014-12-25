@@ -27,14 +27,14 @@ var AddressDao = function() {
   this.insert = function(data, callback) {
     console.log('--- Blanket order address DAO.insert');
     data.addressKey = ++global.addressKey;
-    var key = 'key' + data.addressKey;
+    var key = data.addressKey;
     global.addresses[key] = data;
     callback(null, data);
   };
 
   this.update = function(data, callback) {
     console.log('--- Blanket order address DAO.update');
-    var key = 'key' + data.addressKey;
+    var key = data.addressKey;
     if (!global.addresses[key])
       callback(new Error('Blanket order address not found.'));
     else {
@@ -45,7 +45,7 @@ var AddressDao = function() {
 
   this.remove = function(filter, callback) {
     console.log('--- Blanket order address DAO.remove');
-    var key = 'key' + filter;
+    var key = filter;
     if (global.addresses[key])
       delete global.addresses[key];
     callback(null);

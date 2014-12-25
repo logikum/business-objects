@@ -14,8 +14,10 @@ function PropertyInfo(name, type, flags) {
     throw new Error('The type argument of PropertyInfo constructor must be a DataType object or a model type.');
   this.type = type;
 
-  flags = ensureArgument.isOptionalInteger(flags || 0,
-    'The flags argument of PropertyInfo constructor must be an integer value.');
+  flags = type instanceof DataType ?
+    ensureArgument.isOptionalInteger(flags || 0,
+        'The flags argument of PropertyInfo constructor must be an integer value.') :
+    PropertyFlag.readOnly | PropertyFlag.notOnDto | PropertyFlag.notOnCto;
 
   this.isReadOnly = (flags & PropertyFlag.readOnly) !== 0;
   this.isKey = (flags & PropertyFlag.key) !== 0;
