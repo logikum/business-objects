@@ -8,7 +8,7 @@ var ensureArgument = require('./shared/ensure-argument.js');
 var DataContext = require('./shared/data-context.js');
 var UserInfo = require('./shared/user-info.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
-var AuthorizationAction = require('./rules/authorization-action.js');
+var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
 var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) {
@@ -61,6 +61,10 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
 
     //region Permissions
 
+    function getAuthorizationContext(action, targetName) {
+      return new AuthorizationContext(action, targetName || '', user, brokenRules);
+    }
+
     function canDo (action) {
       return rules.hasPermission(
         getAuthorizationContext(action)
@@ -69,12 +73,8 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
 
     function canExecute (methodName) {
       return rules.hasPermission(
-        getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
+        getAuthorizationContext(Action.executeMethod, methodName)
       );
-    }
-
-    function getAuthorizationContext(action, targetName) {
-      return new AuthorizationContext(action, targetName || '', user, brokenRules);
     }
 
     //endregion
@@ -108,7 +108,7 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
         }
       }
       // Check permissions.
-      if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
+      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
         if (extensions.dataFetch) {
           // Custom fetch.
           extensions.dataFetch.call(self, getDataContext(), filter, method, finish);

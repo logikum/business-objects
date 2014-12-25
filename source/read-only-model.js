@@ -18,7 +18,7 @@ var UserInfo = require('./shared/user-info.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
-var AuthorizationAction = require('./rules/authorization-action.js');
+var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
 var ReadOnlyModelCreator = function(properties, rules, extensions) {
@@ -64,11 +64,11 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     //region Transfer objects methods
 
     function baseFromDto(dto) {
-      properties.forEach(function (property) {
-        if (property.type instanceof DataType && property.isOnDto) {
-          if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
-            setPropertyValue(property, dto[property.name]);
-          }
+      properties.filter(function (property) {
+        return property.isOnDto;
+      }).forEach(function (property) {
+        if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
+          setPropertyValue(property, dto[property.name]);
         }
       });
     }
@@ -85,10 +85,10 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
 
     function baseToCto() {
       var cto = {};
-      properties.forEach(function (property) {
-        if (property.type instanceof DataType && property.isOnCto) {
-          cto[property.name] = readPropertyValue(property);
-        }
+      properties.filter(function (property) {
+        return property.isOnCto;
+      }).forEach(function (property) {
+        cto[property.name] = readPropertyValue(property);
       });
       return cto;
     }
@@ -97,7 +97,7 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
       var cto = {};
       if (extensions.toCto)
         cto = extensions.toCto(
-          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue)
+          new TransferContext(properties.toArray(), readPropertyValue, null /*writePropertyValue*/)
         );
       else
         cto = baseToCto();
@@ -108,6 +108,32 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
       });
       return cto;
     };
+
+    //endregion
+
+    //region Permissions
+
+    function getAuthorizationContext(action, targetName) {
+      return new AuthorizationContext(action, targetName || '', user, brokenRules);
+    }
+
+    function canBeRead (property) {
+      return rules.hasPermission(
+        getAuthorizationContext(Action.readProperty, property.name)
+      );
+    }
+
+    function canDo (action) {
+      return rules.hasPermission(
+        getAuthorizationContext(action)
+      );
+    }
+
+    function canExecute (methodName) {
+      return rules.hasPermission(
+        getAuthorizationContext(Action.executeMethod, methodName)
+      );
+    }
 
     //endregion
 
@@ -152,7 +178,7 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
         });
       }
       // Check permissions.
-      if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
+      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
         if (extensions.dataFetch) {
           // Custom fetch.
           extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
@@ -202,32 +228,6 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     this.getBrokenRules = function(namespace) {
       return brokenRules.output(namespace);
     };
-
-    //endregion
-
-    //region Permissions
-
-    function canBeRead (property) {
-      return rules.hasPermission(
-        getAuthorizationContext(AuthorizationAction.readProperty, property.name)
-      );
-    }
-
-    function canDo (action) {
-      return rules.hasPermission(
-        getAuthorizationContext(action)
-      );
-    }
-
-    function canExecute (methodName) {
-      return rules.hasPermission(
-        getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
-      );
-    }
-
-    function getAuthorizationContext(action, targetName) {
-      return new AuthorizationContext(action, targetName || '', user, brokenRules);
-    }
 
     //endregion
 

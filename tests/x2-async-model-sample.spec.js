@@ -396,7 +396,7 @@ describe('Asynchronous data portal method', function () {
   });
 
   it('fetch of read-only collection', function () {
-    console.log('\n*** Synchronous GET_ALL');
+    console.log('\n*** Asynchronous GET_ALL');
 
     BlanketOrderList.getAll(function (err, orderList) {
       if (err) throw err;
@@ -585,7 +585,7 @@ describe('Asynchronous data portal method', function () {
   });
 
   it('delete of editable model', function () {
-    console.log('\n*** Synchronous REMOVE');
+    console.log('\n*** Asynchronous REMOVE');
 
     BlanketOrder.get(1, function (err, order) {
       if (err) throw err;

@@ -17,7 +17,7 @@ var UserInfo = require('./shared/user-info.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
-var AuthorizationAction = require('./rules/authorization-action.js');
+var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
 
@@ -68,10 +68,10 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function baseToDto() {
       var dto = {};
-      properties.forEach(function (property) {
-        if (property.type instanceof DataType && property.isOnDto) {
-          dto[property.name] = getPropertyValue(property);
-        }
+      properties.filter(function (property) {
+        return property.isOnDto;
+      }).forEach(function (property) {
+        dto[property.name] = getPropertyValue(property);
       });
       return dto;
     }
@@ -86,11 +86,11 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     }
 
     function baseFromDto(dto) {
-      properties.forEach(function (property) {
-        if (property.type instanceof DataType && property.isOnDto) {
-          if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
-            setPropertyValue(property, dto[property.name]);
-          }
+      properties.filter(function (property) {
+        return property.isOnDto;
+      }).forEach(function (property) {
+        if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
+          setPropertyValue(property, dto[property.name]);
         }
       });
     }
@@ -107,10 +107,10 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function baseToCto() {
       var cto = {};
-      properties.forEach(function (property) {
-        if (property.type instanceof DataType && property.isOnCto) {
-          cto[property.name] = readPropertyValue(property);
-        }
+      properties.filter(function (property) {
+        return property.isOnCto;
+      }).forEach(function (property) {
+        cto[property.name] = readPropertyValue(property);
       });
       return cto;
     }
@@ -133,11 +133,11 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function baseFromCto(cto) {
       if (cto && typeof cto === 'object') {
-        properties.forEach(function (property) {
-          if (property.type instanceof DataType && property.isOnCto) {
-            if (cto.hasOwnProperty(property.name) && typeof cto[property.name] !== 'function') {
-              writePropertyValue(property, cto[property.name]);
-            }
+        properties.filter(function (property) {
+          return property.isOnCto;
+        }).forEach(function (property) {
+          if (cto.hasOwnProperty(property.name) && typeof cto[property.name] !== 'function') {
+            writePropertyValue(property, cto[property.name]);
           }
         });
       }
@@ -269,36 +269,6 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
       return MODEL_STATE.getName(state);
     };
 
-    //Object.defineProperty(this, 'isPristine', {
-    //  get: function () {
-    //    return state === MODEL_STATE.pristine;
-    //  }
-    //});
-    //
-    //Object.defineProperty(this, 'isCreated', {
-    //  get: function () {
-    //    return state === MODEL_STATE.created;
-    //  }
-    //});
-    //
-    //Object.defineProperty(this, 'isChanged', {
-    //  get: function () {
-    //    return state === MODEL_STATE.changed;
-    //  }
-    //});
-    //
-    //Object.defineProperty(this, 'isForRemoval', {
-    //  get: function () {
-    //    return state === MODEL_STATE.markedForRemoval;
-    //  }
-    //});
-    //
-    //Object.defineProperty(this, 'isRemoved', {
-    //  get: function () {
-    //    return state === MODEL_STATE.removed;
-    //  }
-    //});
-
     Object.defineProperty(this, 'isNew', {
       get: function () {
         return state === MODEL_STATE.created;
@@ -329,14 +299,46 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
       get: function () {
         var auth;
         if (self.isDeleted())
-          auth = canDo(AuthorizationAction.removeObject);
+          auth = canDo(Action.removeObject);
         else if (self.isNew())
-          auth = canDo(AuthorizationAction.createObject);
+          auth = canDo(Action.createObject);
         else
-          auth = canDo(AuthorizationAction.updateObject);
+          auth = canDo(Action.updateObject);
         return auth && self.isDirty() && self.isValid();
       }
     });
+
+    //endregion
+
+    //region Permissions
+
+    function getAuthorizationContext(action, targetName) {
+      return new AuthorizationContext(action, targetName || '', user, brokenRules);
+    }
+
+    function canBeRead (property) {
+      return rules.hasPermission(
+        getAuthorizationContext(Action.readProperty, property.name)
+      );
+    }
+
+    function canBeWritten (property) {
+      return rules.hasPermission(
+        getAuthorizationContext(Action.writeProperty, property.name)
+      );
+    }
+
+    function canDo (action) {
+      return rules.hasPermission(
+        getAuthorizationContext(action)
+      );
+    }
+
+    function canExecute (methodName) {
+      return rules.hasPermission(
+        getAuthorizationContext(Action.executeMethod, methodName)
+      );
+    }
 
     //endregion
 
@@ -388,7 +390,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function data_fetch (filter, method) {
       // Check permissions.
-      if (method === 'fetch' ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
+      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
         var dto = null;
         if (extensions.dataFetch) {
           // Custom fetch.
@@ -412,7 +414,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function data_insert () {
       // Check permissions.
-      if (canDo(AuthorizationAction.createObject)) {
+      if (canDo(Action.createObject)) {
         if (extensions.dataInsert) {
           // Custom insert.
           extensions.dataInsert.call(self, getDataContext());
@@ -442,7 +444,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function data_update () {
       // Check permissions.
-      if (canDo(AuthorizationAction.updateObject)) {
+      if (canDo(Action.updateObject)) {
         if (extensions.dataUpdate) {
           // Custom update.
           extensions.dataUpdate.call(self, getDataContext());
@@ -460,7 +462,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function data_remove () {
       // Check permissions.
-      if (canDo(AuthorizationAction.removeObject)) {
+      if (canDo(Action.removeObject)) {
         // Remove children first.
         removeChildren();
         if (extensions.dataRemove) {
@@ -540,38 +542,6 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     this.getBrokenRules = function(namespace) {
       return brokenRules.output(namespace);
     };
-
-    //endregion
-
-    //region Permissions
-
-    function canBeRead (property) {
-      return rules.hasPermission(
-          getAuthorizationContext(AuthorizationAction.readProperty, property.name)
-      );
-    }
-
-    function canBeWritten (property) {
-      return rules.hasPermission(
-          getAuthorizationContext(AuthorizationAction.writeProperty, property.name)
-      );
-    }
-
-    function canDo (action) {
-      return rules.hasPermission(
-          getAuthorizationContext(action)
-      );
-    }
-
-    function canExecute (methodName) {
-      return rules.hasPermission(
-          getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
-      );
-    }
-
-    function getAuthorizationContext(action, targetName) {
-      return new AuthorizationContext(action, targetName || '', user, brokenRules);
-    }
 
     //endregion
 
