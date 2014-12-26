@@ -104,12 +104,113 @@ function fromCto (ctx, dto) {
 
 //endregion
 
+//region Data portal methods
+
+function dataCreate (ctx, callback) {
+  ctx.dao.create(function (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('vendorName',   dto.vendorName);
+      ctx.setValue('contractDate', dto.contractDate);
+      ctx.setValue('totalPrice',   dto.totalPrice);
+      ctx.setValue('schedules',    dto.schedules);
+      ctx.setValue('enabled',      dto.enabled);
+      callback(null);
+    }
+  });
+}
+
+function dataFetch (ctx, filter, method, callback) {
+  function cb (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('orderKey',     dto.orderKey);
+      ctx.setValue('vendorName',   dto.vendorName);
+      ctx.setValue('contractDate', dto.contractDate);
+      ctx.setValue('totalPrice',   dto.totalPrice);
+      ctx.setValue('schedules',    dto.schedules);
+      ctx.setValue('enabled',      dto.enabled);
+      ctx.setValue('createdDate',  dto.createdDate);
+      ctx.setValue('modifiedDate', dto.modifiedDate);
+      callback(null, dto);
+    }
+  }
+  if (method === 'fetchByName') {
+    // filter: vendorName
+    ctx.dao.fetchByName(filter, cb);
+  } else {
+    // filter: primaryKey
+    ctx.dao.fetch(filter, cb);
+  }
+  // or:
+  // ctx.dao[method](filter, cb);
+}
+
+function dataInsert (ctx, callback) {
+  var dto = {
+    vendorName:   ctx.getValue('vendorName'),
+    contractDate: ctx.getValue('contractDate'),
+    totalPrice:   ctx.getValue('totalPrice'),
+    schedules:    ctx.getValue('schedules'),
+    enabled:      ctx.getValue('enabled')
+  };
+  ctx.dao.insert(dto, function (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('orderKey', dto.orderKey);
+      ctx.setValue('createdDate', dto.createdDate);
+      callback(null);
+    }
+  });
+}
+
+function dataUpdate (ctx, callback) {
+  if (ctx.isSelfDirty) {
+    var dto = {
+      orderKey:     ctx.getValue('orderKey'),
+      vendorName:   ctx.getValue('vendorName'),
+      contractDate: ctx.getValue('contractDate'),
+      totalPrice:   ctx.getValue('totalPrice'),
+      schedules:    ctx.getValue('schedules'),
+      enabled:      ctx.getValue('enabled')
+    };
+    ctx.dao.update(dto, function (err, dto) {
+      if (err)
+        callback(err);
+      else {
+        ctx.setValue('modifiedDate', dto.modifiedDate);
+        callback(null);
+      }
+    });
+  }
+}
+
+function dataRemove (ctx, callback) {
+  var primaryKey = ctx.getValue('orderKey');
+  ctx.dao.remove(primaryKey, function (err) {
+    if (err)
+      callback(err);
+    else
+      callback(null);
+  });
+}
+
+//endregion
+
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.fromCto = fromCto;
+extensions.dataCreate = dataCreate;
+extensions.dataFetch = dataFetch;
+extensions.dataInsert = dataInsert;
+extensions.dataUpdate = dataUpdate;
+extensions.dataRemove = dataRemove;
 
 var BlanketOrder = bo.EditableModel(properties, rules, extensions);
 

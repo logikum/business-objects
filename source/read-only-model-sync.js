@@ -152,6 +152,10 @@ var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
+    function getDataContext() {
+      return new DataContext(dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue);
+    }
+
     function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
@@ -173,10 +177,6 @@ var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
         // Fetch children as well.
         fetchChildren(dto);
       }
-    }
-
-    function getDataContext() {
-      return new DataContext(dao, user, false, null, fromDto);
     }
 
     //endregion

@@ -4,7 +4,7 @@ var DataContext = require('../../source/shared/data-context.js');
 var UserInfo = require('../../source/shared/user-info.js');
 var UserReader = require('../../sample/user-reader.js');
 
-describe('Data context', function() {
+xdescribe('Data context', function() {
   var dao = {};
   var user = UserReader();
   function toDto () {

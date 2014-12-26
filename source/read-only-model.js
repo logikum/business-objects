@@ -168,6 +168,10 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
+    function getDataContext() {
+      return new DataContext(dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue);
+    }
+
     function data_fetch (filter, method, callback) {
       // Helper function for post-fetch actions.
       function finish (dto) {
@@ -209,10 +213,6 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
         }
       } else
         callback(null, self);
-    }
-
-    function getDataContext() {
-      return new DataContext(dao, user, false, null, fromDto);
     }
 
     //endregion

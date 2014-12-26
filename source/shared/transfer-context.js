@@ -17,7 +17,7 @@ function TransferContext(properties, getValue, setValue) {
       if (self.properties[i].name === name)
         return self.properties[i];
     }
-    throw new Error('There is no property named ' + name + '.');
+    throw new Error(properties.name + ' model has no property named ' + name + '.');
   }
 
   this.getValue = function (propertyName) {

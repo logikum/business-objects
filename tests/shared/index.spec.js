@@ -25,11 +25,12 @@ var NotImplementedError = require('../../source/shared/not-implemented-error.js'
 describe('Shared component index', function () {
   var dao = {};
   var user = UserReader();
-  function toDto () {
-    return {};
+  var data = 0;
+  function getValue () {
+    return data;
   }
-  function fromDto (dto) {
-    this.name = dto.name;
+  function setValue (value) {
+    data = value;
   }
 
   it('properties return correct components', function() {
@@ -40,8 +41,8 @@ describe('Shared component index', function () {
     expect(new shared.ExtensionManagerSync('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManagerSync));
 
     expect(new shared.UserInfo('anonymous')).toEqual(jasmine.any(UserInfo));
-    expect(new shared.DataContext(dao, user, true, toDto, fromDto)).toEqual(jasmine.any(DataContext));
-    expect(new shared.TransferContext([], toDto, fromDto)).toEqual(jasmine.any(TransferContext));
+    expect(new shared.DataContext(dao, user, true, [], getValue, setValue)).toEqual(jasmine.any(DataContext));
+    expect(new shared.TransferContext([], getValue, setValue)).toEqual(jasmine.any(TransferContext));
 
     expect(shared.configuration).toEqual(jasmine.any(Object));
     expect(shared.ensureArgument).toEqual(jasmine.any(Object));

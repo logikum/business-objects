@@ -12,7 +12,13 @@ var BlanketOrderDao = function() {
 
   this.create = function() {
     console.log('--- Blanket order DAO.create');
-    return {};
+    return {
+      vendorName:   '',
+      contractDate: new Date(1980, 1, 1),
+      totalPrice:   0.0,
+      schedules:    0,
+      enabled:      true
+    };
   };
 
   this.fetch = function(filter) {

@@ -213,7 +213,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
     function markAsChanged(itself) {
       if (state === MODEL_STATE.pristine) {
         state = MODEL_STATE.changed;
-        isDirty |= itself;
+        isDirty = isDirty || itself;
         propagateChange(); // up to the parent
         isValidated = false;
       }
@@ -406,6 +406,10 @@ var EditableModelCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
+    function getDataContext() {
+      return new DataContext(dao, user, isDirty, properties.toArray(), getPropertyValue, setPropertyValue);
+    }
+
     function data_create (callback) {
       if (extensions.dataCreate) {
         // Custom create.
@@ -597,10 +601,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
         });
       } else
         callback(null);
-    }
-
-    function getDataContext() {
-      return new DataContext(dao, user, isDirty, toDto, fromDto);
     }
 
     //endregion
