@@ -4,7 +4,7 @@ var util = require('util');
 var CollectionBase = require('./collection-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
-var MODEL_STATE = require('./model-state.js');
+var MODEL_STATE = require('./shared/model-state.js');
 
 var EditableCollectionSyncCreator = function(name, itemType) {
 

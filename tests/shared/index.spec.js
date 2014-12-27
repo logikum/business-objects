@@ -20,6 +20,7 @@ var Enumeration = require('../../source/shared/enumeration.js');
 
 var ArgumentError = require('../../source/shared/argument-error.js');
 var EnumerationError = require('../../source/shared/enumeration-error.js');
+var ModelError = require('../../source/shared/model-error.js');
 var NotImplementedError = require('../../source/shared/not-implemented-error.js');
 
 describe('Shared component index', function () {
@@ -51,6 +52,7 @@ describe('Shared component index', function () {
 
     expect(new shared.ArgumentError('message')).toEqual(jasmine.any(ArgumentError));
     expect(new shared.EnumerationError('message')).toEqual(jasmine.any(EnumerationError));
+    expect(new shared.ModelError('message')).toEqual(jasmine.any(ModelError));
     expect(new shared.NotImplementedError('message')).toEqual(jasmine.any(NotImplementedError));
   });
 });

@@ -1,6 +1,6 @@
 console.log('Testing model-state.js...');
 
-var ModelState = require('../source/model-state.js');
+var ModelState = require('../../source/shared/model-state.js');
 
 describe('Model state enumeration', function () {
 

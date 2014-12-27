@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var Enumeration = require('./shared/enumeration.js');
+var Enumeration = require('./enumeration.js');
 
 function ModelState() {
   ModelState.super_.call(this);

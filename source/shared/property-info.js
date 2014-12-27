@@ -15,15 +15,15 @@ function PropertyInfo(name, type, flags) {
   this.type = type;
 
   flags = type instanceof DataType ?
-    ensureArgument.isOptionalInteger(flags || 0,
+    ensureArgument.isOptionalInteger(flags || PropertyFlag.none,
         'The flags argument of PropertyInfo constructor must be an integer value.') :
     PropertyFlag.readOnly | PropertyFlag.notOnDto | PropertyFlag.notOnCto;
 
-  this.isReadOnly = (flags & PropertyFlag.readOnly) !== 0;
-  this.isKey = (flags & PropertyFlag.key) !== 0;
-  this.isParentKey = (flags & PropertyFlag.parentKey) !== 0;
-  this.isOnDto = (flags & PropertyFlag.notOnDto) === 0;
-  this.isOnCto = (flags & PropertyFlag.notOnCto) === 0;
+  this.isReadOnly = (flags & PropertyFlag.readOnly) === PropertyFlag.readOnly;
+  this.isKey = (flags & PropertyFlag.key) === PropertyFlag.key;
+  this.isParentKey = (flags & PropertyFlag.parentKey) === PropertyFlag.parentKey;
+  this.isOnDto = (flags & PropertyFlag.notOnDto) === PropertyFlag.none;
+  this.isOnCto = (flags & PropertyFlag.notOnCto) === PropertyFlag.none;
 
   // Immutable object.
   Object.freeze(this);

@@ -3,6 +3,7 @@
 function PropertyFlag() {
 
   // Define flag items.
+  this.none = 0;
   this.readOnly = 1;
   this.key = 2;
   this.parentKey = 4;

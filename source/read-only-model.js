@@ -39,6 +39,8 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     var brokenRules = new BrokenRuleList(properties.name);
     var dao = null;
     var user = null;
+    var dataContext = null;
+    var xferContext = null;
 
     // Determine if root or child element.
     var parent = ensureArgument.isOptionalType(arguments[0], [ ModelBase, CollectionBase ],
@@ -63,6 +65,12 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
 
     //region Transfer object methods
 
+    function getTransferContext () {
+      if (!xferContext)
+        xferContext = new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
+      return xferContext;
+    }
+
     function baseFromDto(dto) {
       properties.filter(function (property) {
         return property.isOnDto;
@@ -75,11 +83,7 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
 
     function fromDto (dto) {
       if (extensions.fromDto)
-        extensions.fromDto.call(
-          self,
-          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue),
-          dto
-        );
+        extensions.fromDto.call(self, getTransferContext(), dto);
       else
         baseFromDto(dto);
     }
@@ -97,10 +101,7 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     this.toCto = function () {
       var cto = {};
       if (extensions.toCto)
-        cto = extensions.toCto.call(
-          self,
-          new TransferContext(properties.toArray(), readPropertyValue, null /*writePropertyValue*/)
-        );
+        cto = extensions.toCto.call(self, getTransferContext());
       else
         cto = baseToCto();
 
@@ -169,7 +170,11 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     //region Data portal methods
 
     function getDataContext() {
-      return new DataContext(dao || {}, user, false, properties.toArray(), getPropertyValue, setPropertyValue);
+      if (!dataContext)
+        dataContext = new DataContext(
+          dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+        );
+      return dataContext;
     }
 
     function data_fetch (filter, method, callback) {

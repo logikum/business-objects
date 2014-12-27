@@ -25,6 +25,7 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
     var brokenRules = new BrokenRuleList(name);
     var dao = null;
     var user = null;
+    var dataContext = null;
 
     this.name = name;
 
@@ -82,8 +83,9 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
     //region Data portal methods
 
     function getDataContext() {
-      function fn () {}
-      return new DataContext(dao, user, false, [], fn, fn);
+      if (!dataContext)
+        dataContext = new DataContext(dao, user);
+      return dataContext;
     }
 
     function data_fetch (filter, method, callback) {

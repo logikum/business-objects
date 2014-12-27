@@ -21,7 +21,7 @@ var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
 
-var MODEL_STATE = require('./model-state.js');
+var MODEL_STATE = require('./shared/model-state.js');
 
 var EditableModelSyncCreator = function(properties, rules, extensions) {
 
@@ -44,6 +44,8 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     var isValidated = false;
     var dao = null;
     var user = null;
+    var dataContext = null;
+    var xferContext = null;
 
     // Determine if root or child element.
     var parent = ensureArgument.isOptionalType(arguments[0], ModelBase,
@@ -66,6 +68,12 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     //region Transfer object methods
 
+    function getTransferContext () {
+      if (!xferContext)
+        xferContext = new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
+      return xferContext;
+    }
+
     function baseToDto() {
       var dto = {};
       properties.filter(function (property) {
@@ -78,10 +86,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function toDto () {
       if (extensions.toDto)
-        return extensions.toDto.call(
-          self,
-          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue)
-        );
+        return extensions.toDto.call(self, getTransferContext());
       else
         return baseToDto();
     }
@@ -98,11 +103,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     function fromDto (dto) {
       if (extensions.fromDto)
-        extensions.fromDto.call(
-          self,
-          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue),
-          dto
-        );
+        extensions.fromDto.call(self, getTransferContext(), dto);
       else
         baseFromDto(dto);
     }
@@ -120,10 +121,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     this.toCto = function () {
       var cto = {};
       if (extensions.toCto)
-        cto = extensions.toCto.call(
-          self,
-          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue)
-        );
+        cto = extensions.toCto.call(self, getTransferContext());
       else
         cto = baseToCto();
 
@@ -148,11 +146,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
 
     this.fromCto = function (cto) {
       if (extensions.fromCto)
-        extensions.fromCto.call(
-          self,
-          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue),
-          cto
-        );
+        extensions.fromCto.call(self, getTransferContext(), cto);
       else
         baseFromCto(cto);
 
@@ -381,7 +375,11 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     //region Data portal methods
 
     function getDataContext() {
-      return new DataContext(dao, user, isDirty, properties.toArray(), getPropertyValue, setPropertyValue);
+      if (!dataContext)
+        dataContext = new DataContext(
+          dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+        );
+      return dataContext.setSelfDirty(isDirty);
     }
 
     function data_create () {
