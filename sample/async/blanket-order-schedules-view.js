@@ -4,7 +4,7 @@ var bo = require('../../source/index.js');
 
 var BlanketOrderScheduleView = require('./blanket-order-schedule-view.js');
 
-var BlanketOrderSchedulesView = bo.ReadOnlyCollection(
+var BlanketOrderSchedulesView = bo.ReadOnlyChildCollection(
   'BlanketOrderSchedulesView',
   BlanketOrderScheduleView
 );
