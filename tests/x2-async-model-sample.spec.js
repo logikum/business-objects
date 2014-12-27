@@ -237,6 +237,62 @@ describe('Asynchronous data portal method', function () {
 
       //endregion
 
+      //region Check client transfer object
+
+      var cto = order.toCto();
+
+      expect(cto.orderKey).toBe(2);
+      expect(cto.vendorName).toBe('Acme Corp.');
+      expect(cto.contractDate).toBe(contractDate);
+      expect(cto.totalPrice).toBe(497.5);
+      expect(cto.schedules).toBe(2);
+      expect(cto.enabled).toBe(true);
+      expect(cto.createdDate.getDate()).toBe(new Date().getDate());
+      expect(cto.modifiedDate).toBeNull();
+
+      expect(cto.address.addressKey).toBe(2);
+      expect(cto.address.orderKey).toBe(2);
+      expect(cto.address.country).toBe('Canada');
+      expect(cto.address.state).toBe('Ontario');
+      expect(cto.address.city).toBe('Toronto');
+      expect(cto.address.line1).toBe('100 Front Street W');
+      expect(cto.address.line2).toBe('');
+      expect(cto.address.postalCode).toBe('M5J 1E3');
+
+      expect(cto.items[0].orderItemKey).toBe(4);
+      expect(cto.items[0].orderKey).toBe(2);
+      expect(cto.items[0].productName).toBe('Tablet Creek 7');
+      expect(cto.items[0].obsolete).toBe(false);
+      expect(cto.items[0].expiry).toBe(expiry1);
+      expect(cto.items[0].quantity).toBe(2);
+      expect(cto.items[0].unitPrice).toBe(200);
+
+      expect(cto.items[1].orderItemKey).toBe(5);
+      expect(cto.items[1].orderKey).toBe(2);
+      expect(cto.items[1].productName).toBe('USB 3.0 cable');
+      expect(cto.items[1].obsolete).toBe(false);
+      expect(cto.items[1].expiry).toBe(expiry2);
+      expect(cto.items[1].quantity).toBe(5);
+      expect(cto.items[1].unitPrice).toBe(19.5);
+
+      expect(cto.items[1].schedules[0].orderScheduleKey).toBe(5);
+      expect(cto.items[1].schedules[0].orderItemKey).toBe(5);
+      expect(cto.items[1].schedules[0].quantity).toBe(2);
+      expect(cto.items[1].schedules[0].totalMass).toBe(0.24);
+      expect(cto.items[1].schedules[0].required).toBe(true);
+      expect(cto.items[1].schedules[0].shipTo).toBe('Madrid');
+      expect(cto.items[1].schedules[0].shipDate).toBe(shipDate1);
+
+      expect(cto.items[1].schedules[1].orderScheduleKey).toBe(6);
+      expect(cto.items[1].schedules[1].orderItemKey).toBe(5);
+      expect(cto.items[1].schedules[1].quantity).toBe(3);
+      expect(cto.items[1].schedules[1].totalMass).toBe(0.36);
+      expect(cto.items[1].schedules[1].required).toBe(true);
+      expect(cto.items[1].schedules[1].shipTo).toBe('Copenhagen');
+      expect(cto.items[1].schedules[1].shipDate).toBe(shipDate2);
+
+      //endregion
+
       done();
     });
   });
@@ -386,6 +442,62 @@ describe('Asynchronous data portal method', function () {
       expect(write45).toThrow('BlanketOrderScheduleView.required property is read-only.');
       expect(write46).toThrow('BlanketOrderScheduleView.shipTo property is read-only.');
       expect(write47).toThrow('BlanketOrderScheduleView.shipDate property is read-only.');
+
+      //endregion
+
+      //region Check client transfer object
+
+      var cto = orderView.toCto();
+
+      expect(cto.orderKey).toBe(2);
+      expect(cto.vendorName).toBe('Acme Corp.');
+      expect(cto.contractDate).toBe(contractDate);
+      expect(cto.totalPrice).toBe(497.5);
+      expect(cto.schedules).toBe(2);
+      expect(cto.enabled).toBe(true);
+      expect(cto.createdDate.getDate()).toBe(new Date().getDate());
+      expect(cto.modifiedDate).toBeNull();
+
+      expect(cto.address.addressKey).toBe(2);
+      expect(cto.address.orderKey).toBe(2);
+      expect(cto.address.country).toBe('Canada');
+      expect(cto.address.state).toBe('Ontario');
+      expect(cto.address.city).toBe('Toronto');
+      expect(cto.address.line1).toBe('100 Front Street W');
+      expect(cto.address.line2).toBe('');
+      expect(cto.address.postalCode).toBe('M5J 1E3');
+
+      expect(cto.items[0].orderItemKey).toBe(4);
+      expect(cto.items[0].orderKey).toBe(2);
+      expect(cto.items[0].productName).toBe('Tablet Creek 7');
+      expect(cto.items[0].obsolete).toBe(false);
+      expect(cto.items[0].expiry).toBe(expiry1);
+      expect(cto.items[0].quantity).toBe(2);
+      expect(cto.items[0].unitPrice).toBe(200);
+
+      expect(cto.items[1].orderItemKey).toBe(5);
+      expect(cto.items[1].orderKey).toBe(2);
+      expect(cto.items[1].productName).toBe('USB 3.0 cable');
+      expect(cto.items[1].obsolete).toBe(false);
+      expect(cto.items[1].expiry).toBe(expiry2);
+      expect(cto.items[1].quantity).toBe(5);
+      expect(cto.items[1].unitPrice).toBe(19.5);
+
+      expect(cto.items[1].schedules[0].orderScheduleKey).toBe(5);
+      expect(cto.items[1].schedules[0].orderItemKey).toBe(5);
+      expect(cto.items[1].schedules[0].quantity).toBe(2);
+      expect(cto.items[1].schedules[0].totalMass).toBe(0.24);
+      expect(cto.items[1].schedules[0].required).toBe(true);
+      expect(cto.items[1].schedules[0].shipTo).toBe('Madrid');
+      expect(cto.items[1].schedules[0].shipDate).toBe(shipDate1);
+
+      expect(cto.items[1].schedules[1].orderScheduleKey).toBe(6);
+      expect(cto.items[1].schedules[1].orderItemKey).toBe(5);
+      expect(cto.items[1].schedules[1].quantity).toBe(3);
+      expect(cto.items[1].schedules[1].totalMass).toBe(0.36);
+      expect(cto.items[1].schedules[1].required).toBe(true);
+      expect(cto.items[1].schedules[1].shipTo).toBe('Copenhagen');
+      expect(cto.items[1].schedules[1].shipDate).toBe(shipDate2);
 
       //endregion
 
