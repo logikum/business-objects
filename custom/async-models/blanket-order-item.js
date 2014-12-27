@@ -90,12 +90,95 @@ function fromCto (ctx, dto) {
 
 //endregion
 
+//region Data portal methods
+
+function dataCreate (ctx, callback) {
+  ctx.dao.create(function (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('productName', dto.productName);
+      ctx.setValue('obsolete',    dto.obsolete);
+      ctx.setValue('expiry',      dto.expiry);
+      ctx.setValue('quantity',    dto.quantity);
+      ctx.setValue('unitPrice',   dto.unitPrice);
+      callback(null);
+    }
+  });
+}
+
+function dataFetch (ctx, dto, method, callback) {
+  ctx.setValue('orderItemKey', dto.orderItemKey);
+  ctx.setValue('orderKey',     dto.orderKey);
+  ctx.setValue('productName',  dto.productName);
+  ctx.setValue('obsolete',     dto.obsolete);
+  ctx.setValue('expiry',       dto.expiry);
+  ctx.setValue('quantity',     dto.quantity);
+  ctx.setValue('unitPrice',    dto.unitPrice);
+  callback(null, dto);
+}
+
+function dataInsert (ctx, callback) {
+  var dto = {
+    orderKey:     ctx.getValue('orderKey'),
+    productName:  ctx.getValue('productName'),
+    obsolete:     ctx.getValue('obsolete'),
+    expiry:       ctx.getValue('expiry'),
+    quantity:     ctx.getValue('quantity'),
+    unitPrice:    ctx.getValue('unitPrice')
+  };
+  ctx.dao.insert(dto, function (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('orderItemKey', dto.orderItemKey);
+      callback(null);
+    }
+  });
+}
+
+function dataUpdate (ctx, callback) {
+  if (ctx.isSelfDirty) {
+    var dto = {
+      orderItemKey: ctx.getValue('orderItemKey'),
+      productName:  ctx.getValue('productName'),
+      obsolete:     ctx.getValue('obsolete'),
+      expiry:       ctx.getValue('expiry'),
+      quantity:     ctx.getValue('quantity'),
+      unitPrice:    ctx.getValue('unitPrice')
+    };
+    ctx.dao.update(dto, function (err, dto) {
+      if (err)
+        callback(err);
+      else
+        callback(null);
+    });
+  }
+}
+
+function dataRemove (ctx, callback) {
+  var primaryKey = ctx.getValue('orderItemKey');
+  ctx.dao.remove(primaryKey, function (err) {
+    if (err)
+      callback(err);
+    else
+      callback(null);
+  });
+}
+
+//endregion
+
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.fromCto = fromCto;
+extensions.dataCreate = dataCreate;
+extensions.dataFetch = dataFetch;
+extensions.dataInsert = dataInsert;
+extensions.dataUpdate = dataUpdate;
+extensions.dataRemove = dataRemove;
 
 var BlanketOrderItem = bo.EditableModel(properties, rules, extensions);
 

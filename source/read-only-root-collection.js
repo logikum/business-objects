@@ -81,6 +81,11 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
 
     //region Data portal methods
 
+    function getDataContext() {
+      function fn () {}
+      return new DataContext(dao, user, false, [], fn, fn);
+    }
+
     function data_fetch (filter, method, callback) {
       // Helper function for post-fetch actions.
       function finish (err, data) {
@@ -119,10 +124,6 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
         }
       } else
         callback(null, self);
-    }
-
-    function getDataContext() {
-      return new DataContext(dao, user, false, null, null);
     }
 
     //endregion

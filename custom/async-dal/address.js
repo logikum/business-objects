@@ -4,7 +4,14 @@ var AddressDao = function() {
 
   this.create = function(callback) {
     console.log('--- Blanket order address DAO.create');
-    callback(null, {});
+    callback(null, {
+      country:    '',
+      state:      '',
+      city:       '',
+      line1:      '',
+      line2:      '',
+      postalCode: ''
+    });
   };
 
   this.fetch = function(filter, callback) {

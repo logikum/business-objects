@@ -63,10 +63,27 @@ function toCto (ctx) {
 
 //endregion
 
+//region Data portal methods
+
+function dataFetch (ctx, dto, method, callback) {
+  ctx.setValue('addressKey', dto.addressKey);
+  ctx.setValue('orderKey',   dto.orderKey);
+  ctx.setValue('country',    dto.country);
+  ctx.setValue('state',      dto.state);
+  ctx.setValue('city',       dto.city);
+  ctx.setValue('line1',      dto.line1);
+  ctx.setValue('line2',      dto.line2);
+  ctx.setValue('postalCode', dto.postalCode);
+  callback(null, dto);
+}
+
+//endregion
+
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
+extensions.dataFetch = dataFetch;
 
 var AddressView = bo.ReadOnlyModel(properties, rules, extensions);
 

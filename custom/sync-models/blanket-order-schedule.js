@@ -86,12 +86,73 @@ function fromCto (ctx, dto) {
 
 //endregion
 
+//region Data portal methods
+
+function dataCreate (ctx) {
+  var dto = ctx.dao.create();
+  ctx.setValue('quantity',  dto.quantity);
+  ctx.setValue('totalMass', dto.totalMass);
+  ctx.setValue('required',  dto.required);
+  ctx.setValue('shipTo',    dto.shipTo);
+  ctx.setValue('shipDate',  dto.shipDate);
+}
+
+function dataFetch (ctx, dto, method) {
+  ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
+  ctx.setValue('orderItemKey',     dto.orderItemKey);
+  ctx.setValue('quantity',         dto.quantity);
+  ctx.setValue('totalMass',        dto.totalMass);
+  ctx.setValue('required',         dto.required);
+  ctx.setValue('shipTo',           dto.shipTo);
+  ctx.setValue('shipDate',         dto.shipDate);
+  return dto;
+}
+
+function dataInsert (ctx) {
+  var dto = {
+    orderItemKey: ctx.getValue('orderItemKey'),
+    quantity:     ctx.getValue('quantity'),
+    totalMass:    ctx.getValue('totalMass'),
+    required:     ctx.getValue('required'),
+    shipTo:       ctx.getValue('shipTo'),
+    shipDate:     ctx.getValue('shipDate')
+  };
+  dto = ctx.dao.insert(dto);
+  ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
+}
+
+function dataUpdate (ctx) {
+  if (ctx.isSelfDirty) {
+    var dto = {
+      orderScheduleKey: ctx.getValue('orderScheduleKey'),
+      quantity:         ctx.getValue('quantity'),
+      totalMass:        ctx.getValue('totalMass'),
+      required:         ctx.getValue('required'),
+      shipTo:           ctx.getValue('shipTo'),
+      shipDate:         ctx.getValue('shipDate')
+    };
+    dto = ctx.dao.update(dto);
+  }
+}
+
+function dataRemove (ctx) {
+  var primaryKey = ctx.getValue('orderScheduleKey');
+  ctx.dao.remove(primaryKey);
+}
+
+//endregion
+
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.fromCto = fromCto;
+extensions.dataCreate = dataCreate;
+extensions.dataFetch = dataFetch;
+extensions.dataInsert = dataInsert;
+extensions.dataUpdate = dataUpdate;
+extensions.dataRemove = dataRemove;
 
 var BlanketOrderSchedule = bo.EditableModelSync(properties, rules, extensions);
 

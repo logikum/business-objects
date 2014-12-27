@@ -91,12 +91,99 @@ function fromCto (ctx, dto) {
 
 //endregion
 
+//region Data portal methods
+
+function dataCreate (ctx, callback) {
+  ctx.dao.create(function (err, dto) {
+    if (err)
+       callback(err);
+    else {
+      ctx.setValue('country',    dto.country);
+      ctx.setValue('state',      dto.state);
+      ctx.setValue('city',       dto.city);
+      ctx.setValue('line1',      dto.line1);
+      ctx.setValue('line2',      dto.line2);
+      ctx.setValue('postalCode', dto.postalCode);
+      callback(null);
+    }
+  });
+}
+
+function dataFetch (ctx, dto, method, callback) {
+  ctx.setValue('addressKey', dto.addressKey);
+  ctx.setValue('orderKey',   dto.orderKey);
+  ctx.setValue('country',    dto.country);
+  ctx.setValue('state',      dto.state);
+  ctx.setValue('city',       dto.city);
+  ctx.setValue('line1',      dto.line1);
+  ctx.setValue('line2',      dto.line2);
+  ctx.setValue('postalCode', dto.postalCode);
+  callback(null, dto);
+}
+
+function dataInsert (ctx, callback) {
+  var dto = {
+    orderKey:   ctx.getValue('orderKey'),
+    country:    ctx.getValue('country'),
+    state:      ctx.getValue('state'),
+    city:       ctx.getValue('city'),
+    line1:      ctx.getValue('line1'),
+    line2:      ctx.getValue('line2'),
+    postalCode: ctx.getValue('postalCode')
+  };
+  ctx.dao.insert(dto, function (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('addressKey', dto.addressKey);
+      callback(null);
+    }
+  });
+}
+
+function dataUpdate (ctx, callback) {
+  if (ctx.isSelfDirty) {
+    var dto = {
+      addressKey: ctx.getValue('addressKey'),
+      country:    ctx.getValue('country'),
+      state:      ctx.getValue('state'),
+      city:       ctx.getValue('city'),
+      line1:      ctx.getValue('line1'),
+      line2:      ctx.getValue('line2'),
+      postalCode: ctx.getValue('postalCode')
+    };
+    ctx.dao.update(dto, function (err, dto) {
+      if (err)
+        callback(err);
+      else
+        callback(null);
+    });
+  }
+}
+
+function dataRemove (ctx, callback) {
+  var primaryKey = ctx.getValue('addressKey');
+  ctx.dao.remove(primaryKey, function (err) {
+    if (err)
+      callback(err);
+    else
+      callback(null);
+  });
+}
+
+//endregion
+
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.fromCto = fromCto;
+extensions.dataCreate = dataCreate;
+extensions.dataFetch = dataFetch;
+extensions.dataInsert = dataInsert;
+extensions.dataUpdate = dataUpdate;
+extensions.dataRemove = dataRemove;
 
 var Address = bo.EditableModel(properties, rules, extensions);
 

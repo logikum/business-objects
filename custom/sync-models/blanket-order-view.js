@@ -74,10 +74,36 @@ function toCto (ctx) {
 
 //endregion
 
+//region Data portal methods
+
+function dataFetch (ctx, filter, method) {
+  var dto;
+  if (method === 'fetchByName')
+  // filter: vendorName
+    dto = ctx.dao.fetchByName(filter);
+  else
+  // filter: primaryKey
+    dto = ctx.dao.fetch(filter);
+  // or:
+  // var dto = ctx.dao[method](filter);
+  ctx.setValue('orderKey',     dto.orderKey);
+  ctx.setValue('vendorName',   dto.vendorName);
+  ctx.setValue('contractDate', dto.contractDate);
+  ctx.setValue('totalPrice',   dto.totalPrice);
+  ctx.setValue('schedules',    dto.schedules);
+  ctx.setValue('enabled',      dto.enabled);
+  ctx.setValue('createdDate',  dto.createdDate);
+  ctx.setValue('modifiedDate', dto.modifiedDate);
+  return dto;
+}
+
+//endregion
+
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
+extensions.dataFetch = dataFetch;
 
 var BlanketOrderView = bo.ReadOnlyModelSync(properties, rules, extensions);
 

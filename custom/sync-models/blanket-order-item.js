@@ -90,12 +90,73 @@ function fromCto (ctx, dto) {
 
 //endregion
 
+//region Data portal methods
+
+function dataCreate (ctx) {
+  var dto = ctx.dao.create();
+  ctx.setValue('productName', dto.productName);
+  ctx.setValue('obsolete',    dto.obsolete);
+  ctx.setValue('expiry',      dto.expiry);
+  ctx.setValue('quantity',    dto.quantity);
+  ctx.setValue('unitPrice',   dto.unitPrice);
+}
+
+function dataFetch (ctx, dto, method) {
+  ctx.setValue('orderItemKey', dto.orderItemKey);
+  ctx.setValue('orderKey',     dto.orderKey);
+  ctx.setValue('productName',  dto.productName);
+  ctx.setValue('obsolete',     dto.obsolete);
+  ctx.setValue('expiry',       dto.expiry);
+  ctx.setValue('quantity',     dto.quantity);
+  ctx.setValue('unitPrice',    dto.unitPrice);
+  return dto;
+}
+
+function dataInsert (ctx) {
+  var dto = {
+    orderKey:     ctx.getValue('orderKey'),
+    productName:  ctx.getValue('productName'),
+    obsolete:     ctx.getValue('obsolete'),
+    expiry:       ctx.getValue('expiry'),
+    quantity:     ctx.getValue('quantity'),
+    unitPrice:    ctx.getValue('unitPrice')
+  };
+  dto = ctx.dao.insert(dto);
+  ctx.setValue('orderItemKey', dto.orderItemKey);
+}
+
+function dataUpdate (ctx) {
+  if (ctx.isSelfDirty) {
+    var dto = {
+      orderItemKey: ctx.getValue('orderItemKey'),
+      productName:  ctx.getValue('productName'),
+      obsolete:     ctx.getValue('obsolete'),
+      expiry:       ctx.getValue('expiry'),
+      quantity:     ctx.getValue('quantity'),
+      unitPrice:    ctx.getValue('unitPrice')
+    };
+    dto = ctx.dao.update(dto);
+  }
+}
+
+function dataRemove (ctx) {
+  var primaryKey = ctx.getValue('orderItemKey');
+  ctx.dao.remove(primaryKey);
+}
+
+//endregion
+
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.fromCto = fromCto;
+extensions.dataCreate = dataCreate;
+extensions.dataFetch = dataFetch;
+extensions.dataInsert = dataInsert;
+extensions.dataUpdate = dataUpdate;
+extensions.dataRemove = dataRemove;
 
 var BlanketOrderItem = bo.EditableModelSync(properties, rules, extensions);
 

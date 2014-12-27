@@ -81,6 +81,11 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
 
     //region Data portal methods
 
+    function getDataContext() {
+      function fn () {}
+      return new DataContext(dao, user, false, [], fn, fn);
+    }
+
     function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
@@ -101,10 +106,6 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
           });
         }
       }
-    }
-
-    function getDataContext() {
-      return new DataContext(dao, user, false, null, null);
     }
 
     //endregion

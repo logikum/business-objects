@@ -495,6 +495,18 @@ var EditableModelCreator = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (canDo(Action.createObject)) {
+        if (parent) {
+          // Copy the values of parent keys.
+          var references = properties.filter(function (property) {
+            return property.isParentKey;
+          });
+          for (var i = 0; i < references.length; i++) {
+            var referenceProperty = references[i];
+            var parentValue = parent[referenceProperty.name];
+            if (parentValue !== undefined)
+              setPropertyValue(referenceProperty, parentValue);
+          }
+        }
         if (extensions.dataInsert) {
           // Custom insert.
           extensions.dataInsert.call(self, getDataContext(), function (err) {
@@ -505,18 +517,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
           });
         } else {
           // Standard insert.
-          if (parent) {
-            // Copy the values of parent keys.
-            var references = properties.filter(function (property) {
-              return property.isParentKey;
-            });
-            for (var i = 0; i < references.length; i++) {
-              var referenceProperty = references[i];
-              var parentValue = parent[referenceProperty.name];
-              if (parentValue !== undefined)
-                setPropertyValue(referenceProperty, parentValue);
-            }
-          }
           var dto = toDto.call(self);
           dao.insert(dto, function (err, dto) {
             if (err) {

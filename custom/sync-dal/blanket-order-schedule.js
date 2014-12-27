@@ -4,7 +4,13 @@ var BlanketOrderScheduleDao = function() {
 
   this.create = function() {
     console.log('--- Blanket order schedule DAO.create');
-    return {};
+    return {
+      quantity:  0,
+      totalMass: 0.0,
+      required:  true,
+      shipTo:    '',
+      shipDate:  new Date(1980, 1, 1)
+    };
   };
 
   this.fetch = function(filter) {

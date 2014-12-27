@@ -147,7 +147,6 @@ function dataInsert (ctx) {
   dto = ctx.dao.insert(dto);
   ctx.setValue('orderKey',     dto.orderKey);
   ctx.setValue('createdDate',  dto.createdDate);
-  return dto;
 }
 
 function dataUpdate (ctx) {

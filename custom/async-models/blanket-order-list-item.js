@@ -63,10 +63,27 @@ function toCto (ctx) {
 
 //endregion
 
+//region Data portal methods
+
+function dataFetch (ctx, dto, method, callback) {
+  ctx.setValue('orderKey',     dto.orderKey);
+  ctx.setValue('vendorName',   dto.vendorName);
+  ctx.setValue('contractDate', dto.contractDate);
+  ctx.setValue('totalPrice',   dto.totalPrice);
+  ctx.setValue('schedules',    dto.schedules);
+  ctx.setValue('enabled',      dto.enabled);
+  ctx.setValue('createdDate',  dto.createdDate);
+  ctx.setValue('modifiedDate', dto.modifiedDate);
+  callback(null, dto);
+}
+
+//endregion
+
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
+extensions.dataFetch = dataFetch;
 
 var BlanketOrderListItem = bo.ReadOnlyModel(properties, rules, extensions);
 

@@ -4,7 +4,13 @@ var BlanketOrderItemDao = function() {
 
   this.create = function() {
     console.log('--- Blanket order item DAO.create');
-    return {};
+    return {
+      productName: '',
+      obsolete:    false,
+      expiry:      new Date(1980, 1, 1),
+      quantity:    0,
+      unitPrice:   0.0
+    };
   };
 
   this.fetch = function(filter) {

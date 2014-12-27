@@ -169,7 +169,7 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     //region Data portal methods
 
     function getDataContext() {
-      return new DataContext(dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue);
+      return new DataContext(dao || {}, user, false, properties.toArray(), getPropertyValue, setPropertyValue);
     }
 
     function data_fetch (filter, method, callback) {

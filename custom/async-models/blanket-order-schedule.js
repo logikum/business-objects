@@ -86,12 +86,96 @@ function fromCto (ctx, dto) {
 
 //endregion
 
+//region Data portal methods
+
+function dataCreate (ctx, callback) {
+  ctx.dao.create(function (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('quantity',  dto.quantity);
+      ctx.setValue('totalMass', dto.totalMass);
+      ctx.setValue('required',  dto.required);
+      ctx.setValue('shipTo',    dto.shipTo);
+      ctx.setValue('shipDate',  dto.shipDate);
+      callback(null);
+    }
+  });
+}
+
+function dataFetch (ctx, dto, method, callback) {
+  ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
+  ctx.setValue('orderItemKey',     dto.orderItemKey);
+  ctx.setValue('quantity',         dto.quantity);
+  ctx.setValue('totalMass',        dto.totalMass);
+  ctx.setValue('required',         dto.required);
+  ctx.setValue('shipTo',           dto.shipTo);
+  ctx.setValue('shipDate',         dto.shipDate);
+  callback(null, dto);
+}
+
+function dataInsert (ctx, callback) {
+  var dto = {
+    orderItemKey: ctx.getValue('orderItemKey'),
+    quantity:     ctx.getValue('quantity'),
+    totalMass:    ctx.getValue('totalMass'),
+    required:     ctx.getValue('required'),
+    shipTo:       ctx.getValue('shipTo'),
+    shipDate:     ctx.getValue('shipDate')
+  };
+  ctx.dao.insert(dto, function (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
+      callback(null);
+    }
+  });
+}
+
+function dataUpdate (ctx, callback) {
+  if (ctx.isSelfDirty) {
+    var dto = {
+      orderScheduleKey: ctx.getValue('orderScheduleKey'),
+      quantity:         ctx.getValue('quantity'),
+      totalMass:        ctx.getValue('totalMass'),
+      required:         ctx.getValue('required'),
+      shipTo:           ctx.getValue('shipTo'),
+      shipDate:         ctx.getValue('shipDate')
+    };
+    ctx.dao.update(dto, function (err, dto) {
+      if (err)
+        callback(err);
+      else {
+        callback(null);
+      }
+    });
+  }
+}
+
+function dataRemove (ctx, callback) {
+  var primaryKey = ctx.getValue('orderScheduleKey');
+  ctx.dao.remove(primaryKey, function (err) {
+    if (err)
+      callback(err);
+    else
+      callback(null);
+  });
+}
+
+//endregion
+
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.fromCto = fromCto;
+extensions.dataCreate = dataCreate;
+extensions.dataFetch = dataFetch;
+extensions.dataInsert = dataInsert;
+extensions.dataUpdate = dataUpdate;
+extensions.dataRemove = dataRemove;
 
 var BlanketOrderSchedule = bo.EditableModel(properties, rules, extensions);
 

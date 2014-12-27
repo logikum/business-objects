@@ -67,13 +67,13 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    addressKey:     this.addressKey,
+    addressKey: this.addressKey,
     orderKey:   this.orderKey,
-    country: this.country,
-    state:   this.state,
-    city:    this.city,
+    country:    this.country,
+    state:      this.state,
+    city:       this.city,
     line1:      this.line1,
-    line2:  this.line2,
+    line2:      this.line2,
     postalCode: this.postalCode
   };
 }
@@ -91,12 +91,77 @@ function fromCto (ctx, dto) {
 
 //endregion
 
+//region Data portal methods
+
+function dataCreate (ctx) {
+  var dto = ctx.dao.create();
+  ctx.setValue('country',    dto.country);
+  ctx.setValue('state',      dto.state);
+  ctx.setValue('city',       dto.city);
+  ctx.setValue('line1',      dto.line1);
+  ctx.setValue('line2',      dto.line2);
+  ctx.setValue('postalCode', dto.postalCode);
+}
+
+function dataFetch (ctx, dto, method) {
+  ctx.setValue('addressKey', dto.addressKey);
+  ctx.setValue('orderKey',   dto.orderKey);
+  ctx.setValue('country',    dto.country);
+  ctx.setValue('state',      dto.state);
+  ctx.setValue('city',       dto.city);
+  ctx.setValue('line1',      dto.line1);
+  ctx.setValue('line2',      dto.line2);
+  ctx.setValue('postalCode', dto.postalCode);
+  return dto;
+}
+
+function dataInsert (ctx) {
+  var dto = {
+    orderKey:   ctx.getValue('orderKey'),
+    country:    ctx.getValue('country'),
+    state:      ctx.getValue('state'),
+    city:       ctx.getValue('city'),
+    line1:      ctx.getValue('line1'),
+    line2:      ctx.getValue('line2'),
+    postalCode: ctx.getValue('postalCode')
+  };
+  dto = ctx.dao.insert(dto);
+  ctx.setValue('addressKey', dto.addressKey);
+}
+
+function dataUpdate (ctx) {
+  if (ctx.isSelfDirty) {
+    var dto = {
+      addressKey: ctx.getValue('addressKey'),
+      country:    ctx.getValue('country'),
+      state:      ctx.getValue('state'),
+      city:       ctx.getValue('city'),
+      line1:      ctx.getValue('line1'),
+      line2:      ctx.getValue('line2'),
+      postalCode: ctx.getValue('postalCode')
+    };
+    dto = ctx.dao.update(dto);
+  }
+}
+
+function dataRemove (ctx) {
+  var primaryKey = ctx.getValue('addressKey');
+  ctx.dao.remove(primaryKey);
+}
+
+//endregion
+
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.fromCto = fromCto;
+extensions.dataCreate = dataCreate;
+extensions.dataFetch = dataFetch;
+extensions.dataInsert = dataInsert;
+extensions.dataUpdate = dataUpdate;
+extensions.dataRemove = dataRemove;
 
 var Address = bo.EditableModelSync(properties, rules, extensions);
 

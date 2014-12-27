@@ -63,10 +63,26 @@ function toCto (ctx) {
 
 //endregion
 
+//region Data portal methods
+
+function dataFetch (ctx, dto, method) {
+  ctx.setValue('orderItemKey', dto.orderItemKey);
+  ctx.setValue('orderKey',     dto.orderKey);
+  ctx.setValue('productName',  dto.productName);
+  ctx.setValue('obsolete',     dto.obsolete);
+  ctx.setValue('expiry',       dto.expiry);
+  ctx.setValue('quantity',     dto.quantity);
+  ctx.setValue('unitPrice',    dto.unitPrice);
+  return dto;
+}
+
+//endregion
+
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
+extensions.dataFetch = dataFetch;
 
 var BlanketOrderItemView = bo.ReadOnlyModelSync(properties, rules, extensions);
 

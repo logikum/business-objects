@@ -423,23 +423,23 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     function data_insert () {
       // Check permissions.
       if (canDo(Action.createObject)) {
+        if (parent) {
+          // Copy the values of parent keys.
+          var references = properties.filter(function (property) {
+            return property.isParentKey;
+          });
+          for (var i = 0; i < references.length; i++) {
+            var referenceProperty = references[i];
+            var parentValue = parent[referenceProperty.name];
+            if (parentValue !== undefined)
+              setPropertyValue(referenceProperty, parentValue);
+          }
+        }
         if (extensions.dataInsert) {
           // Custom insert.
           extensions.dataInsert.call(self, getDataContext());
         } else {
           // Standard insert.
-          if (parent) {
-            // Copy the values of parent keys.
-            var references = properties.filter(function (property) {
-              return property.isParentKey;
-            });
-            for (var i = 0; i < references.length; i++) {
-              var referenceProperty = references[i];
-              var parentValue = parent[referenceProperty.name];
-              if (parentValue !== undefined)
-                setPropertyValue(referenceProperty, parentValue);
-            }
-          }
           var dto = toDto.call(self);
           dto = dao.insert(dto);
           fromDto.call(self, dto);
