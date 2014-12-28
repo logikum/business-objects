@@ -1,13 +1,13 @@
 'use strict';
 
 var EditableModel = require('./editable-model.js');
-var EditableCollection = require('./editable-collection.js');
+var EditableChildCollection = require('./editable-child-collection.js');
 var ReadOnlyModel = require('./read-only-model.js');
 var ReadOnlyChildCollection = require('./read-only-child-collection.js');
 var ReadOnlyRootCollection = require('./read-only-root-collection.js');
 
 var EditableModelSync = require('./editable-model-sync.js');
-var EditableCollectionSync = require('./editable-collection-sync.js');
+var EditableChildCollectionSync = require('./editable-child-collection-sync.js');
 var ReadOnlyModelSync = require('./read-only-model-sync.js');
 var ReadOnlyChildCollectionSync = require('./read-only-child-collection-sync.js');
 var ReadOnlyRootCollectionSync = require('./read-only-root-collection-sync.js');
@@ -20,13 +20,13 @@ var rules = require('./rules/index.js');
 
 var businessObjects = {
   EditableModel: EditableModel,
-  EditableCollection: EditableCollection,
+  EditableChildCollection: EditableChildCollection,
   ReadOnlyModel: ReadOnlyModel,
   ReadOnlyChildCollection: ReadOnlyChildCollection,
   ReadOnlyRootCollection: ReadOnlyRootCollection,
 
   EditableModelSync: EditableModelSync,
-  EditableCollectionSync: EditableCollectionSync,
+  EditableChildCollectionSync: EditableChildCollectionSync,
   ReadOnlyModelSync: ReadOnlyModelSync,
   ReadOnlyChildCollectionSync: ReadOnlyChildCollectionSync,
   ReadOnlyRootCollectionSync: ReadOnlyRootCollectionSync,
