@@ -19,6 +19,7 @@ var ensureArgument = require('./ensure-argument.js');
  * dataInsert   (function)    Saves a new instance in the data source.
  * dataUpdate   (function)    Saves an existing instance in the data source.
  * dataRemove   (function)    Deletes an existing instance from the data source.
+ * dataExecute  (function)    Executes a server side command.
  */
 function ExtensionManagerBase(dataSource, modelPath, addArgs) {
 
@@ -32,16 +33,17 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
   var self = this;
   var methods = {};
   var definitions = [
-    { name: 'daoBuilder', length: 2 },
-    { name: 'toDto',      length: 1 },
-    { name: 'fromDto',    length: 2 },
-    { name: 'toCto',      length: 1 },
-    { name: 'fromCto',    length: 2 },
-    { name: 'dataCreate', length: 0 + addArgs },
-    { name: 'dataFetch',  length: 2 + addArgs },
-    { name: 'dataInsert', length: 0 + addArgs },
-    { name: 'dataUpdate', length: 0 + addArgs },
-    { name: 'dataRemove', length: 0 + addArgs }
+    { name: 'daoBuilder',  length: 2 },
+    { name: 'toDto',       length: 1 },
+    { name: 'fromDto',     length: 2 },
+    { name: 'toCto',       length: 1 },
+    { name: 'fromCto',     length: 2 },
+    { name: 'dataCreate',  length: 0 + addArgs },
+    { name: 'dataFetch',   length: 2 + addArgs },
+    { name: 'dataInsert',  length: 0 + addArgs },
+    { name: 'dataUpdate',  length: 0 + addArgs },
+    { name: 'dataRemove',  length: 0 + addArgs },
+    { name: 'dataExecute', length: 1 + addArgs }
   ];
 
   definitions.map(function(definition) {

@@ -5,8 +5,10 @@ var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
+var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataContext = require('./shared/data-context.js');
 var UserInfo = require('./shared/user-info.js');
+var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
@@ -17,6 +19,10 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
     'The name argument of ReadOnlyRootCollectionSyncCreator must be a non-empty string.');
   itemType = ensureArgument.isMandatoryFunction(itemType,
     'The itemType argument of ReadOnlyRootCollectionSyncCreator must be an ReadOnlyRootModelSync type.');
+  rules = ensureArgument.isMandatoryType(rules, RuleManager,
+    'Argument rules of ReadOnlyRootCollectionSyncCreator must be a RuleManager object.');
+  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
+    'Argument extensions of ReadOnlyRootCollectionSyncCreator must be an ExtensionManagerSync object.');
 
   var ReadOnlyRootCollectionSync = function () {
 

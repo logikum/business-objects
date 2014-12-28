@@ -12,12 +12,13 @@ describe('Authorization action enumeration', function () {
     expect(AuthorizationAction.createObject).toBe(3);
     expect(AuthorizationAction.updateObject).toBe(4);
     expect(AuthorizationAction.removeObject).toBe(5);
-    expect(AuthorizationAction.executeMethod).toBe(6);
+    expect(AuthorizationAction.executeCommand).toBe(6);
+    expect(AuthorizationAction.executeMethod).toBe(7);
   });
 
   it('count method returns the item count', function() {
 
-    expect(AuthorizationAction.count()).toBe(7);
+    expect(AuthorizationAction.count()).toBe(8);
   });
 
   it('getName method returns the item name', function() {
@@ -28,7 +29,8 @@ describe('Authorization action enumeration', function () {
     expect(AuthorizationAction.getName(3)).toBe('createObject');
     expect(AuthorizationAction.getName(4)).toBe('updateObject');
     expect(AuthorizationAction.getName(5)).toBe('removeObject');
-    expect(AuthorizationAction.getName(6)).toBe('executeMethod');
+    expect(AuthorizationAction.getName(6)).toBe('executeCommand');
+    expect(AuthorizationAction.getName(7)).toBe('executeMethod');
   });
 
   it('getValue method returns the item value', function() {
@@ -39,29 +41,32 @@ describe('Authorization action enumeration', function () {
     expect(AuthorizationAction.getValue('createObject')).toBe(3);
     expect(AuthorizationAction.getValue('updateObject')).toBe(4);
     expect(AuthorizationAction.getValue('removeObject')).toBe(5);
-    expect(AuthorizationAction.getValue('executeMethod')).toBe(6);
+    expect(AuthorizationAction.getValue('executeCommand')).toBe(6);
+    expect(AuthorizationAction.getValue('executeMethod')).toBe(7);
   });
 
   it('check method inspects a value', function() {
 
-    function check1() {AuthorizationAction.check(-1); }
-    function check2() {AuthorizationAction.check(AuthorizationAction.readProperty); }
-    function check3() {AuthorizationAction.check(AuthorizationAction.writeProperty); }
-    function check4() {AuthorizationAction.check(AuthorizationAction.fetchObject); }
-    function check5() {AuthorizationAction.check(AuthorizationAction.createObject); }
-    function check6() {AuthorizationAction.check(AuthorizationAction.updateObject); }
-    function check7() {AuthorizationAction.check(AuthorizationAction.removeObject); }
-    function check8() {AuthorizationAction.check(AuthorizationAction.executeMethod); }
-    function check9() {AuthorizationAction.check(7); }
+    function check01() {AuthorizationAction.check(-1); }
+    function check02() {AuthorizationAction.check(AuthorizationAction.readProperty); }
+    function check03() {AuthorizationAction.check(AuthorizationAction.writeProperty); }
+    function check04() {AuthorizationAction.check(AuthorizationAction.fetchObject); }
+    function check05() {AuthorizationAction.check(AuthorizationAction.createObject); }
+    function check06() {AuthorizationAction.check(AuthorizationAction.updateObject); }
+    function check07() {AuthorizationAction.check(AuthorizationAction.removeObject); }
+    function check08() {AuthorizationAction.check(AuthorizationAction.executeCommand); }
+    function check09() {AuthorizationAction.check(AuthorizationAction.executeMethod); }
+    function check10() {AuthorizationAction.check(8); }
 
-    expect(check1).toThrow();
-    expect(check2).not.toThrow();
-    expect(check3).not.toThrow();
-    expect(check4).not.toThrow();
-    expect(check5).not.toThrow();
-    expect(check6).not.toThrow();
-    expect(check7).not.toThrow();
-    expect(check8).not.toThrow();
-    expect(check9).toThrow();
+    expect(check01).toThrow();
+    expect(check02).not.toThrow();
+    expect(check03).not.toThrow();
+    expect(check04).not.toThrow();
+    expect(check05).not.toThrow();
+    expect(check06).not.toThrow();
+    expect(check07).not.toThrow();
+    expect(check08).not.toThrow();
+    expect(check09).not.toThrow();
+    expect(check10).toThrow();
   });
 });

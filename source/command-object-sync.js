@@ -2,7 +2,6 @@
 
 var util = require('util');
 var ModelBase = require('./model-base.js');
-var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
@@ -11,7 +10,7 @@ var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
 var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
-var ExtensionManager = require('./shared/extension-manager.js');
+var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
@@ -21,40 +20,37 @@ var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
+var ValidationContext = require('./rules/validation-context.js');
 
-var ReadOnlyModelCreator = function(properties, rules, extensions) {
+var CommandObjectSyncCreator = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-    'Argument properties of ReadOnlyModelCreator must be a PropertyManager object.');
+    'Argument properties of CommandObjectSyncCreator must be a PropertyManager object.');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-    'Argument rules of ReadOnlyModelCreator must be a RuleManager object.');
-  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-    'Argument extensions of ReadOnlyModelCreator must be an ExtensionManager object.');
+    'Argument rules of CommandObjectSyncCreator must be a RuleManager object.');
+  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
+    'Argument extensions of CommandObjectSyncCreator must be an ExtensionManagerSync object.');
 
-  var ReadOnlyModel = function() {
+  var CommandObjectSync = function() {
 
     var self = this;
+    var isDirty = false;
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
+    var isValidated = false;
     var dao = null;
     var user = null;
     var dataContext = null;
     var xferContext = null;
 
-    // Determine if root or child element.
-    var parent = ensureArgument.isOptionalType(arguments[0], [ ModelBase, CollectionBase ],
-      'Argument parent of ReadOnlyModel constructor must be a read-only model or collection object.');
-
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
 
     // Get data access object.
-    if (!parent || parent instanceof ModelBase) {
-      if (extensions.daoBuilder)
-        dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-      else
-        dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
-    }
+    if (extensions.daoBuilder)
+      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
+    else
+      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Get principal.
     if (config.userReader) {
@@ -68,6 +64,23 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
       if (!xferContext)
         xferContext = new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
       return xferContext;
+    }
+
+    function baseToDto() {
+      var dto = {};
+      properties.filter(function (property) {
+        return property.isOnDto;
+      }).forEach(function (property) {
+        dto[property.name] = getPropertyValue(property);
+      });
+      return dto;
+    }
+
+    function toDto () {
+      if (extensions.toDto)
+        return extensions.toDto.call(self, getTransferContext());
+      else
+        return baseToDto();
     }
 
     function baseFromDto(dto) {
@@ -87,30 +100,6 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
         baseFromDto(dto);
     }
 
-    function baseToCto() {
-      var cto = {};
-      properties.filter(function (property) {
-        return property.isOnCto;
-      }).forEach(function (property) {
-        cto[property.name] = readPropertyValue(property);
-      });
-      return cto;
-    }
-
-    this.toCto = function () {
-      var cto = {};
-      if (extensions.toCto)
-        cto = extensions.toCto.call(self, getTransferContext());
-      else
-        cto = baseToCto();
-
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        cto[property.name] = child.toCto();
-      });
-      return cto;
-    };
-
     //endregion
 
     //region Permissions
@@ -122,6 +111,12 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     function canBeRead (property) {
       return rules.hasPermission(
         getAuthorizationContext(Action.readProperty, property.name)
+      );
+    }
+
+    function canBeWritten (property) {
+      return rules.hasPermission(
+        getAuthorizationContext(Action.writeProperty, property.name)
       );
     }
 
@@ -141,27 +136,11 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
 
     //region Child methods
 
-    function fetchChildren(dto, callback) {
-      var count = 0;
-      var error = null;
-
-      function finish (err) {
-        error = error || err;
-        // Check if all children are done.
-        if (++count === properties.childCount()) {
-          callback(error);
-        }
-      }
-      if (properties.childCount()) {
-        properties.children().forEach(function(property) {
-          var child = getPropertyValue(property);
-          if (child instanceof ModelBase)
-            child.fetch(dto[property.name], undefined, finish);
-          else
-            child.fetch(dto[property.name], finish);
-        });
-      } else
-        callback(null);
+    function loadChildren(dto) {
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        child.fetch(dto[property.name]);
+      });
     }
 
     //endregion
@@ -173,63 +152,57 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
         dataContext = new DataContext(
           dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext;
+      return dataContext.setSelfDirty(isDirty);
     }
 
-    function data_fetch (filter, method, callback) {
-      // Helper function for post-fetch actions.
-      function finish (dto) {
-        // Fetch children as well.
-        fetchChildren(dto, function (err) {
-          if (err)
-            callback(err);
-          else
-            callback(null, self);
-        });
-      }
+    function data_execute (method) {
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
-        if (extensions.dataFetch) {
-          // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
-            if (err)
-              callback(err);
-            else
-              finish(dto);
-          });
+      if (method === 'execute' ? canDo(Action.executeCommand) : canExecute(method)) {
+        if (extensions.dataExecute) {
+          // Custom execute.
+          extensions.dataExecute.call(self, getDataContext(), method);
         } else {
-          // Standard fetch.
-          if (parent) {
-            // Child element gets data from parent.
-            fromDto.call(self, filter);
-            finish(filter);
-          } else {
-            // Root element fetches data from repository.
-            dao[method](filter, function (err, dto) {
-              if (err) {
-                callback(err);
-              } else {
-                fromDto.call(self, dto);
-                finish(dto);
-              }
-            });
-          }
+          // Standard execute.
+          var dto = toDto.call(self);
+          dto = dao[method](dto);
+          fromDto.call(self, dto);
         }
-      } else
-        callback(null, self);
+        // Load children as well.
+        loadChildren(dto);
+      }
     }
 
     //endregion
 
     //region Actions
 
-    this.fetch = function(filter, method, callback) {
-      data_fetch(filter, method || 'fetch', callback);
+    this.execute = function(method) {
+      data_execute(method || 'execute');
     };
 
     //endregion
 
     //region Validation
+
+    this.isValid = function() {
+      if (!isValidated)
+        this.checkRules();
+
+      return brokenRules.isValid();
+    };
+
+    this.checkRules = function() {
+      brokenRules.clear();
+
+      properties.forEach(function(property) {
+        validate(property);
+      });
+      isValidated = true;
+    };
+
+    function validate(property) {
+      rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
+    }
 
     this.getBrokenRules = function(namespace) {
       return brokenRules.output(namespace);
@@ -244,9 +217,8 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     }
 
     function setPropertyValue(property, value) {
-      store.setValue(property, value);
-      //if (store.setValue(property, value))
-      //  markAsChanged(true);
+      if (store.setValue(property, value))
+        markAsChanged(true);
     }
 
     function readPropertyValue(property) {
@@ -254,6 +226,13 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
         return store.getValue(property);
       else
         return null;
+    }
+
+    function writePropertyValue(property, value) {
+      if (canBeWritten(property)) {
+        if (store.setValue(property, value))
+          markAsChanged(true);
+      }
     }
 
     properties.map(function(property) {
@@ -267,7 +246,9 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new ModelError(properties.name + '.' + property.name + ' property is read-only.');
+            if (property.isReadOnly)
+              throw new ModelError(properties.name + '.' + property.name + ' property is read-only.');
+            writePropertyValue(property, value);
           },
           enumerable: true
         });
@@ -275,9 +256,7 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, function (err, item) {
-            store.initValue(property, item);
-          });
+          store.initValue(property, property.type.create(self));
         else                      // Collection
           store.initValue(property, new property.type(self));
 
@@ -298,39 +277,19 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(ReadOnlyModel, ModelBase);
+  util.inherits(CommandObjectSync, ModelBase);
 
-  ReadOnlyModel.prototype.name = properties.name;
+  CommandObjectSync.prototype.name = properties.name;
 
   //region Factory methods
 
-  ReadOnlyModel.fetch = function(filter, method, callback) {
-    if (!callback) {
-      callback = method;
-      method = undefined;
-    }
-    var instance = new ReadOnlyModel();
-    instance.fetch(filter, method, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
-  };
-
-  ReadOnlyModel.load = function(parent, data, callback) {
-    var instance = new ReadOnlyModel(parent);
-    instance.fetch(data, undefined, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  CommandObjectSync.create = function() {
+    return new CommandObjectSync();
   };
 
   //endregion
 
-  return ReadOnlyModel;
+  return CommandObjectSync;
 };
 
-module.exports = ReadOnlyModelCreator;
+module.exports = CommandObjectSyncCreator;

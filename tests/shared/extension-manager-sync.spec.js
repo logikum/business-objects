@@ -48,6 +48,7 @@ describe('Extension manager', function() {
     expect(em.dataInsert).toBeDefined();
     expect(em.dataUpdate).toBeDefined();
     expect(em.dataRemove).toBeDefined();
+    expect(em.dataExecute).toBeDefined();
   });
 
   it('has the defined read-only properties', function() {
@@ -186,5 +187,19 @@ describe('Extension manager', function() {
     expect(set2).toThrow();
     expect(set3).not.toThrow();
     expect(set4).toThrow();
+  });
+
+  it('dataExecute property works', function() {
+    function set1() { em.dataExecute = null; }
+    function set2() { em.dataExecute = fn0; }
+    function set3() { em.dataExecute = fn1; }
+    function set4() { em.dataExecute = fn2; }
+    function set5() { em.dataExecute = fn3; }
+
+    expect(set1).toThrow();
+    expect(set2).toThrow();
+    expect(set3).toThrow();
+    expect(set4).not.toThrow();
+    expect(set5).toThrow();
   });
 });

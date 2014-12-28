@@ -4,6 +4,7 @@ var util = require('util');
 var ModelBase = require('./model-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
+var ModelError = require('./shared/model-error.js');
 
 var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
@@ -25,14 +26,12 @@ var MODEL_STATE = require('./shared/model-state.js');
 
 var EditableModelSyncCreator = function(properties, rules, extensions) {
 
-  if (!(properties instanceof PropertyManager))
-    throw new Error('Argument properties of EditableModelSyncCreator must be a PropertyManager object.');
-
-  if (!(rules instanceof RuleManager))
-    throw new Error('Argument rules of EditableModelSyncCreator must be a RuleManager object.');
-
-  if (!(extensions instanceof ExtensionManagerSync))
-    throw new Error('Argument extensions of EditableModelSyncCreator must be an ExtensionManagerSync object.');
+  properties = ensureArgument.isMandatoryType(properties, PropertyManager,
+      'Argument properties of EditableModelSyncCreator must be a PropertyManager object.');
+  rules = ensureArgument.isMandatoryType(rules, RuleManager,
+    'Argument rules of EditableModelSyncCreator must be a RuleManager object.');
+  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
+    'Argument extensions of EditableModelSyncCreator must be an ExtensionManagerSync object.');
 
   var EditableModelSync = function() {
 
@@ -238,7 +237,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
     }
 
     function illegal(newState) {
-      throw new Error('Illegal state transition: ' +
+      throw new ModelError('Illegal state transition: ' +
       (state == null ? 'NULL' : MODEL_STATE.getName(state)) + ' => ' +
       MODEL_STATE.getName(newState));
     }
@@ -584,7 +583,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
           },
           set: function (value) {
             if (property.isReadOnly)
-              throw new Error(properties.name + '.' + property.name + ' property is read-only.');
+              throw new ModelError(properties.name + '.' + property.name + ' property is read-only.');
             writePropertyValue(property, value);
           },
           enumerable: true
@@ -602,7 +601,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new Error('Property ' + properties.name + '.' + property.name + ' is read-only.');
+            throw new ModelError('Property ' + properties.name + '.' + property.name + ' is read-only.');
           },
           enumerable: false
         });

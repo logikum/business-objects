@@ -5,6 +5,7 @@ var ModelBase = require('./model-base.js');
 var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
+var ModelError = require('./shared/model-error.js');
 
 var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
@@ -23,14 +24,12 @@ var AuthorizationContext = require('./rules/authorization-context.js');
 
 var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
 
-  if (!(properties instanceof PropertyManager))
-    throw new Error('Argument properties of ReadOnlyModelSyncCreator must be a PropertyManager object.');
-
-  if (!(rules instanceof RuleManager))
-    throw new Error('Argument rules of ReadOnlyModelSyncCreator must be a RuleManager object.');
-
-  if (!(extensions instanceof ExtensionManagerSync))
-    throw new Error('Argument extensions of ReadOnlyModelSyncCreator must be an ExtensionManagerSync object.');
+  properties = ensureArgument.isMandatoryType(properties, PropertyManager,
+    'Argument properties of ReadOnlyModelSyncCreator must be a PropertyManager object.');
+  rules = ensureArgument.isMandatoryType(rules, RuleManager,
+    'Argument rules of ReadOnlyModelSyncCreator must be a RuleManager object.');
+  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
+    'Argument extensions of ReadOnlyModelSyncCreator must be an ExtensionManagerSync object.');
 
   var ReadOnlyModelSync = function() {
 
@@ -232,7 +231,7 @@ var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new Error(properties.name + '.' + property.name + ' property is read-only.');
+            throw new ModelError(properties.name + '.' + property.name + ' property is read-only.');
           },
           enumerable: true
         });
@@ -249,7 +248,7 @@ var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new Error('Property ' + properties.name + '.' + property.name + ' is read-only.');
+            throw new ModelError('Property ' + properties.name + '.' + property.name + ' is read-only.');
           },
           enumerable: false
         });

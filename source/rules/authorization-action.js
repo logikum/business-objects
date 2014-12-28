@@ -15,7 +15,8 @@ function AuthorizationAction() {
   this.updateObject = 4;
   this.removeObject = 5;
 
-  this.executeMethod = 6;
+  this.executeCommand = 6;
+  this.executeMethod = 7;
 
   // Immutable object.
   Object.freeze(this);
