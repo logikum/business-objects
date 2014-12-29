@@ -1,4 +1,4 @@
-console.log('Testing data portal methods of asynchronous models.js...');
+console.log('Testing data portal methods of asynchronous models...');
 
 var BlanketOrder = require('../sample/async/blanket-order.js');
 var BlanketOrderView = require('../sample/async/blanket-order-view.js');

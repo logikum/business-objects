@@ -217,8 +217,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     }
 
     function setPropertyValue(property, value) {
-      if (store.setValue(property, value))
-        markAsChanged(true);
+      store.setValue(property, value);
     }
 
     function readPropertyValue(property) {
@@ -229,10 +228,8 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     }
 
     function writePropertyValue(property, value) {
-      if (canBeWritten(property)) {
-        if (store.setValue(property, value))
-          markAsChanged(true);
-      }
+      if (canBeWritten(property))
+        store.setValue(property, value);
     }
 
     properties.map(function(property) {

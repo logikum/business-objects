@@ -1,4 +1,4 @@
-console.log('Testing data portal methods of custom synchronous models.js...');
+console.log('Testing data portal methods of custom synchronous models...');
 
 var BlanketOrder = require('../custom/sync-models/blanket-order.js');
 var BlanketOrderView = require('../custom/sync-models/blanket-order-view.js');
