@@ -10,7 +10,7 @@ var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
 var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
-var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var ExtensionManager = require('./shared/extension-manager.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
@@ -22,16 +22,16 @@ var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
 
-var CommandObjectSyncCreator = function(properties, rules, extensions) {
+var CommandObjectCreator = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-    'Argument properties of CommandObjectSyncCreator must be a PropertyManager object.');
+      'Argument properties of CommandObjectCreator must be a PropertyManager object.');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-    'Argument rules of CommandObjectSyncCreator must be a RuleManager object.');
-  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-    'Argument extensions of CommandObjectSyncCreator must be an ExtensionManagerSync object.');
+      'Argument rules of CommandObjectCreator must be a RuleManager object.');
+  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
+      'Argument extensions of CommandObjectCreator must be an ExtensionManager object.');
 
-  var CommandObjectSync = function() {
+  var CommandObject = function() {
 
     var self = this;
     var store = new DataStore();
@@ -54,7 +54,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     // Get principal.
     if (config.userReader) {
       user = ensureArgument.isOptionalType(config.userReader(), UserInfo,
-        'The userReader method of business objects configuration must return a UserInfo instance.');
+          'The userReader method of business objects configuration must return a UserInfo instance.');
     }
 
     //region Transfer object methods
@@ -109,25 +109,25 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
 
     function canBeRead (property) {
       return rules.hasPermission(
-        getAuthorizationContext(Action.readProperty, property.name)
+          getAuthorizationContext(Action.readProperty, property.name)
       );
     }
 
     function canBeWritten (property) {
       return rules.hasPermission(
-        getAuthorizationContext(Action.writeProperty, property.name)
+          getAuthorizationContext(Action.writeProperty, property.name)
       );
     }
 
     function canDo (action) {
       return rules.hasPermission(
-        getAuthorizationContext(action)
+          getAuthorizationContext(action)
       );
     }
 
     function canExecute (methodName) {
       return rules.hasPermission(
-        getAuthorizationContext(Action.executeMethod, methodName)
+          getAuthorizationContext(Action.executeMethod, methodName)
       );
     }
 
@@ -135,11 +135,27 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
 
     //region Child methods
 
-    function loadChildren(dto) {
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        child.fetch(dto[property.name]);
-      });
+    function loadChildren(dto, callback) {
+      var count = 0;
+      var error = null;
+
+      function finish (err) {
+        error = error || err;
+        // Check if all children are done.
+        if (++count === properties.childCount()) {
+          callback(error);
+        }
+      }
+      if (properties.childCount()) {
+        properties.children().forEach(function(property) {
+          var child = getPropertyValue(property);
+          if (child instanceof ModelBase)
+            child.fetch(dto[property.name], undefined, finish);
+          else
+            child.fetch(dto[property.name], finish);
+        });
+      } else
+        callback(null);
     }
 
     //endregion
@@ -149,34 +165,58 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     function getDataContext() {
       if (!dataContext)
         dataContext = new DataContext(
-          dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+            dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
         );
       return dataContext.setSelfDirty(false);
     }
 
-    function data_execute (method) {
+    function data_execute (method, callback) {
+      // Helper function for post-execute actions.
+      function finish (dto) {
+        // Fetch children as well.
+        loadChildren(dto, function (err) {
+          if (err)
+            callback(err);
+          else
+            callback(null, self);
+        });
+      }
       // Check permissions.
       if (method === 'execute' ? canDo(Action.executeCommand) : canExecute(method)) {
         if (extensions.dataExecute) {
           // Custom execute.
-          extensions.dataExecute.call(self, getDataContext(), method);
+          extensions.dataExecute.call(self, getDataContext(), method, function (err, dto) {
+            if (err)
+              callback(err);
+            else
+              finish(dto);
+          });
         } else {
           // Standard execute.
           var dto = toDto.call(self);
-          dto = dao[method](dto);
-          fromDto.call(self, dto);
+          dao[method](dto, function (err, dto) {
+            if (err) {
+              callback(err);
+            } else {
+              fromDto.call(self, dto);
+              finish(dto);
+            }
+          });
         }
-        // Load children as well.
-        loadChildren(dto);
-      }
+      } else
+        callback(null, self);
     }
 
     //endregion
 
     //region Actions
 
-    this.execute = function(method) {
-      data_execute(method || 'execute');
+    this.execute = function(method, callback) {
+      if (!callback) {
+        callback = method;
+        method = null;
+      }
+      data_execute(method || 'execute', callback);
     };
 
     //endregion
@@ -252,7 +292,9 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          store.initValue(property, property.type.create(self));
+          property.type.create(self, function (err, item) {
+            store.initValue(property, item);
+          });
         else                      // Collection
           store.initValue(property, new property.type(self));
 
@@ -273,19 +315,20 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(CommandObjectSync, ModelBase);
+  util.inherits(CommandObject, ModelBase);
 
-  CommandObjectSync.prototype.name = properties.name;
+  CommandObject.prototype.name = properties.name;
 
   //region Factory methods
 
-  CommandObjectSync.create = function() {
-    return new CommandObjectSync();
+  CommandObject.create = function(callback) {
+    var instance = new CommandObject();
+    callback(null, instance);
   };
 
   //endregion
 
-  return CommandObjectSync;
+  return CommandObject;
 };
 
-module.exports = CommandObjectSyncCreator;
+module.exports = CommandObjectCreator;
