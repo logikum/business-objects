@@ -31,7 +31,7 @@ describe('Synchronous data portal method', function () {
     cmd.orderItemKey = 2;
     cmd.orderScheduleKey = 3;
 
-    cmd.execute();
+    cmd.reschedule();
 
     expect(cmd.success).toBe(true);
     expect(cmd.result).toEqual(jasmine.any(RescheduleShippingResult));
@@ -40,6 +40,6 @@ describe('Synchronous data portal method', function () {
     expect(cmd.result.totalMass).toBe(0.19);
     expect(cmd.result.required).toBe(true);
     expect(cmd.result.shipTo).toBe('Budapest');
-    expect(cmd.result.shipDate).toBe(new Date(2014, 12, 30));
+    expect(cmd.result.shipDate).toEqual(new Date(2014, 12, 30));
   });
 });

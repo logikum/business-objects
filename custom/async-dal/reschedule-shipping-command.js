@@ -2,7 +2,7 @@
 
 var RescheduleShippingCommandDao = function() {
 
-  this.execute = function(data) {
+  this.execute = function(data, callback) {
     console.log('--- Reschedule shipping command DAO.execute');
 
     data.success = false;
@@ -15,23 +15,23 @@ var RescheduleShippingCommandDao = function() {
     data.result.shipTo = null;
     data.result.shipDate = null;
 
-    return data;
+    callback(null, data);
   };
 
-  this.reschedule = function(data) {
+  this.reschedule = function(data, callback) {
     console.log('--- Reschedule shipping command DAO.reschedule');
 
     data.success = true;
 
     data.result = {};
 
-    data.result.quantity = 1;
-    data.result.totalMass = 0.19;
-    data.result.required = true;
-    data.result.shipTo = 'Budapest';
-    data.result.shipDate = new Date(2014, 12, 30);
+    data.result.quantity = 2;
+    data.result.totalMass = 0.21;
+    data.result.required = false;
+    data.result.shipTo = 'Berlin';
+    data.result.shipDate = new Date(2015, 1, 3);
 
-    return data;
+    callback(null, data);
   };
 
 };

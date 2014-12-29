@@ -310,6 +310,14 @@ var CommandObjectCreator = function(properties, rules, extensions) {
       }
     });
 
+    if (extensions.methods) {
+      extensions.methods.map(function (methodName) {
+        self[methodName] = function (callback) {
+          self.execute(methodName, callback);
+        };
+      });
+    }
+
     //endregion
 
     // Immutable object.

@@ -76,6 +76,8 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
     });
   });
 
+  this.methods = [];
+
   // Immutable object.
   Object.freeze(this);
 }

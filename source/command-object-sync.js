@@ -157,12 +157,13 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     function data_execute (method) {
       // Check permissions.
       if (method === 'execute' ? canDo(Action.executeCommand) : canExecute(method)) {
+        var dto = {};
         if (extensions.dataExecute) {
           // Custom execute.
-          extensions.dataExecute.call(self, getDataContext(), method);
+          dto = extensions.dataExecute.call(self, getDataContext(), method);
         } else {
           // Standard execute.
-          var dto = toDto.call(self);
+          dto = toDto.call(self);
           dto = dao[method](dto);
           fromDto.call(self, dto);
         }
@@ -231,7 +232,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
         store.setValue(property, value);
     }
 
-    properties.map(function(property) {
+    properties.map(function (property) {
 
       if (property.type instanceof DataType) {
         // Normal property
@@ -267,6 +268,14 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
         });
       }
     });
+
+    if (extensions.methods) {
+      extensions.methods.map(function (methodName) {
+        self[methodName] = function () {
+          self.execute(methodName);
+        };
+      });
+    }
 
     //endregion
 

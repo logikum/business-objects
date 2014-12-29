@@ -5,7 +5,7 @@ var daoBuilder = require('../dao-builder.js');
 
 var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
-var Extensions = bo.shared.ExtensionManagerSync;
+var Extensions = bo.shared.ExtensionManager;
 var Property = bo.shared.PropertyInfo;
 //var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
@@ -20,45 +20,51 @@ var success = new Property('success', dt.Boolean);
 var result = new Property('result', RescheduleShippingResult);
 
 var properties = new Properties(
-    'ClearScheduleCommand',
-    orderKey,
-    orderItemKey,
-    orderScheduleKey,
-    success,
-    result
+  'ClearScheduleCommand',
+  orderKey,
+  orderItemKey,
+  orderScheduleKey,
+  success,
+  result
 );
 
 var rules = new Rules(
-    cr.required(orderKey),
-    cr.required(orderItemKey),
-    cr.required(orderScheduleKey)
+  cr.required(orderKey),
+  cr.required(orderItemKey),
+  cr.required(orderScheduleKey)
 );
 
 //region Data portal methods
 
-function dataExecute (ctx, method) {
-    var dto = {
-        orderKey:         ctx.getValue('orderKey'),
-        orderItemKey:     ctx.getValue('orderItemKey'),
-        orderScheduleKey: ctx.getValue('orderScheduleKey')
-    };
-    if (method === 'reschedule')
-        dto = ctx.dao.reschedule(dto);
-    else
-        dto = ctx.dao.execute(dto);
-    // or:
-    // dto = ctx.dao[method](dto);
-    ctx.setValue('success', dto.success);
-    return dto;
+function dataExecute (ctx, method, callback) {
+  function cb (err, dto) {
+    if (err)
+      callback(err);
+    else {
+      ctx.setValue('success', dto.success);
+      callback(null, dto);
+    }
+  }
+  var dto = {
+    orderKey:         ctx.getValue('orderKey'),
+    orderItemKey:     ctx.getValue('orderItemKey'),
+    orderScheduleKey: ctx.getValue('orderScheduleKey')
+  };
+  if (method === 'reschedule')
+    ctx.dao.reschedule(dto, cb);
+  else
+    dto = ctx.dao.execute(dto, cb);
+  // or:
+  // ctx.dao[method](dto, cb);
 }
 
 //endregion
 
-var extensions = new Extensions('sync-dal', __filename);
+var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
 extensions.methods.push('reschedule');
 
-var RescheduleShippingCommand = bo.CommandObjectSync(properties, rules, extensions);
+var RescheduleShippingCommand = bo.CommandObject(properties, rules, extensions);
 
 module.exports = RescheduleShippingCommand;
