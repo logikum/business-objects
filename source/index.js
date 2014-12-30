@@ -2,7 +2,8 @@
 
 var EditableModel = require('./editable-model.js');
 var EditableChildCollection = require('./editable-child-collection.js');
-var ReadOnlyModel = require('./read-only-model.js');
+var ReadOnlyRootModel = require('./read-only-root-model.js');
+var ReadOnlyChildModel = require('./read-only-child-model.js');
 var ReadOnlyRootCollection = require('./read-only-root-collection.js');
 var ReadOnlyChildCollection = require('./read-only-child-collection.js');
 var CommandObject = require('./command-object.js');
@@ -24,7 +25,8 @@ var rules = require('./rules/index.js');
 var businessObjects = {
   EditableModel: EditableModel,
   EditableChildCollection: EditableChildCollection,
-  ReadOnlyModel: ReadOnlyModel,
+  ReadOnlyRootModel: ReadOnlyRootModel,
+  ReadOnlyChildModel: ReadOnlyChildModel,
   ReadOnlyRootCollection: ReadOnlyRootCollection,
   ReadOnlyChildCollection: ReadOnlyChildCollection,
   CommandObject: CommandObject,

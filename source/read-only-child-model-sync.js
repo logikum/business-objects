@@ -194,8 +194,6 @@ var ReadOnlyChildModelSyncCreator = function(properties, rules, extensions) {
     }
 
     function setPropertyValue(property, value) {
-      //if (store.setValue(property, value))
-      //  markAsChanged(true);
       store.setValue(property, value);
     }
 

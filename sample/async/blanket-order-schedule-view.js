@@ -34,6 +34,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderScheduleView = bo.ReadOnlyModel(properties, rules, extensions);
+var BlanketOrderScheduleView = bo.ReadOnlyChildModel(properties, rules, extensions);
 
 module.exports = BlanketOrderScheduleView;

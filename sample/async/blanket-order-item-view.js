@@ -38,6 +38,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderItemView = bo.ReadOnlyModel(properties, rules, extensions);
+var BlanketOrderItemView = bo.ReadOnlyChildModel(properties, rules, extensions);
 
 module.exports = BlanketOrderItemView;

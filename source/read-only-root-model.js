@@ -22,16 +22,16 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
-var ReadOnlyModelCreator = function(properties, rules, extensions) {
+var ReadOnlyRootModelCreator = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-    'Argument properties of ReadOnlyModelCreator must be a PropertyManager object.');
+    'Argument properties of ReadOnlyRootModelCreator must be a PropertyManager object.');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-    'Argument rules of ReadOnlyModelCreator must be a RuleManager object.');
+    'Argument rules of ReadOnlyRootModelCreator must be a RuleManager object.');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-    'Argument extensions of ReadOnlyModelCreator must be an ExtensionManager object.');
+    'Argument extensions of ReadOnlyRootModelCreator must be an ExtensionManager object.');
 
-  var ReadOnlyModel = function() {
+  var ReadOnlyRootModel = function() {
 
     var self = this;
     var store = new DataStore();
@@ -41,20 +41,14 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     var dataContext = null;
     var xferContext = null;
 
-    // Determine if root or child element.
-    var parent = ensureArgument.isOptionalType(arguments[0], [ ModelBase, CollectionBase ],
-      'Argument parent of ReadOnlyModel constructor must be a read-only model or collection object.');
-
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
 
     // Get data access object.
-    if (!parent || parent instanceof ModelBase) {
-      if (extensions.daoBuilder)
-        dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-      else
-        dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
-    }
+    if (extensions.daoBuilder)
+      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
+    else
+      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Get principal.
     if (config.userReader) {
@@ -199,22 +193,16 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
           });
         } else {
           // Standard fetch.
-          if (parent) {
-            // Child element gets data from parent.
-            fromDto.call(self, filter);
-            finish(filter);
-          } else {
-            // Root element fetches data from repository.
-            dao.checkMethod(method);
-            dao[method](filter, function (err, dto) {
-              if (err) {
-                callback(err);
-              } else {
-                fromDto.call(self, dto);
-                finish(dto);
-              }
-            });
-          }
+          // Root element fetches data from repository.
+          dao.checkMethod(method);
+          dao[method](filter, function (err, dto) {
+            if (err) {
+              callback(err);
+            } else {
+              fromDto.call(self, dto);
+              finish(dto);
+            }
+          });
         }
       } else
         callback(null, self);
@@ -299,29 +287,19 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(ReadOnlyModel, ModelBase);
+  util.inherits(ReadOnlyRootModel, ModelBase);
 
-  ReadOnlyModel.prototype.name = properties.name;
+  ReadOnlyRootModel.prototype.name = properties.name;
 
   //region Factory methods
 
-  ReadOnlyModel.fetch = function(filter, method, callback) {
+  ReadOnlyRootModel.fetch = function(filter, method, callback) {
     if (!callback) {
       callback = method;
       method = undefined;
     }
-    var instance = new ReadOnlyModel();
+    var instance = new ReadOnlyRootModel();
     instance.fetch(filter, method, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
-  };
-
-  ReadOnlyModel.load = function(parent, data, callback) {
-    var instance = new ReadOnlyModel(parent);
-    instance.fetch(data, undefined, function (err) {
       if (err)
         callback(err);
       else
@@ -331,7 +309,7 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
 
   //endregion
 
-  return ReadOnlyModel;
+  return ReadOnlyRootModel;
 };
 
-module.exports = ReadOnlyModelCreator;
+module.exports = ReadOnlyRootModelCreator;

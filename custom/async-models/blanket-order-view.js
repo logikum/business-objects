@@ -111,7 +111,7 @@ extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-var BlanketOrderView = bo.ReadOnlyModel(properties, rules, extensions);
+var BlanketOrderView = bo.ReadOnlyRootModel(properties, rules, extensions);
 
 var BlanketOrderViewFactory = {
   get: function (key, callback) {

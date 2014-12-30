@@ -8,7 +8,8 @@ describe('Business object index', function() {
 
     expect(index.EditableModel).toEqual(jasmine.any(Function));
     expect(index.EditableChildCollection).toEqual(jasmine.any(Function));
-    expect(index.ReadOnlyModel).toEqual(jasmine.any(Function));
+    expect(index.ReadOnlyRootModel).toEqual(jasmine.any(Function));
+    expect(index.ReadOnlyChildModel).toEqual(jasmine.any(Function));
     expect(index.ReadOnlyRootCollection).toEqual(jasmine.any(Function));
     expect(index.ReadOnlyChildCollection).toEqual(jasmine.any(Function));
     expect(index.CommandObject).toEqual(jasmine.any(Function));

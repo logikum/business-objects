@@ -41,20 +41,14 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
     var dataContext = null;
     var xferContext = null;
 
-    //// Determine if root or child element.
-    //var parent = ensureArgument.isOptionalType(arguments[0], [ ModelBase, CollectionBase ],
-    //    'Argument parent of ReadOnlyRootModelSync constructor must be a read-only model or collection object.');
-
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
 
     // Get data access object.
-    //if (!parent || parent instanceof ModelBase) {
-      if (extensions.daoBuilder)
-        dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-      else
-        dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
-    //}
+    if (extensions.daoBuilder)
+      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
+    else
+      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Get principal.
     if (config.userReader) {
@@ -267,12 +261,6 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
     instance.fetch(filter, method);
     return instance;
   };
-
-  //ReadOnlyRootModelSync.load = function(parent, data) {
-  //  var instance = new ReadOnlyRootModelSync(parent);
-  //  instance.fetch(data);
-  //  return instance;
-  //};
 
   //endregion
 

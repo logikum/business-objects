@@ -36,6 +36,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var AddressView = bo.ReadOnlyModel(properties, rules, extensions);
+var AddressView = bo.ReadOnlyChildModel(properties, rules, extensions);
 
 module.exports = AddressView;
