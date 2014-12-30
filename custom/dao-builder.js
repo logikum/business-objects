@@ -1,5 +1,9 @@
+'use strict';
+
 var fs = require('fs');
 var path = require('path');
+var DaoBase = require('../source/data-access/dao-base.js');
+var ensureArgument = require('../source/shared/ensure-argument.js');
 
 var daoBuilder = function (dataSource, modelPath) {
 
@@ -19,12 +23,13 @@ var daoBuilder = function (dataSource, modelPath) {
   if (!daoStats.isFile())
     throw new Error('The required data access file does not exist: ' + daoPath);
 
-  var dao = require(daoPath);
+  var daoCtor = require(daoPath);
 
-  if (typeof dao !== 'function')
+  if (typeof daoCtor !== 'function')
     throw new Error('The data access file must return a constructor: ' + daoPath);
 
-  return new dao();
+  return ensureArgument.isMandatoryType(new daoCtor(), DaoBase,
+      daoPath + ' must inherit DaoBase type.');
 };
 
 module.exports = daoBuilder;

@@ -1,57 +1,67 @@
 'use strict';
 
+var util = require('util');
+var DaoBase = require('../../source/data-access/dao-base.js');
+
 var BlanketOrderScheduleDao = function() {
+  BlanketOrderScheduleDao.super_.call(this, 'BlanketOrderScheduleDao');
+};
+util.inherits(BlanketOrderScheduleDao, DaoBase);
 
-  this.create = function(callback) {
-    console.log('--- Blanket order schedule DAO.create');
-    callback(null, {});
-  };
+BlanketOrderScheduleDao.prototype.create = function(callback) {
+  console.log('--- Blanket order schedule DAO.create');
 
-  this.fetch = function(filter, callback) {
-    console.log('--- Blanket order schedule DAO.fetch');
-    if (!global.schedules[filter])
-      callback(new Error('Blanket order schedule not found.'));
-    else
-      callback(null, global.schedules[filter]);
-  };
+  callback(null, {});
+};
 
-  this.fetchForItem = function(filter, callback) {
-    console.log('--- Blanket order schedule DAO.fetchForItem');
-    var schedules = [];
-    for (var key in global.schedules) {
-      if (global.schedules.hasOwnProperty(key)) {
-        var schedule = global.schedules[key];
-        if (schedule.orderItemKey === filter)
-          schedules.push(schedule);
-      }
+BlanketOrderScheduleDao.prototype.fetch = function(filter, callback) {
+  console.log('--- Blanket order schedule DAO.fetch');
+
+  if (!global.schedules[filter])
+    callback(new Error('Blanket order schedule not found.'));
+  else
+    callback(null, global.schedules[filter]);
+};
+
+BlanketOrderScheduleDao.prototype.fetchForItem = function(filter, callback) {
+  console.log('--- Blanket order schedule DAO.fetchForItem');
+
+  var schedules = [];
+  for (var key in global.schedules) {
+    if (global.schedules.hasOwnProperty(key)) {
+      var schedule = global.schedules[key];
+      if (schedule.orderItemKey === filter)
+        schedules.push(schedule);
     }
-    callback(null, schedules);
-  };
+  }
+  callback(null, schedules);
+};
 
-  this.insert = function(data, callback) {
-    console.log('--- Blanket order schedule DAO.insert');
-    data.orderScheduleKey = ++global.scheduleKey;
+BlanketOrderScheduleDao.prototype.insert = function(data, callback) {
+  console.log('--- Blanket order schedule DAO.insert');
+
+  data.orderScheduleKey = ++global.scheduleKey;
+  global.schedules[data.orderScheduleKey] = data;
+  callback(null, data);
+};
+
+BlanketOrderScheduleDao.prototype.update = function(data, callback) {
+  console.log('--- Blanket order schedule DAO.update');
+
+  if (!global.schedules[data.orderScheduleKey])
+    callback(new Error('Blanket order schedule not found.'));
+  else {
     global.schedules[data.orderScheduleKey] = data;
     callback(null, data);
-  };
+  }
+};
 
-  this.update = function(data, callback) {
-    console.log('--- Blanket order schedule DAO.update');
-    if (!global.schedules[data.orderScheduleKey])
-      callback(new Error('Blanket order schedule not found.'));
-    else {
-      global.schedules[data.orderScheduleKey] = data;
-      callback(null, data);
-    }
-  };
+BlanketOrderScheduleDao.prototype.remove = function(filter, callback) {
+  console.log('--- Blanket order schedule DAO.remove');
 
-  this.remove = function(filter, callback) {
-    console.log('--- Blanket order schedule DAO.remove');
-    if (global.schedules[filter])
-      delete global.schedules[filter];
-    callback(null);
-  };
-
+  if (global.schedules[filter])
+    delete global.schedules[filter];
+  callback(null);
 };
 
 module.exports = BlanketOrderScheduleDao;

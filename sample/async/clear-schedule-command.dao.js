@@ -1,13 +1,18 @@
 'use strict';
 
+var util = require('util');
+var DaoBase = require('../../source/data-access/dao-base.js');
+
 var ClearScheduleCommandDao = function() {
+  ClearScheduleCommandDao.super_.call(this, 'ClearScheduleCommandDao');
+};
+util.inherits(ClearScheduleCommandDao, DaoBase);
 
-  this.execute = function(data, callback) {
-    console.log('--- Clear schedule command DAO.execute');
-    data.result = true;
-    callback(null, data);
-  };
+ClearScheduleCommandDao.prototype.execute = function(data, callback) {
+  console.log('--- Clear schedule command DAO.execute');
 
+  data.result = true;
+  callback(null, data);
 };
 
 module.exports = ClearScheduleCommandDao;
