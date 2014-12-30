@@ -15,7 +15,8 @@ describe('Business object index', function() {
 
     expect(index.EditableModelSync).toEqual(jasmine.any(Function));
     expect(index.EditableChildCollectionSync).toEqual(jasmine.any(Function));
-    expect(index.ReadOnlyModelSync).toEqual(jasmine.any(Function));
+    expect(index.ReadOnlyRootModelSync).toEqual(jasmine.any(Function));
+    expect(index.ReadOnlyChildModelSync).toEqual(jasmine.any(Function));
     expect(index.ReadOnlyRootCollectionSync).toEqual(jasmine.any(Function));
     expect(index.ReadOnlyChildCollectionSync).toEqual(jasmine.any(Function));
     expect(index.CommandObjectSync).toEqual(jasmine.any(Function));

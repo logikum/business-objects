@@ -47,7 +47,7 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderView = bo.ReadOnlyModelSync(properties, rules, extensions);
+var BlanketOrderView = bo.ReadOnlyRootModelSync(properties, rules, extensions);
 
 var BlanketOrderViewFactory = {
   get: function (key) {
