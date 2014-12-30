@@ -387,6 +387,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
         extensions.dataCreate.call(self, getDataContext());
       } else {
         // Standard create.
+        dao.checkMethod('create');
         var dto = dao.create();
         fromDto.call(self, dto);
       }
@@ -407,6 +408,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
             dto = filter;
           } else {
             // Root element fetches data from repository.
+            dao.checkMethod(method);
             dto = dao[method](filter);
           }
           fromDto.call(self, dto);
@@ -438,6 +440,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
         } else {
           // Standard insert.
           var dto = toDto.call(self);
+          dao.checkMethod('insert');
           dto = dao.insert(dto);
           fromDto.call(self, dto);
         }
@@ -456,6 +459,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
         } else if (isDirty) {
           // Standard update.
           var dto = toDto.call(self);
+          dao.checkMethod('update');
           dto = dao.update(dto);
           fromDto.call(self, dto);
         }
@@ -476,6 +480,7 @@ var EditableModelSyncCreator = function(properties, rules, extensions) {
         } else {
           // Standard removal.
           var filter = properties.getKey(getPropertyValue);
+          dao.checkMethod('remove');
           dao.remove(filter);
         }
         markAsRemoved();

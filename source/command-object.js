@@ -194,6 +194,7 @@ var CommandObjectCreator = function(properties, rules, extensions) {
         } else {
           // Standard execute.
           var dto = toDto.call(self);
+          dao.checkMethod(method);
           dao[method](dto, function (err, dto) {
             if (err) {
               callback(err);

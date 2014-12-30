@@ -205,6 +205,7 @@ var ReadOnlyModelCreator = function(properties, rules, extensions) {
             finish(filter);
           } else {
             // Root element fetches data from repository.
+            dao.checkMethod(method);
             dao[method](filter, function (err, dto) {
               if (err) {
                 callback(err);

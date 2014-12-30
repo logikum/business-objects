@@ -420,6 +420,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
         });
       } else {
         // Standard create.
+        dao.checkMethod('create');
         dao.create(function (err, dto) {
           if (err)
             callback(err);
@@ -463,6 +464,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
             finish(filter);
           } else {
             // Root element fetches data from repository.
+            dao.checkMethod(method);
             dao[method](filter, function (err, dto) {
               if (err) {
                 callback(err);
@@ -515,6 +517,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
         } else {
           // Standard insert.
           var dto = toDto.call(self);
+          dao.checkMethod('insert');
           dao.insert(dto, function (err, dto) {
             if (err) {
               callback(err);
@@ -554,6 +557,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
         } else if (isDirty) {
           // Standard update.
           var dto = toDto.call(self);
+          dao.checkMethod('update');
           dao.update(dto, function (err, dto) {
             if (err) {
               callback(err);
@@ -593,6 +597,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
           } else {
             // Standard removal.
             var filter = properties.getKey(getPropertyValue);
+            dao.checkMethod('remove');
             dao.remove(filter, cb);
           }
         });

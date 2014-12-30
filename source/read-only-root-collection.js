@@ -128,6 +128,7 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
         } else {
           // Standard fetch.
           // Root element fetches data from repository.
+          dao.checkMethod(method);
           dao[method](filter, finish);
         }
       } else

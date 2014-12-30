@@ -174,6 +174,7 @@ var ReadOnlyModelSyncCreator = function(properties, rules, extensions) {
             dto = filter;
           } else {
             // Root element fetches data from repository.
+            dao.checkMethod(method);
             dto = dao[method](filter);
           }
           fromDto.call(self, dto);

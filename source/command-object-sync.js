@@ -164,6 +164,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
         } else {
           // Standard execute.
           dto = toDto.call(self);
+          dao.checkMethod(method);
           dto = dao[method](dto);
           fromDto.call(self, dto);
         }
