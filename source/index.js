@@ -8,7 +8,8 @@ var ReadOnlyRootCollection = require('./read-only-root-collection.js');
 var ReadOnlyChildCollection = require('./read-only-child-collection.js');
 var CommandObject = require('./command-object.js');
 
-var EditableModelSync = require('./editable-model-sync.js');
+var EditableRootModelSync = require('./editable-root-model-sync.js');
+var EditableChildModelSync = require('./editable-child-model-sync.js');
 var EditableChildCollectionSync = require('./editable-child-collection-sync.js');
 var ReadOnlyRootModelSync = require('./read-only-root-model-sync.js');
 var ReadOnlyChildModelSync = require('./read-only-child-model-sync.js');
@@ -31,7 +32,8 @@ var businessObjects = {
   ReadOnlyChildCollection: ReadOnlyChildCollection,
   CommandObject: CommandObject,
 
-  EditableModelSync: EditableModelSync,
+  EditableRootModelSync: EditableRootModelSync,
+  EditableChildModelSync: EditableChildModelSync,
   EditableChildCollectionSync: EditableChildCollectionSync,
   ReadOnlyRootModelSync: ReadOnlyRootModelSync,
   ReadOnlyChildModelSync: ReadOnlyChildModelSync,

@@ -154,6 +154,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var BlanketOrderSchedule = bo.EditableModelSync(properties, rules, extensions);
+var BlanketOrderSchedule = bo.EditableChildModelSync(properties, rules, extensions);
 
 module.exports = BlanketOrderSchedule;

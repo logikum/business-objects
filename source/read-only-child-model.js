@@ -40,8 +40,8 @@ var ReadOnlyChildModelCreator = function(properties, rules, extensions) {
     var dataContext = null;
     var xferContext = null;
 
-    // Determine if root or child element.
-    var parent = ensureArgument.isOptionalType(arguments[0], [ ModelBase, CollectionBase ],
+    // Get parent element.
+    var parent = ensureArgument.isMandatoryType(arguments[0], [ ModelBase, CollectionBase ],
       'Argument parent of ReadOnlyChildModel constructor must be a model or collection object.');
 
     // Set up business rules.
