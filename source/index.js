@@ -1,6 +1,7 @@
 'use strict';
 
-var EditableModel = require('./editable-model.js');
+var EditableRootModel = require('./editable-root-model.js');
+var EditableChildModel = require('./editable-child-model.js');
 var EditableChildCollection = require('./editable-child-collection.js');
 var ReadOnlyRootModel = require('./read-only-root-model.js');
 var ReadOnlyChildModel = require('./read-only-child-model.js');
@@ -24,7 +25,9 @@ var shared = require('./shared/index.js');
 var rules = require('./rules/index.js');
 
 var businessObjects = {
-  EditableModel: EditableModel,
+  EditableRootModel: EditableRootModel,
+  EditableChildModel: EditableChildModel,
+  // EditableRootCollection is not implemented.
   EditableChildCollection: EditableChildCollection,
   ReadOnlyRootModel: ReadOnlyRootModel,
   ReadOnlyChildModel: ReadOnlyChildModel,
@@ -34,6 +37,7 @@ var businessObjects = {
 
   EditableRootModelSync: EditableRootModelSync,
   EditableChildModelSync: EditableChildModelSync,
+  // EditableRootCollectionSync is not implemented.
   EditableChildCollectionSync: EditableChildCollectionSync,
   ReadOnlyRootModelSync: ReadOnlyRootModelSync,
   ReadOnlyChildModelSync: ReadOnlyChildModelSync,

@@ -24,16 +24,16 @@ var ValidationContext = require('./rules/validation-context.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 
-var EditableModelCreator = function(properties, rules, extensions) {
+var EditableRootModelCreator = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-    'Argument properties of EditableModelCreator must be a PropertyManager object.');
+      'Argument properties of EditableRootModelCreator must be a PropertyManager object.');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-    'Argument rules of EditableModelCreator must be a RuleManager object.');
+      'Argument rules of EditableRootModelCreator must be a RuleManager object.');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-    'Argument extensions of EditableModelCreator must be an ExtensionManager object.');
+      'Argument extensions of EditableRootModelCreator must be an ExtensionManager object.');
 
-  var EditableModel = function() {
+  var EditableRootModel = function() {
 
     var self = this;
     var state = null;
@@ -45,10 +45,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
     var user = null;
     var dataContext = null;
     var xferContext = null;
-
-    // Determine if root or child element.
-    var parent = ensureArgument.isOptionalType(arguments[0], ModelBase,
-        'Argument parent of EditableModel constructor must be an EditableModel object.');
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -197,7 +193,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
       if (state === null) {
         state = MODEL_STATE.created;
         isDirty = true;
-        propagateChange(); // up to the parent
       }
       else if (state !== MODEL_STATE.created)
         illegal(MODEL_STATE.created);
@@ -207,7 +202,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
       if (state === MODEL_STATE.pristine) {
         state = MODEL_STATE.changed;
         isDirty = isDirty || itself;
-        propagateChange(); // up to the parent
         isValidated = false;
       }
       else if (state === MODEL_STATE.removed)
@@ -219,7 +213,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
         state = MODEL_STATE.markedForRemoval;
         isDirty = true;
         propagateRemoval(); // down to children
-        propagateChange(); // up to the parent
       }
       else if (state === MODEL_STATE.created)
         state = MODEL_STATE.removed;
@@ -240,11 +233,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
       throw new ModelError('Illegal state transition: ' +
       (state == null ? 'NULL' : MODEL_STATE.getName(state)) + ' => ' +
       MODEL_STATE.getName(newState));
-    }
-
-    function propagateChange() {
-      if (parent)
-        parent.childHasChanged();
     }
 
     this.childHasChanged = function() {
@@ -275,8 +263,8 @@ var EditableModelCreator = function(properties, rules, extensions) {
     Object.defineProperty(this, 'isDirty', {
       get: function () {
         return state === MODEL_STATE.created ||
-          state === MODEL_STATE.changed ||
-          state === MODEL_STATE.markedForRemoval;
+            state === MODEL_STATE.changed ||
+            state === MODEL_STATE.markedForRemoval;
       }
     });
 
@@ -315,25 +303,25 @@ var EditableModelCreator = function(properties, rules, extensions) {
 
     function canBeRead (property) {
       return rules.hasPermission(
-        getAuthorizationContext(Action.readProperty, property.name)
+          getAuthorizationContext(Action.readProperty, property.name)
       );
     }
 
     function canBeWritten (property) {
       return rules.hasPermission(
-        getAuthorizationContext(Action.writeProperty, property.name)
+          getAuthorizationContext(Action.writeProperty, property.name)
       );
     }
 
     function canDo (action) {
       return rules.hasPermission(
-        getAuthorizationContext(action)
+          getAuthorizationContext(action)
       );
     }
 
     function canExecute (methodName) {
       return rules.hasPermission(
-        getAuthorizationContext(Action.executeMethod, methodName)
+          getAuthorizationContext(Action.executeMethod, methodName)
       );
     }
 
@@ -402,7 +390,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
     function getDataContext() {
       if (!dataContext)
         dataContext = new DataContext(
-          dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+            dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
         );
       return dataContext.setSelfDirty(isDirty);
     }
@@ -458,22 +446,16 @@ var EditableModelCreator = function(properties, rules, extensions) {
           });
         } else {
           // Standard fetch.
-          if (parent) {
-            // Child element gets data from parent.
-            fromDto.call(self, filter);
-            finish(filter);
-          } else {
-            // Root element fetches data from repository.
-            dao.checkMethod(method);
-            dao[method](filter, function (err, dto) {
-              if (err) {
-                callback(err);
-              } else {
-                fromDto.call(self, dto);
-                finish(dto);
-              }
-            });
-          }
+          // Root element fetches data from repository.
+          dao.checkMethod(method);
+          dao[method](filter, function (err, dto) {
+            if (err) {
+              callback(err);
+            } else {
+              fromDto.call(self, dto);
+              finish(dto);
+            }
+          });
         }
       } else
         callback(null, self);
@@ -494,18 +476,6 @@ var EditableModelCreator = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (canDo(Action.createObject)) {
-        if (parent) {
-          // Copy the values of parent keys.
-          var references = properties.filter(function (property) {
-            return property.isParentKey;
-          });
-          for (var i = 0; i < references.length; i++) {
-            var referenceProperty = references[i];
-            var parentValue = parent[referenceProperty.name];
-            if (parentValue !== undefined)
-              setPropertyValue(referenceProperty, parentValue);
-          }
-        }
         if (extensions.dataInsert) {
           // Custom insert.
           extensions.dataInsert.call(self, getDataContext(), function (err) {
@@ -738,18 +708,14 @@ var EditableModelCreator = function(properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableModel, ModelBase);
+  util.inherits(EditableRootModel, ModelBase);
 
-  EditableModel.prototype.name = properties.name;
+  EditableRootModel.prototype.name = properties.name;
 
   //region Factory methods
 
-  EditableModel.create = function(parent, callback) {
-    if (!callback) {
-      callback = parent;
-      parent = undefined;
-    }
-    var instance = new EditableModel(parent);
+  EditableRootModel.create = function(callback) {
+    var instance = new EditableRootModel();
     instance.create(function (err) {
       if (err)
         callback(err);
@@ -758,23 +724,13 @@ var EditableModelCreator = function(properties, rules, extensions) {
     });
   };
 
-  EditableModel.fetch = function(filter, method, callback) {
+  EditableRootModel.fetch = function(filter, method, callback) {
     if (!callback) {
       callback = method;
       method = undefined;
     }
-    var instance = new EditableModel();
+    var instance = new EditableRootModel();
     instance.fetch(filter, method, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
-  };
-
-  EditableModel.load = function(parent, data, callback) {
-    var instance = new EditableModel(parent);
-    instance.fetch(data, undefined, function (err) {
       if (err)
         callback(err);
       else
@@ -784,7 +740,7 @@ var EditableModelCreator = function(properties, rules, extensions) {
 
   //endregion
 
-  return EditableModel;
+  return EditableRootModel;
 };
 
-module.exports = EditableModelCreator;
+module.exports = EditableRootModelCreator;

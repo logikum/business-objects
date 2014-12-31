@@ -180,6 +180,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var BlanketOrderItem = bo.EditableModel(properties, rules, extensions);
+var BlanketOrderItem = bo.EditableChildModel(properties, rules, extensions);
 
 module.exports = BlanketOrderItem;

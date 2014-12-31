@@ -39,6 +39,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderSchedule = bo.EditableModel(properties, rules, extensions);
+var BlanketOrderSchedule = bo.EditableChildModel(properties, rules, extensions);
 
 module.exports = BlanketOrderSchedule;
