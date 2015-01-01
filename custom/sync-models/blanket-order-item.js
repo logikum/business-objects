@@ -79,8 +79,8 @@ function toCto (ctx) {
 }
 
 function fromCto (ctx, dto) {
-  this.orderItemKey = dto.orderItemKey;
-  this.orderKey =     dto.orderKey;
+  //this.orderItemKey = dto.orderItemKey;
+  //this.orderKey =     dto.orderKey;
   this.productName =  dto.productName;
   this.obsolete =     dto.obsolete;
   this.expiry =       dto.expiry;

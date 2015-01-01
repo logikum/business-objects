@@ -145,7 +145,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
       else
         baseFromCto(cto);
 
-      properties.children().forEach(function(property) {
+      properties.children().forEach(function (property) {
         var child = getPropertyValue(property);
         if (cto[property.name]) {
           child.fromCto(cto[property.name]);

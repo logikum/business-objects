@@ -158,6 +158,10 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
       });
     };
 
+    this.keyEquals = function (data) {
+      return properties.keyEquals(data, getPropertyValue);
+    };
+
     //endregion
 
     //region Mark object state

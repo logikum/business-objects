@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 console.log('Testing data portal methods of custom synchronous models...');
 

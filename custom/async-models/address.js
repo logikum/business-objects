@@ -79,8 +79,8 @@ function toCto (ctx) {
 }
 
 function fromCto (ctx, dto) {
-    this.addressKey = dto.addressKey;
-    this.orderKey =   dto.orderKey;
+    //this.addressKey = dto.addressKey;
+    //this.orderKey =   dto.orderKey;
     this.country =    dto.country;
     this.state =      dto.state;
     this.city =       dto.city;

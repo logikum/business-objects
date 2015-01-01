@@ -92,14 +92,14 @@ function toCto (ctx) {
 }
 
 function fromCto (ctx, dto) {
-  this.orderKey =     dto.orderKey;
+  //this.orderKey =     dto.orderKey;
   this.vendorName =   dto.vendorName;
   this.contractDate = dto.contractDate;
   this.totalPrice =   dto.totalPrice;
   this.schedules =    dto.schedules;
   this.enabled =      dto.enabled;
-  this.createdDate =  dto.createdDate;
-  this.modifiedDate = dto.modifiedDate;
+  //this.createdDate =  dto.createdDate;
+  //this.modifiedDate = dto.modifiedDate;
 }
 
 //endregion

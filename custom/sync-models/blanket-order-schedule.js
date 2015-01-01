@@ -75,8 +75,8 @@ function toCto (ctx) {
 }
 
 function fromCto (ctx, dto) {
-  this.orderScheduleKey = dto.orderScheduleKey;
-  this.orderItemKey =     dto.orderItemKey;
+  //this.orderScheduleKey = dto.orderScheduleKey;
+  //this.orderItemKey =     dto.orderItemKey;
   this.quantity =         dto.quantity;
   this.totalMass =        dto.totalMass;
   this.required =         dto.required;

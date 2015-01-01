@@ -39,10 +39,39 @@ var EditableCollectionCreator = function(name, itemType) {
 
     this.fromCto = function (data) {
       if (data instanceof Array) {
-        data.forEach(function (cto) {
-          var item = new itemType(parent);
-          item.fromCto(cto);
-          items.push(item);
+        var dataNew = data.filter(function () { return true; });
+        var itemsLate = [];
+        // Update existing items.
+        items.forEach(function (item, index) {
+          var dataFound = false;
+          var i = 0;
+          for (; i < dataNew.length; i++) {
+            var cto = data[i];
+            if (item.keyEquals(cto)) {
+              item.fromCto(cto);
+              dataFound = true;
+              break;
+            }
+          }
+          if (dataFound)
+            dataNew.splice(i, 1);
+          else
+            itemsLate.push(index);
+        });
+        // Remove non existing items.
+        itemsLate.forEach(function (index) {
+          items[index].remove();
+        });
+        // Insert non existing data.
+        dataNew.forEach(function (cto) {
+          itemType.create(parent, function (err, item) {
+            if (err)
+              throw err;
+            else {
+              item.fromCto(cto);
+              items.push(item);
+            }
+          });
         });
       }
     };

@@ -147,6 +147,33 @@ function PropertyManager() {
     return key;
   };
 
+  this.keyEquals = function (data, getPropertyValue) {
+    // Get key properties.
+    var keys = items.filter(function (item) {
+      return item.isKey;
+    });
+    // Get key values.
+    var values = {};
+    if (keys.length) {
+      keys.forEach(function (item) {
+        values[item.name] = getPropertyValue(item);
+      });
+    } else {
+      items.forEach(function (item) {
+        if (item.isOnCto)
+          values[item.name] = getPropertyValue(item);
+      });
+    }
+    // Compare key values to data.
+    for (var propertyName in values) {
+      if (values.hasOwnProperty(propertyName)) {
+        if (data[propertyName] === undefined || data[propertyName] !== values[propertyName])
+          return false;
+      }
+    }
+    return true;
+  };
+
   //endregion
 
   // Immutable object.
