@@ -3,13 +3,52 @@
 var util = require('util');
 var DaoBase = require('../../source/data-access/dao-base.js');
 
-var daoAddressViewCtor = require('./address-view.dao.js');
-var daoOrderItemViewCtor = require('./blanket-order-item-view.dao.js');
-var daoOrderScheduleViewCtor = require('./blanket-order-schedule-view.dao.js');
+//region Helper methods
 
-var daoAddressView = new daoAddressViewCtor();
-var daoOrderItemView = new daoOrderItemViewCtor();
-var daoOrderScheduleView = new daoOrderScheduleViewCtor();
+function fetchAddress (filter, callback) {
+  console.log('--- Blanket order address view DAO.fetch');
+
+  for (var key in global.addresses) {
+    if (global.addresses.hasOwnProperty(key)) {
+      var data = global.addresses[key];
+      if (data.orderKey === filter){
+        callback(null, data);
+        return;
+      }
+    }
+  }
+  callback(null, {});
+}
+
+function fetchItemsOfOrder (filter, callback) {
+  console.log('--- Blanket order item view DAO.fetchForOrder');
+
+  var items = [];
+  for (var key in global.items) {
+    if (global.items.hasOwnProperty(key)) {
+      var item = global.items[key];
+      if (item.orderKey === filter)
+        items.push(item);
+    }
+  }
+  callback(null, items);
+}
+
+function fetchSchedulesOfItem (filter, callback) {
+  console.log('--- Blanket order schedule view DAO.fetchForItem');
+
+  var schedules = [];
+  for (var key in global.schedules) {
+    if (global.schedules.hasOwnProperty(key)) {
+      var schedule = global.schedules[key];
+      if (schedule.orderItemKey === filter)
+        schedules.push(schedule);
+    }
+  }
+  callback(null, schedules);
+}
+
+//endregion
 
 var BlanketOrderViewDao = function() {
   BlanketOrderViewDao.super_.call(this, 'BlanketOrderViewDao');
@@ -26,14 +65,14 @@ BlanketOrderViewDao.prototype.fetch = function(filter, callback) {
   }
 
   var order = global.orders[key];
-  daoAddressView.fetch(order.orderKey, function (err, address) {
+  fetchAddress(order.orderKey, function (err, address) {
     if (err) {
       callback(err);
       return;
     }
     order.address = address;
 
-    daoOrderItemView.fetchForOrder(order.orderKey, function (err, items) {
+    fetchItemsOfOrder(order.orderKey, function (err, items) {
       if (err) {
         callback(err);
         return;
@@ -43,7 +82,7 @@ BlanketOrderViewDao.prototype.fetch = function(filter, callback) {
       var count = 0;
       for (var i = 0; i < order.items.length; i++) {
         var item = order.items[i];
-        daoOrderScheduleView.fetchForItem(item.orderItemKey, function (err, schedules) {
+        fetchSchedulesOfItem(item.orderItemKey, function (err, schedules) {
           if (err) {
             callback(err);
             return;
@@ -68,14 +107,14 @@ BlanketOrderViewDao.prototype.fetchByName = function(filter, callback) {
       if (order.vendorName === filter) {
         found = true;
 
-        daoAddressView.fetch(order.orderKey, function (err, address) {
+        fetchAddress(order.orderKey, function (err, address) {
           if (err) {
             callback(err);
             return;
           }
           order.address = address;
 
-          daoOrderItemView.fetchForOrder(order.orderKey, function (err, items) {
+          fetchItemsOfOrder(order.orderKey, function (err, items) {
             if (err) {
               callback(err);
               return;
@@ -85,7 +124,7 @@ BlanketOrderViewDao.prototype.fetchByName = function(filter, callback) {
             var count = 0;
             for (var i = 0; i < order.items.length; i++) {
               var item = order.items[i];
-              daoOrderScheduleView.fetchForItem(item.orderItemKey, function (err, schedules) {
+              fetchSchedulesOfItem(item.orderItemKey, function (err, schedules) {
                 if (err) {
                   callback(err);
                   return;
