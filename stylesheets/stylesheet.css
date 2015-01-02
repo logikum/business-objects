@@ -89,9 +89,20 @@ header h2 {
   min-height: 595px;
 }
 
+.wrapper {
+  width: 880px;
+  margin: 0 auto;
+}
+
+.left-side {
+  float: left;
+  width: 240px;
+  padding-top: 60px;
+}
+
 .inner {
   width: 620px;
-  margin: 0 auto;
+  padding: 0 0 0 260px;
 }
 
 #container .inner img {
