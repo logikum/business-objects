@@ -306,13 +306,25 @@ blockquote {
 }
 
 ul li {
-  list-style: disc inside;
+  /*list-style: disc inside;*/
   padding-left: 20px;
 }
 
 ol li {
   list-style: decimal inside;
   padding-left: 3px;
+}
+
+ul li.l1, ol li.l1 {
+  padding-left: 0px;
+}
+
+ul li.l2, ol li.l2 {
+  padding-left: 20px;
+}
+
+ul li.l3, ol li.l3 {
+  padding-left: 40px;
 }
 
 dl dt {
