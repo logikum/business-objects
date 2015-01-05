@@ -167,4 +167,6 @@ var ensureArgument = {
   //endregion
 };
 
+Object.freeze(ensureArgument);
+
 module.exports = ensureArgument;

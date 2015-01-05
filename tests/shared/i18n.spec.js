@@ -64,4 +64,16 @@ describe('Internationalization', function () {
     expect(i1.get('template2', 'Albert Einstein', 'scientist')).toBe('Albert Einstein is a famous scientist.');
     expect(i1.get('template3', 3, 7, 21)).toBe('Result: 3 * 7 = 21');
   });
+
+  it('get method works with extended message keys', function() {
+    var i1 = new i18n();
+
+    expect(i1.get('capitols.France')).toBe('Paris');
+    expect(i1.get('capitols.Egypt')).toBe('Cairo');
+    expect(i1.get('capitols.Japan')).toBe('Tokyo');
+
+    expect(i1.get('capitols.USA.Texas')).toBe('Austin');
+    expect(i1.get('capitols.USA.North Dakota')).toBe('Bismarck');
+    expect(i1.get('capitols.USA.Utah')).toBe('Salt Lake City');
+  });
 });

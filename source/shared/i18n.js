@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var config = require('./config-reader.js');
-var ensureArgument = require('./ensure-argument.js');
+//var ensureArgument = require('./ensure-argument.js');
 
 var locales = {};
 
@@ -39,8 +39,9 @@ function readLocales (namespace, localePath) {
 
 // Define message handler.
 var i18n = function (namespace) {
-  this.namespace = ensureArgument.isMandatoryString(namespace || '$default',
-      'The namespace argument of i18n constructor must be a non-empty string.');
+  //this.namespace = ensureArgument.isMandatoryString(namespace || '$default',
+  //    'The namespace argument of i18n constructor must be a non-empty string.');
+  this.namespace = namespace || '$default';
 
   Object.freeze(this);
 };
@@ -53,13 +54,15 @@ i18n.prototype.get = function (messageKey) {
 
 i18n.prototype.getWithNs = function (namespace, messageKey) {
 
-  namespace = ensureArgument.isMandatoryString(namespace,
-      'The namespace argument of i18n.get method must be a non-empty string.');
-  messageKey = ensureArgument.isMandatoryString(messageKey,
-      'The messageKey argument of i18n.get method must be a non-empty string.');
+  //namespace = ensureArgument.isMandatoryString(namespace,
+  //    'The namespace argument of i18n.get method must be a non-empty string.');
+  //var keys = ensureArgument.isMandatoryString(messageKey,
+  //    'The messageKey argument of i18n.get method must be a non-empty string.')
+  //  .split('.');
+  var keys = messageKey.split('.');
   var messageArgs = arguments;
 
-  function replacer(match, p1, p2, p3, offset, string) {
+  function replacer(match) {
     var index = new Number(match.substr(1, match.length - 2)) + 2;
     var replacement = '';
     if (index < messageArgs.length) {
@@ -70,23 +73,38 @@ i18n.prototype.getWithNs = function (namespace, messageKey) {
     return replacement;
   }
 
+  function readMessage(messages) {
+    var base = messages;
+    for (var i = 0; i < keys.length; i++) {
+      if (!base[keys[i]])
+        return false;
+      if (i + 1 === keys.length) {
+        message = base[keys[i]];
+        return true;
+      } else
+        base = base[keys[i]];
+    }
+  }
+
   var ns = locales[namespace];
   var locale = config.localeReader();
-  var l_Main = locale.substr(0, locale.indexOf('-'));
 
   var message = messageKey;
 
   // When namespace is valid...
   if (ns) {
+    var found = false;
     // Get message of specific locale.
-    if (ns[locale] && ns[locale][messageKey])
-      message = ns[locale][messageKey];
+    if (ns[locale])
+      found = readMessage(ns[locale]);
     // Get message of main locale.
-    else if (l_Main && ns[l_Main] && ns[l_Main][messageKey])
-      message = ns[l_Main][messageKey];
+    if (!found && l_Main && ns[l_Main]) {
+      var l_Main = locale.substr(0, locale.indexOf('-'));
+      found = readMessage(ns[l_Main]);
+    }
     // Get message of default locale.
-    else if (ns['default'] && ns['default'][messageKey])
-      message = ns['default'][messageKey];
+    if (!found && ns['default'])
+      readMessage(ns['default']);
   }
 
   // Format message with optional arguments.

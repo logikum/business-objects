@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var ensureArgument = require('./ensure-argument.js');
 var EnumerationError = require('./enumeration-error.js');
 
 function Enumeration () {
