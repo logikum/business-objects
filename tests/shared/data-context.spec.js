@@ -2,7 +2,7 @@ console.log('Testing shared/data-context.js...');
 
 var DataContext = require('../../source/shared/data-context.js');
 var UserInfo = require('../../source/shared/user-info.js');
-var UserReader = require('../../sample/user-reader.js');
+var UserReader = require('../../sample/get-user.js');
 
 describe('Data context', function() {
   var dao = {};

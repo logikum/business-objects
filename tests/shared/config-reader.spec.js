@@ -1,5 +1,6 @@
 console.log('Testing shared/config-reader.js...');
 
+var path = require('path');
 var ConfigReader = require('../../source/shared/config-reader.js');
 var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
 
@@ -21,6 +22,19 @@ describe('Configuration reader object', function() {
     expect(user.userName).toBe('Ada Lovelace');
     expect(user.email).toBe('ada.lovelace@computer.net');
     expect(user.roles).toContain('administrators');
+  });
+
+  it('has a locale reader method', function() {
+    var locale = ConfigReader.localeReader();
+
+    expect(ConfigReader.localeReader).toBeDefined();
+
+    expect(locale).toBe('hu-HU');
+  });
+
+  it('can have a property for the path of locales', function() {
+
+    expect(ConfigReader.pathOfLocales.substr(-8)).toBe(path.sep + 'locales');
   });
 
   it('can have a no access behavior property', function() {

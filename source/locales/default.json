@@ -1,0 +1,8 @@
+{
+  "ArgumentError": {
+    "default": "The passed value is invalid.",
+    "property2": "value2",
+    "property3": "value3"
+  },
+  "default": "This is a test message."
+}

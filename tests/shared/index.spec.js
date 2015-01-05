@@ -2,7 +2,7 @@ console.log('Testing shared/index.js...');
 
 var shared = require('../../source/shared/index.js');
 var Text = require('../../source/data-types/text.js');
-var UserReader = require('../../sample/user-reader.js');
+var UserReader = require('../../sample/get-user.js');
 
 var PropertyInfo = require('../../source/shared/property-info.js');
 var PropertyManager = require('../../source/shared/property-manager.js');
