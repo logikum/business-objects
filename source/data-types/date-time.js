@@ -13,7 +13,7 @@ util.inherits(DateTime, DataType);
 
 DateTime.prototype.check = function (value) {
   if (value !== null && !(value instanceof Date))
-    throw new DataTypeError('The passed value is not DateTime.');
+    throw new DataTypeError('date');
 };
 
 DateTime.prototype.hasValue = function (value) {

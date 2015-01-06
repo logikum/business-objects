@@ -32,8 +32,8 @@ RuleBase.prototype.initialize = function () {
           break;
         default:
           throw new Error(
-              'A Rule constructor can accept three kind of argument: ' + '' +
-              'a string as the message, an integer as the priority and ' + '' +
+              'A Rule constructor can accept three kind of argument: ' +
+              'a string as the message, an integer as the priority and ' +
               'a Boolean as the stopsProcessing argument.');
           break;
       }
@@ -44,11 +44,11 @@ RuleBase.prototype.initialize = function () {
 };
 
 RuleBase.prototype.execute = function () {
-  throw new NotImplementedError('The Rule.execute method is not implemented.');
+  throw new NotImplementedError('method', 'Rule', 'execute');
 };
 
 RuleBase.prototype.result = function () {
-  throw new NotImplementedError('The Rule.result method is not implemented.');
+  throw new NotImplementedError('method', 'Rule', 'result');
 };
 
 module.exports = RuleBase;

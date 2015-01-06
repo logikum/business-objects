@@ -10,11 +10,11 @@ function DataType (name) {
 }
 
 DataType.prototype.check = function () {
-  throw new NotImplementedError('The DataType.check method is not implemented.');
+  throw new NotImplementedError('method', 'DataType', 'check');
 };
 
 DataType.prototype.hasValue = function () {
-  throw new NotImplementedError('The DataType.hasValue method is not implemented.');
+  throw new NotImplementedError('method', 'DataType', 'hasValue');
 };
 
 module.exports = DataType;

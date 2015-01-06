@@ -20,7 +20,12 @@
     "enumType": "The {0} is not an enumeration type."
   },
   "DataTypeError": {
-    "default": "The data type of the passed value is invalid."
+    "default": "The data type of the passed value is invalid.",
+    "boolean": "The passed value is not Boolean.",
+    "date": "The passed value is not DateTime.",
+    "decimal": "The passed value is not Decimal.",
+    "integer": "The passed value is not Integer.",
+    "text": "The passed value is not Text."
   },
   "EnumerationError": {
     "default": "An enumeration error occurred.",
@@ -28,13 +33,19 @@
     "enumName": "The passed name ({1}) is not a {0} item."
   },
   "NotImplementedError": {
-    "default": "The method is not implemented."
+    "default": "The method is not implemented.",
+    "method": "The {0}.{1} method is not implemented."
   },
   "AuthorizationError": {
     "default": "The user has no permission to execute the action."
   },
   "ModelError": {
-    "default": "An error occurred in the model."
+    "default": "An error occurred in the model.",
+    "readCollection": "Cannot read properties of {0}.{1} collection.",
+    "writeCollection": "Cannot write properties of {0}.{1} collection.",
+    "noProperty": "{0} model has no property named {1}.",
+    "readOnly": "{0}.{1} property is read-only.",
+    "transition": "Illegal state transition: {0} => {1}"
   },
   "default": "This is a test message."
 }

@@ -13,7 +13,7 @@ util.inherits(Integer, DataType);
 
 Integer.prototype.check = function (value) {
   if (value !== null && (typeof value !== 'number' || value % 1 !== 0))
-    throw new DataTypeError('The passed value is not Integer.');
+    throw new DataTypeError('integer');
 };
 
 Integer.prototype.hasValue = function (value) {

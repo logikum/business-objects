@@ -13,7 +13,7 @@ util.inherits(Boolean, DataType);
 
 Boolean.prototype.check = function (value) {
   if (value !== null && typeof value !== 'boolean')
-    throw new DataTypeError('The passed value is not Boolean.');
+    throw new DataTypeError('boolean');
 };
 
 Boolean.prototype.hasValue = function (value) {

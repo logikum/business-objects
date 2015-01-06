@@ -242,9 +242,9 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
     }
 
     function illegal(newState) {
-      throw new ModelError('Illegal state transition: ' +
-      (state == null ? 'NULL' : MODEL_STATE.getName(state)) + ' => ' +
-      MODEL_STATE.getName(newState));
+      throw new ModelError('transition',
+        (state == null ? 'NULL' : MODEL_STATE.getName(state)),
+        MODEL_STATE.getName(newState));
     }
 
     function propagateChange() {
@@ -585,7 +585,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
           },
           set: function (value) {
             if (property.isReadOnly)
-              throw new ModelError(properties.name + '.' + property.name + ' property is read-only.');
+              throw new ModelError('readOnly', properties.name , property.name);
             writePropertyValue(property, value);
           },
           enumerable: true
@@ -603,7 +603,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new ModelError('Property ' + properties.name + '.' + property.name + ' is read-only.');
+            throw new ModelError('readOnly', properties.name , property.name);
           },
           enumerable: false
         });

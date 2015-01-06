@@ -10,7 +10,7 @@ function UserInfo (userCode) {
 }
 
 UserInfo.prototype.isInRole = function (role) {
-  throw new NotImplementedError('The UserInfo.isInRole method is not implemented.');
+  throw new NotImplementedError('method', 'UserInfo', 'isInRole');
 };
 
 module.exports = UserInfo;

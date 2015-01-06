@@ -13,7 +13,7 @@ util.inherits(Decimal, DataType);
 
 Decimal.prototype.check = function (value) {
   if (value !== null && typeof value !== 'number')
-    throw new DataTypeError('The passed value is not Decimal.');
+    throw new DataTypeError('decimal');
 };
 
 Decimal.prototype.hasValue = function (value) {

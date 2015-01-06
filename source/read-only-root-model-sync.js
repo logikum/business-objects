@@ -221,7 +221,7 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new ModelError(properties.name + '.' + property.name + ' property is read-only.');
+            throw new ModelError('readOnly', properties.name , property.name);
           },
           enumerable: true
         });
@@ -238,7 +238,7 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new ModelError('Property ' + properties.name + '.' + property.name + ' is read-only.');
+            throw new ModelError('readOnly', properties.name , property.name);
           },
           enumerable: false
         });

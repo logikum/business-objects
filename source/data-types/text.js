@@ -13,7 +13,7 @@ util.inherits(Text, DataType);
 
 Text.prototype.check = function (value) {
   if (value !== null && typeof value !== 'string')
-    throw new DataTypeError('The passed value is not Text.');
+    throw new DataTypeError('text');
 };
 
 Text.prototype.hasValue = function (value) {

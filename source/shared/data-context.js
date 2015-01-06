@@ -37,27 +37,27 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
       if (self.properties[i].name === name)
         return self.properties[i];
     }
-    throw new Error(properties.name + ' model has no property named ' + name + '.');
+    throw new ModelError('noProperty', properties.name, name);
   }
 
   this.getValue = function (propertyName) {
-    if (getValue) {
-      propertyName = ensureArgument.isMandatoryString(propertyName,
-        'The propertyName argument of DataContext.getValue method must be a  non-empty string.');
+    propertyName = ensureArgument.isMandatoryString(propertyName,
+      'The propertyName argument of DataContext.getValue method must be a non-empty string.');
+    if (getValue)
       return getValue(getByName(propertyName));
-    } else
-      throw new ModelError('Cannot read properties of a collection.');
+    else
+      throw new ModelError('readCollection', properties.name, propertyName);
   };
 
   this.setValue = function (propertyName, value) {
+    propertyName = ensureArgument.isMandatoryString(propertyName,
+      'The propertyName argument of DataContext.setValue method must be a non-empty string.');
     if (setValue) {
-      propertyName = ensureArgument.isMandatoryString(propertyName,
-        'The propertyName argument of DataContext.setValue method must be a  non-empty string.');
       if (value !== undefined) {
         setValue(getByName(propertyName), value);
       }
     } else
-      throw new ModelError('Cannot write properties of a collection.');
+      throw new ModelError('writeCollection', properties.name, propertyName);
   };
 
   // Immutable object.
