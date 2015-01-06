@@ -3,7 +3,9 @@
 var ensureArgument = require('./ensure-argument.js');
 var EnumerationError = require('./enumeration-error.js');
 
-function Enumeration () {
+function Enumeration (name) {
+  this.$name = ensureArgument.isMandatoryString(name,
+      'The name argument of Enumeration constructor must be a non-empty string.')
 }
 
 Enumeration.prototype.count = function () {
@@ -26,7 +28,7 @@ Enumeration.prototype.getName = function (value) {
         return propertyName;
     }
   }
-  throw new EnumerationError('The passed value (' + value + ') is not an enumeration item.');
+  throw new EnumerationError('enumValue', this.$name, value);
 };
 
 Enumeration.prototype.getValue = function (name) {
@@ -39,7 +41,7 @@ Enumeration.prototype.getValue = function (name) {
         return this[propertyName];
     }
   }
-  throw new EnumerationError('The passed name (' + name + ') is not an enumeration item.');
+  throw new EnumerationError('enumName', this.$name, name);
 };
 
 Enumeration.prototype.check = function (value, message) {
@@ -49,7 +51,7 @@ Enumeration.prototype.check = function (value, message) {
         return;
     }
   }
-  throw new EnumerationError(message || 'The passed value (' + value + ') is not an enumeration item.');
+  throw new EnumerationError(message || 'enumValue', this.$name, value);
 };
 
 module.exports = Enumeration;

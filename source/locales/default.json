@@ -1,8 +1,40 @@
 {
   "ArgumentError": {
     "default": "The passed value is invalid.",
-    "property2": "value2",
-    "property3": "value3"
+    "required": "The argument is required.",
+    "string": "The argument must be a string.",
+    "optString": "The argument must be a string or null.",
+    "manString": "The argument must be a non-empty string.",
+    "optNumber": "The argument must be a number value or null.",
+    "manNumber": "The argument must be a number value.",
+    "optInteger": "The argument must be an integer value or null.",
+    "manInteger": "The argument must be an integer value.",
+    "optBoolean": "The argument must be a Boolean value or null.",
+    "manBoolean": "The argument must be a Boolean value.",
+    "optObject": "The argument must be an object or null.",
+    "manObject": "The argument must be an object.",
+    "optFunction": "The argument must be a function or null.",
+    "manFunction": "The argument must be a function.",
+    "optType": "The argument must be a {0} object or null.",
+    "manType": "The argument must be a {0} object.",
+    "enumType": "The {0} is not an enumeration type."
+  },
+  "DataTypeError": {
+    "default": "The data type of the passed value is invalid."
+  },
+  "EnumerationError": {
+    "default": "An enumeration error occurred.",
+    "enumValue": "The passed value ({1}) is not a {0} item.",
+    "enumName": "The passed name ({1}) is not a {0} item."
+  },
+  "NotImplementedError": {
+    "default": "The method is not implemented."
+  },
+  "AuthorizationError": {
+    "default": "The user has no permission to execute the action."
+  },
+  "ModelError": {
+    "default": "An error occurred in the model."
   },
   "default": "This is a test message."
 }

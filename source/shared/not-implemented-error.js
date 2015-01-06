@@ -1,13 +1,16 @@
 'use strict';
 
+var CLASS_NAME = 'NotImplementedError';
+
 var util = require('util');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 function NotImplementedError(message) {
   NotImplementedError.super_.call(this);
 
-  this.name = 'NotImplementedError';
+  this.name = CLASS_NAME;
 
-  this.message = message || 'The method is not implemented.';
+  this.message = t.apply(this, message ? arguments : ['default']);
 }
 util.inherits(NotImplementedError, Error);
 

@@ -8,10 +8,31 @@ describe('Enumeration', function() {
   var numbers2 = numbers.two;
   var numbers3 = numbers.three;
 
-  it('constructor expects no arguments', function() {
-    var options = new Enumeration();
+  it('constructor expects one argument', function() {
+    function build01() { var options = new Enumeration(); }
+    function build02() { var options = new Enumeration(''); }
+    function build03() { var options = new Enumeration('Options'); }
+    function build04() { var options = new Enumeration(100); }
+    function build05() { var options = new Enumeration(true); }
+    function build06() { var options = new Enumeration({name:'Options'}); }
+    function build07() { var options = new Enumeration(['Options']); }
+    function build08() { var options = new Enumeration(new Date(2000, 12, 31)); }
 
-    expect(options.count()).toBe(0);
+    expect(build01).toThrow();
+    expect(build02).toThrow();
+    expect(build03).not.toThrow();
+    expect(build04).toThrow();
+    expect(build05).toThrow();
+    expect(build06).toThrow();
+    expect(build07).toThrow();
+    expect(build08).toThrow();
+  });
+
+  it('$name property returns the type name', function() {
+
+    expect(numbers1.$name).toBe('Numbers1');
+    expect(numbers2.$name).toBe('Numbers2');
+    expect(numbers3.$name).toBe('Numbers3');
   });
 
   it('has the defined items', function() {
@@ -94,7 +115,7 @@ describe('Enumeration', function() {
     function check1() {numbers3.check(10); }
     function check2() {numbers3.check(20, 'Invalid enumeration value!'); }
 
-    expect(check1).toThrow('The passed value (10) is not an enumeration item.');
+    expect(check1).toThrow('The passed value (10) is not a Numbers3 item.');
     expect(check2).toThrow('Invalid enumeration value!');
   });
 });

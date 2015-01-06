@@ -4,7 +4,7 @@ var util = require('util');
 var Enumeration = require('../shared/enumeration.js');
 
 function AuthorizationAction() {
-  AuthorizationAction.super_.call(this);
+  AuthorizationAction.super_.call(this, 'AuthorizationAction');
 
   // Define enumeration members.
   this.readProperty = 0;

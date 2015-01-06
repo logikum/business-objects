@@ -1,13 +1,16 @@
 'use strict';
 
+var CLASS_NAME = 'AuthorizationError';
+
 var util = require('util');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 function AuthorizationError(message) {
   AuthorizationError.super_.call(this);
 
-  this.name = 'AuthorizationError';
+  this.name = CLASS_NAME;
 
-  this.message = message || 'The user has no permission to execute the action.';
+  this.message = t.apply(this, message ? arguments : ['default']);
 }
 util.inherits(AuthorizationError, Error);
 

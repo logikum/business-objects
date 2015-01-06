@@ -4,7 +4,7 @@ var util = require('util');
 var Enumeration = require('../shared/enumeration.js');
 
 function RuleSeverity() {
-  RuleSeverity.super_.call(this);
+  RuleSeverity.super_.call(this, 'RuleSeverity');
 
   // Define enumeration members.
   this.success = 0;

@@ -8,7 +8,7 @@ var ensureArgument = {
 
   hasValue: function (value, message) {
     if (value === null || value === undefined)
-      throw new ArgumentError(message || 'The argument is required.');
+      throw new ArgumentError(message || 'required');
     return value;
   },
 
@@ -18,7 +18,7 @@ var ensureArgument = {
 
   isString: function (value, message) {
     if (typeof value !== 'string')
-      throw new ArgumentError(message || 'The argument must be a string.');
+      throw new ArgumentError(message || 'string');
     return value;
   },
 
@@ -26,13 +26,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && typeof value !== 'string')
-      throw new ArgumentError(message || 'The argument must be a string or null.');
+      throw new ArgumentError(message || 'optString');
     return value;
   },
 
   isMandatoryString: function (value, message) {
     if (typeof value !== 'string' || value.trim().length === 0)
-      throw new ArgumentError(message || 'The argument must be a non-empty string.');
+      throw new ArgumentError(message || 'manString');
     return value;
   },
 
@@ -44,13 +44,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && typeof value !== 'number')
-      throw new ArgumentError(message || 'The argument must be a number value or null.');
+      throw new ArgumentError(message || 'optNumber');
     return value;
   },
 
   isMandatoryNumber: function (value, message) {
     if (typeof value !== 'number')
-      throw new ArgumentError(message || 'The argument must be a number value.');
+      throw new ArgumentError(message || 'manNumber');
     return value;
   },
 
@@ -62,13 +62,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && (typeof value !== 'number' || value % 1 !== 0))
-      throw new ArgumentError(message || 'The argument must be an integer value or null.');
+      throw new ArgumentError(message || 'optInteger');
     return value;
   },
 
   isMandatoryInteger: function (value, message) {
     if (typeof value !== 'number' || value % 1 !== 0)
-      throw new ArgumentError(message || 'The argument must be an integer value.');
+      throw new ArgumentError(message || 'manInteger');
     return value;
   },
 
@@ -80,13 +80,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && typeof value !== 'boolean')
-      throw new ArgumentError(message || 'The argument must be a Boolean value or null.');
+      throw new ArgumentError(message || 'optBoolean');
     return value;
   },
 
   isMandatoryBoolean: function (value, message) {
     if (typeof value !== 'boolean')
-      throw new ArgumentError(message || 'The argument must be a Boolean value.');
+      throw new ArgumentError(message || 'manBoolean');
     return value;
   },
 
@@ -98,13 +98,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (typeof value !== 'object')
-      throw new ArgumentError(message || 'The argument must be an object or null.');
+      throw new ArgumentError(message || 'optObject');
     return value;
   },
 
   isMandatoryObject: function (value, message) {
     if (typeof value !== 'object' || value === null)
-      throw new ArgumentError(message || 'The argument must be an object.');
+      throw new ArgumentError(message || 'manObject');
     return value;
   },
 
@@ -116,13 +116,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && typeof value !== 'function')
-      throw new ArgumentError(message || 'The argument must be a function or null.');
+      throw new ArgumentError(message || 'optFunction');
     return value;
   },
 
   isMandatoryFunction: function (value, message) {
     if (typeof value !== 'function')
-      throw new ArgumentError(message || 'The argument must be a function.');
+      throw new ArgumentError(message || 'manFunction');
     return value;
   },
 
@@ -137,7 +137,7 @@ var ensureArgument = {
     if (value !== null && !(types.some(function (option) {
         return value instanceof option || value.super_ === option;
       })))
-      throw new ArgumentError(message || 'The argument must be a ' + types.join() + ' object or null.');
+      throw new ArgumentError(message || 'optType', types.join(' | '));
     return value;
   },
 
@@ -146,7 +146,7 @@ var ensureArgument = {
     if (!(types.some(function (option) {
         return value instanceof option || value.super_ === option;
       })))
-      throw new ArgumentError(message || 'The argument must be a ' + type + ' object.');
+      throw new ArgumentError(message || 'manType', type);
     return value;
   },
 
@@ -156,11 +156,10 @@ var ensureArgument = {
 
   isEnumMember: function (value, type, defaultValue, message) {
     if (!type || typeof type.check !== 'function')
-      throw new ArgumentError('The ' + type + ' is not an enumeration type.');
+      throw new ArgumentError('enumType', type);
     if (defaultValue && (value === null || value === undefined))
       value = defaultValue;
-    type.check(value,
-        message || 'The argument must be a member of ' + type + ' enumeration.');
+    type.check(value, message || 'enumValue');
     return value;
   }
 

@@ -4,7 +4,7 @@ var util = require('util');
 var Enumeration = require('../../source/shared/enumeration.js');
 
 function Numbers1() {
-  Numbers1.super_.call(this);
+  Numbers1.super_.call(this, 'Numbers1');
 
   this.one = 0;
 
@@ -13,7 +13,7 @@ function Numbers1() {
 util.inherits(Numbers1, Enumeration);
 
 function Numbers2() {
-  Numbers2.super_.call(this);
+  Numbers2.super_.call(this, 'Numbers2');
 
   this.one = 0;
   this.two = 1;
@@ -23,7 +23,7 @@ function Numbers2() {
 util.inherits(Numbers2, Enumeration);
 
 function Numbers3() {
-  Numbers3.super_.call(this);
+  Numbers3.super_.call(this, 'Numbers3');
 
   this.one = 0;
   this.two = 1;

@@ -4,6 +4,11 @@ var AuthorizationAction = require('../../source/rules/authorization-action.js');
 
 describe('Authorization action enumeration', function () {
 
+  it('$name property returns the type name', function() {
+
+    expect(AuthorizationAction.$name).toBe('AuthorizationAction');
+  });
+
   it('has the defined items', function() {
 
     expect(AuthorizationAction.readProperty).toBe(0);

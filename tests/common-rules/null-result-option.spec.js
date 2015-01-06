@@ -4,6 +4,11 @@ var NullResultOption = require('../../source/common-rules/null-result-option.js'
 
 describe('No result option enumeration', function () {
 
+  it('$name property returns the type name', function() {
+
+    expect(NullResultOption.$name).toBe('NullResultOption');
+  });
+
   it('has the defined items', function() {
 
     expect(NullResultOption.returnTrue).toBe(0);

@@ -4,6 +4,11 @@ var ModelState = require('../../source/shared/model-state.js');
 
 describe('Model state enumeration', function () {
 
+  it('$name property returns the type name', function() {
+
+    expect(ModelState.$name).toBe('ModelState');
+  });
+
   it('has the defined items', function() {
 
     expect(ModelState.pristine).toBe(0);

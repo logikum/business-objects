@@ -4,6 +4,11 @@ var RuleSeverity = require('../../source/rules/rule-severity.js');
 
 describe('Rule severity enumeration', function () {
 
+  it('$name property returns the type name', function() {
+
+    expect(RuleSeverity.$name).toBe('RuleSeverity');
+  });
+
   it('has the defined items', function() {
 
     expect(RuleSeverity.success).toBe(0);

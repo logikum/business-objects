@@ -10,7 +10,7 @@ function ArgumentError(message) {
 
   this.name = CLASS_NAME;
 
-  this.message = t.apply(this, message ? arguments : ['The passed value is invalid.']);
+  this.message = t.apply(this, message ? arguments : ['default']);
 }
 util.inherits(ArgumentError, Error);
 

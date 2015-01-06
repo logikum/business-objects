@@ -4,6 +4,11 @@ var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
 
 describe('No access behavior enumeration', function () {
 
+  it('$name property returns the type name', function() {
+
+    expect(NoAccessBehavior.$name).toBe('NoAccessBehavior');
+  });
+
   it('has the defined items', function() {
 
     expect(NoAccessBehavior.throwError).toBe(0);

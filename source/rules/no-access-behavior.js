@@ -4,7 +4,7 @@ var util = require('util');
 var Enumeration = require('../shared/enumeration.js');
 
 function NoAccessBehavior() {
-  NoAccessBehavior.super_.call(this);
+  NoAccessBehavior.super_.call(this, 'NoAccessBehavior');
 
   // Define enumeration members.
   this.throwError = 0;

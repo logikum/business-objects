@@ -4,7 +4,7 @@ var util = require('util');
 var Enumeration = require('../shared/enumeration.js');
 
 function NullResultOption() {
-  NullResultOption.super_.call(this);
+  NullResultOption.super_.call(this, 'NullResultOption');
 
   // Define enumeration members.
   this.returnTrue = 0;

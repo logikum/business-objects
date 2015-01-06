@@ -4,7 +4,7 @@ var util = require('util');
 var Enumeration = require('./enumeration.js');
 
 function ModelState() {
-  ModelState.super_.call(this);
+  ModelState.super_.call(this, 'ModelState');
 
   // Define enumeration members.
   this.pristine = 0;
