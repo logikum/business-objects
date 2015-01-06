@@ -3,9 +3,10 @@
 var fs = require('fs');
 var path = require('path');
 var config = require('./config-reader.js');
-//var ensureArgument = require('./ensure-argument.js');
 
 var locales = {};
+
+//region Read all locales
 
 // Read business-objects locales.
 readLocales('$bo', path.join(process.cwd(), 'source/locales'));
@@ -37,11 +38,22 @@ function readLocales (namespace, localePath) {
   });
 }
 
-// Define message handler.
-var i18n = function (namespace) {
-  //this.namespace = ensureArgument.isMandatoryString(namespace || '$default',
-  //    'The namespace argument of i18n constructor must be a non-empty string.');
+//endregion
+
+//region Define message handler
+
+var i18n = function (namespace, keyRoot) {
+
+  if (namespace && typeof namespace !== 'string')
+    throw new Error('The namespace argument of i18n constructor must be a string.');
+  if (keyRoot && typeof keyRoot !== 'string')
+    throw new Error('The keyRoot argument of i18n constructor must be a string.');
+
   this.namespace = namespace || '$default';
+  this.keyRoot = keyRoot || '';
+
+  if (this.keyRoot && this.keyRoot.substr(-1) !== '.')
+    this.keyRoot += '.';
 
   Object.freeze(this);
 };
@@ -54,12 +66,12 @@ i18n.prototype.get = function (messageKey) {
 
 i18n.prototype.getWithNs = function (namespace, messageKey) {
 
-  //namespace = ensureArgument.isMandatoryString(namespace,
-  //    'The namespace argument of i18n.get method must be a non-empty string.');
-  //var keys = ensureArgument.isMandatoryString(messageKey,
-  //    'The messageKey argument of i18n.get method must be a non-empty string.')
-  //  .split('.');
-  var keys = messageKey.split('.');
+  if (typeof namespace !== 'string' || namespace.length === 0)
+    throw new Error('The namespace argument of i18n.get method must be a non-empty string.');
+  if (typeof messageKey !== 'string' || messageKey.length === 0)
+    throw new Error('The messageKey argument of i18n.get method must be a non-empty string.');
+
+  var keys = (this.keyRoot + messageKey).split('.');
   var messageArgs = arguments;
 
   function replacer(match) {
@@ -114,5 +126,7 @@ i18n.prototype.getWithNs = function (namespace, messageKey) {
 
   return message;
 };
+
+//endregion
 
 module.exports = i18n;

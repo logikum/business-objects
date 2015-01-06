@@ -5,6 +5,7 @@ var path = require('path');
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
 
+// Define the possible configuration files.
 var options = [
   '/business-objects-config.js',
   '/business-objects-config.json',
@@ -15,6 +16,7 @@ var cwd = process.cwd();
 var config = {};
 var cfg;
 
+// Read first configuration file found.
 for (var i = 0; i < options.length; i++) {
   var cfgPath = path.join(cwd, options[i]);
   if (fs.existsSync(cfgPath)) {
@@ -23,7 +25,10 @@ for (var i = 0; i < options.length; i++) {
   }
 }
 
+// Test if configuration file was found.
 if (cfg) {
+
+  // Evaluate the data access object builder.
   if (cfg.daoBuilder) {
 
     if (typeof cfg.daoBuilder !== 'string')
@@ -42,6 +47,7 @@ if (cfg) {
     config.daoBuilder = daoBuilder;
   }
 
+  // Evaluate the user information reader.
   if (cfg.userReader) {
 
     if (typeof cfg.userReader !== 'string')
@@ -58,34 +64,7 @@ if (cfg) {
     config.userReader = userReaderFunction;
   }
 
-  if (cfg.localeReader) {
-
-    if (typeof cfg.localeReader !== 'string')
-      throw new Error('The value of localeReader property of BusinessObjects configuration must be a string.');
-
-    var localeReaderPath = path.join(cwd, cfg.localeReader);
-    if (!fs.existsSync(localeReaderPath) || !fs.statSync(localeReaderPath).isFile())
-      throw new Error('The value of localeReader property of BusinessObjects configuration is not a valid file path: ' + localeReaderPath);
-
-    var localeReaderFunction = require(localeReaderPath);
-    if (typeof localeReaderFunction !== 'function')
-      throw new Error('The file defined by the localeReader property of BusinessObjects configuration must return a function: ' + localeReaderPath);
-
-    config.localeReader = localeReaderFunction;
-  }
-
-  if (cfg.pathOfLocales) {
-
-    if (typeof cfg.pathOfLocales !== 'string')
-      throw new Error('The value of pathOfLocales property of BusinessObjects configuration must be a string.');
-
-    var pathOfLocales = path.join(cwd, cfg.pathOfLocales);
-    if (!fs.existsSync(pathOfLocales) || !fs.statSync(pathOfLocales).isDirectory())
-      throw new Error('The value of pathOfLocales property of BusinessObjects configuration is not a valid directory path: ' + pathOfLocales);
-
-    config.pathOfLocales = pathOfLocales;
-  }
-
+  // Evaluate the unauthorized behavior.
   if (cfg.noAccessBehavior !== undefined && cfg.noAccessBehavior !== null) {
     NoAccessBehavior.check(cfg.noAccessBehavior,
       'The value of noAccessBehavior property of BusinessObjects configuration must be a NoAccessBehavior item.');
