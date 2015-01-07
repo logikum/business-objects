@@ -3,19 +3,18 @@
 var fs = require('fs');
 var path = require('path');
 var DaoBase = require('./dao-base.js');
-var ensureArgument = require('../shared/ensure-argument.js');
+var DaoError = require('./dao-error.js');
 
 var daoBuilder = function (dataSource, modelPath) {
 
   if (typeof dataSource !== 'string' || dataSource.trim().length === 0)
-    throw new Error('The dataSource argument of daoBuilder function must be a non-empty string.');
-
+    throw new DaoError('f_manString', 'dataSource');
   if (typeof modelPath !== 'string' || modelPath.trim().length === 0)
-    throw new Error('The modelPath argument of daoBuilder function must be a non-empty string.');
+    throw new DaoError('f_manString', 'modelPath');
 
   var modelStats = fs.statSync(modelPath);
   if (!modelStats.isFile())
-    throw new Error('The modelPath argument of daoBuilder function is not a valid file path: ' + modelPath);
+    throw new DaoError('filePath', 'modelPath', modelPath);
 
   var daoPath = path.join(
     path.dirname(modelPath),
@@ -24,15 +23,17 @@ var daoBuilder = function (dataSource, modelPath) {
 
   var daoStats = fs.statSync(daoPath);
   if (!daoStats.isFile())
-    throw new Error('The required data access file does not exist: ' + daoPath);
+    throw new DaoError('noDaoFile', daoPath);
 
-  var daoCtor = require(daoPath);
+  var daoConstructor = require(daoPath);
 
-  if (typeof daoCtor !== 'function')
-    throw new Error('The data access file must return a constructor: ' + daoPath);
+  if (typeof daoConstructor !== 'function')
+    throw new DaoError('daoCtor', daoPath);
 
-  return ensureArgument.isMandatoryType(new daoCtor(), DaoBase,
-      daoPath + ' must inherit DaoBase type.');
+  var daoInstance = new daoConstructor();
+  if (!(daoInstance instanceof DaoBase) && daoInstance.super_ !== DaoBase)
+    throw new DaoError('daoType', daoPath);
+  return daoInstance;
 };
 
 module.exports = daoBuilder;

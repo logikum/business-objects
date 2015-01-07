@@ -1,18 +1,21 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var DaoError = require('./dao-error.js');
 
 var DaoBase = function (name) {
 
-  this.name = ensureArgument.isMandatoryString(name,
-      'The name argument of a data access object constructor must be a non-empty string.');
+  if (typeof name !== 'string' || name.trim().length === 0)
+    throw new DaoError('c_manString', 'name');
+  else
+    this.name = name;
 };
 
 DaoBase.prototype.checkMethod = function (methodName) {
-  methodName = ensureArgument.isMandatoryString(methodName,
-      'The methodName argument of DaoBase.checkMethod method must be a non-empty-string.');
+
+  if (typeof methodName !== 'string' || methodName.trim().length === 0)
+    throw new DaoError('m_manString', 'checkMethod', 'methodName');
   if (!this[methodName] || typeof this[methodName] !== 'function')
-    throw new Error(this.name + ' object has no method named ' + methodName + '.');
+    throw new Error('noMethod', this.name, methodName);
 };
 
 module.exports = DaoBase;
