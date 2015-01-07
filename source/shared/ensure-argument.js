@@ -1,6 +1,14 @@
 'use strict';
 
 var ArgumentError = require('./argument-error.js');
+var t = require('../locales/i18n-bo.js')('ArgumentError');
+
+function failed (argArray, skip, message, other) {
+  var args = [null, message].concat(Array.prototype.slice.call(argArray, skip));
+  if (other) args.push(other);
+  var factory = ArgumentError.bind.apply(ArgumentError, args);
+  throw new factory();
+}
 
 var ensureArgument = {
 
@@ -8,7 +16,7 @@ var ensureArgument = {
 
   hasValue: function (value, message) {
     if (value === null || value === undefined)
-      throw new ArgumentError(message || 'required');
+      failed(arguments, 2, message || 'required');
     return value;
   },
 
@@ -18,7 +26,7 @@ var ensureArgument = {
 
   isString: function (value, message) {
     if (typeof value !== 'string')
-      throw new ArgumentError(message || 'string');
+      failed(arguments, 2, message || 'string');
     return value;
   },
 
@@ -26,13 +34,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && typeof value !== 'string')
-      throw new ArgumentError(message || 'optString');
+      failed(arguments, 2, message || 'optString');
     return value;
   },
 
   isMandatoryString: function (value, message) {
     if (typeof value !== 'string' || value.trim().length === 0)
-      throw new ArgumentError(message || 'manString');
+      failed(arguments, 2, message || 'manString');
     return value;
   },
 
@@ -44,13 +52,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && typeof value !== 'number')
-      throw new ArgumentError(message || 'optNumber');
+      failed(arguments, 2, message || 'optNumber');
     return value;
   },
 
   isMandatoryNumber: function (value, message) {
     if (typeof value !== 'number')
-      throw new ArgumentError(message || 'manNumber');
+      failed(arguments, 2, message || 'manNumber');
     return value;
   },
 
@@ -62,13 +70,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && (typeof value !== 'number' || value % 1 !== 0))
-      throw new ArgumentError(message || 'optInteger');
+      failed(arguments, 2, message || 'optInteger');
     return value;
   },
 
   isMandatoryInteger: function (value, message) {
     if (typeof value !== 'number' || value % 1 !== 0)
-      throw new ArgumentError(message || 'manInteger');
+      failed(arguments, 2, message || 'manInteger');
     return value;
   },
 
@@ -80,13 +88,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && typeof value !== 'boolean')
-      throw new ArgumentError(message || 'optBoolean');
+      failed(arguments, 2, message || 'optBoolean');
     return value;
   },
 
   isMandatoryBoolean: function (value, message) {
     if (typeof value !== 'boolean')
-      throw new ArgumentError(message || 'manBoolean');
+      failed(arguments, 2, message || 'manBoolean');
     return value;
   },
 
@@ -98,13 +106,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (typeof value !== 'object')
-      throw new ArgumentError(message || 'optObject');
+      failed(arguments, 2, message || 'optObject');
     return value;
   },
 
   isMandatoryObject: function (value, message) {
     if (typeof value !== 'object' || value === null)
-      throw new ArgumentError(message || 'manObject');
+      failed(arguments, 2, message || 'manObject');
     return value;
   },
 
@@ -116,13 +124,13 @@ var ensureArgument = {
     if (value === undefined)
       value = null;
     if (value !== null && typeof value !== 'function')
-      throw new ArgumentError(message || 'optFunction');
+      failed(arguments, 2, message || 'optFunction');
     return value;
   },
 
   isMandatoryFunction: function (value, message) {
     if (typeof value !== 'function')
-      throw new ArgumentError(message || 'manFunction');
+      failed(arguments, 2, message || 'manFunction');
     return value;
   },
 
@@ -137,7 +145,7 @@ var ensureArgument = {
     if (value !== null && !(types.some(function (option) {
         return value instanceof option || value.super_ === option;
       })))
-      throw new ArgumentError(message || 'optType', types.join(' | '));
+      failed(arguments, 3, message || 'optType', types.join(' | '));
     return value;
   },
 
@@ -146,7 +154,7 @@ var ensureArgument = {
     if (!(types.some(function (option) {
         return value instanceof option || value.super_ === option;
       })))
-      throw new ArgumentError(message || 'manType', type);
+      failed(arguments, 3, message || 'manType', type);
     return value;
   },
 
@@ -156,7 +164,7 @@ var ensureArgument = {
 
   isEnumMember: function (value, type, defaultValue, message) {
     if (!type || typeof type.check !== 'function')
-      throw new ArgumentError('enumType', type);
+      failed(arguments, 4, 'enumType', type);
     if (defaultValue && (value === null || value === undefined))
       value = defaultValue;
     type.check(value, message || 'enumValue');
