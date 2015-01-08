@@ -9,14 +9,14 @@ var RuleSeverity = require('./rule-severity.js');
 var BrokenRuleList = function (modelName) {
 
   modelName = ensureArgument.isMandatoryString(modelName,
-      'The modelName argument of BrokenRuleList constructor must be a non-empty string.');
+      'c_manString', 'BrokenRuleList', 'modelName');
 
   var items = {};
   var length = 0;
 
   this.add = function (brokenRule) {
     brokenRule = ensureArgument.isMandatoryType(brokenRule, BrokenRule,
-      'The brokenRule argument of BrokenRuleList.add method must be a BrokenRule object.');
+        'm_manType', 'BrokenRuleList', 'add', 'brokenRule');
 
     if (items[brokenRule.propertyName])
       items[brokenRule.propertyName].push(brokenRule);
@@ -75,7 +75,7 @@ var BrokenRuleList = function (modelName) {
   this.output = function (namespace) {
 
     namespace = ensureArgument.isOptionalString(namespace,
-      'The namespace argument of BrokenRuleList.output method must be a string or null.');
+        'm_optString', 'BrokenRuleList', 'output', 'namespace');
 
     var data = null;
 

@@ -55,6 +55,7 @@ var i18n = function (namespace, keyRoot) {
   if (this.keyRoot && this.keyRoot.substr(-1) !== '.')
     this.keyRoot += '.';
 
+  // Immutable object.
   Object.freeze(this);
 };
 

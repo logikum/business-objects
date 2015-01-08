@@ -65,6 +65,7 @@ var index = {
   nullResultOption: NullResultOption
 };
 
+// Immutable object.
 Object.freeze(index);
 
 module.exports = index;

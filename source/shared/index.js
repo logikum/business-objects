@@ -22,7 +22,7 @@ var EnumerationError = require('./enumeration-error.js');
 var ModelError = require('./model-error.js');
 var NotImplementedError = require('./not-implemented-error.js');
 
-var shared = {
+var index = {
   PropertyInfo: PropertyInfo,
   PropertyManager: PropertyManager,
   DataStore: DataStore,
@@ -46,4 +46,7 @@ var shared = {
   NotImplementedError: NotImplementedError
 };
 
-module.exports = shared;
+// Immutable object.
+Object.freeze(index);
+
+module.exports = index;

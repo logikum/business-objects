@@ -6,6 +6,9 @@ var NotImplementedError = require('../shared/not-implemented-error.js');
 function DataType (name) {
 
   this.name = ensureArgument.isMandatoryString(name, 'c_manString', 'DataType', 'name');
+
+  // Immutable object.
+  Object.freeze(this);
 }
 
 DataType.prototype.check = function () {

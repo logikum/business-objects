@@ -22,7 +22,7 @@ var BrokenRules = require('./broken-rules.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 var BrokenRule = require('./broken-rule.js');
 
-var rules = {
+var index = {
   ValidationRule: ValidationRule,
   ValidationContext: ValidationContext,
   ValidationResult: ValidationResult,
@@ -46,4 +46,7 @@ var rules = {
   BrokenRule: BrokenRule
 };
 
-module.exports = rules;
+// Immutable object.
+Object.freeze(index);
+
+module.exports = index;

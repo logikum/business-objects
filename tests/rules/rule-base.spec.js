@@ -3,13 +3,46 @@ console.log('Testing rules/rule-base.js...');
 var RuleBase = require('../../source/rules/rule-base.js');
 
 describe('Rule base', function () {
-  var rb = new RuleBase();
+  var rb = new RuleBase('postalCode');
 
-  it('has three properties', function() {
+  it('constructor expects a non-empty string argument', function () {
+    var build01 = function () { return new RuleBase(); };
+    var build02 = function () { return new RuleBase(null); };
+    var build03 = function () { return new RuleBase(''); };
+    var build04 = function () { return new RuleBase('ruleName'); };
+    var build05 = function () { return new RuleBase(false); };
+    var build06 = function () { return new RuleBase(125); };
+    var build07 = function () { return new RuleBase({}); };
+    var build08 = function () { return new RuleBase(['ruleName']); };
 
+    expect(build01).toThrow();
+    expect(build02).toThrow();
+    expect(build03).toThrow();
+    expect(build04).not.toThrow();
+    expect(build05).toThrow();
+    expect(build06).toThrow();
+    expect(build07).toThrow();
+    expect(build08).toThrow();
+  });
+
+  it('has four properties', function() {
+
+    expect(rb.ruleName).toBe('postalCode');
     expect(rb.message).toBeNull();
     expect(rb.priority).toBe(10);
     expect(rb.stopsProcessing).toBe(false);
+  });
+
+  it('has one read-only property', function() {
+    rb.ruleName = 'zip';
+    rb.message = '';
+    rb.priority = 33;
+    rb.stopsProcessing = true;
+
+    expect(rb.ruleName).toBe('postalCode');
+    expect(rb.message).toBe('');
+    expect(rb.priority).toBe(33);
+    expect(rb.stopsProcessing).toBe(true);
   });
 
   it('initialize method expects a string,a number and a Boolean argument', function() {

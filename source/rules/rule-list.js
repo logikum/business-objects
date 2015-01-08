@@ -8,9 +8,9 @@ function RuleList() {
   this.add = function (id, rule) {
 
     id = ensureArgument.isMandatoryString(id,
-      'The id argument of RuleList.add method must be a non-empty string.');
+        'c_manString', 'RuleList', 'add', 'id');
     rule = ensureArgument.isMandatoryType(rule, Rule,
-      'The rule argument of RuleList.add method must be a Rule object.');
+        'c_manType', 'RuleList', 'add', 'rule');
 
     if (this[id])
       this[id].push(rule);

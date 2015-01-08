@@ -8,11 +8,11 @@ function AuthorizationResult(ruleName, targetName, message) {
   AuthorizationResult.super_.call(this);
 
   this.ruleName = ensureArgument.isMandatoryString(ruleName,
-    'The ruleName argument of AuthorizationResult constructor must be a non-empty string.');
+      'c_manString', 'AuthorizationResult', 'ruleName');
   this.propertyName = ensureArgument.isString(targetName || '',
-    'The targetName argument of AuthorizationResult constructor must be a string.');
+      'c_string', 'AuthorizationResult', 'targetName');
   this.message = ensureArgument.isMandatoryString(message,
-    'The message argument of AuthorizationResult constructor must be a non-empty string.');
+      'c_manString', 'AuthorizationResult', 'message');
 }
 util.inherits(AuthorizationResult, ResultBase);
 

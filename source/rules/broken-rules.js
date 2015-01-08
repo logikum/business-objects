@@ -8,13 +8,13 @@ function BrokenRules () {
   this.add = function (propertyName, message, severity) {
 
     propertyName = ensureArgument.isMandatoryString(propertyName,
-        'The propertyName argument of BrokenRules.add method must be a non-empty string.');
+        'm_manString', 'BrokenRules', 'add', 'propertyName');
 
     var brokenRule = {
       message: ensureArgument.isMandatoryString(message,
-          'The message argument of BrokenRules.add method must be a non-empty string.'),
+          'm_manString', 'BrokenRules', 'add', 'message'),
       severity: ensureArgument.isEnumMember(severity, RuleSeverity, null,
-          'The severity argument of BrokenRules.add method must be a RuleSeverity value.')
+          'm_enumType', 'BrokenRules', 'add', 'severity')
     };
 
     if (this[propertyName])

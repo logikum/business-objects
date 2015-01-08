@@ -13,7 +13,7 @@ describe('Rule list', function () {
 
   it('add method expects a non-empty string and a rule argument', function() {
     var rl = new RuleList();
-    var rule = new Rule();
+    var rule = new Rule('IPAddress');
     rule.initialize('message', 13, true);
 
     var add01 = function () { rl.add(); };
@@ -33,9 +33,9 @@ describe('Rule list', function () {
 
   it('add method creates an array property', function() {
     var rl = new RuleList();
-    var rule1 = new Rule();
+    var rule1 = new Rule('rule_01');
     rule1.initialize('message #1', 7, false);
-    var rule2 = new Rule();
+    var rule2 = new Rule('rule_02');
     rule2.initialize('message #2', 13, true);
     rl.add('property', rule1);
     rl.add('property', rule2);
@@ -51,9 +51,9 @@ describe('Rule list', function () {
 
   it('sort method arranges items by priority', function() {
     var rl = new RuleList();
-    var rule1 = new Rule();
+    var rule1 = new Rule('rule_01');
     rule1.initialize('message #1', 7, false);
-    var rule2 = new Rule();
+    var rule2 = new Rule('rule_02');
     rule2.initialize('message #2', 13, true);
     rl.add('property', rule1);
     rl.add('property', rule2);

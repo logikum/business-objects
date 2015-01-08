@@ -6,9 +6,9 @@ var BrokenRuleList = require('./broken-rule-list.js');
 function ValidationContext(getProperty, brokenRules) {
 
   this.getProperty = ensureArgument.isMandatoryFunction(getProperty,
-    'The getProperty argument of ValidationContext constructor must be a function.');
+      'c_manFunction', 'ValidationContext', 'getProperty');
   this.brokenRules = ensureArgument.isMandatoryType(brokenRules, BrokenRuleList,
-    'The brokenRules argument of ValidationContext constructor must be a BrokenRuleList object.');
+      'c_manType', 'ValidationContext', 'brokenRules');
 
   // Immutable object.
   Object.freeze(this);

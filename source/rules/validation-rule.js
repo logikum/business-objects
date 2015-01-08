@@ -8,16 +8,14 @@ var ValidationResult = require('./validation-result.js');
 var PropertyInfo = require('../shared/property-info.js');
 
 function ValidationRule(ruleName) {
-  ValidationRule.super_.call(this);
+  ValidationRule.super_.call(this, ruleName);
 
-  this.ruleName = ensureArgument.isMandatoryString(ruleName,
-    'The ruleName argument of ValidationRule constructor must be a non-empty string.');
   this.primaryProperty = null;
 
   this.initialize = function (primaryProperty, message, priority, stopsProcessing) {
 
     this.primaryProperty = ensureArgument.isMandatoryType(primaryProperty, PropertyInfo,
-      'The primaryProperty argument of ValidationRule.initialize method must be a PropertyInfo object.');
+        'm_manType', 'ValidationRule', 'initialize', 'primaryProperty');
 
     // Initialize base properties.
     RuleBase.prototype.initialize.call(this, message, priority, stopsProcessing);
@@ -26,26 +24,25 @@ function ValidationRule(ruleName) {
   var inputProperties = [];
   var affectedProperties = [];
 
-  function addProperty (array, property, message) {
-    property = ensureArgument.isMandatoryType(property, PropertyInfo, message);
-
-    if (array.indexOf(property) < 0)
-      array.push(property);
-  }
-
   this.addInputProperty = function (property) {
-    addProperty(inputProperties, property,
-      'The property argument of ValidationRule.addInputProperty method must be a property info object.');
+    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+        'm_manType', 'ValidationRule', 'addInputProperty', 'property');
+
+    if (inputProperties.indexOf(property) < 0)
+      inputProperties.push(property);
   };
 
   this.addAffectedProperty = function (property) {
-    addProperty(affectedProperties, property,
-      'The property argument of ValidationRule.addAffectedProperty method must be a property info object.');
+    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+        'm_manType', 'ValidationRule', 'addAffectedProperty', 'property');
+
+    if (affectedProperties.indexOf(property) < 0)
+      affectedProperties.push(property);
   };
 
   this.getInputValues = function (getValue) {
     getValue = ensureArgument.isMandatoryFunction(getValue,
-      'The getValue argument of ValidationRule.getInputValues method must be a function.');
+        'm_manFunction', 'ValidationRule', 'getInputValues', 'getValue');
 
     var inputValues = {};
     var combined = new Array(this.primaryProperty).concat(inputProperties);
@@ -60,7 +57,7 @@ function ValidationRule(ruleName) {
 
     var result = new ValidationResult(this.ruleName, this.primaryProperty.name, message || this.message);
     result.severity = ensureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
-      'The severity argument of ValidationRule.result method must be a RuleSeverity value.');
+        'm_manFunction', 'ValidationRule', 'result', 'severity');
     result.stopsProcessing = this.stopsProcessing;
     result.isPreserved = false;
     result.affectedProperties = affectedProperties;
@@ -68,6 +65,7 @@ function ValidationRule(ruleName) {
     return result;
   };
 
+  // Immutable object.
   Object.freeze(ValidationRule);
 }
 util.inherits(ValidationRule, RuleBase);

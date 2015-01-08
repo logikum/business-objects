@@ -8,11 +8,11 @@ function ValidationResult(ruleName, propertyName, message) {
   ValidationResult.super_.call(this);
 
   this.ruleName = ensureArgument.isMandatoryString(ruleName,
-    'The ruleName argument of ValidationResult constructor must be a non-empty string.');
+      'c_manString', 'ValidationResult', 'ruleName');
   this.propertyName = ensureArgument.isMandatoryString(propertyName,
-    'The propertyName argument of ValidationResult constructor must be a string.');
+      'c_manString', 'ValidationResult', 'propertyName');
   this.message = ensureArgument.isMandatoryString(message,
-    'The message argument of ValidationResult constructor must be a non-empty string.');
+      'c_manString', 'ValidationResult', 'message');
   this.affectedProperties = null;
 }
 util.inherits(ValidationResult, ResultBase);

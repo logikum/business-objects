@@ -6,7 +6,7 @@ var DataType = require('../../source/data-types/data-type.js');
 describe('Boolean type', function() {
   var dt = new Boolean();
 
-  it('create method returns a data type', function() {
+  it('constructor returns a data type', function() {
 
     expect(dt).toEqual(jasmine.any(DataType));
   });

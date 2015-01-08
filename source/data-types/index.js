@@ -14,6 +14,7 @@ var index = {
   DateTime: new DateTime()
 };
 
+// Immutable object.
 Object.freeze(index);
 
 module.exports = index;

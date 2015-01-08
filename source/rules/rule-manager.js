@@ -1,6 +1,7 @@
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');
+var ArgumentError = require('../shared/argument-error.js');
 var RuleList = require('./rule-list.js');
 var ValidationRule = require('./validation-rule.js');
 var ValidationContext = require('./validation-context.js');
@@ -22,7 +23,7 @@ var RuleManager = function () {
     },
     set: function (value) {
       noAccessBehavior = ensureArgument.isEnumMember(value, NoAccessBehavior, NoAccessBehavior.throwError,
-        'The value of RuleManager.noAccessBehavior property must be a NoAccessBehavior item.');
+          'p_enumType', 'RuleManager', 'noAccessBehavior');
     },
     enumeration: true
   });
@@ -45,23 +46,23 @@ var RuleManager = function () {
 
     if (rule instanceof ValidationRule) {
       if (!rule.primaryProperty)
-        throw new Error('The rule argument of RuleManager.add method is not initialized.');
+        throw new ArgumentError('m_notInit', 'RuleManager', 'add', 'rule');
       validationRules.add(rule.primaryProperty.name, rule);
 
     } else if (rule instanceof AuthorizationRule) {
       if (!rule.ruleId)
-        throw new Error('The rule argument of RuleManager.add method is not initialized.');
+        throw new ArgumentError('m_notInit', 'RuleManager', 'add', 'rule');
       authorizationRules.add(rule.ruleId, rule);
 
     } else
-      throw new Error('The rule argument of RuleManager.add method must be a Rule object.');
+      throw new ArgumentError('m_manType', 'RuleManager', 'add', 'rule', 'Rule');
   };
 
   this.validate = function (property, context) {
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
-      'The property argument of RuleManager.validate method must be a PropertyInfo object.');
+        'm_manType', 'RuleManager', 'validate', 'property');
     context = ensureArgument.isMandatoryType(context, ValidationContext,
-      'The context argument of RuleManager.validate method must be a ValidationContext object.');
+        'm_manType', 'RuleManager', 'validate', 'context');
 
     context.brokenRules.clear(property);
 

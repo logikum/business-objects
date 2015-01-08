@@ -1,9 +1,18 @@
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');
+var ArgumentError = require('../shared/argument-error.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
-var RuleBase = function () {
+var RuleBase = function (ruleName) {
+
+  ruleName = ensureArgument.isMandatoryString(ruleName, 'c_manString', 'Rule', 'ruleName');
+  Object.defineProperty(this, 'ruleName', {
+    get: function () {
+      return ruleName;
+    },
+    enumeration: true
+  });
 
   this.message = null;
   this.priority = 10;
@@ -31,16 +40,11 @@ RuleBase.prototype.initialize = function () {
           this.stopsProcessing = args[i];
           break;
         default:
-          throw new Error(
-              'A Rule constructor can accept three kind of argument: ' +
-              'a string as the message, an integer as the priority and ' +
-              'a Boolean as the stopsProcessing argument.');
-          break;
+          throw new ArgumentError('rule');
       }
     }
   }
-  ensureArgument.isMandatoryString(this.message,
-      'The message argument of Rule.initialize method must be a non-empty string.');
+  ensureArgument.isMandatoryString(this.message, 'm_manString', 'Rule', 'method', 'message');
 };
 
 RuleBase.prototype.execute = function () {

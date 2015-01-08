@@ -7,12 +7,13 @@ var DataTypeError = require('./data-type-error.js');
 function Text() {
   Text.super_.call(this, 'Text');
 
+  // Immutable object.
   Object.freeze(this);
 }
 util.inherits(Text, DataType);
 
 Text.prototype.check = function (value) {
-  if (value !== null && typeof value !== 'string')
+  if (value !== null && typeof value !== 'string'  && !(value instanceof String))
     throw new DataTypeError('text');
 };
 

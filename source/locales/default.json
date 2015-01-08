@@ -1,6 +1,7 @@
 {
   "ArgumentError": {
     "default": "The passed value is invalid.",
+    "rule": "A Rule constructor can accept three kind of argument: a string as the message, an integer as the priority and a Boolean as the stopsProcessing argument.",
 
     "required": "The argument is required.",
     "string": "The argument must be a string.",
@@ -18,7 +19,7 @@
     "manFunction": "The argument must be a function.",
     "optType": "The argument must be a {0} object or null.",
     "manType": "The argument must be a {0} object.",
-    "enumType": "The {0} is not an enumeration type.",
+    "enumType": "The argument must be a {0} item.",
     "optArray": "The argument must be an array of {0} objects, or a single {0} object or null.",
     "manArray": "The argument must be an array of {0} objects or a single {0} object.",
     "optArrayPrim": "The argument must be an array of {0} values, or a single {0} values or null.",
@@ -40,7 +41,7 @@
     "c_manFunction": "The {1} argument of {0} constructor must be a function.",
     "c_optType": "The {1} argument of {0} constructor must be a {2} object or null.",
     "c_manType": "The {1} argument of {0} constructor must be a {2} object.",
-    "c_enumType": "The {1} argument of {0} constructor is not a {2} item.",
+    "c_enumType": "The {1} argument of {0} constructor must be a {2} item.",
     "c_optArray": "The {1} argument of {0} constructor must be an array of {2} objects, or a single {2} object or null.",
     "c_manArray": "The {1} argument of {0} constructor must be an array of {2} objects or a single {2} object.",
     "c_optArrayPrim": "The {1} argument of {0} constructor must be an array of {2} values, or a single {2} values or null.",
@@ -62,11 +63,15 @@
     "m_manFunction": "The {2} argument of {0}.{1} method must be a function.",
     "m_optType": "The {2} argument of {0}.{1} method must be a {3} object or null.",
     "m_manType": "The {2} argument of {0}.{1} method must be a {3} object.",
-    "m_enumType": "The {2} argument of {0}.{1} method is not a {3} item.",
-    "m_optArray": "The {2} argument of {0}.{1} must be an array of {3} objects, or a single {3} object or null.",
-    "m_manArray": "The {2} argument of {0}.{1} must be an array of {3} objects or a single {3} object.",
-    "m_optArrayPrim": "The {2} argument of {0}.{1} must be an array of {3} values, or a single {3} values or null.",
-    "m_manArrayPrim": "The {2} argument of {0}.{1} must be an array of {3} values or a single {3} values."
+    "m_enumType": "The {2} argument of {0}.{1} method must be a {3} item.",
+    "m_optArray": "The {2} argument of {0}.{1} method must be an array of {3} objects, or a single {3} object or null.",
+    "m_manArray": "The {2} argument of {0}.{1} method must be an array of {3} objects or a single {3} object.",
+    "m_optArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values, or a single {3} values or null.",
+    "m_manArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values or a single {3} values.",
+
+    "m_notInit": "The {2} argument of {0}.{1} method is not initialized.",
+    "m_null": "The {2} argument of {0}.{1} method must be null.",
+    "p_enumType": "The value of {0}.{1} property must be a {2} item."
   },
   "DataTypeError": {
     "default": "The data type of the passed value is invalid.",
@@ -112,7 +117,8 @@
     "isInAllRoles": "The user is not member of all roles of the following: {0}",
     "isInAnyRole": "The user is not member of any role of the following: {0}",
     "isNotInRole": "The user is member of {0} role.",
-    "isNotInAnyRole": "The user is member of some roles of the following: {0}"
+    "isNotInAnyRole": "The user is member of some roles of the following: {0}",
+    "invalid": "The model is invalid."
   },
   "AuthorizationError": {
     "default": "The user has no permission to execute the action."

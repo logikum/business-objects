@@ -1,5 +1,6 @@
 'use strict';
 
+var t = require('../locales/i18n-bo.js')('Rules');
 var ensureArgument = require('../shared/ensure-argument.js');
 var BrokenRules = require('./broken-rules.js');
 var RuleSeverity = require('./rule-severity.js');
@@ -7,12 +8,12 @@ var RuleSeverity = require('./rule-severity.js');
 function ValidationError(brokenRules, message) {
 
   brokenRules = ensureArgument.isMandatoryType(brokenRules, BrokenRules,
-    'The brokenRules argument of ValidationError constructor must be a BrokenRules object.');
+      'c_manType', 'ValidationError', 'brokenRules');
 
   this.name = 'ValidationError';
   this.status = 422;
-  this.message = ensureArgument.isString(message || 'The model is invalid.',
-    'The message argument of BrokenRuleList.toError method must be a string.');
+  this.message = ensureArgument.isString(message || t('invalid'),
+      'c_string', 'ValidationError', 'message');
   this.data = {};
   this.count = 0;
 
@@ -28,6 +29,7 @@ function ValidationError(brokenRules, message) {
     }
   }
 
+  // Immutable object.
   Object.freeze(this);
 }
 

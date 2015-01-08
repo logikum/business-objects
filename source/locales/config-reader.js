@@ -57,6 +57,7 @@ if (cfg) {
   }
 }
 
+// Immutable object.
 Object.freeze(config);
 
 module.exports = config;

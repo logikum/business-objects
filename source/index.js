@@ -24,7 +24,7 @@ var daoBuilder = require('./data-access/dao-builder.js');
 var shared = require('./shared/index.js');
 var rules = require('./rules/index.js');
 
-var businessObjects = {
+var index = {
   EditableRootModel: EditableRootModel,
   EditableChildModel: EditableChildModel,
   // EditableRootCollection is not implemented.
@@ -52,4 +52,7 @@ var businessObjects = {
   rules: rules
 };
 
-module.exports = businessObjects;
+// Immutable object.
+Object.freeze(index);
+
+module.exports = index;

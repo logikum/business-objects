@@ -8,6 +8,9 @@ var DaoBase = function (name) {
     throw new DaoError('c_manString', 'name');
   else
     this.name = name;
+
+  // Immutable object.
+  Object.freeze(DaoBase);
 };
 
 DaoBase.prototype.checkMethod = function (methodName) {

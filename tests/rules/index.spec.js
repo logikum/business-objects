@@ -29,7 +29,7 @@ var Enumeration = require('../../source/shared/enumeration.js');
 
 describe('Rule component index', function () {
   function getProperty () { }
-  var rule = new RuleBase();
+  var rule = new RuleBase('required');
   var brokenRules = new BrokenRuleList('modelName');
   var brs = new BrokenRules();
   var user = new UserInfo('user-code');
@@ -51,7 +51,7 @@ describe('Rule component index', function () {
     expect(new rules.RuleManager()).toEqual(jasmine.any(RuleManager));
     expect(new rules.RuleList('property', rule)).toEqual(jasmine.any(RuleList));
     expect(rules.RuleSeverity).toEqual(jasmine.any(Enumeration));
-    expect(new rules.RuleBase()).toEqual(jasmine.any(RuleBase));
+    expect(new rules.RuleBase('memberOf')).toEqual(jasmine.any(RuleBase));
     expect(new rules.ResultBase()).toEqual(jasmine.any(ResultBase));
 
     expect(new rules.BrokenRules()).toEqual(jasmine.any(BrokenRules));
