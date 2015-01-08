@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('util');
+var t = require('../locales/i18n-bo.js')('Rules');
 var ensureArgument = require('../shared/ensure-argument.js');
 var AuthorizationRule = require('../rules/authorization-rule.js');
 var UserInfo = require('../shared/user-info.js');
@@ -8,19 +9,16 @@ var UserInfo = require('../shared/user-info.js');
 function IsNotInRoleRule(action, target, role, message, priority, stopsProcessing) {
   IsNotInRoleRule.super_.call(this, 'IsNotInRole');
 
-  var defaultMessage = 'The user is member of ' + role + ' role.';
+  this.role = ensureArgument.isMandatoryString(role, 'c_manString', 'IsNotInRoleRule', 'role');
 
   // Initialize base properties.
   this.initialize(
       action,
       target,
-      message || defaultMessage,
+      message || t('isNotInRole', role),
       priority,
       stopsProcessing
   );
-
-  this.role = ensureArgument.isMandatoryString(role,
-    'The roles argument of IsNotInRoleRule constructor must be a non-empty string.');
 
   // Immutable object.
   Object.freeze(this);
@@ -28,8 +26,9 @@ function IsNotInRoleRule(action, target, role, message, priority, stopsProcessin
 util.inherits(IsNotInRoleRule, AuthorizationRule);
 
 IsNotInRoleRule.prototype.execute = function (userInfo) {
+
   userInfo = ensureArgument.isOptionalType(userInfo, UserInfo,
-    'The userInfo argument of IsNotInRoleRule.execute method must be a UserInfo object or null.');
+    'm_optType', 'IsNotInRoleRule', 'execute', 'userInfo', 'UserInfo');
 
   var hasPermission = !userInfo.isInRole(this.role);
 

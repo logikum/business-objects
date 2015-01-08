@@ -1,26 +1,24 @@
 'use strict';
 
 var util = require('util');
+var t = require('../locales/i18n-bo.js')('Rules');
 var ensureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 function MaxLengthRule(primaryProperty, maxLength, message, priority, stopsProcessing) {
   MaxLengthRule.super_.call(this, 'MaxLength');
 
-  var defaultMessage = maxLength > 1 ?
-  'The length of property ' + primaryProperty.name + ' cannot exceed ' +  maxLength + ' characters.' :
-  'The length of property ' + primaryProperty.name + ' cannot exceed ' +  maxLength + ' character.';
+  this.maxLength = ensureArgument.isMandatoryInteger(maxLength, 'c_manInteger', 'MaxLengthRule', 'maxLength');
 
   // Initialize base properties.
   this.initialize(
       primaryProperty,
-      message || defaultMessage,
+      message || (maxLength > 1 ?
+        t('maxLength', primaryProperty.name, maxLength) :
+        t('maxLength1', primaryProperty.name)),
       priority,
       stopsProcessing
   );
-
-  this.maxLength = ensureArgument.isMandatoryInteger(maxLength,
-    'The maxLength argument of MaxLengthRule constructor must be an integer value.');
 
   // Immutable object.
   Object.freeze(this);
@@ -28,7 +26,9 @@ function MaxLengthRule(primaryProperty, maxLength, message, priority, stopsProce
 util.inherits(MaxLengthRule, ValidationRule);
 
 MaxLengthRule.prototype.execute = function (inputs) {
+
   var value = inputs[this.primaryProperty.name];
+
   if (value && value.toString().length > this.maxLength)
     return this.result(this.message);
 };

@@ -1,26 +1,24 @@
 'use strict';
 
 var util = require('util');
+var t = require('../locales/i18n-bo.js')('Rules');
 var ensureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 function LengthIsRule(primaryProperty, length, message, priority, stopsProcessing) {
   LengthIsRule.super_.call(this, 'LengthIs');
 
-  var defaultMessage = length > 1 ?
-      'The length of property ' + primaryProperty.name + ' has to be ' +  length + ' characters.' :
-      'The length of property ' + primaryProperty.name + ' has to be ' +  length + ' character.';
+  this.length = ensureArgument.isMandatoryInteger(length, 'c_manInteger', 'LengthIsRule', 'length');
 
   // Initialize base properties.
   this.initialize(
       primaryProperty,
-      message || defaultMessage,
+      message || (length > 1 ?
+        t('lengthIs', primaryProperty.name, length) :
+        t('lengthIs1', primaryProperty.name)),
       priority,
       stopsProcessing
   );
-
-  this.length = ensureArgument.isMandatoryInteger(length,
-    'The length argument of LengthIsRule constructor must be an integer value.');
 
   // Immutable object.
   Object.freeze(this);
@@ -28,7 +26,9 @@ function LengthIsRule(primaryProperty, length, message, priority, stopsProcessin
 util.inherits(LengthIsRule, ValidationRule);
 
 LengthIsRule.prototype.execute = function (inputs) {
+
   var value = inputs[this.primaryProperty.name];
+
   if (!value || value.toString().length !== this.length)
     return this.result(this.message);
 };

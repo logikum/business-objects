@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('util');
+var t = require('../locales/i18n-bo.js')('Rules');
 var ensureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 var NullResultOption = require('./null-result-option.js');
@@ -8,20 +9,18 @@ var NullResultOption = require('./null-result-option.js');
 function ExpressionRule(primaryProperty, regex, option, message, priority, stopsProcessing) {
   ExpressionRule.super_.call(this, 'Expression');
 
-  var defaultMessage = 'Property ' + primaryProperty.name + ' is invalid.';
+  this.regex = ensureArgument.isMandatoryType(regex, RegExp,
+    'c_manType', 'ExpressionRule', 'regex');
+  this.option = ensureArgument.isEnumMember(option, NullResultOption, null,
+    'The option argument of ExpressionRule constructor must be a NullResultOption value.');
 
   // Initialize base properties.
   this.initialize(
       primaryProperty,
-      message || defaultMessage,
+      message || t('expression', primaryProperty.name),
       priority,
       stopsProcessing
   );
-
-  this.regex = ensureArgument.isMandatoryType(regex, RegExp,
-    'The regex argument of ExpressionRule constructor must be a RegExp object.');
-  this.option = ensureArgument.isEnumMember(option, NullResultOption, null,
-    'The option argument of ExpressionRule constructor must be a NullResultOption value.');
 
   // Immutable object.
   Object.freeze(this);
@@ -29,6 +28,7 @@ function ExpressionRule(primaryProperty, regex, option, message, priority, stops
 util.inherits(ExpressionRule, ValidationRule);
 
 ExpressionRule.prototype.execute = function (inputs) {
+
   var value = inputs[this.primaryProperty.name];
   var ruleIsSatisfied = false;
 

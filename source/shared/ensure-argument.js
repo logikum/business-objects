@@ -169,6 +169,56 @@ var ensureArgument = {
       value = defaultValue;
     type.check(value, message || 'enumValue');
     return value;
+  },
+
+  //endregion
+
+  //region Array
+
+  isOptionalArray: function (value, type, message) {
+    if (value === undefined || value === null)
+      return [];
+    var msgKey = 'optArray';
+    if (type === String || type === Number || type === Boolean) {
+      msgKey = 'optArrayPrim';
+      var typeName = type.name.toLowerCase();
+      if (typeof type === typeName || value instanceof type)
+        return [value];
+      if (value instanceof Array && value.length && value.every(function (item) {
+          return typeof item === typeName || item instanceof type;
+        }))
+        return value;
+    } else {
+      if (value instanceof type)
+        return [value];
+      if (value instanceof Array && value.length && value.every(function (item) {
+          return item instanceof type;
+        }))
+        return value;
+    }
+    failed(arguments, 3, message || msgKey, type);
+  },
+
+  isMandatoryArray: function (value, type, message) {
+    var msgKey = 'manArray';
+    if (type === String || type === Number || type === Boolean) {
+      msgKey = 'manArrayPrim';
+      var typeName = type.name.toLowerCase();
+      if (typeof type === typeName || value instanceof type)
+        return [value];
+      if (value instanceof Array && value.length && value.every(function (item) {
+          return typeof item === typeName || item instanceof type;
+        }))
+        return value;
+    } else {
+      if (value instanceof type)
+        return [value];
+      if (value instanceof Array && value.length && value.every(function (item) {
+          return item instanceof type;
+        }))
+        return value;
+    }
+    failed(arguments, 3, message || msgKey, type);
   }
 
   //endregion

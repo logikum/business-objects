@@ -8,8 +8,7 @@ var RuleSeverity = require('../rules/rule-severity.js');
 function InformationRule(primaryProperty, message, priority, stopsProcessing) {
   InformationRule.super_.call(this, 'Information');
 
-  ensureArgument.isMandatoryString(message,
-      'The message argument of InformationRule constructor must be a non-empty string.');
+  ensureArgument.isMandatoryString(message, 'c_manString', 'InformationRule', 'message');
 
   // Initialize base properties.
   this.initialize(
@@ -19,16 +18,13 @@ function InformationRule(primaryProperty, message, priority, stopsProcessing) {
       stopsProcessing || false
   );
 
-  this.execute = function(inputs) {
-    return this.result(this.message, RuleSeverity.information);
-  };
-
   // Immutable object.
   Object.freeze(this);
 }
 util.inherits(InformationRule, ValidationRule);
 
 InformationRule.prototype.execute = function (inputs) {
+
   return this.result(this.message, RuleSeverity.information);
 };
 

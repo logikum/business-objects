@@ -19,6 +19,10 @@
     "optType": "The argument must be a {0} object or null.",
     "manType": "The argument must be a {0} object.",
     "enumType": "The {0} is not an enumeration type.",
+    "optArray": "The argument must be an array of {0} objects, or a single {0} object or null.",
+    "manArray": "The argument must be an array of {0} objects or a single {0} object.",
+    "optArrayPrim": "The argument must be an array of {0} values, or a single {0} values or null.",
+    "manArrayPrim": "The argument must be an array of {0} values or a single {0} values.",
 
     "c_required": "The {1} argument of {0} constructor is required.",
     "c_string": "The {1} argument of {0} constructor must be a string.",
@@ -37,6 +41,10 @@
     "c_optType": "The {1} argument of {0} constructor must be a {2} object or null.",
     "c_manType": "The {1} argument of {0} constructor must be a {2} object.",
     "c_enumType": "The {1} argument of {0} constructor is not a {2} item.",
+    "c_optArray": "The {1} argument of {0} constructor must be an array of {2} objects, or a single {2} object or null.",
+    "c_manArray": "The {1} argument of {0} constructor must be an array of {2} objects or a single {2} object.",
+    "c_optArrayPrim": "The {1} argument of {0} constructor must be an array of {2} values, or a single {2} values or null.",
+    "c_manArrayPrim": "The {1} argument of {0} constructor must be an array of {2} values or a single {2} values.",
 
     "m_required": "The {2} argument of {0}.{1} method is required.",
     "m_string": "The {2} argument of {0}.{1} method must be a string.",
@@ -54,7 +62,11 @@
     "m_manFunction": "The {2} argument of {0}.{1} method must be a function.",
     "m_optType": "The {2} argument of {0}.{1} method must be a {3} object or null.",
     "m_manType": "The {2} argument of {0}.{1} method must be a {3} object.",
-    "m_enumType": "The {2} argument of {0}.{1} method is not a {3} item."
+    "m_enumType": "The {2} argument of {0}.{1} method is not a {3} item.",
+    "m_optArray": "The {2} argument of {0}.{1} must be an array of {3} objects, or a single {3} object or null.",
+    "m_manArray": "The {2} argument of {0}.{1} must be an array of {3} objects or a single {3} object.",
+    "m_optArrayPrim": "The {2} argument of {0}.{1} must be an array of {3} values, or a single {3} values or null.",
+    "m_manArrayPrim": "The {2} argument of {0}.{1} must be an array of {3} values or a single {3} values."
   },
   "DataTypeError": {
     "default": "The data type of the passed value is invalid.",
@@ -83,6 +95,24 @@
     "daoCtor": "The data access file must return a constructor: {0}",
     "daoType": "The data access object must inherit DaoBase type: {0}",
     "noMethod": "{0} object has no method named {1}."
+  },
+  "Rules": {
+    "required": "Property {0} is required.",
+    "dependency": "--- dependency rule ---",
+    "expression": "Property {0} is invalid.",
+    "lengthIs": "The length of property {0} has to be {1} characters.",
+    "lengthIs1": "The length of property {0} has to be 1 character.",
+    "maxLength": "The length of property {0} cannot exceed {1} characters.",
+    "maxLength1": "The length of property {0} cannot exceed 1 character.",
+    "maxValue": "The value of property {0} cannot exceed {1}.'",
+    "minLength": "The length of property {0} has to be {1} characters at least.",
+    "minLength1": "The length of property {0} has to be 1 character at least.",
+    "minValue": "The value of property {0} has to be {1} at least.",
+    "isInRole": "The user is not member of {0} role.",
+    "isInAllRoles": "The user is not member of all roles of the following: {0}",
+    "isInAnyRole": "The user is not member of any role of the following: {0}",
+    "isNotInRole": "The user is member of {0} role.",
+    "isNotInAnyRole": "The user is member of some roles of the following: {0}"
   },
   "AuthorizationError": {
     "default": "The user has no permission to execute the action."

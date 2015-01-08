@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('util');
+var t = require('../locales/i18n-bo.js')('Rules');
 var ensureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 var RuleSeverity = require('../rules/rule-severity.js');
@@ -11,24 +12,16 @@ function DependencyRule(primaryProperty, dependencies, message, priority, stopsP
 
   var self = this;
 
+  dependencies = ensureArgument.isMandatoryArray(dependencies, PropertyInfo,
+    'c_manArray', 'DependencyRule', 'dependencies');
+
   // Initialize base properties.
   this.initialize(
       primaryProperty,
-      message || '--- dependency rule ---',
+      message || t('dependency'),
       priority || -100,
       stopsProcessing
   );
-
-  var err = 'The dependencies argument of DependencyRule constructor must be a single or an array of PropertyInfo objects.';
-  if (dependencies instanceof PropertyInfo) {
-    dependencies = [ dependencies ];
-  } else if (dependencies instanceof Array) {
-    if (dependencies.every(function(item) {
-        return typeof item instanceof PropertyInfo;
-      }))
-      throw new Error(err);
-  } else
-    throw new Error(err);
 
   dependencies.forEach(function (dependency) {
     self.addAffectedProperty(dependency);
@@ -40,7 +33,9 @@ function DependencyRule(primaryProperty, dependencies, message, priority, stopsP
 util.inherits(DependencyRule, ValidationRule);
 
 DependencyRule.prototype.execute = function (inputs) {
+
   var value = inputs[this.primaryProperty.name];
+
   if (this.primaryProperty.type.hasValue(value))
     return this.result(this.message, RuleSeverity.success);
 };
