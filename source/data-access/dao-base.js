@@ -1,16 +1,19 @@
 'use strict';
 
+var ensureArgument = require('../shared/ensure-argument.js');
 var DaoError = require('./dao-error.js');
 
 var DaoBase = function (name) {
 
-  if (typeof name !== 'string' || name.trim().length === 0)
+  if (typeof name !== 'string' && !(name instanceof String) || name.trim().length === 0)
     throw new DaoError('c_manString', 'name');
-  else
-    this.name = name;
 
-  // Immutable object.
-  Object.freeze(DaoBase);
+  Object.defineProperty(this, 'name', {
+    get: function () {
+      return name;
+    },
+    enumeration: true
+  });
 };
 
 DaoBase.prototype.checkMethod = function (methodName) {
@@ -20,5 +23,7 @@ DaoBase.prototype.checkMethod = function (methodName) {
   if (!this[methodName] || typeof this[methodName] !== 'function')
     throw new DaoError('noMethod', this.name, methodName);
 };
+
+Object.seal(DaoBase.prototype);
 
 module.exports = DaoBase;
