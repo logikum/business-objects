@@ -1,6 +1,7 @@
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');
+var ModelError = require('./model-error.js');
 
 /**
  *
@@ -24,11 +25,11 @@ var ensureArgument = require('./ensure-argument.js');
 function ExtensionManagerBase(dataSource, modelPath, addArgs) {
 
   this.dataSource = ensureArgument.isMandatoryString(dataSource,
-    'The dataSource argument of ExtensionManager constructor must be a non-empty string.');
+      'c_manString', 'ExtensionManager', 'dataSource');
   this.modelPath = ensureArgument.isMandatoryString(modelPath,
-    'The modelPath argument of ExtensionManager constructor must be a non-empty string.');
+      'c_manString', 'ExtensionManager', 'modelPath');
   addArgs = ensureArgument.isMandatoryInteger(addArgs,
-    'The addArgs argument of ExtensionManager constructor must be an integer value.');
+      'c_manInteger', 'ExtensionManager', 'addArgs');
 
   var self = this;
   var methods = {};
@@ -56,21 +57,15 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
       set: function (value) {
         if (value && typeof value === 'function' && value.length == definition.length)
           methods[definition.name] = value;
-        else {
-          var message = 'The ' + definition.name + ' property of ExtensionManager expects a function ';
+        else
           switch (definition.length) {
             case 0:
-              message += 'without arguments.';
-              break;
+              throw new ModelError('propertyArg0', 'ExtensionManager', definition.name);
             case 1:
-              message += 'with 1 argument.';
-              break;
+              throw new ModelError('propertyArg1', 'ExtensionManager', definition.name);
             default:
-              message += 'with ' + definition.length.toString() + ' arguments.';
-              break;
+              throw new ModelError('propertyArgN', 'ExtensionManager', definition.name, definition.length);
           }
-          throw new Error(message);
-        }
       },
       enumerable: true
     });

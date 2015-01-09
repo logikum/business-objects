@@ -10,26 +10,29 @@ function DataStore() {
   var data = {};
 
   this.initValue = function (property, value) {
+
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
-        'The property argument of PropertyManager.initValue method must be a PropertyInfo object.');
+        'm_manType', 'DataStore', 'initValue', 'property');
     value = ensureArgument.isOptionalType(value, [ CollectionBase, ModelBase ],
-        'The value argument of PropertyManager.initValue method must be null or a model.');
+        'm_optType', 'DataStore', 'initValue', 'value');
 
     data[property.name] = value;
   };
 
   this.getValue = function (property) {
+
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
-        'The property argument of PropertyManager.getValue method must be a PropertyInfo object.');
+        'm_manType', 'DataStore', 'getValue', 'property');
 
     return data[property.name];
   };
 
   this.setValue = function (property, value) {
+
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
-        'The property argument of PropertyManager.setValue method must be a PropertyInfo object.');
-    if (value === undefined)
-      throw new Error('The value argument of PropertyManager.setValue method must be supplied.');
+        'm_manType', 'DataStore', 'setValue', 'property');
+    value = ensureArgument.isDefined(value,
+        'm_defined', 'DataStore', 'setValue', 'value');
 
     property.type.check(value);
     if (value !== data[property.name]) {

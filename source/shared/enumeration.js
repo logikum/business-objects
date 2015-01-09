@@ -5,7 +5,7 @@ var EnumerationError = require('./enumeration-error.js');
 
 function Enumeration (name) {
   this.$name = ensureArgument.isMandatoryString(name,
-      'The name argument of Enumeration constructor must be a non-empty string.')
+      'c_manString', 'Enumeration', 'name')
 }
 
 Enumeration.prototype.count = function () {
@@ -20,7 +20,7 @@ Enumeration.prototype.count = function () {
 
 Enumeration.prototype.getName = function (value) {
   value = ensureArgument.isMandatoryNumber(value,
-      'The value argument of Enumeration.getName method must be a number value.');
+      'm_manNumber', 'Enumeration', 'getName', 'value');
 
   for (var propertyName in this) {
     if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
@@ -33,7 +33,7 @@ Enumeration.prototype.getName = function (value) {
 
 Enumeration.prototype.getValue = function (name) {
   name = ensureArgument.isMandatoryString(name,
-      'The name argument of Enumeration.getValue method must be a non-empty string.');
+      'm_manString', 'Enumeration', 'getValue', 'name');
 
   for (var propertyName in this) {
     if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {

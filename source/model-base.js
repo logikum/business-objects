@@ -1,6 +1,6 @@
 'use strict';
 
-var ModelBase = function () {
-};
+function ModelBase () {
+}
 
 module.exports = ModelBase;

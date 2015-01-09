@@ -6,6 +6,7 @@ var NotImplementedError = require('./not-implemented-error.js');
 function UserInfo (userCode) {
 
   userCode = ensureArgument.isOptionalString(userCode, 'c_optString', 'UserInfo', 'userCode');
+
   Object.defineProperty(this, 'userCode', {
     get: function () {
       return userCode;

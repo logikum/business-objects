@@ -1,34 +1,33 @@
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');
+var ArgumentError = require('./argument-error.js');
 var PropertyInfo = require('./property-info.js');
 var DataType = require('../data-types/data-type.js');
 
-function PropertyManager() {
+function PropertyManager(name /*, property1, property2 [, ...] */) {
 
   var items = [];
   var changed_c = false;  // for children
   var changed_k = false;  // for key
   var children = [];
   var key;
-  var args = Array.prototype.slice.call(arguments);
 
-  var name = args.shift() || '';
   this.name = ensureArgument.isMandatoryString(name,
-      'The name argument of PropertyManager constructor must be a  non-empty string.');
+      'c_manString', 'PropertyManager', 'name');
 
-  args.forEach(function (arg) {
-    items.push(ensureArgument.isMandatoryType(arg, PropertyInfo,
-        'All arguments of PropertyManager constructor but the first must be a PropertyInfo object.'));
-    changed_c = true;
-    changed_k = true;
-  });
+  Array.prototype.slice.call(arguments, 1)
+      .forEach(function (arg) {
+        items.push(ensureArgument.isMandatoryType(arg, PropertyInfo, 'propManCtor'));
+        changed_c = true;
+        changed_k = true;
+      });
 
   //region Item management
 
   this.add = function (property) {
     items.push(ensureArgument.isMandatoryType(property, PropertyInfo,
-        'The property argument of PropertyManager.push method must be a PropertyInfo object.'));
+        'm_manType', 'PropertyManager', 'add', 'property'));
     changed_c = true;
     changed_k = true;
   };
@@ -43,7 +42,7 @@ function PropertyManager() {
 
   this.contains = function (property) {
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
-        'The property argument of PropertyManager.contains method must be a PropertyInfo object.');
+        'm_manType', 'PropertyManager', 'contains', 'property');
 
     return items.some(function (item) {
       return item.name === property.name;
@@ -52,19 +51,21 @@ function PropertyManager() {
 
   this.getByName = function (name, message) {
     name = ensureArgument.isMandatoryString(name,
-        'The name argument of PropertyManager.getByName method must be a  non-empty string.');
+        'm_manString', 'PropertyManager', 'getByName', 'name');
 
     for (var i = 0; i < items.length; i++) {
       if (items[i].name === name)
         return items[i];
     }
-    throw new Error(message || 'The PropertyManager has no element named ' + name + '.');
+    throw new ArgumentError(message || 'propManItem', name);
   };
 
   this.toArray = function () {
-    return items.filter(function (item) {
+    var array = items.filter(function (item) {
       return item.type instanceof DataType;
     });
+    array.name = this.name;
+    return array;
   };
 
   //endregion

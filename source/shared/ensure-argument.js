@@ -3,6 +3,8 @@
 var ArgumentError = require('./argument-error.js');
 var t = require('../locales/i18n-bo.js')('ArgumentError');
 
+//region Helper methods
+
 function failed (argArray, skip, message, other) {
   var args = [null, message].concat(Array.prototype.slice.call(argArray, skip));
   if (other) args.push(other);
@@ -10,9 +12,27 @@ function failed (argArray, skip, message, other) {
   throw new factory();
 }
 
+function typeNames (types) {
+  var list = '<< no types >>';
+  if (types.length) {
+    list = types.map(function (type) {
+      return type.name ? type.name : '-unknown-'
+    }).join(' | ');
+  }
+  return list;
+}
+
+//endregion
+
 var ensureArgument = {
 
   //region Generic
+
+  isDefined: function (value, message) {
+    if (value === undefined)
+      failed(arguments, 2, message || 'defined');
+    return value;
+  },
 
   hasValue: function (value, message) {
     if (value === null || value === undefined)
@@ -145,7 +165,7 @@ var ensureArgument = {
     if (value !== null && !(types.some(function (option) {
         return value instanceof option || value.super_ === option;
       })))
-      failed(arguments, 3, message || 'optType', types.join(' | '));
+      failed(arguments, 3, message || 'optType', typeNames(types));
     return value;
   },
 
@@ -154,7 +174,7 @@ var ensureArgument = {
     if (!(types.some(function (option) {
         return value instanceof option || value.super_ === option;
       })))
-      failed(arguments, 3, message || 'manType', type);
+      failed(arguments, 3, message || 'manType', typeNames(types));
     return value;
   },
 
@@ -184,16 +204,16 @@ var ensureArgument = {
       var typeName = type.name.toLowerCase();
       if (typeof type === typeName || value instanceof type)
         return [value];
-      if (value instanceof Array && value.length && value.every(function (item) {
+      if (value instanceof Array && (!value.length || value.every(function (item) {
           return typeof item === typeName || item instanceof type;
-        }))
+        })))
         return value;
     } else {
       if (value instanceof type)
         return [value];
-      if (value instanceof Array && value.length && value.every(function (item) {
+      if (value instanceof Array && (!value.length || value.every(function (item) {
           return item instanceof type;
-        }))
+        })))
         return value;
     }
     failed(arguments, 3, message || msgKey, type);

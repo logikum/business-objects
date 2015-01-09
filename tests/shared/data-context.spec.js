@@ -1,13 +1,15 @@
 console.log('Testing shared/data-context.js...');
 
 var DataContext = require('../../source/shared/data-context.js');
+var PropertyInfo = require('../../source/shared/property-info.js');
+var Text = require('../../source/data-types/text.js');
 var UserInfo = require('../../source/shared/user-info.js');
 var UserReader = require('../../sample/get-user.js');
 
 describe('Data context', function() {
   var dao = {};
   var user = UserReader();
-  var properties = [ { name: 'scores' } ];
+  var properties = [ new PropertyInfo('scores', new Text()) ];
   var data = { scores: 123 };
   function getValue (property) {
     return data[property.name];

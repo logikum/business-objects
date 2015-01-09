@@ -4,11 +4,10 @@ var PropertyInfo = require('../../source/shared/property-info.js');
 var F = require('../../source/shared/property-flag.js');
 var DataType = require('../../source/data-types/data-type.js');
 var Text = require('../../source/data-types/text.js');
+var CollectionBase = require('../../source/collection-base.js');
 
 describe('Property description', function() {
-  function newType () {
-    return {};
-  }
+  var items = new CollectionBase();
   var pi = new PropertyInfo('property', new Text());
 
   it('constructor expects two or three arguments', function() {
@@ -17,9 +16,9 @@ describe('Property description', function() {
     function create3() { return new PropertyInfo(1, 2); }
     function create4() { return new PropertyInfo('1', '2', '3'); }
 
-    var pi1 = new PropertyInfo('property', newType);
+    var pi1 = new PropertyInfo('property', items);
     var pi2 = new PropertyInfo('property', new Text());
-    var pi3 = new PropertyInfo('property', newType, F.readOnly);
+    var pi3 = new PropertyInfo('property', items, F.readOnly);
     var pi4 = new PropertyInfo('property', new Text(), F.key | F.notOnCto);
 
     expect(create1).toThrow();

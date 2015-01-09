@@ -5,6 +5,8 @@ var PropertyInfo = require('../../source/shared/property-info.js');
 var F = require('../../source/shared/property-flag.js');
 var Text = require('../../source/data-types/text.js');
 var DateTime = require('../../source/data-types/date-time.js');
+var CollectionBase = require('../../source/collection-base.js');
+var ModelBase = require('../../source/model-base.js');
 
 describe('Property manager', function () {
   function getPropertyValue (property) {
@@ -12,7 +14,7 @@ describe('Property manager', function () {
   }
 
   it('constructor expects a non-empty string and optional properties', function() {
-    var OrderList = function () {};
+    var OrderList = new CollectionBase();
     var property1 = new PropertyInfo('name', new Text(), F.key);
     var property2 = new PropertyInfo('created', new DateTime(), F.readOnly);
     var property3 = new PropertyInfo('orders', OrderList);
@@ -184,7 +186,7 @@ describe('Property manager', function () {
   //region Children
 
   it('children and childCount methods work', function() {
-    var OrderList = function () {};
+    var OrderList = new CollectionBase();
     var name = new PropertyInfo('name', new Text());
     var orders = new PropertyInfo('orders', OrderList);
     var created = new PropertyInfo('created', new DateTime());
@@ -196,7 +198,7 @@ describe('Property manager', function () {
     expect(pm.children()[0].name).toBe('orders');
     expect(pm.childCount()).toBe(1);
 
-    var Address = function () {};
+    var Address = new ModelBase();
     var address = new PropertyInfo('address', Address);
     pm.add(address);
 
@@ -206,7 +208,7 @@ describe('Property manager', function () {
     expect(pm.children()[1].name).toBe('address');
     expect(pm.childCount()).toBe(2);
 
-    var Account = function () {};
+    var Account = new ModelBase();
     var account = pm.create('account', Account);
 
     expect(pm.children()).toEqual(jasmine.any(Array));
@@ -221,7 +223,7 @@ describe('Property manager', function () {
   //region Key
 
   it('getKey method works - no keys', function() {
-    var Figures = function () {};
+    var Figures = new CollectionBase();
     var one = new PropertyInfo('uno', new Text());
     var two = new PropertyInfo('due', Figures);
     var three = new PropertyInfo('tre', new Text());
@@ -240,7 +242,7 @@ describe('Property manager', function () {
   });
 
   it('getKey method works - one key', function() {
-    var Figures = function () {};
+    var Figures = new CollectionBase();
     var one = new PropertyInfo('uno', new Text());
     var two = new PropertyInfo('due', Figures);
     var three = new PropertyInfo('tre', new Text(), F.key);
@@ -253,7 +255,7 @@ describe('Property manager', function () {
   });
 
   it('getKey method works - more keys', function() {
-    var Figures = function () {};
+    var Figures = new CollectionBase();
     var one = new PropertyInfo('uno', new Text(), F.key);
     var two = new PropertyInfo('due', Figures);
     var three = new PropertyInfo('tre', new Text());

@@ -3,20 +3,18 @@
 var ensureArgument = require('./ensure-argument.js');
 var DataType = require('../data-types/data-type.js');
 var PropertyFlag = require('../shared/property-flag.js');
+var ModelBase = require('../model-base.js');
+var CollectionBase = require('../collection-base.js');
 
 function PropertyInfo(name, type, flags) {
 
   this.name = ensureArgument.isMandatoryString(name,
-      'The name argument of PropertyInfo constructor must be a non-empty string.');
-
-  type = type || {};
-  if (!(type instanceof DataType || typeof type === 'function'))
-    throw new Error('The type argument of PropertyInfo constructor must be a DataType object or a model type.');
-  this.type = type;
-
+      'c_manString', 'PropertyInfo', 'name');
+  this.type = ensureArgument.isMandatoryType(type, [ DataType, ModelBase, CollectionBase ],
+      'c_manType', 'PropertyInfo', 'type');
   flags = type instanceof DataType ?
-    ensureArgument.isOptionalInteger(flags || PropertyFlag.none,
-        'The flags argument of PropertyInfo constructor must be an integer value.') :
+    ensureArgument.isMandatoryInteger(flags || PropertyFlag.none,
+        'c_optInteger', 'PropertyInfo', 'flags') :
     PropertyFlag.readOnly | PropertyFlag.notOnDto | PropertyFlag.notOnCto;
 
   this.isReadOnly = (flags & PropertyFlag.readOnly) === PropertyFlag.readOnly;

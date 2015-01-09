@@ -1,6 +1,6 @@
 'use strict';
 
-var CollectionBase = function () {
-};
+function CollectionBase () {
+}
 
 module.exports = CollectionBase;

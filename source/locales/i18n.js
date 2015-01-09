@@ -81,7 +81,9 @@ i18n.prototype.getWithNs = function (namespace, messageKey) {
     if (index < messageArgs.length) {
       var arg = messageArgs[index];
       if (arg !== undefined && arg !== null)
-        replacement = arg.toString();
+        replacement = typeof arg === 'function' ?
+            (arg.name ? arg.name : '<< unknown >>') :
+            arg.toString();
     }
     return replacement;
   }

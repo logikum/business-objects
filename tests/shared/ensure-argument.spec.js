@@ -7,6 +7,7 @@ describe('Argument checking object', function () {
 
   it('has the necessary methods', function () {
     // Generic
+    expect(ensureArgument.isDefined).toBeDefined();
     expect(ensureArgument.hasValue).toBeDefined();
     // String
     expect(ensureArgument.isString).toBeDefined();
@@ -32,7 +33,12 @@ describe('Argument checking object', function () {
     expect(ensureArgument.isMandatoryType).toBeDefined();
     // EnumMember
     expect(ensureArgument.isEnumMember).toBeDefined();
+    // Array
+    expect(ensureArgument.isOptionalArray).toBeDefined();
+    expect(ensureArgument.isMandatoryArray).toBeDefined();
   });
+
+  //region Generic
 
   it('hasValue method works', function () {
     function call1() { return ensureArgument.hasValue(); }
@@ -63,6 +69,10 @@ describe('Argument checking object', function () {
     expect(any09).toBeDefined();
     expect(any10).toBeDefined();
   });
+
+  //endregion
+
+  //region String
 
   it('isString method works', function () {
     function call01() { return ensureArgument.isString(); }
@@ -154,6 +164,10 @@ describe('Argument checking object', function () {
     expect(any01).toBeDefined();
   });
 
+  //endregion
+
+  //region Number
+
   it('isOptionalNumber method works', function () {
     function call01() { return ensureArgument.isOptionalNumber(false); }
     function call02() { return ensureArgument.isOptionalNumber(''); }
@@ -213,6 +227,10 @@ describe('Argument checking object', function () {
     expect(any01).toBeDefined();
     expect(any02).toBeDefined();
   });
+
+  //endregion
+
+  //region Integer
 
   it('isOptionalInteger method works', function () {
     function call01() { return ensureArgument.isOptionalInteger(false); }
@@ -274,6 +292,10 @@ describe('Argument checking object', function () {
     expect(any01).toBeDefined();
   });
 
+  //endregion
+
+  //region Boolean
+
   it('isOptionalBoolean method works', function () {
     function call01() { return ensureArgument.isOptionalBoolean(1); }
     function call02() { return ensureArgument.isOptionalBoolean(-100.99); }
@@ -333,6 +355,10 @@ describe('Argument checking object', function () {
 
     expect(any01).toBeDefined();
   });
+
+  //endregion
+
+  //region Object
 
   it('isOptionalObject method works', function () {
     function call01() { return ensureArgument.isOptionalObject(false); }
@@ -394,6 +420,10 @@ describe('Argument checking object', function () {
     expect(any04).toBeDefined();
   });
 
+  //endregion
+
+  //region Function
+
   it('isOptionalFunction method works', function () {
     function call01() { return ensureArgument.isOptionalFunction(false); }
     function call02() { return ensureArgument.isOptionalFunction(1); }
@@ -453,6 +483,10 @@ describe('Argument checking object', function () {
 
     expect(any01).toBeDefined();
   });
+
+  //endregion
+
+  //region Type
 
   it('isOptionalType method works', function () {
     function call01() { return ensureArgument.isOptionalType(false, Boolean); }
@@ -518,6 +552,10 @@ describe('Argument checking object', function () {
     expect(any06).toBeDefined();
   });
 
+  //endregion
+
+  //region EnumMember
+
   it('isEnumMember method works', function () {
     var Numbers = numbers.three;
 
@@ -547,4 +585,12 @@ describe('Argument checking object', function () {
     expect(call11).toThrow();
     expect(call12).toThrow();
   });
+
+  //endregion
+
+  //region Array
+
+  //var z = 1;
+
+  //endregion
 });

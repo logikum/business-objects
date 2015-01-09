@@ -2,23 +2,24 @@
 
 var ensureArgument = require('./ensure-argument.js');
 var ModelError = require('./model-error.js');
+var PropertyInfo = require('./property-info.js');
 var UserInfo = require('./user-info.js');
 
 function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
   var self = this;
 
   this.dao = ensureArgument.isMandatoryObject(dao || {},
-    'The dao argument of DataContext constructor must be an object or null.');
+      'c_manObject', 'DataContext', 'dao');
   this.user = ensureArgument.isOptionalType(user, UserInfo,
-    'The user argument of DataContext constructor must be an UserInfo object or null.');
+      'c_optType', 'DataContext', 'user');
   var isDirty = ensureArgument.isMandatoryBoolean(isSelfDirty || false,
-    'The isSelfDirty argument of DataContext constructor must be a Boolean value.');
-  this.properties = ensureArgument.isMandatoryType(properties || [], Array,
-    'The properties argument of DataContext constructor must be an array of PropertyInfo objects.');
+      'c_manBoolean', 'DataContext', 'isSelfDirty');
+  this.properties = ensureArgument.isOptionalArray(properties, PropertyInfo,
+      'c_optArray', 'DataContext', 'properties');
   getValue = ensureArgument.isOptionalFunction(getValue,
-    'The getValue argument of DataContext constructor must be a function.');
+      'c_optFunction', 'DataContext', 'getValue');
   setValue = ensureArgument.isOptionalFunction(setValue,
-    'The setValue argument of DataContext constructor must be a function.');
+      'c_optFunction', 'DataContext', 'setValue');
 
   Object.defineProperty(self, 'isSelfDirty', {
     get: function () {
@@ -42,7 +43,7 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
 
   this.getValue = function (propertyName) {
     propertyName = ensureArgument.isMandatoryString(propertyName,
-      'The propertyName argument of DataContext.getValue method must be a non-empty string.');
+        'm_manString', 'DataContext', 'getValue', 'propertyName');
     if (getValue)
       return getValue(getByName(propertyName));
     else
@@ -51,7 +52,7 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
 
   this.setValue = function (propertyName, value) {
     propertyName = ensureArgument.isMandatoryString(propertyName,
-      'The propertyName argument of DataContext.setValue method must be a non-empty string.');
+        'm_manString', 'DataContext', 'setValue', 'propertyName');
     if (setValue) {
       if (value !== undefined) {
         setValue(getByName(propertyName), value);
