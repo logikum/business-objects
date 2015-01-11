@@ -1,8 +1,13 @@
 console.log('Testing locales/i18n.js...');
 
+var path = require('path');
 var i18n = require('../../source/locales/i18n.js');
 
 describe('Internationalization', function () {
+  var currentLocale = '';
+  function localeReader () { return currentLocale; }
+  var pathOfLocales = path.join(process.cwd(), 'locales');
+  i18n.initialize(pathOfLocales, localeReader);
 
   it('constructor expects 0-2 arguments', function () {
     var build01 = function () { return new i18n(); };
@@ -70,7 +75,6 @@ describe('Internationalization', function () {
     expect(i3.getWithNs('$bo', 'default')).toBe('This is a test message.');
   });
 
-
   it('parameter replacement works', function() {
     var i1 = new i18n();
 
@@ -98,5 +102,29 @@ describe('Internationalization', function () {
     expect(i2.get('USA.Texas')).toBe('Austin');
     expect(i2.get('USA.North Dakota')).toBe('Bismarck');
     expect(i2.get('USA.Utah')).toBe('Salt Lake City');
+  });
+
+  it('works with specific locale', function() {
+    var i1 = new i18n();
+    currentLocale = 'hu-HU';
+
+    expect(i1.get('capitols.France')).toBe('Párizs');
+    expect(i1.get('capitols.Egypt')).toBe('Kairó');
+    expect(i1.get('capitols.Japan')).toBe('Tokió');
+
+    expect(i1.getWithNs('dashboard', 'manager')).toBe('Kovács János');
+    expect(i1.getWithNs('dashboard', 'developer')).toBe('Dolgos István');
+    expect(i1.getWithNs('dashboard', 'designer')).toBe('Popper Mária');
+
+    // Use missing locale.
+    currentLocale = 'fr';
+
+    expect(i1.get('capitols.France')).toBe('Paris');
+    expect(i1.get('capitols.Egypt')).toBe('Cairo');
+    expect(i1.get('capitols.Japan')).toBe('Tokyo');
+
+    expect(i1.getWithNs('dashboard', 'manager')).toBe('John Smith');
+    expect(i1.getWithNs('dashboard', 'developer')).toBe('Steve Jobs');
+    expect(i1.getWithNs('dashboard', 'designer')).toBe('Mary Poppins');
   });
 });

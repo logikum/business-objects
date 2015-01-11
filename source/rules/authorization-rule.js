@@ -2,6 +2,7 @@
 
 var util = require('util');
 var ensureArgument = require('../shared/ensure-argument.js');
+var ArgumentError = require('../shared/argument-error.js');
 var PropertyInfo = require('../shared/property-info.js');
 var RuleBase = require('./rule-base.js');
 var RuleSeverity = require('./rule-severity.js');
@@ -49,7 +50,7 @@ function AuthorizationRule(ruleName) {
 
     } else {
       if (target !== null)
-        throw new Error('m_null', 'AuthorizationRule', 'initialize', 'target');
+        throw new ArgumentError('m_null', 'AuthorizationRule', 'initialize', 'target');
     }
 
     // Initialize base properties.

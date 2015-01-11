@@ -2,28 +2,27 @@
 
 var fs = require('fs');
 var path = require('path');
-var config = require('./config-reader.js');
 
 var locales = {};
+var getCurrentLocale = function () { return 'default'; };
+var isInitialized = false;
 
-//region Read all locales
+//region Read locales
 
 // Read business-objects locales.
 readLocales('$bo', path.join(process.cwd(), 'source/locales'));
 
-// Read project locales.
-if (config.pathOfLocales) {
+function readProjectLocales (pathOfLocales) {
   // Read default namespace.
-  readLocales('$default', config.pathOfLocales);
+  readLocales('$default', pathOfLocales);
 
   // Read other namespaces.
-  fs.readdirSync(config.pathOfLocales).filter(function (directoryName) {
-    return fs.statSync(path.join(config.pathOfLocales, directoryName)).isDirectory() &&
+  fs.readdirSync(pathOfLocales).filter(function (directoryName) {
+    return fs.statSync(path.join(pathOfLocales, directoryName)).isDirectory() &&
         path.extname(directoryName) !== '$default' &&
         path.extname(directoryName) !== '$bo';
   }).forEach(function (directoryName) {
-    //var ns = directoryName.substr(directoryName.lastIndexOf(path.sep) + 1);
-    readLocales(directoryName, path.join(config.pathOfLocales, directoryName));
+    readLocales(directoryName, path.join(pathOfLocales, directoryName));
   });
 }
 
@@ -57,6 +56,19 @@ var i18n = function (namespace, keyRoot) {
 
   // Immutable object.
   Object.freeze(this);
+};
+
+i18n.initialize = function (pathOfLocales, localeReader) {
+  if (isInitialized)
+    throw new Error('i18n is already initialized.');
+
+  if (pathOfLocales) {
+    readProjectLocales(pathOfLocales);
+  }
+  if (localeReader) {
+    getCurrentLocale = localeReader;
+  }
+  isInitialized = true;
 };
 
 i18n.prototype.get = function (messageKey) {
@@ -102,7 +114,7 @@ i18n.prototype.getWithNs = function (namespace, messageKey) {
   }
 
   var ns = locales[namespace];
-  var locale = config.localeReader();
+  var locale = getCurrentLocale();
 
   var message = messageKey;
 

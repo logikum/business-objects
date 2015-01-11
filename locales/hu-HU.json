@@ -1,0 +1,18 @@
+{
+  "property1": "value1",
+  "property2": "value2",
+  "property3": "value3",
+  "capitols": {
+    "France": "Párizs",
+    "Egypt": "Kairó",
+    "Japan": "Tokió",
+    "USA": {
+      "Texas": "Austin",
+      "North Dakota": "Bismarck",
+      "Utah": "Salt Lake City"
+    }
+  },
+  "template1": "Hello, {0}!",
+  "template2": "{0} is a famous {1}.",
+  "template3": "Result: {0} * {1} = {2}"
+}

@@ -11,7 +11,8 @@ describe('Is-not-in-any-role rule', function () {
     var build01 = function () { return new IsNotInAnyRoleRule(); };
     var build02 = function () { return new IsNotInAnyRoleRule(AuthorizationAction.updateObject); };
     var build03 = function () { return new IsNotInAnyRoleRule(AuthorizationAction.updateObject, null); };
-    var build04 = function () { return new IsNotInAnyRoleRule(AuthorizationAction.updateObject, null, 'developers'); };
+    var build04 = function () {
+      return new IsNotInAnyRoleRule(AuthorizationAction.updateObject, null, 'developers'); };
     var build05 = function () { return new IsNotInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women']); };
     var build06 = function () { return new IsNotInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women'], 'message'); };
     var build07 = function () { return new IsNotInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women'], 'message', 100); };
@@ -21,7 +22,7 @@ describe('Is-not-in-any-role rule', function () {
     expect(build01).toThrow();
     expect(build02).toThrow();
     expect(build03).toThrow();
-    expect(build04).toThrow();
+    expect(build04).not.toThrow();
     expect(build05).not.toThrow();
     expect(build06).not.toThrow();
     expect(build07).not.toThrow();

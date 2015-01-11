@@ -78,6 +78,16 @@
     "m_null": "The {2} argument of {0}.{1} method must be null.",
     "p_enumType": "The value of {0}.{1} property must be a {2} item."
   },
+  "ConfigurationError": {
+    "default": "There is an error in the business objects' configuration.",
+    "boString": "The value of {0} property of business objects configuration must be a string.",
+    "boFile": "The value of {0} property of business objects configuration is not a valid file path: {1}",
+    "boFunction": "The file defined by the {0} property of business objects configuration must return a function: {1}",
+    "i18nString": "The value of {0} property of localization configuration must be a string.",
+    "i18nFile": "The value of {0} property of localization configuration is not a valid file path: {1}",
+    "i18nFunction": "The file defined by the {0} property of localization configuration must return a function: {1}",
+    "i18nDirectory": "The value of {0} property of localization configuration is not a valid directory path: {1}"
+  },
   "DataTypeError": {
     "default": "The data type of the passed value is invalid.",
     "boolean": "The passed value is not Boolean.",

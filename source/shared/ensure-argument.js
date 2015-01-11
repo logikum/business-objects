@@ -202,7 +202,7 @@ var ensureArgument = {
     if (type === String || type === Number || type === Boolean) {
       msgKey = 'optArrayPrim';
       var typeName = type.name.toLowerCase();
-      if (typeof type === typeName || value instanceof type)
+      if (typeof value === typeName || value instanceof type)
         return [value];
       if (value instanceof Array && (!value.length || value.every(function (item) {
           return typeof item === typeName || item instanceof type;
@@ -224,7 +224,7 @@ var ensureArgument = {
     if (type === String || type === Number || type === Boolean) {
       msgKey = 'manArrayPrim';
       var typeName = type.name.toLowerCase();
-      if (typeof type === typeName || value instanceof type)
+      if (typeof value === typeName || value instanceof type)
         return [value];
       if (value instanceof Array && value.length && value.every(function (item) {
           return typeof item === typeName || item instanceof type;

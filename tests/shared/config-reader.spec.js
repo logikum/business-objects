@@ -28,4 +28,17 @@ describe('Business objects configuration reader object', function() {
 
     expect(ConfigReader.noAccessBehavior).toBe(NoAccessBehavior.throwError);
   });
+
+  it('has a property for the path of locales', function() {
+
+    expect(ConfigReader.pathOfLocales.substr(-8)).toBe(path.sep + 'locales');
+  });
+
+  it('has a locale reader method', function() {
+    var locale = ConfigReader.localeReader();
+
+    expect(ConfigReader.localeReader).toBeDefined();
+
+    expect(locale).toBe('hu-HU');
+  });
 });

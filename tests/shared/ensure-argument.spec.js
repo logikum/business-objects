@@ -2,6 +2,7 @@ console.log('Testing shared/ensure-argument.js...');
 
 var numbers = require('./numbers.js');
 var ensureArgument = require('../../source/shared/ensure-argument.js');
+var ModelBase = require('../../source/model-base.js');
 
 describe('Argument checking object', function () {
 
@@ -39,6 +40,36 @@ describe('Argument checking object', function () {
   });
 
   //region Generic
+
+  it('isDefined method works', function () {
+    function call1() { return ensureArgument.isDefined(); }
+
+    var any01 = ensureArgument.isDefined(null);
+    var any02 = ensureArgument.isDefined(false);
+    var any03 = ensureArgument.isDefined(1);
+    var any04 = ensureArgument.isDefined(-100.99);
+    var any05 = ensureArgument.isDefined('');
+    var any06 = ensureArgument.isDefined('Romeo and Juliet');
+    var any07 = ensureArgument.isDefined([]);
+    var any08 = ensureArgument.isDefined({});
+    var any09 = ensureArgument.isDefined(function() {});
+    var any10 = ensureArgument.isDefined(new Date());
+    var any11 = ensureArgument.isDefined(new RegExp('[0-9]+'));
+
+    expect(call1).toThrow('The argument must be supplied.');
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+    expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
+    expect(any07).toBeDefined();
+    expect(any08).toBeDefined();
+    expect(any09).toBeDefined();
+    expect(any10).toBeDefined();
+    expect(any11).toBeDefined();
+  });
 
   it('hasValue method works', function () {
     function call1() { return ensureArgument.hasValue(); }
@@ -590,7 +621,81 @@ describe('Argument checking object', function () {
 
   //region Array
 
-  //var z = 1;
+  it('isOptionalArray method works', function () {
+    function call1() { return ensureArgument.isOptionalArray(false, String); }
+    function call2() { return ensureArgument.isOptionalArray(1, String); }
+    function call3() { return ensureArgument.isOptionalArray(-100.99, String); }
+    function call4() { return ensureArgument.isOptionalArray({}, String); }
+    function call5() { return ensureArgument.isOptionalArray(function() {}, String); }
+    function call6() { return ensureArgument.isOptionalArray(new Date(), String); }
+    function call7() { return ensureArgument.isOptionalArray(new RegExp('[0-9]+'), String); }
+    function call8() { return ensureArgument.isOptionalArray(['first', 13], String); }
+
+    var any01 = ensureArgument.isOptionalArray(undefined, String);
+    var any02 = ensureArgument.isOptionalArray(null, String);
+    var any03 = ensureArgument.isOptionalArray('', String);
+    var any04 = ensureArgument.isOptionalArray('Romeo and Juliet', String);
+    var any05 = ensureArgument.isOptionalArray(['one'], String);
+    var any06 = ensureArgument.isOptionalArray(['one', 'two', 'three'], String);
+    var any07 = ensureArgument.isOptionalArray(new ModelBase(), ModelBase);
+    var any08 = ensureArgument.isOptionalArray([new ModelBase(), new ModelBase()], ModelBase);
+
+    expect(call1).toThrow();
+    expect(call2).toThrow();
+    expect(call3).toThrow();
+    expect(call4).toThrow();
+    expect(call5).toThrow();
+    expect(call6).toThrow();
+    expect(call7).toThrow();
+    expect(call8).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+    expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
+    expect(any07).toBeDefined();
+    expect(any08).toBeDefined();
+  });
+
+  it('isMandatoryArray method works', function () {
+    function call01() { return ensureArgument.isMandatoryArray(undefined, String); }
+    function call02() { return ensureArgument.isMandatoryArray(null, String); }
+    function call03() { return ensureArgument.isMandatoryArray(false, String); }
+    function call04() { return ensureArgument.isMandatoryArray(1, String); }
+    function call05() { return ensureArgument.isMandatoryArray(-100.99, String); }
+    function call06() { return ensureArgument.isMandatoryArray({}, String); }
+    function call07() { return ensureArgument.isMandatoryArray(function() {}, String); }
+    function call08() { return ensureArgument.isMandatoryArray(new Date(), String); }
+    function call09() { return ensureArgument.isMandatoryArray(new RegExp('[0-9]+'), String); }
+    function call10() { return ensureArgument.isMandatoryArray(['first', 13], String); }
+
+    var any01 = ensureArgument.isMandatoryArray('', String);
+    var any02 = ensureArgument.isMandatoryArray('Romeo and Juliet', String);
+    var any03 = ensureArgument.isMandatoryArray(['one'], String);
+    var any04 = ensureArgument.isMandatoryArray(['one', 'two', 'three'], String);
+    var any05 = ensureArgument.isMandatoryArray(new ModelBase(), ModelBase);
+    var any06 = ensureArgument.isMandatoryArray([new ModelBase(), new ModelBase()], ModelBase);
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow();
+    expect(call06).toThrow();
+    expect(call07).toThrow();
+    expect(call08).toThrow();
+    expect(call09).toThrow();
+    expect(call10).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+    expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
+  });
 
   //endregion
 });
