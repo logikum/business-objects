@@ -4,8 +4,9 @@ var fs = require('fs');
 var path = require('path');
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
-var ConfigurationError = require('./configuration-error.js');
 var configHelper = require('./config-helper.js');
+var ConfigurationError = require('./configuration-error.js');
+var UserInfo = require('./user-info.js');
 
 // Define the possible configuration files.
 var options = [
@@ -41,6 +42,17 @@ if (cfg) {
   if (cfg.userReader) {
     config.userReader = configHelper.getFunction(cfg.userReader, 'userReader', ConfigurationError);
   }
+  config.getUser = function () {
+    var user = null;
+    if (config.userReader) {
+      user = config.userReader();
+      if (user === undefined)
+        user = null;
+      else if (user !== null && !(user instanceof UserInfo) && user.super_ !== UserInfo)
+        throw new ConfigurationError('userInfo');
+    }
+    return user;
+  };
 
   // Evaluate the unauthorized behavior.
   if (cfg.noAccessBehavior !== undefined && cfg.noAccessBehavior !== null) {

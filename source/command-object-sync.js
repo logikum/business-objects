@@ -14,7 +14,6 @@ var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
-var UserInfo = require('./shared/user-info.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
@@ -25,11 +24,11 @@ var ValidationContext = require('./rules/validation-context.js');
 var CommandObjectSyncCreator = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-    'Argument properties of CommandObjectSyncCreator must be a PropertyManager object.');
+      'c_manType', 'CommandObjectSyncCreator', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-    'Argument rules of CommandObjectSyncCreator must be a RuleManager object.');
+      'c_manType', 'CommandObjectSyncCreator', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-    'Argument extensions of CommandObjectSyncCreator must be an ExtensionManagerSync object.');
+      'c_manType', 'CommandObjectSyncCreator', 'extensions');
 
   var CommandObjectSync = function() {
 
@@ -52,10 +51,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Get principal.
-    if (config.userReader) {
-      user = ensureArgument.isOptionalType(config.userReader(), UserInfo,
-        'The userReader method of business objects configuration must return a UserInfo instance.');
-    }
+    user = config.getUser();
 
     //region Transfer object methods
 

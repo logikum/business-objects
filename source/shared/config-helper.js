@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var path = require('path');
+//var UserInfo = require('./user-info.js');
 
 var configHelper = {
   
@@ -41,6 +42,17 @@ var configHelper = {
 
     if (!enumType.hasMember(value))
       throw new errorType('enumMember', name, enumType);
+
+    return value;
+  },
+
+  getUser: function (value, valueType, errorType) {
+
+    if (value === undefined)
+      value = null;
+
+    if (value !== null && !(value instanceof valueType) && value.super_ !== valueType)
+      throw new errorType('userInfo');
 
     return value;
   },

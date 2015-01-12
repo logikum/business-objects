@@ -15,7 +15,6 @@ var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
-var UserInfo = require('./shared/user-info.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
@@ -25,11 +24,11 @@ var AuthorizationContext = require('./rules/authorization-context.js');
 var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'Argument properties of ReadOnlyRootModelSyncCreator must be a PropertyManager object.');
+      'c_manType', 'ReadOnlyRootModelSyncCreator', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'Argument rules of ReadOnlyRootModelSyncCreator must be a RuleManager object.');
+      'c_manType', 'ReadOnlyRootModelSyncCreator', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'Argument extensions of ReadOnlyRootModelSyncCreator must be an ExtensionManagerSync object.');
+      'c_manType', 'ReadOnlyRootModelSyncCreator', 'extensions');
 
   var ReadOnlyRootModelSync = function() {
 
@@ -51,10 +50,7 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Get principal.
-    if (config.userReader) {
-      user = ensureArgument.isOptionalType(config.userReader(), UserInfo,
-          'The userReader method of business objects configuration must return a UserInfo instance.');
-    }
+    user = config.getUser();
 
     //region Transfer object methods
 

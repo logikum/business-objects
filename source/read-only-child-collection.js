@@ -2,16 +2,19 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
+var ModelBase = require('./model-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
-var ReadOnlyCollectionCreator = function(name, itemType) {
+var ReadOnlyChildCollectionCreator = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
-    'The name argument of ReadOnlyCollectionCreator must be a non-empty string.');
-  itemType = ensureArgument.isMandatoryFunction(itemType,
-    'The itemType argument of ReadOnlyCollectionCreator must be an ReadOnlyModel type.');
+      'c_manString', 'ReadOnlyChildCollectionCreator', 'name');
+  itemType = ensureArgument.isMandatoryType(itemType, ModelBase,
+      'c_itemType', 'ReadOnlyChildCollectionCreator', 'ReadOnlyChildModel');
 
-  var ReadOnlyCollection = function (parent) {
+  var ReadOnlyChildCollection = function (parent) {
+
+    parent = ensureArgument.isMandatoryType(parent, ModelBase, 'c_parent', name, 'ReadOnlyModel');
 
     var self = this;
     var items = [];
@@ -96,9 +99,9 @@ var ReadOnlyCollectionCreator = function(name, itemType) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(ReadOnlyCollection, CollectionBase);
+  util.inherits(ReadOnlyChildCollection, CollectionBase);
 
-  return ReadOnlyCollection;
+  return ReadOnlyChildCollection;
 };
 
-module.exports = ReadOnlyCollectionCreator;
+module.exports = ReadOnlyChildCollectionCreator;

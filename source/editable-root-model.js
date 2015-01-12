@@ -14,7 +14,6 @@ var ExtensionManager = require('./shared/extension-manager.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
-var UserInfo = require('./shared/user-info.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
@@ -27,11 +26,11 @@ var MODEL_STATE = require('./shared/model-state.js');
 var EditableRootModelCreator = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'Argument properties of EditableRootModelCreator must be a PropertyManager object.');
+      'c_manType', 'EditableRootModelCreator', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'Argument rules of EditableRootModelCreator must be a RuleManager object.');
+      'c_manType', 'EditableRootModelCreator', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-      'Argument extensions of EditableRootModelCreator must be an ExtensionManager object.');
+      'c_manType', 'EditableRootModelCreator', 'extensions');
 
   var EditableRootModel = function() {
 
@@ -56,10 +55,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Get principal.
-    if (config.userReader) {
-      user = ensureArgument.isOptionalType(config.userReader(), UserInfo,
-          'The userReader method of business objects configuration must return a UserInfo instance.');
-    }
+    user = config.getUser();
 
     //region Transfer object methods
 

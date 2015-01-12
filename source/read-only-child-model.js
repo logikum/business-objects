@@ -15,7 +15,6 @@ var ExtensionManager = require('./shared/extension-manager.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
-var UserInfo = require('./shared/user-info.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
@@ -25,13 +24,16 @@ var AuthorizationContext = require('./rules/authorization-context.js');
 var ReadOnlyChildModelCreator = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-    'Argument properties of ReadOnlyChildModelCreator must be a PropertyManager object.');
+      'c_manType', 'ReadOnlyChildModelCreator', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-    'Argument rules of ReadOnlyChildModelCreator must be a RuleManager object.');
+      'c_manType', 'ReadOnlyChildModelCreator', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-    'Argument extensions of ReadOnlyChildModelCreator must be an ExtensionManager object.');
+      'c_manType', 'ReadOnlyChildModelCreator', 'extensions');
 
-  var ReadOnlyChildModel = function() {
+  var ReadOnlyChildModel = function(parent) {
+
+    parent = ensureArgument.isMandatoryType(parent, [ ModelBase, CollectionBase ],
+        'c_parent', properties.name, 'ReadOnlyModel');
 
     var self = this;
     var store = new DataStore();
@@ -40,18 +42,11 @@ var ReadOnlyChildModelCreator = function(properties, rules, extensions) {
     var dataContext = null;
     var xferContext = null;
 
-    // Get parent element.
-    var parent = ensureArgument.isMandatoryType(arguments[0], [ ModelBase, CollectionBase ],
-      'Argument parent of ReadOnlyChildModel constructor must be a model or collection object.');
-
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
 
     // Get principal.
-    if (config.userReader) {
-      user = ensureArgument.isOptionalType(config.userReader(), UserInfo,
-        'The userReader method of business objects configuration must return a UserInfo instance.');
-    }
+    user = config.getUser();
 
     //region Transfer object methods
 

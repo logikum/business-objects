@@ -2,12 +2,12 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
+var ModelBase = require('./model-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataContext = require('./shared/data-context.js');
-var UserInfo = require('./shared/user-info.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var Action = require('./rules/authorization-action.js');
@@ -16,13 +16,13 @@ var AuthorizationContext = require('./rules/authorization-context.js');
 var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensions) {
 
   name = ensureArgument.isMandatoryString(name,
-    'The name argument of ReadOnlyRootCollectionSyncCreator must be a non-empty string.');
-  itemType = ensureArgument.isMandatoryFunction(itemType,
-    'The itemType argument of ReadOnlyRootCollectionSyncCreator must be an ReadOnlyRootModelSync type.');
+      'c_manString', 'ReadOnlyRootCollectionSyncCreator', 'name');
+  itemType = ensureArgument.isMandatoryType(itemType, ModelBase,
+      'c_itemType', 'ReadOnlyRootCollectionSyncCreator', 'ReadOnlyChildModelSync');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-    'Argument rules of ReadOnlyRootCollectionSyncCreator must be a RuleManager object.');
+      'c_manType', 'ReadOnlyRootCollectionSyncCreator', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-    'Argument extensions of ReadOnlyRootCollectionSyncCreator must be an ExtensionManagerSync object.');
+      'c_manType', 'ReadOnlyRootCollectionSyncCreator', 'extensions');
 
   var ReadOnlyRootCollectionSync = function () {
 
@@ -42,10 +42,7 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Get principal.
-    if (config.userReader) {
-      user = ensureArgument.isOptionalType(config.userReader(), UserInfo,
-        'The userReader method of business objects configuration must return a UserInfo instance.');
-    }
+    user = config.getUser();
 
     Object.defineProperty(self, 'count', {
       get: function () {

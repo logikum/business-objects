@@ -2,18 +2,21 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
+var ModelBase = require('./model-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 
-var EditableCollectionSyncCreator = function(name, itemType) {
+var EditableChildCollectionSyncCreator = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
-    'The name argument of EditableCollectionSyncCreator must be a non-empty string.');
-  itemType = ensureArgument.isMandatoryFunction(itemType,
-    'The itemType argument of EditableCollectionSyncCreator must be an EditableModelSync type.');
+      'c_manString', 'EditableChildCollectionSyncCreator', 'name');
+  itemType = ensureArgument.isMandatoryType(itemType, ModelBase,
+      'c_itemType', 'EditableChildCollectionSyncCreator', 'EditableChildModelSync');
 
-  var EditableCollectionSync = function (parent) {
+  var EditableChildCollectionSync = function (parent) {
+
+    parent = ensureArgument.isMandatoryType(parent, ModelBase, 'c_parent', name, 'EditableModelSync');
 
     var self = this;
     var items = [];
@@ -143,9 +146,9 @@ var EditableCollectionSyncCreator = function(name, itemType) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableCollectionSync, CollectionBase);
+  util.inherits(EditableChildCollectionSync, CollectionBase);
 
-  return EditableCollectionSync;
+  return EditableChildCollectionSync;
 };
 
-module.exports = EditableCollectionSyncCreator;
+module.exports = EditableChildCollectionSyncCreator;

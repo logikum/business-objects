@@ -2,18 +2,21 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
+var ModelBase = require('./model-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 
-var EditableCollectionCreator = function(name, itemType) {
+var EditableChildCollectionCreator = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
-    'The name argument of EditableCollectionCreator must be a non-empty string.');
-  itemType = ensureArgument.isMandatoryFunction(itemType,
-    'The itemType argument of EditableCollectionCreator must be an EditableModel type.');
+      'c_manString', 'EditableChildCollectionCreator', 'name');
+  itemType = ensureArgument.isMandatoryType(itemType, ModelBase,
+      'c_itemType', 'EditableChildCollectionCreator', 'EditableChildModel');
 
-  var EditableCollection = function (parent) {
+  var EditableChildCollection = function (parent) {
+
+    parent = ensureArgument.isMandatoryType(parent, ModelBase, 'c_parent', name, 'EditableModel');
 
     var self = this;
     var items = [];
@@ -172,9 +175,9 @@ var EditableCollectionCreator = function(name, itemType) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(EditableCollection, CollectionBase);
+  util.inherits(EditableChildCollection, CollectionBase);
 
-  return EditableCollection;
+  return EditableChildCollection;
 };
 
-module.exports = EditableCollectionCreator;
+module.exports = EditableChildCollectionCreator;
