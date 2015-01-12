@@ -74,7 +74,7 @@ var i18n = function (namespace, keyRoot) {
 
 i18n.initialize = function (pathOfLocales, localeReader) {
   if (isInitialized)
-    throw new Error('i18n is already initialized.');
+    throw new I18nError('ready');
 
   if (pathOfLocales) {
     readProjectLocales(

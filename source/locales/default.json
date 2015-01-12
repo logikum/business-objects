@@ -97,7 +97,8 @@
     "directory": "The value of {0} property of i18n.initialize method is not a valid directory path: {1}",
     "function": "The file defined by the {0} property of i18n.initialize method must return a function: {1}",
     "c_optString": "The {0} argument of i18n constructor must be a string or null.",
-    "m_manString": "The {0} argument of i18n.get method must be a non-empty string."
+    "m_manString": "The {0} argument of i18n.get method must be a non-empty string.",
+    "ready": "i18n is already initialized."
   },
   "DataTypeError": {
     "default": "The data type of the passed value is invalid.",
