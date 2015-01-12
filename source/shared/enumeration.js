@@ -54,4 +54,14 @@ Enumeration.prototype.check = function (value, message) {
   throw new EnumerationError(message || 'enumValue', this.$name, value);
 };
 
+Enumeration.prototype.hasMember = function (value) {
+  for (var propertyName in this) {
+    if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
+      if (this[propertyName] === value)
+        return true;
+    }
+  }
+  return false;
+};
+
 module.exports = Enumeration;

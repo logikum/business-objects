@@ -1,12 +1,11 @@
 console.log('Testing locales/i18n.js...');
 
-var path = require('path');
 var i18n = require('../../source/locales/i18n.js');
 
 describe('Internationalization', function () {
   var currentLocale = '';
   function localeReader () { return currentLocale; }
-  var pathOfLocales = path.join(process.cwd(), 'locales');
+  var pathOfLocales = '/locales';
   i18n.initialize(pathOfLocales, localeReader);
 
   it('constructor expects 0-2 arguments', function () {

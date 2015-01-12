@@ -17,22 +17,24 @@ describe('Expression rule', function () {
     var build02 = function () { return new ExpressionRule(true); };
     var build03 = function () { return new ExpressionRule(pi); };
     var build04 = function () { return new ExpressionRule(pi, re); };
-    var build05 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse); };
-    var build06 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse, 'message'); };
-    var build07 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse, 'message', 30); };
-    var build08 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse, 'message', 30, true); };
+    var build05 = function () { return new ExpressionRule(pi, re, true); };
+    var build06 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse); };
+    var build07 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse, 'message'); };
+    var build08 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse, 'message', 30); };
     var build09 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse, 'message', 30, true); };
+    var build10 = function () { return new ExpressionRule(pi, re, NullResultOption.returnFalse, 'message', 30, true); };
 
 
     expect(build01).toThrow();
     expect(build02).toThrow();
     expect(build03).toThrow();
     expect(build04).toThrow();
-    expect(build05).not.toThrow();
+    expect(build05).toThrow('The option argument of ExpressionRule constructor must be a NullResultOption item.');
     expect(build06).not.toThrow();
     expect(build07).not.toThrow();
     expect(build08).not.toThrow();
     expect(build09).not.toThrow();
+    expect(build10).not.toThrow();
   });
 
   it('inherits validation rule type', function() {

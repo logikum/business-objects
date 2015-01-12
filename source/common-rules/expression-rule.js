@@ -10,9 +10,9 @@ function ExpressionRule(primaryProperty, regex, option, message, priority, stops
   ExpressionRule.super_.call(this, 'Expression');
 
   this.regex = ensureArgument.isMandatoryType(regex, RegExp,
-    'c_manType', 'ExpressionRule', 'regex');
+      'c_manType', 'ExpressionRule', 'regex');
   this.option = ensureArgument.isEnumMember(option, NullResultOption, null,
-    'The option argument of ExpressionRule constructor must be a NullResultOption value.');
+      'c_enumMember', 'ExpressionRule', 'option', 'NullResultOption');
 
   // Initialize base properties.
   this.initialize(

@@ -1,6 +1,7 @@
 'use strict';
 
 var ArgumentError = require('./argument-error.js');
+//var Enumeration = require('./enumeration.js');
 var t = require('../locales/i18n-bo.js')('ArgumentError');
 
 //region Helper methods
@@ -45,7 +46,7 @@ var ensureArgument = {
   //region String
 
   isString: function (value, message) {
-    if (typeof value !== 'string')
+    if (typeof value !== 'string' && !(value instanceof String))
       failed(arguments, 2, message || 'string');
     return value;
   },
@@ -53,13 +54,13 @@ var ensureArgument = {
   isOptionalString: function (value, message) {
     if (value === undefined)
       value = null;
-    if (value !== null && typeof value !== 'string')
+    if (value !== null && typeof value !== 'string' && !(value instanceof String))
       failed(arguments, 2, message || 'optString');
     return value;
   },
 
   isMandatoryString: function (value, message) {
-    if (typeof value !== 'string' || value.trim().length === 0)
+    if (typeof value !== 'string' && !(value instanceof String) || value.trim().length === 0)
       failed(arguments, 2, message || 'manString');
     return value;
   },
@@ -71,13 +72,13 @@ var ensureArgument = {
   isOptionalNumber: function (value, message) {
     if (value === undefined)
       value = null;
-    if (value !== null && typeof value !== 'number')
+    if (value !== null && typeof value !== 'number' && !(value instanceof Number))
       failed(arguments, 2, message || 'optNumber');
     return value;
   },
 
   isMandatoryNumber: function (value, message) {
-    if (typeof value !== 'number')
+    if (typeof value !== 'number' && !(value instanceof Number))
       failed(arguments, 2, message || 'manNumber');
     return value;
   },
@@ -89,13 +90,13 @@ var ensureArgument = {
   isOptionalInteger: function (value, message) {
     if (value === undefined)
       value = null;
-    if (value !== null && (typeof value !== 'number' || value % 1 !== 0))
+    if (value !== null && (typeof value !== 'number' && !(value instanceof Number) || value % 1 !== 0))
       failed(arguments, 2, message || 'optInteger');
     return value;
   },
 
   isMandatoryInteger: function (value, message) {
-    if (typeof value !== 'number' || value % 1 !== 0)
+    if (typeof value !== 'number' && !(value instanceof Number) || value % 1 !== 0)
       failed(arguments, 2, message || 'manInteger');
     return value;
   },
@@ -107,13 +108,13 @@ var ensureArgument = {
   isOptionalBoolean: function (value, message) {
     if (value === undefined)
       value = null;
-    if (value !== null && typeof value !== 'boolean')
+    if (value !== null && typeof value !== 'boolean' && !(value instanceof Boolean))
       failed(arguments, 2, message || 'optBoolean');
     return value;
   },
 
   isMandatoryBoolean: function (value, message) {
-    if (typeof value !== 'boolean')
+    if (typeof value !== 'boolean' && !(value instanceof Boolean))
       failed(arguments, 2, message || 'manBoolean');
     return value;
   },
@@ -183,11 +184,13 @@ var ensureArgument = {
   //region EnumMember
 
   isEnumMember: function (value, type, defaultValue, message) {
-    if (!type || typeof type.check !== 'function')
+    if (!(type && type.hasMember && type.constructor &&
+        type.constructor.super_ && type.constructor.super_.name === 'Enumeration'))
       failed(arguments, 4, 'enumType', type);
     if (defaultValue && (value === null || value === undefined))
       value = defaultValue;
-    type.check(value, message || 'enumValue');
+    if (!type.hasMember(value))
+      failed(arguments, 4, message || 'enumMember', type);
     return value;
   },
 

@@ -2,6 +2,8 @@
 
 var fs = require('fs');
 var path = require('path');
+var util = require('util');
+var configHelper = require('../shared/config-helper.js');
 
 var locales = {};
 var getCurrentLocale = function () { return 'default'; };
@@ -39,14 +41,26 @@ function readLocales (namespace, localePath) {
 
 //endregion
 
+//region Custom error
+
+function I18nError() {
+  I18nError.super_.call(this);
+
+  var i18nLocales = new i18n('$bo', 'i18n');
+
+  this.name = 'I18nError';
+  this.message = i18nLocales.get.apply(i18nLocales, arguments.length ? arguments : ['default']);
+}
+util.inherits(I18nError, Error);
+
+//endregion
+
 //region Define message handler
 
 var i18n = function (namespace, keyRoot) {
 
-  if (namespace && typeof namespace !== 'string')
-    throw new Error('The namespace argument of i18n constructor must be a string.');
-  if (keyRoot && typeof keyRoot !== 'string')
-    throw new Error('The keyRoot argument of i18n constructor must be a string.');
+  namespace = configHelper.isOptionalString(namespace, 'namespace', I18nError);
+  keyRoot = configHelper.isOptionalString(keyRoot, 'keyRoot', I18nError);
 
   this.namespace = namespace || '$default';
   this.keyRoot = keyRoot || '';
@@ -63,10 +77,15 @@ i18n.initialize = function (pathOfLocales, localeReader) {
     throw new Error('i18n is already initialized.');
 
   if (pathOfLocales) {
-    readProjectLocales(pathOfLocales);
+    readProjectLocales(
+        configHelper.getDirectory(pathOfLocales, 'pathOfLocales', I18nError)
+    );
   }
   if (localeReader) {
-    getCurrentLocale = localeReader;
+    getCurrentLocale = typeof localeReader === 'function' ?
+        localeReader :
+        configHelper.getFunction(localeReader, 'localeReader', I18nError)
+    ;
   }
   isInitialized = true;
 };
@@ -79,10 +98,8 @@ i18n.prototype.get = function (messageKey) {
 
 i18n.prototype.getWithNs = function (namespace, messageKey) {
 
-  if (typeof namespace !== 'string' || namespace.length === 0)
-    throw new Error('The namespace argument of i18n.get method must be a non-empty string.');
-  if (typeof messageKey !== 'string' || messageKey.length === 0)
-    throw new Error('The messageKey argument of i18n.get method must be a non-empty string.');
+  namespace = configHelper.isMandatoryString(namespace, 'namespace', I18nError);
+  messageKey = configHelper.isMandatoryString(messageKey, 'messageKey', I18nError);
 
   var keys = (this.keyRoot + messageKey).split('.');
   var messageArgs = arguments;

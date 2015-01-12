@@ -118,4 +118,16 @@ describe('Enumeration', function() {
     expect(check1).toThrow('The passed value (10) is not a Numbers3 item.');
     expect(check2).toThrow('Invalid enumeration value!');
   });
+
+  it('hasMember method tests a value', function() {
+
+    expect(numbers3.hasMember()).toBe(false);
+    expect(numbers3.hasMember(true)).toBe(false);
+    expect(numbers3.hasMember('')).toBe(false);
+    expect(numbers3.hasMember(-1)).toBe(false);
+    expect(numbers3.hasMember(0)).toBe(true);
+    expect(numbers3.hasMember(2)).toBe(true);
+    expect(numbers3.hasMember(3)).toBe(false);
+    expect(numbers3.hasMember([0])).toBe(false);
+  });
 });

@@ -5,6 +5,7 @@ var path = require('path');
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
 var ConfigurationError = require('./configuration-error.js');
+var configHelper = require('./config-helper.js');
 
 // Define the possible configuration files.
 var options = [
@@ -31,75 +32,31 @@ if (cfg) {
 
   // Evaluate the data access object builder.
   if (cfg.daoBuilder) {
-
-    if (typeof cfg.daoBuilder !== 'string' && !(cfg.daoBuilder instanceof String))
-      throw new ConfigurationError('boString', 'daoBuilder');
-
-    var daoBuilderPath = path.join(cwd, cfg.daoBuilder);
-    if (!fs.existsSync(daoBuilderPath) || !fs.statSync(daoBuilderPath).isFile())
-      throw new ConfigurationError('boFile', 'daoBuilder', daoBuilderPath);
-
-    var daoBuilderFunction = require(daoBuilderPath);
-    if (typeof daoBuilderFunction !== 'function')
-      throw new ConfigurationError('boFunction', 'daoBuilder', daoBuilderPath);
-
-    config.daoBuilder = daoBuilderFunction;
+    config.daoBuilder = configHelper.getFunction(cfg.daoBuilder, 'daoBuilder', ConfigurationError);
   } else {
     config.daoBuilder = daoBuilder;
   }
 
   // Evaluate the user information reader.
   if (cfg.userReader) {
-
-    if (typeof cfg.userReader !== 'string' && !(cfg.userReader instanceof String))
-      throw new ConfigurationError('boString', 'userReader');
-
-    var userReaderPath = path.join(cwd, cfg.userReader);
-    if (!fs.existsSync(userReaderPath) || !fs.statSync(userReaderPath).isFile())
-      throw new ConfigurationError('boFile', 'userReader', userReaderPath);
-
-    var userReaderFunction = require(userReaderPath);
-    if (typeof userReaderFunction !== 'function')
-      throw new ConfigurationError('boFunction', 'userReader', userReaderPath);
-
-    config.userReader = userReaderFunction;
+    config.userReader = configHelper.getFunction(cfg.userReader, 'userReader', ConfigurationError);
   }
 
   // Evaluate the unauthorized behavior.
   if (cfg.noAccessBehavior !== undefined && cfg.noAccessBehavior !== null) {
-    NoAccessBehavior.check(cfg.noAccessBehavior,
-      'The value of noAccessBehavior property of BusinessObjects configuration must be a NoAccessBehavior item.');
-    config.noAccessBehavior = cfg.noAccessBehavior;
+    config.noAccessBehavior = configHelper.isEnumMember(
+        cfg.noAccessBehavior, NoAccessBehavior, 'noAccessBehavior', ConfigurationError
+    );
   }
 
   // Evaluate the path of locale.
   if (cfg.pathOfLocales) {
-
-    if (typeof cfg.pathOfLocales !== 'string' && !(cfg.pathOfLocales instanceof String))
-      throw new ConfigurationError('i18nString', 'pathOfLocales');
-
-    var pathOfLocales = path.join(cwd, cfg.pathOfLocales);
-    if (!fs.existsSync(pathOfLocales) || !fs.statSync(pathOfLocales).isDirectory())
-      throw new ConfigurationError('i18nDirectory', 'pathOfLocales', pathOfLocales);
-
-    config.pathOfLocales = pathOfLocales;
+    config.pathOfLocales = configHelper.getDirectory(cfg.pathOfLocales, 'pathOfLocales', ConfigurationError);
   }
 
   // Evaluate the locale reader.
   if (cfg.localeReader) {
-
-    if (typeof cfg.localeReader !== 'string' && !(cfg.localeReader instanceof String))
-      throw new ConfigurationError('i18nString', 'localeReader');
-
-    var localeReaderPath = path.join(cwd, cfg.localeReader);
-    if (!fs.existsSync(localeReaderPath) || !fs.statSync(localeReaderPath).isFile())
-      throw new ConfigurationError('i18nFile', 'localeReader', localeReaderPath);
-
-    var localeReaderFunction = require(localeReaderPath);
-    if (typeof localeReaderFunction !== 'function')
-      throw new ConfigurationError('i18nFunction', 'localeReader', localeReaderPath);
-
-    config.localeReader = localeReaderFunction;
+    config.localeReader = configHelper.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
   }
 }
 

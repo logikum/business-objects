@@ -1,6 +1,7 @@
 {
   "ArgumentError": {
     "default": "The passed value is invalid.",
+    "enumType": "{0} is not an enumeration type.",
     "rule": "A Rule constructor can accept three kind of argument: a string as the message, an integer as the priority and a Boolean as the stopsProcessing argument.",
     "propManCtor": "All arguments of PropertyManager constructor but the first must be a PropertyInfo object.",
     "propManItem": "The PropertyManager has no item named {0}.",
@@ -22,7 +23,7 @@
     "manFunction": "The argument must be a function.",
     "optType": "The argument must be a {0} object or null.",
     "manType": "The argument must be a {0} object.",
-    "enumType": "The argument must be a {0} item.",
+    "enumMember": "The argument must be a {0} item.",
     "optArray": "The argument must be an array of {0} objects, or a single {0} object or null.",
     "manArray": "The argument must be an array of {0} objects or a single {0} object.",
     "optArrayPrim": "The argument must be an array of {0} values, or a single {0} values or null.",
@@ -45,7 +46,7 @@
     "c_manFunction": "The {1} argument of {0} constructor must be a function.",
     "c_optType": "The {1} argument of {0} constructor must be a {2} object or null.",
     "c_manType": "The {1} argument of {0} constructor must be a {2} object.",
-    "c_enumType": "The {1} argument of {0} constructor must be a {2} item.",
+    "c_enumMember": "The {1} argument of {0} constructor must be a {2} item.",
     "c_optArray": "The {1} argument of {0} constructor must be an array of {2} objects, or a single {2} object or null.",
     "c_manArray": "The {1} argument of {0} constructor must be an array of {2} objects or a single {2} object.",
     "c_optArrayPrim": "The {1} argument of {0} constructor must be an array of {2} values, or a single {2} values or null.",
@@ -68,7 +69,7 @@
     "m_manFunction": "The {2} argument of {0}.{1} method must be a function.",
     "m_optType": "The {2} argument of {0}.{1} method must be a {3} object or null.",
     "m_manType": "The {2} argument of {0}.{1} method must be a {3} object.",
-    "m_enumType": "The {2} argument of {0}.{1} method must be a {3} item.",
+    "m_enumMember": "The {2} argument of {0}.{1} method must be a {3} item.",
     "m_optArray": "The {2} argument of {0}.{1} method must be an array of {3} objects, or a single {3} object or null.",
     "m_manArray": "The {2} argument of {0}.{1} method must be an array of {3} objects or a single {3} object.",
     "m_optArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values, or a single {3} values or null.",
@@ -76,17 +77,24 @@
 
     "m_notInit": "The {2} argument of {0}.{1} method is not initialized.",
     "m_null": "The {2} argument of {0}.{1} method must be null.",
-    "p_enumType": "The value of {0}.{1} property must be a {2} item."
+    "p_enumMember": "The value of {0}.{1} property must be a {2} item."
   },
   "ConfigurationError": {
-    "default": "There is an error in the business objects' configuration.",
-    "boString": "The value of {0} property of business objects configuration must be a string.",
-    "boFile": "The value of {0} property of business objects configuration is not a valid file path: {1}",
-    "boFunction": "The file defined by the {0} property of business objects configuration must return a function: {1}",
-    "i18nString": "The value of {0} property of localization configuration must be a string.",
-    "i18nFile": "The value of {0} property of localization configuration is not a valid file path: {1}",
-    "i18nFunction": "The file defined by the {0} property of localization configuration must return a function: {1}",
-    "i18nDirectory": "The value of {0} property of localization configuration is not a valid directory path: {1}"
+    "default": "An error occurred in the business objects' configuration.",
+    "string": "The value of {0} property of business objects' configuration must be a string.",
+    "file": "The value of {0} property of business objects' configuration is not a valid file path: {1}",
+    "directory": "The value of {0} property of business objects' configuration is not a valid directory path: {1}",
+    "function": "The file defined by the {0} property of business objects' configuration must return a function: {1}",
+    "enumMember": "The value of {0} property of business objects' configuration must be a {1} item."
+  },
+  "I18nError": {
+    "default": "An error occurred in the business objects' localization.",
+    "string": "The value of {0} property of i18n.initialize method must be a string.",
+    "file": "The value of {0} property of i18n.initialize method is not a valid file path: {1}",
+    "directory": "The value of {0} property of i18n.initialize method is not a valid directory path: {1}",
+    "function": "The file defined by the {0} property of i18n.initialize method must return a function: {1}",
+    "c_optString": "The {0} argument of i18n constructor must be a string or null.",
+    "m_manString": "The {0} argument of i18n.get method must be a non-empty string."
   },
   "DataTypeError": {
     "default": "The data type of the passed value is invalid.",
