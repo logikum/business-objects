@@ -1,14 +1,12 @@
 'use strict';
 
-var CLASS_NAME = 'NotImplementedError';
-
 var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+var t = require('../locales/i18n-bo.js')('NotImplementedError');
 
 function NotImplementedError() {
   NotImplementedError.super_.call(this);
 
-  this.name = CLASS_NAME;
+  this.name = 'NotImplementedError';
   this.message = t.apply(this, arguments);
 }
 util.inherits(NotImplementedError, Error);

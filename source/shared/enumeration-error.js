@@ -1,14 +1,12 @@
 'use strict';
 
-var CLASS_NAME = 'EnumerationError';
-
 var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+var t = require('../locales/i18n-bo.js')('EnumerationError');
 
 function EnumerationError() {
   EnumerationError.super_.call(this);
 
-  this.name = CLASS_NAME;
+  this.name = 'EnumerationError';
   this.message = t.apply(this, arguments);
 }
 util.inherits(EnumerationError, Error);

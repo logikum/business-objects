@@ -1,14 +1,12 @@
 'use strict';
 
-var CLASS_NAME = 'ConfigurationError';
-
 var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+var t = require('../locales/i18n-bo.js')('ConfigurationError');
 
 function ConfigurationError() {
   ConfigurationError.super_.call(this);
 
-  this.name = CLASS_NAME;
+  this.name = 'ConfigurationError';
   this.message = t.apply(this, arguments);
 }
 util.inherits(ConfigurationError, Error);
