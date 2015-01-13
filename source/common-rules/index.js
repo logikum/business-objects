@@ -1,6 +1,5 @@
-/**
+/*
  * Common rules' index module.
- * @module common-rules/index
  */
 'use strict';
 

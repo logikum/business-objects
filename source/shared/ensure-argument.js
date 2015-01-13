@@ -1,3 +1,7 @@
+/**
+ * Argument checker module.
+ * @module shared/ensure-argument
+ */
 'use strict';
 
 var ArgumentError = require('./argument-error.js');

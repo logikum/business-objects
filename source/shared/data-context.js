@@ -1,3 +1,7 @@
+/**
+ * Data context module.
+ * @module shared/data-context
+ */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');

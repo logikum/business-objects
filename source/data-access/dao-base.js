@@ -1,3 +1,7 @@
+/**
+ * Base data access object module.
+ * @module data-access/dao-base
+ */
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');

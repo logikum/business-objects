@@ -1,3 +1,7 @@
+/**
+ * Broken rule list module.
+ * @module rules/broken-rule-list
+ */
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');

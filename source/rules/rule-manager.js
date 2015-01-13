@@ -1,3 +1,7 @@
+/**
+ * Rule manager module.
+ * @module rules/rule-manager
+ */
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');

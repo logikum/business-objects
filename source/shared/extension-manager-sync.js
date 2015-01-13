@@ -1,3 +1,7 @@
+/**
+ * Synchronous extension manager module.
+ * @module shared/extension-manager-sync
+ */
 'use strict';
 
 var util = require('util');

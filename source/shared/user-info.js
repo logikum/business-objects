@@ -1,3 +1,7 @@
+/**
+ * User information module.
+ * @module shared/user-info
+ */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');

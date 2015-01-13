@@ -1,3 +1,7 @@
+/**
+ * Authorization context module.
+ * @module rules/authorization-context
+ */
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');

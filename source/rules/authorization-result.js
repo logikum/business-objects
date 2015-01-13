@@ -1,3 +1,7 @@
+/**
+ * Authorization result module.
+ * @module rules/authorization-result
+ */
 'use strict';
 
 var util = require('util');

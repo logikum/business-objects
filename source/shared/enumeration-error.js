@@ -1,3 +1,7 @@
+/**
+ * Enumeration error module.
+ * @module shared/enumeration-error
+ */
 'use strict';
 
 var util = require('util');

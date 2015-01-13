@@ -1,3 +1,7 @@
+/**
+ * Authorization error module.
+ * @module rules/authorization-error
+ */
 'use strict';
 
 var util = require('util');

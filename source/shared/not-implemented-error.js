@@ -1,3 +1,7 @@
+/**
+ * Not implemented error module.
+ * @module shared/not-implemented-error
+ */
 'use strict';
 
 var util = require('util');

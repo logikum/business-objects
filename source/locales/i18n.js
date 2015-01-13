@@ -1,3 +1,7 @@
+/**
+ * Internationalization of business objects.
+ * @module i18n
+ */
 'use strict';
 
 var fs = require('fs');

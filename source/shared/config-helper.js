@@ -1,3 +1,7 @@
+/**
+ * Configuration utility module.
+ * @module shared/config-helper
+ */
 'use strict';
 
 var fs = require('fs');

@@ -1,3 +1,7 @@
+/**
+ * Transfer context module.
+ * @module shared/transfer-context
+ */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');

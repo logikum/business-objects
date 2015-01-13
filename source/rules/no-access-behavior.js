@@ -1,3 +1,7 @@
+/**
+ * No access behavior module.
+ * @module rules/no-access-behavior
+ */
 'use strict';
 
 var util = require('util');

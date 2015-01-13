@@ -1,8 +1,10 @@
-/**
+/*
  * Business objects' index module.
- * @module index
  */
 'use strict';
+
+//var ModelBase = require('./model-base.js');
+//var CollectionBase = require('./collection-base.js');
 
 var EditableRootModel = require('./editable-root-model.js');
 var EditableChildModel = require('./editable-child-model.js');
@@ -23,10 +25,11 @@ var ReadOnlyChildCollectionSync = require('./read-only-child-collection-sync.js'
 var CommandObjectSync = require('./command-object-sync.js');
 
 var dataTypes = require('./data-types/index.js');
-var commonRules = require('./common-rules/index.js');
-var daoBuilder = require('./data-access/dao-builder.js');
 var shared = require('./shared/index.js');
 var rules = require('./rules/index.js');
+var commonRules = require('./common-rules/index.js');
+var dataAccess = require('./data-access/index.js');
+var i18n = require('./locales/i18n.js');
 
 /**
  * List of models and helper namespaces.
@@ -34,6 +37,9 @@ var rules = require('./rules/index.js');
  * @namespace bo
  */
 var index = {
+  //ModelBase: ModelBase,
+  //CollectionBase: CollectionBase,
+
   /**
    * Creator function for asynchronous editable root models.
    * @memberof bo
@@ -137,28 +143,39 @@ var index = {
   /**
    * List of data types.
    * @memberof bo
+   * @see {@link bo/data-types} for further information.
    */
   dataTypes: dataTypes,
   /**
-   * List of common rules.
-   * @memberof bo
-   */
-  commonRules: commonRules,
-  /**
-   * Default data access object builder.
-   * @memberof bo
-   */
-  daoBuilder: daoBuilder,
-  /**
    * List of shared components.
    * @memberof bo
+   * @see {@link bo/shared} for further information.
    */
   shared: shared,
   /**
    * List of rule components.
    * @memberof bo
+   * @see {@link bo/rules} for further information.
    */
-  rules: rules
+  rules: rules,
+  /**
+   * List of common rules.
+   * @memberof bo
+   * @see {@link bo/common-rules} for further information.
+   */
+  commonRules: commonRules,
+  /**
+   * List of data access components.
+   * @memberof bo
+   * @see {@link bo/data-access} for further information.
+   */
+  dataAccess: dataAccess,
+  /**
+   * Internationalization of business objects.
+   * @memberof bo
+   * @see {@link module:i18n} for further information.
+   */
+  i18n: i18n
 };
 
 // Immutable object.

@@ -1,3 +1,7 @@
+/**
+ * Data access error module.
+ * @module data-access/dao-error
+ */
 'use strict';
 
 var util = require('util');

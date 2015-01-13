@@ -1,3 +1,7 @@
+/**
+ * Argument error module.
+ * @module shared/argument-error
+ */
 'use strict';
 
 var util = require('util');

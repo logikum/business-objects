@@ -1,3 +1,7 @@
+/**
+ * Base extension manager module.
+ * @module shared/extension-manager-base
+ */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');
@@ -8,19 +12,19 @@ var ModelError = require('./model-error.js');
  * @param dataSource
  * @constructor
  *
- * dataSource   (string)      The name of the data source.
- * modelPath    (string)      The path of the model definition.
- * daoBuilder   (string)      Returns the data access object of the model for the data source.
- * toDto        (function)    Convert model instance to data transfer object.
- * fromDto      (function)    Convert data transfer object to model instance.
- * toCto        (function)    Convert model instance to client transfer object.
- * fromCto      (function)    Convert client transfer object to model instance.
- * dataCreate   (function)    Returns the property values of a new instance from the data source.
- * dataFetch    (function)    Returns the property values of an existing instance from the data source.
- * dataInsert   (function)    Saves a new instance in the data source.
- * dataUpdate   (function)    Saves an existing instance in the data source.
- * dataRemove   (function)    Deletes an existing instance from the data source.
- * dataExecute  (function)    Executes a server side command.
+ * dataSource   string      The name of the data source.
+ * modelPath    string      The path of the model definition.
+ * daoBuilder   string      Returns the data access object of the model for the data source.
+ * toDto        function    Convert model instance to data transfer object.
+ * fromDto      function    Convert data transfer object to model instance.
+ * toCto        function    Convert model instance to client transfer object.
+ * fromCto      function    Convert client transfer object to model instance.
+ * dataCreate   function    Returns the property values of a new instance from the data source.
+ * dataFetch    function    Returns the property values of an existing instance from the data source.
+ * dataInsert   function    Saves a new instance in the data source.
+ * dataUpdate   function    Saves an existing instance in the data source.
+ * dataRemove   function    Deletes an existing instance from the data source.
+ * dataExecute  function    Executes a server side command.
  */
 function ExtensionManagerBase(dataSource, modelPath, addArgs) {
 

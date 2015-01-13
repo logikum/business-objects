@@ -1,3 +1,7 @@
+/**
+ * Configuration error module.
+ * @module shared/configuration-error
+ */
 'use strict';
 
 var util = require('util');

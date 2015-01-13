@@ -1,3 +1,7 @@
+/**
+ * Property definition module.
+ * @module shared/property-info
+ */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');

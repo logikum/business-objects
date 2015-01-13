@@ -1,3 +1,7 @@
+/**
+ * Rule severity module.
+ * @module rules/rule-severity
+ */
 'use strict';
 
 var util = require('util');

@@ -1,3 +1,7 @@
+/**
+ * Validation result module.
+ * @module rules/validation-result
+ */
 'use strict';
 
 var util = require('util');

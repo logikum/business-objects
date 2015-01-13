@@ -1,3 +1,7 @@
+/**
+ * Validation error module.
+ * @module rules/validation-error
+ */
 'use strict';
 
 var t = require('../locales/i18n-bo.js')('Rules');

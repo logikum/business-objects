@@ -1,3 +1,7 @@
+/**
+ * Data store module.
+ * @module shared/data-store
+ */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');

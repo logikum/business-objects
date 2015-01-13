@@ -1,3 +1,7 @@
+/**
+ * Configuration module.
+ * @module shared/config-reader
+ */
 'use strict';
 
 var fs = require('fs');

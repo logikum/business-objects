@@ -1,6 +1,5 @@
-/**
+/*
  * Data types' index module.
- * @module data-types/index
  */
 'use strict';
 

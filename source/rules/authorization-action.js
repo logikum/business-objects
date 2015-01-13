@@ -1,3 +1,7 @@
+/**
+ * Authorization action module.
+ * @module rules/authorization-action
+ */
 'use strict';
 
 var util = require('util');

@@ -1,3 +1,7 @@
+/**
+ * Property flag set module.
+ * @module shared/property-flag
+ */
 'use strict';
 
 function PropertyFlag() {

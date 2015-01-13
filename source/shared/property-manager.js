@@ -1,3 +1,7 @@
+/**
+ * Property manager module.
+ * @module shared/property-manager
+ */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');

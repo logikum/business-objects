@@ -1,3 +1,7 @@
+/**
+ * Asynchronous extension manager module.
+ * @module shared/extension-manager
+ */
 'use strict';
 
 var util = require('util');

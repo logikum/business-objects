@@ -1,3 +1,7 @@
+/**
+ * Data access object builder module.
+ * @module data-access/dao-builder
+ */
 'use strict';
 
 var fs = require('fs');

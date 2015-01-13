@@ -1,3 +1,7 @@
+/**
+ * Validation rule module.
+ * @module rules/validation-rule
+ */
 'use strict';
 
 var util = require('util');

@@ -1,3 +1,7 @@
+/**
+ * Model error module.
+ * @module shared/model-error
+ */
 'use strict';
 
 var util = require('util');

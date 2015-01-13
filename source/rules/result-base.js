@@ -1,3 +1,7 @@
+/**
+ * Base result module.
+ * @module rules/result-base
+ */
 'use strict';
 
 var BrokenRule = require('./broken-rule.js');

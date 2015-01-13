@@ -1,3 +1,7 @@
+/**
+ * Validation context module.
+ * @module rules/validation-context
+ */
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');
