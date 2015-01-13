@@ -1,3 +1,7 @@
+/**
+ * Dependency rule module.
+ * @module common-rules/dependency-rule
+ */
 'use strict';
 
 var util = require('util');

@@ -2,16 +2,19 @@
   "name": "business-objects",
   "version": "0.0.0",
   "description": "A software development framework that helps you build a reusable, maintainable object-oriented business layer for your app.",
-  "keywords": ["business objects"],
-  "license" : "MIT",
+  "keywords": [
+    "business objects"
+  ],
+  "license": "MIT",
   "author": "Mármarosi József <marmarosi@logikum.hu>",
   "main": "source/index.js",
   "scripts": {
     "test": "jasmine-node ./tests"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-jsdoc": "^0.5.7",
     "jasmine-node": "~1.14.5"
   },
   "repository": {

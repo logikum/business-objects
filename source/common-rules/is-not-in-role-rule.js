@@ -1,3 +1,7 @@
+/**
+ * Is-not-in-role rule module.
+ * @module common-rules/is-not-in-role-rule
+ */
 'use strict';
 
 var util = require('util');

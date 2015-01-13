@@ -1,3 +1,7 @@
+/**
+ * Base data type module.
+ * @module data-types/data-type
+ */
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');

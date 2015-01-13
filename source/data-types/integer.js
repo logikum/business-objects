@@ -1,3 +1,7 @@
+/**
+ * Integer data type module.
+ * @module data-types/integer
+ */
 'use strict';
 
 var util = require('util');

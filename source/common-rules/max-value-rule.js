@@ -1,3 +1,7 @@
+/**
+ * Max-value rule module.
+ * @module common-rules/max-value-rule
+ */
 'use strict';
 
 var util = require('util');

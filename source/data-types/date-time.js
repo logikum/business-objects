@@ -1,3 +1,7 @@
+/**
+ * Date-time data type module.
+ * @module data-types/date-time
+ */
 'use strict';
 
 var util = require('util');

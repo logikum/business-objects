@@ -1,3 +1,7 @@
+/**
+ * Synchronous command object module.
+ * @module command-object-sync
+ */
 'use strict';
 
 var util = require('util');

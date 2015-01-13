@@ -1,3 +1,7 @@
+/**
+ * Decimal data type module.
+ * @module data-types/decimal
+ */
 'use strict';
 
 var util = require('util');

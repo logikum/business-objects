@@ -1,3 +1,7 @@
+/**
+ * Information rule module.
+ * @module common-rules/information-rule
+ */
 'use strict';
 
 var util = require('util');

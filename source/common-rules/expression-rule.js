@@ -1,3 +1,7 @@
+/**
+ * Expression rule module.
+ * @module common-rules/expression-rule
+ */
 'use strict';
 
 var util = require('util');

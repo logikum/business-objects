@@ -1,3 +1,7 @@
+/**
+ * Synchronous editable child model module.
+ * @module editable-child-model-sync
+ */
 'use strict';
 
 var util = require('util');

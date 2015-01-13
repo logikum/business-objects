@@ -1,3 +1,7 @@
+/**
+ * Asynchronous editable root model module.
+ * @module editable-root-model
+ */
 'use strict';
 
 var util = require('util');

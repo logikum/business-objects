@@ -1,3 +1,7 @@
+/**
+ * Text data type module.
+ * @module data-types/text
+ */
 'use strict';
 
 var util = require('util');

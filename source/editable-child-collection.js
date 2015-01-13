@@ -1,3 +1,7 @@
+/**
+ * Asynchronous editable child collection module.
+ * @module editable-child-collection
+ */
 'use strict';
 
 var util = require('util');

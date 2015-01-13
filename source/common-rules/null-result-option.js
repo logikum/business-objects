@@ -1,3 +1,7 @@
+/**
+ * Null result option module.
+ * @module common-rules/null-result-option
+ */
 'use strict';
 
 var util = require('util');

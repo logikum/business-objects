@@ -1,3 +1,7 @@
+/**
+ * Max-length rule module.
+ * @module common-rules/max-length-rule
+ */
 'use strict';
 
 var util = require('util');

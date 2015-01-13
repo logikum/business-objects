@@ -1,3 +1,7 @@
+/**
+ * Length-is rule module.
+ * @module common-rules/length-is-rule
+ */
 'use strict';
 
 var util = require('util');

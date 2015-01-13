@@ -1,3 +1,7 @@
+/**
+ * Synchronous read-only child model module.
+ * @module read-only-child-model-sync
+ */
 'use strict';
 
 var util = require('util');

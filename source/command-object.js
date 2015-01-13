@@ -1,3 +1,7 @@
+/**
+ * Asynchronous command object module.
+ * @module command-object
+ */
 'use strict';
 
 var util = require('util');

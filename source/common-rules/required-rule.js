@@ -1,3 +1,7 @@
+/**
+ * Required rule module.
+ * @module common-rules/required-rule
+ */
 'use strict';
 
 var util = require('util');

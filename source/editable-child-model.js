@@ -1,3 +1,7 @@
+/**
+ * Asynchronous editable child model module.
+ * @module editable-child-model
+ */
 'use strict';
 
 var util = require('util');

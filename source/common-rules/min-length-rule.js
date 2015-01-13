@@ -1,3 +1,7 @@
+/**
+ * Min-length rule module.
+ * @module common-rules/min-length-rule
+ */
 'use strict';
 
 var util = require('util');

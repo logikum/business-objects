@@ -1,3 +1,7 @@
+/**
+ * Min-value rule module.
+ * @module common-rules/min-value-rule
+ */
 'use strict';
 
 var util = require('util');

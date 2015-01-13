@@ -1,3 +1,7 @@
+/**
+ * Data type error module.
+ * @module data-types/data-type-error
+ */
 'use strict';
 
 var util = require('util');

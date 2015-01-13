@@ -1,3 +1,7 @@
+/**
+ * Boolean data type module.
+ * @module data-types/boolean
+ */
 'use strict';
 
 var util = require('util');

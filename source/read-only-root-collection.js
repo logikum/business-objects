@@ -1,3 +1,7 @@
+/**
+ * Asynchronous read-only root collection module.
+ * @module read-only-root-collection
+ */
 'use strict';
 
 var util = require('util');
