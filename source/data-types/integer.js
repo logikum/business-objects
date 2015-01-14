@@ -1,13 +1,18 @@
-/**
- * Integer data type module.
- * @module data-types/integer
- */
 'use strict';
 
 var util = require('util');
 var DataType = require('./data-type.js');
 var DataTypeError = require('./data-type-error.js');
 
+/**
+ * Creates Integer data type definition.
+ *
+ * @memberof bo.dataTypes
+ * @constructor
+ *
+ * @classdesc Provide methods to work with Integer data.
+ * @extends bo.dataTypes.DataType
+ */
 function Integer() {
   Integer.super_.call(this, 'Integer');
 
@@ -16,6 +21,14 @@ function Integer() {
 }
 util.inherits(Integer, DataType);
 
+/**
+ * Checks if value is an Integer data.
+ *
+ * @function bo.dataTypes.Integer#check
+ * @param {?data} value - The value to check.
+ *
+ * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Integer.
+ */
 Integer.prototype.check = function (value) {
   if (value !== null &&
       (typeof value !== 'number' || value % 1 !== 0) &&
@@ -23,6 +36,15 @@ Integer.prototype.check = function (value) {
     throw new DataTypeError('integer');
 };
 
+/**
+ * Checks if value is an Integer data and is not null.
+ *
+ * @function bo.dataTypes.Integer#hasValue
+ * @param {!data} value - The value to check.
+ * @returns {boolean} True if the value is Integer and not null, otherwise false.
+ *
+ * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Integer.
+ */
 Integer.prototype.hasValue = function (value) {
   this.check(value);
   return value != undefined && value != null;

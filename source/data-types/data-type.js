@@ -27,6 +27,8 @@ function DataType (name) {
 
 /**
  * Abstract method to check if the data type of the value conforms to the data type definition.
+ *
+ * @abstract
  * @function bo.dataTypes.DataType#check
  * @param {?*} value - The value to check.
  */
@@ -37,6 +39,8 @@ DataType.prototype.check = function (value) {
 /**
  * Abstract method to check if the data type of the value conforms to the data type definition
  * and it is not null.
+ *
+ * @abstract
  * @function bo.dataTypes.DataType#hasValue
  * @param {!*} value - The value to check.
  * @returns {boolean} True if the value is the defined data type and not null, otherwise false.
