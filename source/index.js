@@ -142,8 +142,6 @@ var index = {
 
   /**
    * List of data types.
-   * @memberof bo
-   * @see {@link bo/data-types} for further information.
    */
   dataTypes: dataTypes,
   /**
