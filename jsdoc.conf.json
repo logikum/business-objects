@@ -1,0 +1,28 @@
+{
+	"tags"      : {
+		"allowUnknownTags" : true
+	},
+	"plugins"   : ["plugins/markdown"],
+
+	"templates" : {
+		"cleverLinks"           : false,
+		"monospaceLinks"        : false,
+		"dateFormat"            : "ddd MMM Do YYYY",
+		"outputSourceFiles"     : false,
+		"outputSourcePath"      : false,
+		"systemName"            : "business-objects",
+		"footer"                : "",
+		"copyright"             : "JavaScript business objects ♦ Copyright © 2014-2015 Logikum Kft.",
+		"navType"               : "vertical",
+		"theme"                 : "united",
+		"linenums"              : true,
+		"collapseSymbols"       : false,
+		"inverseNav"            : true,
+		"highlightTutorialCode" : true,
+		"protocol"							: "fred://"
+	},
+	"markdown"  : {
+		"parser"   : "gfm",
+		"hardwrap" : true
+	}
+}
