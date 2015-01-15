@@ -1,7 +1,3 @@
-/**
- * Data access object builder module.
- * @module data-access/dao-builder
- */
 'use strict';
 
 var fs = require('fs');
@@ -9,6 +5,20 @@ var path = require('path');
 var DaoBase = require('./dao-base.js');
 var DaoError = require('./dao-error.js');
 
+/**
+ * Checks if the requested method exists on the data access object.
+ *
+ * @function bo.dataAccess.daoBuilder
+ * @param {!string} dataSource - The name of the data source.
+ * @param {!string} modelPath - The path of the model which the data access object belongs to.
+ *
+ * @throws {@link bo.dataAccess.DaoError DaoError}: The name of the data source must be a non-empty string.
+ * @throws {@link bo.dataAccess.DaoError DaoError}: The model path must be a non-empty string.
+ * @throws {@link bo.dataAccess.DaoError DaoError}: The model path is not a valid file path.
+ * @throws {@link bo.dataAccess.DaoError DaoError}: The required data access file does not exist.
+ * @throws {@link bo.dataAccess.DaoError DaoError}: The data access file must return a constructor.
+ * @throws {@link bo.dataAccess.DaoError DaoError}: The data access object must inherit DaoBase type.
+ */
 var daoBuilder = function (dataSource, modelPath) {
 
   if (typeof dataSource !== 'string' || dataSource.trim().length === 0)

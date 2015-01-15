@@ -1,6 +1,3 @@
-/*
- * Business objects' index module.
- */
 'use strict';
 
 //var ModelBase = require('./model-base.js');
@@ -35,6 +32,9 @@ var i18n = require('./locales/i18n.js');
  * List of models and helper namespaces.
  *
  * @namespace bo
+ *
+ * @property {namespace} dataTypes - {@link bo.dataTypes Data types namespace} contains data type components and definitions.
+ * @property {namespace} dataAccess - {@link bo.dataAccess Data access namespace} contains data access components.
  */
 var index = {
   //ModelBase: ModelBase,
@@ -139,10 +139,6 @@ var index = {
    */
   CommandObjectSync: CommandObjectSync,
 
-
-  /**
-   * List of data types.
-   */
   dataTypes: dataTypes,
   /**
    * List of shared components.
@@ -162,11 +158,6 @@ var index = {
    * @see {@link bo/common-rules} for further information.
    */
   commonRules: commonRules,
-  /**
-   * List of data access components.
-   * @memberof bo
-   * @see {@link bo/data-access} for further information.
-   */
   dataAccess: dataAccess,
   /**
    * Internationalization of business objects.

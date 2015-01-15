@@ -1,6 +1,3 @@
-/*
- * Data access components' index module.
- */
 'use strict';
 
 var DaoBase = require('./dao-base.js');
@@ -8,28 +5,15 @@ var daoBuilder = require('./dao-builder.js');
 var DaoError = require('./dao-error.js');
 
 /**
- * List of data access components.
- *
- * @namespace bo/data-access
+ * Contains data access components.
+ * @namespace bo.dataAccess
+ * @property {function} daoBuilder - {@link bo.dataAccess.daoBuilder Data access object builder} function to get data access objects.
+ * @property {function} DaoBase - {@link bo.dataAccess.DaoBase Data access object} constructor to create new data access objects.
+ * @property {function} DaoError - {@link bo.dataAccess.DaoError Data access error} constructor to create new errors occurred in data access objects.
  */
 var index = {
-  /**
-   * Creator function for data access objects.
-   * @memberof bo/data-access
-   * @see {@link module:data-access/dao-builder} for further information.
-   */
   daoBuilder: daoBuilder,
-  /**
-   * Base object for data access objects.
-   * @memberof bo/data-access
-   * @see {@link module:data-access/dao-base} for further information.
-   */
   DaoBase: DaoBase,
-  /**
-   * Error object for data access objects.
-   * @memberof bo/data-access
-   * @see {@link module:data-access/dao-error} for further information.
-   */
   DaoError: DaoError
 };
 
