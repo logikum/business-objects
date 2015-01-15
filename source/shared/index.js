@@ -1,6 +1,3 @@
-/*
- * Shared components' index module.
- */
 'use strict';
 
 var PropertyInfo = require('./property-info.js');
@@ -28,9 +25,23 @@ var ModelError = require('./model-error.js');
 var NotImplementedError = require('./not-implemented-error.js');
 
 /**
- * List of shared components.
+ * Contains components used by models, collections and other components.
  *
- * @namespace bo/shared
+ * @namespace bo.shared
+ *
+ * @property {function} Enumeration - {@link bo.shared.Enumeration Enumeration} constructor
+ *      to create new enumerations.
+ *
+ * @property {function} ArgumentError - {@link bo.shared.ArgumentError Argument error} constructor
+ *      to create a new error related to an argument.
+ * @property {function} ConfigurationError - {@link bo.shared.ConfigurationError Configuration error} constructor
+ *      to create a new error related to configuration.
+ * @property {function} EnumerationError - {@link bo.shared.EnumerationError Enumeration error} constructor
+ *      to create a new error related to an enumeration.
+ * @property {function} ModelError - {@link bo.shared.ModelError Model error} constructor
+ *      to create a new error related to a model.
+ * @property {function} NotImplementedError - {@link bo.shared.NotImplementedError Not implemented error} constructor
+ *      to create a new error related to a not implemented function.
  */
 var index = {
   /**
@@ -100,11 +111,6 @@ var index = {
    * @see {@link module:shared/ensure-argument} for further information.
    */
   ensureArgument: ensureArgument,
-  /**
-   * Base object for enumerations.
-   * @memberof bo/shared
-   * @see {@link module:shared/enumeration} for further information.
-   */
   Enumeration: Enumeration,
   /**
    * Flag set for property definitions.
@@ -113,36 +119,10 @@ var index = {
    */
   PropertyFlag: PropertyFlag,
 
-
-  /**
-   * Error object for argument checks.
-   * @memberof bo/shared
-   * @see {@link module:shared/argument-error} for further information.
-   */
   ArgumentError: ArgumentError,
-  /**
-   * Error object for configuration.
-   * @memberof bo/shared
-   * @see {@link module:shared/configuration-error} for further information.
-   */
   ConfigurationError: ConfigurationError,
-  /**
-   * Error object for enumerations.
-   * @memberof bo/shared
-   * @see {@link module:shared/enumeration-error} for further information.
-   */
   EnumerationError: EnumerationError,
-  /**
-   * Error object for models.
-   * @memberof bo/shared
-   * @see {@link module:shared/model-error} for further information.
-   */
   ModelError: ModelError,
-  /**
-   * Error object for not implemented functions.
-   * @memberof bo/shared
-   * @see {@link module:shared/not-implemented-error} for further information.
-   */
   NotImplementedError: NotImplementedError
 };
 

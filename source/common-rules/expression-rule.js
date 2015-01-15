@@ -44,7 +44,7 @@ ExpressionRule.prototype.execute = function (inputs) {
     // then return the pre-defined result value.
     ruleIsSatisfied = (this.option === NullResultOption.returnTrue);
   } else {
-    // the value is not null, so run the regular expression
+    // The value is not null, so run the regular expression
     ruleIsSatisfied = this.regex.test(value.toString());
   }
 

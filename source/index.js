@@ -34,6 +34,9 @@ var i18n = require('./locales/i18n.js');
  * @namespace bo
  *
  * @property {namespace} dataTypes - {@link bo.dataTypes Data types namespace} contains data type components and definitions.
+ * @property {namespace} shared - {@link bo.shared Shared namespace} contains components used by models, collections and other components.
+ * @property {namespace} rules - {@link bo.rules Rules namespace} contains components of validation and authorization rules.
+ * @property {namespace} commonRules - {@link bo.commonRules Common rules namespace} contains frequently used rules.
  * @property {namespace} dataAccess - {@link bo.dataAccess Data access namespace} contains data access components.
  */
 var index = {
@@ -140,23 +143,8 @@ var index = {
   CommandObjectSync: CommandObjectSync,
 
   dataTypes: dataTypes,
-  /**
-   * List of shared components.
-   * @memberof bo
-   * @see {@link bo/shared} for further information.
-   */
   shared: shared,
-  /**
-   * List of rule components.
-   * @memberof bo
-   * @see {@link bo/rules} for further information.
-   */
   rules: rules,
-  /**
-   * List of common rules.
-   * @memberof bo
-   * @see {@link bo/common-rules} for further information.
-   */
   commonRules: commonRules,
   dataAccess: dataAccess,
   /**

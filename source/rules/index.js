@@ -1,6 +1,3 @@
-/*
- * Rule components' index module.
- */
 'use strict';
 
 var ValidationRule = require('./validation-rule.js');
@@ -28,7 +25,7 @@ var BrokenRules = require('./broken-rules.js');
 /**
  * List of rule components.
  *
- * @namespace bo/rules
+ * @namespace bo.rules
  */
 var index = {
   /**

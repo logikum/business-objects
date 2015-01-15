@@ -1,7 +1,3 @@
-/**
- * Data access error module.
- * @module data-access/dao-error
- */
 'use strict';
 
 var util = require('util');
@@ -17,6 +13,7 @@ var t = require('../locales/i18n-bo.js')('DaoError');
  *
  * @classdesc Represents a data access error.
  * @extends {Error}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
 function DaoError() {
   DaoError.super_.call(this);
@@ -24,6 +21,7 @@ function DaoError() {
   /**
    * The name of the error type.
    * @type {string}
+   * @default
    */
   this.name = 'DaoError';
 

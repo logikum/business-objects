@@ -13,6 +13,7 @@ var t = require('../locales/i18n-bo.js')('DataTypeError');
  *
  * @classdesc Represents a data type error.
  * @extends {Error}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
 function DataTypeError() {
   DataTypeError.super_.call(this);
@@ -20,6 +21,7 @@ function DataTypeError() {
   /**
    * The name of the error type.
    * @type {string}
+   * @default
    */
   this.name = 'DataTypeError';
 

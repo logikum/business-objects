@@ -10,7 +10,9 @@ var DateTime = require('./date-time.js');
 
 /**
  * Contains data type components and definitions.
+ *
  * @namespace bo.dataTypes
+ *
  * @property {function} DataType - {@link bo.dataTypes.DataType Data type} constructor to create new definitions.
  * @property {function} DataTypeError - {@link bo.dataTypes.DataTypeError Data type error} constructor to create new errors occurred in data type definitions.
  * @property {object} Boolean - Data type instance that defines {@link bo.dataTypes.Boolean Boolean} data.

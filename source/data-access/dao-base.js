@@ -11,6 +11,7 @@ var DaoError = require('./dao-error.js');
  * @param {!string} name - The name of the data access object.
  *
  * @classdesc Serves as the base class for data access objects.
+ * @throws {@link bo.dataAccess.DaoError DaoError}: The data access object name must be a non-empty string.
  */
 var DaoBase = function (name) {
 
