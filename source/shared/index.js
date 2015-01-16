@@ -29,6 +29,11 @@ var NotImplementedError = require('./not-implemented-error.js');
  *
  * @namespace bo.shared
  *
+ * @property {function} PropertyInfo - {@link bo.shared.PropertyInfo PropertyInfo} constructor
+ *      to create new property definitions.
+ * @property {function} PropertyManager - {@link bo.shared.PropertyManager PropertyManager} constructor
+ *      to create a new property manager.
+ *
  * @property {function} Enumeration - {@link bo.shared.Enumeration Enumeration} constructor
  *      to create new enumerations.
  *
@@ -44,17 +49,7 @@ var NotImplementedError = require('./not-implemented-error.js');
  *      to create a new error related to a not implemented function.
  */
 var index = {
-  /**
-   * Property definition for models.
-   * @memberof bo/shared
-   * @see {@link module:shared/property-info} for further information.
-   */
   PropertyInfo: PropertyInfo,
-  /**
-   * Collection of property definitions of a model.
-   * @memberof bo/shared
-   * @see {@link module:shared/property-manager} for further information.
-   */
   PropertyManager: PropertyManager,
   /**
    * Collection of property values of a model.

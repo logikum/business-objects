@@ -1,7 +1,3 @@
-/**
- * Property manager module.
- * @module shared/property-manager
- */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');
@@ -9,6 +5,18 @@ var ArgumentError = require('./argument-error.js');
 var PropertyInfo = require('./property-info.js');
 var DataType = require('../data-types/data-type.js');
 
+/**
+ * @classdesc Provides methods to manage the properties of a business object model.
+ * @description Creates a new property manager object.
+ *
+ * @memberof bo.shared
+ * @constructor
+ * @param {!string} name - The name of the business object model.
+ * @param {...bo.shared.PropertyInfo} [property] - Description of a model property.
+ *
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The property must be PropertyInfo object.
+ */
 function PropertyManager(name /*, property1, property2 [, ...] */) {
 
   var items = [];
@@ -17,6 +25,11 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
   var children = [];
   var key;
 
+  /**
+   * The name of the business object model.
+   * @type {string}
+   * @readonly
+   */
   this.name = ensureArgument.isMandatoryString(name,
       'c_manString', 'PropertyManager', 'name');
 
@@ -29,6 +42,13 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
 
   //region Item management
 
+  /**
+   * Adds a new property to the business object model.
+   *
+   * @param {!bo.shared.PropertyInfo} property - Description of the model property to be added.
+   *
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The property must be PropertyInfo object.
+   */
   this.add = function (property) {
     items.push(ensureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'PropertyManager', 'add', 'property'));
@@ -36,6 +56,27 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
     changed_k = true;
   };
 
+  /**
+   * Creates a new property for the business object model.
+   *    </br></br>
+   * The data type can be any one from the {@link bo.dataTypes} namespace
+   * or a custom data type based on {@link bo.dataTypes.DataType DataType} object,
+   * or can be any business object model or collection defined by the
+   * model types available in the {@link bo} namespace (i.e. models based on
+   * {@link bo.ModelBase ModelBase} or {@link bo.CollectionBase CollectionBase}
+   * objects).
+   *    </br></br>
+   * The flags parameter is ignored when data type is a model or collection.
+   *
+   * @param {string} name - The name of the property.
+   * @param {*} type - The data type of the property.
+   * @param {?bo.shared.PropertyFlag} flags - Other attributes of the property.
+   * @returns {bo.shared.PropertyInfo} The definition of the property.
+   *
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The type must be a data type, a model or a collection.
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The flags must be PropertyFlag items.
+   */
   this.create = function (name, type, flags) {
     var property = new PropertyInfo(name, type, flags);
     items.push(property);
@@ -44,6 +85,14 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
     return property;
   };
 
+  /**
+   * Determines whether a property belongs to the business object model.
+   *
+   * @param {bo.shared.PropertyInfo} property - Property definition to be checked.
+   * @returns {boolean} True if the model contains the property, otherwise false.
+   *
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The property must be PropertyInfo object.
+   */
   this.contains = function (property) {
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'PropertyManager', 'contains', 'property');
@@ -53,6 +102,16 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
     });
   };
 
+  /**
+   * Gets the property with the given name.
+   *
+   * @param {string} name - The name of the property.
+   * @param {string} [message] - The error message in case of not finding the property.
+   * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+   * @returns {bo.shared.PropertyInfo} The requested property definition.
+   *
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
+   */
   this.getByName = function (name, message) {
     name = ensureArgument.isMandatoryString(name,
         'm_manString', 'PropertyManager', 'getByName', 'name');
@@ -64,6 +123,11 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
     throw new ArgumentError(message || 'propManItem', name);
   };
 
+  /**
+   * Gets the property definitions of the business object model as an array.
+   *
+   * @returns {Array.<bo.shared.PropertyInfo>} The array of model properties.
+   */
   this.toArray = function () {
     var array = items.filter(function (item) {
       return item.type instanceof DataType;
@@ -76,14 +140,36 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
 
   //region Public array methods
 
+  /**
+   * Executes the provided function once per property definition.
+   *
+   * @param {function} callback - Function that produces an element of the model properties,
+   *    taking three arguments: property, index, array.
+   */
   this.forEach = function (callback) {
     items.forEach(callback);
   };
 
+  /**
+   * Creates a new array with all properties that pass the test implemented by the provided function.
+   *
+   * @param {function} callback - Function to test each element of the properties,
+   *    taking three arguments: property, index, array.
+   *    Return true to keep the property definition, false otherwise.
+   * @returns {Array.<bo.shared.PropertyInfo>} A new array with all properties that passed the test.
+   */
   this.filter = function (callback) {
     return items.filter(callback);
   };
 
+  /**
+   * Creates a new array with the results of calling a provided function
+   * on every element of the model properties.
+   *
+   * @param {function} callback - Function that produces an element of the new array,
+   *    taking three arguments: property, index, array.
+   * @returns {Array} A new array with items produced by the function.
+   */
   this.map = function (callback) {
     return items.map(callback);
   };
@@ -101,11 +187,21 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
     }
   }
 
+  /**
+   * Gets the child models and collections of the current model.
+   *
+   * @returns {Array.<bo.shared.PropertyInfo>} - The array of the child properties.
+   */
   this.children = function () {
     checkChildren();
     return children;
   };
 
+  /**
+   * Gets the count of the child models and collections of the current model.
+   *
+   * @returns {Number} The count of the child properties.
+   */
   this.childCount = function () {
     checkChildren();
     return children.length;
@@ -147,11 +243,33 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
     }
   }
 
+  /**
+   * Gets the key of the current model.
+   *    </br></br>
+   * If the model has no key properties, the method returns the data transfer object,
+   * If the model has one key property, then it returns the current value of the that property.
+   * If the model has more key properties, an object will be returned whose properties will hold
+   * the current values of the key properties.
+   *
+   * @protected
+   * @param {function} getPropertyValue - A function that returns
+   *    the current value of the given property.
+   * @returns {*} The key value of the model.
+   */
   this.getKey = function (getPropertyValue) {
     checkKeys(getPropertyValue);
     return key;
   };
 
+  /**
+   * Determines that the passed data contains current values of the model key.
+   *
+   * @protected
+   * @param {object} data - Data object whose properties can contain the values of the model key.
+   * @param {function} getPropertyValue - A function that returns
+   *    the current value of the given property.
+   * @returns {boolean} True when the values are equal, false otherwise.
+   */
   this.keyEquals = function (data, getPropertyValue) {
     // Get key properties.
     var keys = items.filter(function (item) {

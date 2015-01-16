@@ -11,6 +11,7 @@ var NotImplementedError = require('../shared/not-implemented-error.js');
  * @param {!string} name - The name of the data type.
  *
  * @classdesc Serves as the base class for data type definitions.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
  */
 function DataType (name) {
 
