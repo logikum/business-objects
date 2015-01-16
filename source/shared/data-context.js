@@ -1,7 +1,3 @@
-/**
- * Data context module.
- * @module shared/data-context
- */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');
@@ -9,15 +5,57 @@ var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
 var UserInfo = require('./user-info.js');
 
+/**
+ * @classdesc
+ *    Provides the context for custom data transfer objects.
+ * @description
+ *    Creates a new data context object.
+ *      </br></br>
+ *    <i><b>Warning:</b> Data context objects are created in models internally.
+ *    They are intended only to make publicly available the context
+ *    for custom data transfer objects.</i>
+ *
+ * @memberof bo.shared
+ * @constructor
+ * @param {object} dao - The data access object of the current model.
+ * @param {bo.shared.UserInfo} user - The current user.
+ * @param {boolean} isSelfDirty - Indicates whether the current model itself has been changed.
+ * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
+ * @param {function} getValue - A function that returns the current value of a property.
+ * @param {function} setValue - A function that changes the current value of a property.
+ *
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The dao argument must be an object.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The user must be an UserInfo object.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The isSelfDirty argument must be a Boolean value.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The properties must be an array
+ *    of PropertyInfo objects, or a single PropertyInfo object or null.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The getValue argument must be a function.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The setValue argument must be a function.
+ */
 function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
   var self = this;
 
+  /**
+   * The data access object of the current model.
+   * @type {object}
+   * @readonly
+   */
   this.dao = ensureArgument.isMandatoryObject(dao || {},
       'c_manObject', 'DataContext', 'dao');
+  /**
+   * The current user.
+   * @type {bo.shared.UserInfo}
+   * @readonly
+   */
   this.user = ensureArgument.isOptionalType(user, UserInfo,
       'c_optType', 'DataContext', 'user');
   var isDirty = ensureArgument.isMandatoryBoolean(isSelfDirty || false,
       'c_manBoolean', 'DataContext', 'isSelfDirty');
+  /**
+   * Array of property definitions that may appear on the data transfer object.
+   * @type {Array.<bo.shared.PropertyInfo>}
+   * @readonly
+   */
   this.properties = ensureArgument.isOptionalArray(properties, PropertyInfo,
       'c_optArray', 'DataContext', 'properties');
   getValue = ensureArgument.isOptionalFunction(getValue,
@@ -25,6 +63,11 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
   setValue = ensureArgument.isOptionalFunction(setValue,
       'c_optFunction', 'DataContext', 'setValue');
 
+  /**
+   * Indicates whether the current model itself has been changed.
+   * @type {boolean}
+   * @readonly
+   */
   Object.defineProperty(self, 'isSelfDirty', {
     get: function () {
       return isDirty;
@@ -32,6 +75,12 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
     enumerable: true
   });
 
+  /**
+   * Sets whether the current model itself has been changed.
+   *
+   * @param {boolean} isSelfDirty - Indicates whether the current model itself has been changed.
+   * @returns {bo.shared.DataContext} The data context object itself.
+   */
   this.setSelfDirty = function (isSelfDirty) {
     isDirty = isSelfDirty === true;
     return this;
@@ -45,6 +94,16 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
     throw new ModelError('noProperty', properties.name, name);
   }
 
+  /**
+   * Gets the current value of a model property.
+   *
+   * @param {string} propertyName - The name of the property.
+   * @returns {*} The value of a model property.
+   *
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The model has no property with the given name.
+   * @throws {@link bo.shared.ModelError ModelError}: Cannot read the properties of a collection.
+   */
   this.getValue = function (propertyName) {
     propertyName = ensureArgument.isMandatoryString(propertyName,
         'm_manString', 'DataContext', 'getValue', 'propertyName');
@@ -54,6 +113,17 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
       throw new ModelError('readCollection', properties.name, propertyName);
   };
 
+  /**
+   * Sets the current value of a model property.
+   *
+   * @param {string} propertyName - The name of the property.
+   * @param {*} value - The new value of the property.
+   *
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The model has no property with the given name.
+   * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value has wrong data type.
+   * @throws {@link bo.shared.ModelError ModelError}: Cannot write the properties of a collection.
+   */
   this.setValue = function (propertyName, value) {
     propertyName = ensureArgument.isMandatoryString(propertyName,
         'm_manString', 'DataContext', 'setValue', 'propertyName');

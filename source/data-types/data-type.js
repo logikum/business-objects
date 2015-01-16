@@ -4,13 +4,13 @@ var ensureArgument = require('../shared/ensure-argument.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
 /**
- * Creates a new data type definition.
+ * @classdesc Serves as the base class for data type definitions.
+ * @description Creates a new data type definition.
  *
  * @memberof bo.dataTypes
  * @constructor
  * @param {!string} name - The name of the data type.
  *
- * @classdesc Serves as the base class for data type definitions.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
  */
 function DataType (name) {

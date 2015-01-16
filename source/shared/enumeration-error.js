@@ -4,14 +4,14 @@ var util = require('util');
 var t = require('../locales/i18n-bo.js')('EnumerationError');
 
 /**
- * Creates an enumeration error object.
+ * @classdesc Represents an enumeration error.
+ * @description Creates an enumeration error object.
  *
  * @memberof bo.shared
  * @constructor
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  *
- * @classdesc Represents an enumeration error.
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */

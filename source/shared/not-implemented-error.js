@@ -4,14 +4,14 @@ var util = require('util');
 var t = require('../locales/i18n-bo.js')('NotImplementedError');
 
 /**
- * Creates a not implemented error object.
+ * @classdesc Represents an error of not implemented function.
+ * @description Creates a not implemented error object.
  *
  * @memberof bo.shared
  * @constructor
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  *
- * @classdesc Represents an error of not implemented function.
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */

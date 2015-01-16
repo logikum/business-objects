@@ -30,12 +30,23 @@ var NotImplementedError = require('./not-implemented-error.js');
  * @namespace bo.shared
  *
  * @property {function} PropertyInfo - {@link bo.shared.PropertyInfo PropertyInfo} constructor
- *      to create new property definitions.
+ *      to create new property definition.
  * @property {function} PropertyManager - {@link bo.shared.PropertyManager PropertyManager} constructor
  *      to create a new property manager.
+ * @property {function} DataStore - {@link bo.shared.DataStore DataStore} constructor
+ *      to create new data store.
+ *
+ * @property {function} UserInfo - {@link bo.shared.UserInfo UserInfo} constructor
+ *      to create new base object for user information.
+ * @property {function} DataContext - {@link bo.shared.DataContext DataContext} constructor
+ *      to create new context object for custom data transfer objects.
+ * @property {function} TransferContext - {@link bo.shared.TransferContext TransferContext} constructor
+ *      to create new context object for custom client transfer objects.
  *
  * @property {function} Enumeration - {@link bo.shared.Enumeration Enumeration} constructor
- *      to create new enumerations.
+ *      to create new enumeration.
+ * @property {function} PropertyFlag - {@link bo.shared.PropertyFlag PropertyFlag} constructor
+ *      to create new flag set for a property definition.
  *
  * @property {function} ArgumentError - {@link bo.shared.ArgumentError Argument error} constructor
  *      to create a new error related to an argument.
@@ -51,11 +62,6 @@ var NotImplementedError = require('./not-implemented-error.js');
 var index = {
   PropertyInfo: PropertyInfo,
   PropertyManager: PropertyManager,
-  /**
-   * Collection of property values of a model.
-   * @memberof bo/shared
-   * @see {@link module:shared/property-manager} for further information.
-   */
   DataStore: DataStore,
   //ExtensionManagerBase: ExtensionManagerBase,
   /**
@@ -71,27 +77,10 @@ var index = {
    */
   ExtensionManagerSync: ExtensionManagerSync,
 
-
   //ModelState: ModelState,
-  /**
-   * Base object for user information.
-   * @memberof bo/shared
-   * @see {@link module:shared/user-info} for further information.
-   */
   UserInfo: UserInfo,
-  /**
-   * Context information for data transfer objects.
-   * @memberof bo/shared
-   * @see {@link module:shared/data-context} for further information.
-   */
   DataContext: DataContext,
-  /**
-   * Context information for client transfer objects.
-   * @memberof bo/shared
-   * @see {@link module:shared/transfer-context} for further information.
-   */
   TransferContext: TransferContext,
-
 
   //configHelper: configHelper,
   /**
@@ -107,11 +96,6 @@ var index = {
    */
   ensureArgument: ensureArgument,
   Enumeration: Enumeration,
-  /**
-   * Flag set for property definitions.
-   * @memberof bo/shared
-   * @see {@link module:shared/property-flag} for further information.
-   */
   PropertyFlag: PropertyFlag,
 
   ArgumentError: ArgumentError,

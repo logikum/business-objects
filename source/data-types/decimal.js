@@ -5,12 +5,12 @@ var DataType = require('./data-type.js');
 var DataTypeError = require('./data-type-error.js');
 
 /**
- * Creates Text data type definition.
+ * @classdesc Provide methods to work with Text data.
+ * @description Creates Text data type definition.
  *
  * @memberof bo.dataTypes
  * @constructor
  *
- * @classdesc Provide methods to work with Text data.
  * @extends bo.dataTypes.DataType
  */
 function Decimal() {

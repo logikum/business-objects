@@ -4,14 +4,14 @@ var util = require('util');
 var t = require('../locales/i18n-bo.js')('ModelError');
 
 /**
- * Creates a model error object.
+ * @classdesc Represents a model error.
+ * @description Creates a model error object.
  *
  * @memberof bo.shared
  * @constructor
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  *
- * @classdesc Represents a model error.
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */

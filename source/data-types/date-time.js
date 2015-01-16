@@ -5,12 +5,12 @@ var DataType = require('./data-type.js');
 var DataTypeError = require('./data-type-error.js');
 
 /**
- * Creates DateTime data type definition.
+ * @classdesc Provide methods to work with DateTime data.
+ * @description Creates DateTime data type definition.
  *
  * @memberof bo.dataTypes
  * @constructor
  *
- * @classdesc Provide methods to work with DateTime data.
  * @extends bo.dataTypes.DataType
  */
 function DateTime() {

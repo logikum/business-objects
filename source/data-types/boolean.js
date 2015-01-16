@@ -5,12 +5,12 @@ var DataType = require('./data-type.js');
 var DataTypeError = require('./data-type-error.js');
 
 /**
- * Creates Boolean data type definition.
+ * @classdesc Provide methods to work with Boolean data.
+ * @description Creates Boolean data type definition.
  *
  * @memberof bo.dataTypes
  * @constructor
  *
- * @classdesc Provide methods to work with Boolean data.
  * @extends bo.dataTypes.DataType
  */
 function Boolean () {

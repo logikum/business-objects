@@ -4,14 +4,14 @@ var util = require('util');
 var t = require('../locales/i18n-bo.js')('DataTypeError');
 
 /**
- * Creates a data type error object.
+ * @classdesc Represents a data type error.
+ * @description Creates a data type error object.
  *
  * @memberof bo.dataTypes
  * @constructor
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  *
- * @classdesc Represents a data type error.
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */

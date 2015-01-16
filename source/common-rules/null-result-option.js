@@ -4,13 +4,14 @@ var util = require('util');
 var Enumeration = require('../shared/enumeration.js');
 
 /**
- * Creates a new object containing null result options.
+ * @classdesc Represents the eligible actions when
+ *    an {@link bo.commonRules.ExpressionRule expression rule} is executed on a null value.
+ * @description
+ *    Creates a new object containing null result options.
  *
  * @memberof bo.commonRules
  * @constructor
  *
- * @classdesc Represents the eligible actions when
- *    an {@link bo.commonRules.ExpressionRule expression rule} is executed on a null value.
  * @extends bo.shared.Enumeration
  */
 function NullResultOption() {
