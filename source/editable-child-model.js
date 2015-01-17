@@ -51,7 +51,6 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
     var dao = null;
     var user = null;
     var dataContext = null;
-    var xferContext = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -67,10 +66,10 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
 
     //region Transfer object methods
 
-    function getTransferContext () {
-      if (!xferContext)
-        xferContext = new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
-      return xferContext;
+    function getTransferContext (authorize) {
+      return authorize ?
+          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue) :
+          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
     }
 
     function baseToDto() {
@@ -85,7 +84,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
 
     function toDto () {
       if (extensions.toDto)
-        return extensions.toDto.call(self, getTransferContext());
+        return extensions.toDto.call(self, getTransferContext(false));
       else
         return baseToDto();
     }
@@ -102,7 +101,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
 
     function fromDto (dto) {
       if (extensions.fromDto)
-        extensions.fromDto.call(self, getTransferContext(), dto);
+        extensions.fromDto.call(self, getTransferContext(false), dto);
       else
         baseFromDto(dto);
     }
@@ -120,7 +119,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
     this.toCto = function () {
       var cto = {};
       if (extensions.toCto)
-        cto = extensions.toCto.call(self, getTransferContext());
+        cto = extensions.toCto.call(self, getTransferContext(true));
       else
         cto = baseToCto();
 
@@ -145,7 +144,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
 
     this.fromCto = function (cto) {
       if (extensions.fromCto)
-        extensions.fromCto.call(self, getTransferContext(), cto);
+        extensions.fromCto.call(self, getTransferContext(true), cto);
       else
         baseFromCto(cto);
 

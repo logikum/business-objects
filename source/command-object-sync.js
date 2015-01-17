@@ -43,7 +43,6 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     var dao = null;
     var user = null;
     var dataContext = null;
-    var xferContext = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -60,9 +59,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     //region Transfer object methods
 
     function getTransferContext () {
-      if (!xferContext)
-        xferContext = new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
-      return xferContext;
+      return new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
     }
 
     function baseToDto() {

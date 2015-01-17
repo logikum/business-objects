@@ -35,10 +35,10 @@ function TransferContext(properties, getValue, setValue) {
    */
   this.properties = ensureArgument.isOptionalArray(properties, PropertyInfo,
       'c_optArray', 'TransferContext', 'properties');
-  getValue = ensureArgument.isMandatoryFunction(getValue,
-      'c_manFunction', 'TransferContext', 'getValue');
-  setValue = ensureArgument.isMandatoryFunction(setValue,
-      'c_manFunction', 'TransferContext', 'setValue');
+  getValue = ensureArgument.isOptionalFunction(getValue,
+      'c_optFunction', 'TransferContext', 'getValue');
+  setValue = ensureArgument.isOptionalFunction(setValue,
+      'c_optFunction', 'TransferContext', 'setValue');
 
   function getByName (name) {
     for (var i = 0; i < self.properties.length; i++) {
@@ -58,9 +58,12 @@ function TransferContext(properties, getValue, setValue) {
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The model has no property with the given name.
    */
   this.getValue = function (propertyName) {
-    propertyName = ensureArgument.isMandatoryString(propertyName,
-        'm_manString', 'TransferContext', 'getValue', 'propertyName');
-    return getValue(getByName(propertyName));
+    if (getValue) {
+      propertyName = ensureArgument.isMandatoryString(propertyName,
+          'm_manString', 'TransferContext', 'getValue', 'propertyName');
+      return getValue(getByName(propertyName));
+    } else
+      throw new ModelError('getValue');
   };
 
   /**
@@ -74,11 +77,14 @@ function TransferContext(properties, getValue, setValue) {
    * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value has wrong data type.
    */
   this.setValue = function (propertyName, value) {
-    propertyName = ensureArgument.isMandatoryString(propertyName,
-        'm_manString', 'TransferContext', 'setValue', 'propertyName');
-    if (value !== undefined) {
-      setValue(getByName(propertyName), value);
-    }
+    if (setValue) {
+      propertyName = ensureArgument.isMandatoryString(propertyName,
+          'm_manString', 'TransferContext', 'setValue', 'propertyName');
+      if (value !== undefined) {
+        setValue(getByName(propertyName), value);
+      }
+    } else
+      throw new ModelError('setValue');
   };
 
   // Immutable object.

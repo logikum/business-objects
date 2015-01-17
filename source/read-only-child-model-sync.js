@@ -44,7 +44,6 @@ var ReadOnlyChildModelSyncCreator = function(properties, rules, extensions) {
     var brokenRules = new BrokenRuleList(properties.name);
     var user = null;
     var dataContext = null;
-    var xferContext = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -54,10 +53,10 @@ var ReadOnlyChildModelSyncCreator = function(properties, rules, extensions) {
 
     //region Transfer object methods
 
-    function getTransferContext () {
-      if (!xferContext)
-        xferContext = new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
-      return xferContext;
+    function getTransferContext (authorize) {
+      return authorize ?
+          new TransferContext(properties.toArray(), readPropertyValue, null) :
+          new TransferContext(properties.toArray(), null, setPropertyValue);
     }
 
     function baseFromDto(dto) {
@@ -72,7 +71,7 @@ var ReadOnlyChildModelSyncCreator = function(properties, rules, extensions) {
 
     function fromDto (dto) {
       if (extensions.fromDto)
-        extensions.fromDto.call(self, getTransferContext(), dto);
+        extensions.fromDto.call(self, getTransferContext(false), dto);
       else
         baseFromDto(dto);
     }
@@ -90,7 +89,7 @@ var ReadOnlyChildModelSyncCreator = function(properties, rules, extensions) {
     this.toCto = function () {
       var cto = {};
       if (extensions.toCto)
-        cto = extensions.toCto.call(self, getTransferContext());
+        cto = extensions.toCto.call(self, getTransferContext(true));
       else
         cto = baseToCto();
 

@@ -16,23 +16,27 @@ describe('Transfer context', function() {
   var ctx = new TransferContext([ pi ], getValue, setValue);
 
   it('constructor expects three arguments', function() {
-    function create1() { return new TransferContext(); }
-    function create2() { return new TransferContext(1, 2, 3); }
-    function create3() { return new TransferContext('1', '2', '3'); }
-    function create4() { return new TransferContext([ pi ]); }
-    function create5() { return new TransferContext([ pi ], getValue); }
-    function create6() { return new TransferContext([ pi ], getValue, setValue); }
-    function create7() { return new TransferContext([ pi ], getValue, {}); }
-    function create8() { return new TransferContext([ pi ], {}, setValue); }
+    function create01() { return new TransferContext(); }
+    function create02() { return new TransferContext(1, 2, 3); }
+    function create03() { return new TransferContext('1', '2', '3'); }
+    function create04() { return new TransferContext([ pi ]); }
+    function create05() { return new TransferContext([ pi ], getValue); }
+    function create06() { return new TransferContext([ pi ], getValue, setValue); }
+    function create07() { return new TransferContext([ pi ], null, setValue); }
+    function create08() { return new TransferContext([ pi ], getValue, {}); }
+    function create09() { return new TransferContext([ pi ], {}, setValue); }
+    function create10() { return new TransferContext(null, getValue, setValue); }
 
-    expect(create1).toThrow();
-    expect(create2).toThrow();
-    expect(create3).toThrow();
-    expect(create4).toThrow();
-    expect(create5).toThrow();
-    expect(create6).not.toThrow();
-    expect(create7).toThrow();
-    expect(create8).toThrow();
+    expect(create01).not.toThrow();
+    expect(create02).toThrow();
+    expect(create03).toThrow();
+    expect(create04).not.toThrow();
+    expect(create05).not.toThrow();
+    expect(create06).not.toThrow();
+    expect(create07).not.toThrow();
+    expect(create08).toThrow();
+    expect(create09).toThrow();
+    expect(create10).not.toThrow();
   });
 
   it('has one property', function() {
@@ -49,13 +53,21 @@ describe('Transfer context', function() {
   });
 
   it('getValue method works', function() {
+    var ctxReadOnly = new TransferContext([ pi ], null, setValue);
+
+    function get01() { var v = ctxReadOnly.getValue('property'); }
 
     expect(ctx.getValue('property')).toBe(125);
+    expect(get01).toThrow("Read-only model's properties cannot be copied to data transfer object.");
   });
 
   it('setValue method works', function() {
-    ctx.setValue('property', 216);
+    var ctxReadOnly = new TransferContext([ pi ], getValue, null);
+    ctx.setValue('property', 1001);
 
-    expect(ctx.getValue('property')).toBe(216);
+    function set01() { ctxReadOnly.setValue('property', 1001); }
+
+    expect(ctx.getValue('property')).toBe(1001);
+    expect(set01).toThrow("Read-only model's properties cannot be copied from client transfer object.");
   });
 });
