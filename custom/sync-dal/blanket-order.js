@@ -16,7 +16,7 @@ var BlanketOrderDao = function() {
 };
 util.inherits(BlanketOrderDao, DaoBase);
 
-BlanketOrderDao.prototype.create = function() {
+BlanketOrderDao.prototype.create = function(connection) {
   console.log('--- Blanket order DAO.create');
 
   return {
@@ -28,7 +28,7 @@ BlanketOrderDao.prototype.create = function() {
   };
 };
 
-BlanketOrderDao.prototype.fetch = function(filter) {
+BlanketOrderDao.prototype.fetch = function(connection, filter) {
   console.log('--- Blanket order DAO.fetch');
 
   var key = filter;
@@ -36,17 +36,17 @@ BlanketOrderDao.prototype.fetch = function(filter) {
     throw new Error('Blanket order not found.');
 
   var order = global.orders[key];
-  order.address = daoAddress.fetch(order.orderKey);
-  order.items = daoOrderItem.fetchForOrder(order.orderKey);
+  order.address = daoAddress.fetch(connection, order.orderKey);
+  order.items = daoOrderItem.fetchForOrder(connection, order.orderKey);
   for (var i = 0; i < order.items.length; i++) {
     var item = order.items[i];
-    item.schedules = daoOrderSchedule.fetchForItem(item.orderItemKey);
+    item.schedules = daoOrderSchedule.fetchForItem(connection, item.orderItemKey);
   }
 
   return order;
 };
 
-BlanketOrderDao.prototype.fetchByName = function(filter) {
+BlanketOrderDao.prototype.fetchByName = function(connection, filter) {
   console.log('--- Blanket order DAO.fetchByName');
 
   for (var key in global.orders) {
@@ -54,11 +54,11 @@ BlanketOrderDao.prototype.fetchByName = function(filter) {
       var order = global.orders[key];
       if (order.vendorName === filter) {
 
-        order.address = daoAddress.fetch(order.orderKey);
-        order.items = daoOrderItem.fetchForOrder(order.orderKey);
+        order.address = daoAddress.fetch(connection, order.orderKey);
+        order.items = daoOrderItem.fetchForOrder(connection, order.orderKey);
         for (var i = 0; i < order.items.length; i++) {
           var item = order.items[i];
-          item.schedules = daoOrderSchedule.fetchForItem(item.orderItemKey);
+          item.schedules = daoOrderSchedule.fetchForItem(connection, item.orderItemKey);
         }
 
         return order;
@@ -68,7 +68,7 @@ BlanketOrderDao.prototype.fetchByName = function(filter) {
   throw new Error('Blanket order not found.');
 };
 
-BlanketOrderDao.prototype.insert = function(data) {
+BlanketOrderDao.prototype.insert = function(connection, data) {
   console.log('--- Blanket order DAO.insert');
 
   data.orderKey = ++global.orderKey;
@@ -78,7 +78,7 @@ BlanketOrderDao.prototype.insert = function(data) {
   return data;
 };
 
-BlanketOrderDao.prototype.update = function(data) {
+BlanketOrderDao.prototype.update = function(connection, data) {
   console.log('--- Blanket order DAO.update');
 
   var key = data.orderKey;
@@ -89,7 +89,7 @@ BlanketOrderDao.prototype.update = function(data) {
   return data;
 };
 
-BlanketOrderDao.prototype.remove = function(filter) {
+BlanketOrderDao.prototype.remove = function(connection, filter) {
   console.log('--- Blanket order DAO.remove');
 
   var key = filter;

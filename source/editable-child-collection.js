@@ -122,12 +122,12 @@ var EditableChildCollectionCreator = function(name, itemType) {
       });
     };
 
-    this.save = function (callback) {
+    this.save = function (connection, callback) {
       var count = 0;
       var error = null;
       if (items.length) {
         items.forEach(function (item) {
-          item.save(function (err) {
+          item.save(connection, function (err) {
             error = error || err;
             // Check if all items are done.
             if (++count === items.length) {

@@ -8,7 +8,7 @@ var RescheduleShippingCommandDao = function() {
 };
 util.inherits(RescheduleShippingCommandDao, DaoBase);
 
-RescheduleShippingCommandDao.prototype.execute = function(data, callback) {
+RescheduleShippingCommandDao.prototype.execute = function(connection, data, callback) {
   console.log('--- Reschedule shipping command DAO.execute');
 
   data.success = false;
@@ -24,7 +24,7 @@ RescheduleShippingCommandDao.prototype.execute = function(data, callback) {
   callback(null, data);
 };
 
-RescheduleShippingCommandDao.prototype.reschedule = function(data, callback) {
+RescheduleShippingCommandDao.prototype.reschedule = function(connection, data, callback) {
   console.log('--- Reschedule shipping command DAO.reschedule');
 
   data.success = true;

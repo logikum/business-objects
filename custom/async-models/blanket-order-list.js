@@ -23,13 +23,13 @@ function dataFetch (ctx, filter, method, callback) {
   }
   if (method === 'fetchByName') {
     // filter: vendorName
-    ctx.dao.fetchByName(filter, cb);
+    ctx.dao.fetchByName(ctx.connection, filter, cb);
   } else {
     // filter: primaryKey
-    ctx.dao.fetch(filter, cb);
+    ctx.dao.fetch(ctx.connection, filter, cb);
   }
   // or:
-  // ctx.dao[method](filter, cb);
+  // ctx.dao[method](ctx.connection, filter, cb);
 }
 
 //endregion

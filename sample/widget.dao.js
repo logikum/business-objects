@@ -8,7 +8,7 @@ var WidgetDao = function() {
 };
 util.inherits(WidgetDao, DaoBase);
 
-WidgetDao.prototype.select = function(data) {
+WidgetDao.prototype.select = function(connection, data) {
   return 'Hello, world!';
 };
 

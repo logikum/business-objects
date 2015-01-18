@@ -8,7 +8,7 @@ var BlanketOrderListDao = function() {
 };
 util.inherits(BlanketOrderListDao, DaoBase);
 
-BlanketOrderListDao.prototype.fetch = function(filter, callback) {
+BlanketOrderListDao.prototype.fetch = function(connection, filter, callback) {
   console.log('--- Blanket order list DAO.fetch');
 
   var orderList = [];
@@ -20,7 +20,7 @@ BlanketOrderListDao.prototype.fetch = function(filter, callback) {
   callback(null, orderList);
 };
 
-BlanketOrderListDao.prototype.fetchByName = function(filter, callback) {
+BlanketOrderListDao.prototype.fetchByName = function(connection, filter, callback) {
   console.log('--- Blanket order list DAO.fetchByName');
 
   var orderList = [];

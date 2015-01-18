@@ -17,19 +17,19 @@ describe('Data context', function() {
   function setValue (property, value) {
     data[property.name] = value;
   }
-  var ctx = new DataContext(dao, user, false, properties, getValue, setValue);
+  var ctx = new DataContext(dao, user, properties, getValue, setValue);
 
-  it('constructor expects zero-six arguments', function() {
+  it('constructor expects zero-five arguments', function() {
     function create01() { return new DataContext(); }
     function create02() { return new DataContext(1, 2); }
-    function create03() { return new DataContext('1', '2', '3', '4', '5', '6'); }
+    function create03() { return new DataContext('1', '2', '3', '4', '5'); }
     function create04() { return new DataContext(dao); }
     function create05() { return new DataContext(dao, user); }
-    function create06() { return new DataContext(dao, user, false); }
-    function create07() { return new DataContext(dao, user, true, properties); }
-    function create08() { return new DataContext(dao, user, false, properties, getValue); }
-    function create09() { return new DataContext(dao, user, true, properties, getValue, setValue); }
-    function create10() { return new DataContext(dao, {}, false, properties, getValue, setValue); }
+    function create06() { return new DataContext(dao, user, []); }
+    function create07() { return new DataContext(dao, user, properties); }
+    function create08() { return new DataContext(dao, user, properties, getValue); }
+    function create09() { return new DataContext(dao, user, properties, getValue, setValue); }
+    function create10() { return new DataContext(dao, {}, properties, getValue, setValue); }
 
     expect(create01).not.toThrow();
     expect(create02).toThrow();
@@ -43,31 +43,40 @@ describe('Data context', function() {
     expect(create10).toThrow();
   });
 
-  it('has four properties', function() {
+  it('has five properties', function() {
 
     expect(ctx.dao).toBe(dao);
     expect(ctx.user).toEqual(jasmine.any(UserInfo));
-    expect(ctx.isSelfDirty).toBe(false);
     expect(ctx.properties).toBe(properties);
+    expect(ctx.connection).toBeNull();
+    expect(ctx.isSelfDirty).toBe(false);
   });
 
   it('has read-only properties', function() {
     ctx.dao = null;
     ctx.user = null;
-    ctx.isSelfDirty = true;
     ctx.properties = null;
+    ctx.connection = {};
+    ctx.isSelfDirty = true;
 
     expect(ctx.dao).toBe(dao);
     expect(ctx.user).toBe(user);
-    expect(ctx.isSelfDirty).toBe(false);
     expect(ctx.properties).toBe(properties);
+    expect(ctx.connection).toBeNull();
+    expect(ctx.isSelfDirty).toBe(false);
   });
 
-  it('setSelfDirty method works', function() {
-    var result = ctx.setSelfDirty(true);
+  it('setState method works', function() {
+    var connection = { connectionId: 1 };
+    var result = ctx.setState(connection, true);
 
-    expect(result).toBe(ctx);
-    expect(result.isSelfDirty).toBe(true);
+    expect(ctx.connection).toBe(connection);
+    expect(ctx.isSelfDirty).toBe(true);
+
+    var result = ctx.setState();
+
+    expect(ctx.connection).toBeNull();
+    expect(ctx.isSelfDirty).toBe(false);
   });
 
   it('getValue and setValue methods work', function() {

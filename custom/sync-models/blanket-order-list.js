@@ -18,12 +18,12 @@ function dataFetch (ctx, filter, method) {
   var dto;
   if (method === 'fetchByName')
   // filter: vendorName
-    dto = ctx.dao.fetchByName(filter);
+    dto = ctx.dao.fetchByName(ctx.connection, filter);
   else
   // filter: none
-    dto = ctx.dao.fetch(filter);
+    dto = ctx.dao.fetch(ctx.connection, filter);
   // or:
-  // var dto = ctx.dao[method](filter);
+  // var dto = ctx.dao[method](ctx.connection, filter);
   return dto;
 }
 

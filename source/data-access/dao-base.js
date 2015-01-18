@@ -9,7 +9,7 @@ var DaoError = require('./dao-error.js');
  *
  * @memberof bo.dataAccess
  * @constructor
- * @param {!string} name - The name of the data access object.
+ * @param {string} name - The name of the data access object.
  *
  * @throws {@link bo.dataAccess.DaoError DaoError}: The data access object name must be a non-empty string.
  */
@@ -35,7 +35,7 @@ var DaoBase = function (name) {
  * Checks if the requested method exists on the data access object.
  *
  * @function bo.dataAccess.DaoBase#check
- * @param {!string} methodName - The name of the method to check.
+ * @param {string} methodName - The name of the method to check.
  *
  * @throws {@link bo.dataAccess.DaoError DaoError}: The method name must be a non-empty string.
  * @throws {@link bo.dataAccess.DaoError DaoError}: Data access object has no method with the requested name.

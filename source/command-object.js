@@ -43,6 +43,7 @@ var CommandObjectCreator = function(properties, rules, extensions) {
     var dao = null;
     var user = null;
     var dataContext = null;
+    var connection = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -159,49 +160,83 @@ var CommandObjectCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(
-            dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+            dao, user, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setSelfDirty(false);
+      return dataContext.setState(connection, false);
+    }
+
+    function runTransaction (main, callback) {
+      // Start transaction.
+      config.connectionManager.beginTransaction(
+          extensions.dataSource, function (errBegin, connection) {
+            if (errBegin)
+              callback(errBegin);
+            else
+              main(connection, function (err, result) {
+                if (err)
+                // Undo transaction.
+                  config.connectionManager.rollbackTransaction(
+                      extensions.dataSource, connection, function (errRollback, connClosed) {
+                        connection = connClosed;
+                        callback(err);
+                      });
+                else
+                // Finish transaction.
+                  config.connectionManager.commitTransaction(
+                      extensions.dataSource, connection, function (errCommit, connClosed) {
+                        connection = connClosed;
+                        if (errCommit)
+                          callback(errCommit);
+                        else
+                          callback(null, result);
+                      });
+              });
+          });
     }
 
     function data_execute (method, callback) {
       // Helper function for post-execute actions.
-      function finish (dto) {
+      function finish (dto, cb) {
         // Fetch children as well.
         loadChildren(dto, function (err) {
           if (err)
-            callback(err);
+            cb(err);
           else
-            callback(null, self);
+            cb(null, self);
         });
       }
-      // Check permissions.
-      if (method === 'execute' ? canDo(Action.executeCommand) : canExecute(method)) {
+      // Main activity.
+      function main (connection, cb) {
+        // Execute command.
         if (extensions.dataExecute) {
-          // Custom execute.
-          extensions.dataExecute.call(self, getDataContext(), method, function (err, dto) {
+          // *** Custom execute.
+          extensions.dataExecute.call(self, getDataContext(connection), method, function (err, dto) {
             if (err)
-              callback(err);
+              cb(err);
             else
-              finish(dto);
+              finish(dto, cb);
           });
         } else {
-          // Standard execute.
+          // *** Standard execute.
           var dto = toDto.call(self);
           dao.checkMethod(method);
-          dao[method](dto, function (err, dto) {
-            if (err) {
-              callback(err);
-            } else {
+          dao[method](connection, dto, function (err, dto) {
+            if (err)
+              cb(err);
+            else {
               fromDto.call(self, dto);
-              finish(dto);
+              finish(dto, cb);
             }
           });
         }
-      } else
+      }
+      // Check permissions.
+      if (method === 'execute' ? canDo(Action.executeCommand) : canExecute(method))
+        runTransaction(main, callback);
+      else
         callback(null, self);
     }
 

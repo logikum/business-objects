@@ -16,9 +16,9 @@ var PropertyInfo = require('./property-info.js');
  *
  * @memberof bo.shared
  * @constructor
- * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
- * @param {function} getValue - A function that returns the current value of a property.
- * @param {function} setValue - A function that changes the current value of a property.
+ * @param {Array.<bo.shared.PropertyInfo>} [properties] - An array of property definitions.
+ * @param {function} [getValue] - A function that returns the current value of a property.
+ * @param {function} [setValue] - A function that changes the current value of a property.
  *
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The properties must be an array
  *    of PropertyInfo objects, or a single PropertyInfo object or null.

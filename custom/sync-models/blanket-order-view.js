@@ -80,12 +80,12 @@ function dataFetch (ctx, filter, method) {
   var dto;
   if (method === 'fetchByName')
   // filter: vendorName
-    dto = ctx.dao.fetchByName(filter);
+    dto = ctx.dao.fetchByName(ctx.connection, filter);
   else
   // filter: primaryKey
-    dto = ctx.dao.fetch(filter);
+    dto = ctx.dao.fetch(ctx.connection, filter);
   // or:
-  // var dto = ctx.dao[method](filter);
+  // var dto = ctx.dao[method](ctx.connection, filter);
   ctx.setValue('orderKey',     dto.orderKey);
   ctx.setValue('vendorName',   dto.vendorName);
   ctx.setValue('contractDate', dto.contractDate);

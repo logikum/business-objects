@@ -8,7 +8,7 @@ var ClearScheduleCommandDao = function() {
 };
 util.inherits(ClearScheduleCommandDao, DaoBase);
 
-ClearScheduleCommandDao.prototype.execute = function(data, callback) {
+ClearScheduleCommandDao.prototype.execute = function(connection, data, callback) {
   console.log('--- Clear schedule command DAO.execute');
 
   data.result = true;

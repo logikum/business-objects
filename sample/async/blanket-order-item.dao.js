@@ -8,13 +8,13 @@ var BlanketOrderItemDao = function() {
 };
 util.inherits(BlanketOrderItemDao, DaoBase);
 
-BlanketOrderItemDao.prototype.create = function(callback) {
+BlanketOrderItemDao.prototype.create = function(connection, callback) {
   console.log('--- Blanket order item DAO.create');
 
   callback(null, {});
 };
 
-BlanketOrderItemDao.prototype.fetch = function(filter, callback) {
+BlanketOrderItemDao.prototype.fetch = function(connection, filter, callback) {
   console.log('--- Blanket order item DAO.fetch');
 
   if (!global.items[filter])
@@ -23,7 +23,7 @@ BlanketOrderItemDao.prototype.fetch = function(filter, callback) {
     callback(null, global.items[filter]);
 };
 
-BlanketOrderItemDao.prototype.fetchForOrder = function(filter, callback) {
+BlanketOrderItemDao.prototype.fetchForOrder = function(connection, filter, callback) {
   console.log('--- Blanket order item DAO.fetchForOrder');
 
   var items = [];
@@ -37,7 +37,7 @@ BlanketOrderItemDao.prototype.fetchForOrder = function(filter, callback) {
   callback(null, items);
 };
 
-BlanketOrderItemDao.prototype.insert = function(data, callback) {
+BlanketOrderItemDao.prototype.insert = function(connection, data, callback) {
   console.log('--- Blanket order item DAO.insert');
 
   data.orderItemKey = ++global.itemKey;
@@ -45,7 +45,7 @@ BlanketOrderItemDao.prototype.insert = function(data, callback) {
   callback(null, data);
 };
 
-BlanketOrderItemDao.prototype.update = function(data, callback) {
+BlanketOrderItemDao.prototype.update = function(connection, data, callback) {
   console.log('--- Blanket order item DAO.update');
 
   if (!global.items[data.orderItemKey])
@@ -56,7 +56,7 @@ BlanketOrderItemDao.prototype.update = function(data, callback) {
   }
 };
 
-BlanketOrderItemDao.prototype.remove = function(filter, callback) {
+BlanketOrderItemDao.prototype.remove = function(connection, filter, callback) {
   console.log('--- Blanket order item DAO.remove');
 
   if (global.items[filter])

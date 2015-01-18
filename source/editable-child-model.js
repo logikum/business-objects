@@ -366,26 +366,26 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
         callback(null);
     }
 
-    function insertChildren(callback) {
-      saveChildren(callback);
+    function insertChildren(connection, callback) {
+      saveChildren(connection, callback);
     }
 
-    function updateChildren(callback) {
-      saveChildren(callback);
+    function updateChildren(connection, callback) {
+      saveChildren(connection, callback);
     }
 
-    function removeChildren(callback) {
-      saveChildren(callback);
+    function removeChildren(connection, callback) {
+      saveChildren(connection, callback);
     }
 
-    function saveChildren(callback) {
+    function saveChildren(connection, callback) {
       var count = 0;
       var error = null;
 
       if (properties.childCount()) {
         properties.children().forEach(function (property) {
           var child = getPropertyValue(property);
-          child.save(function (err) {
+          child.save(connection, function (err) {
             error = error || err;
             // Check if all children are done.
             if (++count === properties.childCount()) {
@@ -401,38 +401,68 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(
-            dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+            dao, user, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setSelfDirty(isDirty);
+      return dataContext.setState(connection, isDirty);
+    }
+
+    function runStatements (main, callback) {
+      // Open connection.
+      config.connectionManager.openConnection(
+          extensions.dataSource, function (errOpen, connection) {
+            if (errOpen)
+              callback(errOpen);
+            else
+              main(connection, function (err, result) {
+                // Close connection.
+                config.connectionManager.closeConnection(
+                    extensions.dataSource, connection, function (errClose, connClosed) {
+                      connection = connClosed;
+                      if (err)
+                        callback(err);
+                      else if (errClose)
+                        callback(errClose);
+                      else
+                        callback(null, result);
+                    });
+              });
+          });
     }
 
     function data_create (callback) {
-      if (extensions.dataCreate) {
-        // Custom create.
-        extensions.dataCreate.call(self, getDataContext(), function (err) {
-          if (err)
-            callback(err);
-          else {
-            markAsCreated();
-            callback(null, self);
-          }
-        });
-      } else {
-        // Standard create.
-        dao.checkMethod('create');
-        dao.create(function (err, dto) {
-          if (err)
-            callback(err);
-          else {
-            fromDto.call(self, dto);
-            markAsCreated();
-            callback(null, self);
-          }
-        });
+      // Helper callback for post-creation actions.
+      function finish (cb) {
+        markAsCreated();
+        cb(null, self);
       }
+      // Main activity.
+      function main (connection, cb) {
+        // Execute creation.
+        if (extensions.dataCreate) {
+          // *** Custom creation.
+          extensions.dataCreate.call(self, getDataContext(connection), function (err) {
+            if (err)
+              cb(err);
+            else
+              finish(cb);
+          });
+        } else {
+          // *** Standard creation.
+          dao.checkMethod('create');
+          dao.create(connection, function (err, dto) {
+            if (err)
+              cb(err);
+            else {
+              fromDto.call(self, dto);
+              finish(cb);
+            }
+          });
+        }
+      }
+      runStatements(main, callback);
     }
 
     function data_fetch (filter, method, callback) {
@@ -440,9 +470,9 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
       function finish (dto) {
         // Fetch children as well.
         fetchChildren(dto, function (err) {
-          if (err) {
+          if (err)
             callback(err);
-          } else {
+          else {
             markAsPristine();
             callback(null, self);
           }
@@ -450,16 +480,17 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
+        // Execute fetch.
         if (extensions.dataFetch) {
-          // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
+          // *** Custom fetch.
+          extensions.dataFetch.call(self, getDataContext(null), filter, method, function (err, dto) {
             if (err)
               callback(err);
             else
               finish(dto);
           });
         } else {
-          // Standard fetch.
+          // *** Standard fetch.
           // Child element gets data from parent.
           fromDto.call(self, filter);
           finish(filter);
@@ -468,18 +499,43 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
         callback(null, self);
     }
 
-    function data_insert (callback) {
+    function data_insert (connection, callback) {
       // Helper function for post-insert actions.
-      function finish () {
+      function finish (conn, cb) {
         // Insert children as well.
-        insertChildren(function (err) {
-          if (err) {
-            callback(err);
-          } else {
+        insertChildren(conn, function (err) {
+          if (err)
+            cb(err);
+          else {
             markAsPristine();
-            callback(null, self);
+            cb(null, self);
           }
         });
+      }
+      // Main activity.
+      function main (conn, cb) {
+        // Execute insert.
+        if (extensions.dataInsert) {
+          // *** Custom insert.
+          extensions.dataInsert.call(self, getDataContext(conn), function (err) {
+            if (err)
+              cb(err);
+            else
+              finish(conn, cb);
+          });
+        } else {
+          // *** Standard insert.
+          var dto = toDto.call(self);
+          dao.checkMethod('insert');
+          dao.insert(conn, dto, function (err, dto) {
+            if (err)
+              cb(err);
+            else {
+              fromDto.call(self, dto);
+              finish(conn, cb);
+            }
+          });
+        }
       }
       // Check permissions.
       if (canDo(Action.createObject)) {
@@ -493,103 +549,100 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
           if (parentValue !== undefined)
             setPropertyValue(referenceProperty, parentValue);
         }
-        // End of copy.
-        if (extensions.dataInsert) {
-          // Custom insert.
-          extensions.dataInsert.call(self, getDataContext(), function (err) {
-            if (err)
-              callback(err);
-            else
-              finish();
-          });
-        } else {
-          // Standard insert.
-          var dto = toDto.call(self);
-          dao.checkMethod('insert');
-          dao.insert(dto, function (err, dto) {
-            if (err) {
-              callback(err);
-            } else {
-              fromDto.call(self, dto);
-              finish();
-            }
-          });
-        }
+        // Execute insert.
+        main(connection, callback);
       } else
         callback(null, self);
     }
 
-    function data_update (callback) {
+    function data_update (connection, callback) {
       // Helper function for post-update actions.
-      function finish () {
+      function finish (conn, cb) {
         // Update children as well.
-        updateChildren(function (err) {
-          if (err) {
-            callback(err);
-          } else {
+        updateChildren(conn, function (err) {
+          if (err)
+            cb(err);
+          else {
             markAsPristine();
-            callback(null, self);
+            cb(null, self);
           }
         });
       }
-      // Check permissions.
-      if (canDo(Action.updateObject)) {
+      // Main activity.
+      function main (conn, cb) {
+        // Execute update.
         if (extensions.dataUpdate) {
-          // Custom update.
-          extensions.dataUpdate.call(self, getDataContext(), function (err) {
+          // *** Custom update.
+          extensions.dataUpdate.call(self, getDataContext(conn), function (err) {
             if (err)
-              callback(err);
+              cb(err);
             else
-              finish();
+              finish(conn, cb);
           });
         } else if (isDirty) {
-          // Standard update.
+          // *** Standard update.
           var dto = toDto.call(self);
           dao.checkMethod('update');
-          dao.update(dto, function (err, dto) {
-            if (err) {
-              callback(err);
-            } else {
+          dao.update(conn, dto, function (err, dto) {
+            if (err)
+              cb(err);
+            else {
               fromDto.call(self, dto);
-              finish();
+              finish(conn, cb);
             }
           });
         } else {
           // Update children only.
-          finish();
-        }
-      } else
-        callback(null, self);
-    }
-
-    function data_remove (callback) {
-      // Helper callback for post-removal actions.
-      function cb (err) {
-        if (err) {
-          callback(err);
-        } else {
-          markAsRemoved();
-          callback(null, null);
+          finish(conn, cb);
         }
       }
       // Check permissions.
-      if (canDo(Action.removeObject)) {
-        // Remove children first.
-        removeChildren(function (err) {
-          if (err)
-            callback(err);
+      if (canDo(Action.updateObject))
+        main(connection, callback);
+      else
+        callback(null, self);
+    }
 
-          if (extensions.dataRemove) {
-            // Custom removal.
-            extensions.dataRemove.call(self, getDataContext(), cb);
-          } else {
-            // Standard removal.
-            var filter = properties.getKey(getPropertyValue);
-            dao.checkMethod('remove');
-            dao.remove(filter, cb);
+    function data_remove (connection, callback) {
+      // Helper callback for post-removal actions.
+      function finish (cb) {
+        markAsRemoved();
+        cb(null, null);
+      }
+      // Main activity.
+      function main (conn, cb) {
+        // Remove children first.
+        removeChildren(conn, function (err) {
+          if (err)
+            cb(err);
+          else {
+            // Execute removal.
+            if (extensions.dataRemove) {
+              // *** Custom removal.
+              extensions.dataRemove.call(self, getDataContext(conn), function (err) {
+                if (err)
+                  cb(err);
+                else
+                  finish(cb);
+              });
+            } else {
+              // *** Standard removal.
+              var filter = properties.getKey(getPropertyValue);
+              dao.checkMethod('remove');
+              dao.remove(conn, filter, function (err) {
+                if (err)
+                  cb(err);
+                else
+                  finish(cb);
+              });
+            }
           }
         });
-      } else
+      }
+      // Check permissions.
+      if (canDo(Action.removeObject))
+        main(connection, callback);
+      else
         callback(null);
     }
 
@@ -605,17 +658,17 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
       data_fetch(filter, method || 'fetch', callback);
     };
 
-    this.save = function(callback) {
+    this.save = function(connection, callback) {
       if (this.isValid()) {
         switch (state) {
           case MODEL_STATE.created:
-            data_insert(callback);
+            data_insert(connection, callback);
             break;
           case MODEL_STATE.changed:
-            data_update(callback);
+            data_update(connection, callback);
             break;
           case MODEL_STATE.markedForRemoval:
-            data_remove(callback);
+            data_remove(connection, callback);
             break;
           default:
             callback(null, this);

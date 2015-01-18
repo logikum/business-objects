@@ -7,33 +7,33 @@ var UserInfo = require('./user-info.js');
 
 /**
  * @classdesc
- *    Provides the context for custom data transfer objects.
+ *    Provides the context for custom model actions.
  * @description
  *    Creates a new data context object.
  *      </br></br>
  *    <i><b>Warning:</b> Data context objects are created in models internally.
  *    They are intended only to make publicly available the context
- *    for custom data transfer objects.</i>
+ *    for custom model actions.</i>
  *
  * @memberof bo.shared
  * @constructor
  * @param {object} dao - The data access object of the current model.
  * @param {bo.shared.UserInfo} user - The current user.
- * @param {boolean} isSelfDirty - Indicates whether the current model itself has been changed.
  * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
  * @param {function} getValue - A function that returns the current value of a property.
  * @param {function} setValue - A function that changes the current value of a property.
  *
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The dao argument must be an object.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The user must be an UserInfo object.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The isSelfDirty argument must be a Boolean value.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The properties must be an array
  *    of PropertyInfo objects, or a single PropertyInfo object or null.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The getValue argument must be a function.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The setValue argument must be a function.
  */
-function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
+function DataContext(dao, user, properties, getValue, setValue) {
   var self = this;
+  var isDirty = false;
+  var daConnection = null;
 
   /**
    * The data access object of the current model.
@@ -49,8 +49,6 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
    */
   this.user = ensureArgument.isOptionalType(user, UserInfo,
       'c_optType', 'DataContext', 'user');
-  var isDirty = ensureArgument.isMandatoryBoolean(isSelfDirty || false,
-      'c_manBoolean', 'DataContext', 'isSelfDirty');
   /**
    * Array of property definitions that may appear on the data transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
@@ -68,6 +66,18 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
    * @type {boolean}
    * @readonly
    */
+  Object.defineProperty(self, 'connection', {
+    get: function () {
+      return daConnection;
+    },
+    enumerable: true
+  });
+
+  /**
+   * Indicates whether the current model itself has been changed.
+   * @type {boolean}
+   * @readonly
+   */
   Object.defineProperty(self, 'isSelfDirty', {
     get: function () {
       return isDirty;
@@ -76,12 +86,14 @@ function DataContext(dao, user, isSelfDirty, properties, getValue, setValue) {
   });
 
   /**
-   * Sets whether the current model itself has been changed.
+   * Sets the current state of the model.
    *
-   * @param {boolean} isSelfDirty - Indicates whether the current model itself has been changed.
+   * @param {object} [connection] - The current connection for the data store.
+   * @param {boolean} [isSelfDirty] - Indicates whether the current model itself has been changed.
    * @returns {bo.shared.DataContext} The data context object itself.
    */
-  this.setSelfDirty = function (isSelfDirty) {
+  this.setState = function (connection, isSelfDirty) {
+    daConnection = connection || null;
     isDirty = isSelfDirty === true;
     return this;
   };

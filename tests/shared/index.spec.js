@@ -42,7 +42,7 @@ describe('Shared component index', function () {
     expect(new shared.ExtensionManagerSync('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManagerSync));
 
     expect(new shared.UserInfo('anonymous')).toEqual(jasmine.any(UserInfo));
-    expect(new shared.DataContext(dao, user, true, [], getValue, setValue)).toEqual(jasmine.any(DataContext));
+    expect(new shared.DataContext(dao, user, [], getValue, setValue)).toEqual(jasmine.any(DataContext));
     expect(new shared.TransferContext([], getValue, setValue)).toEqual(jasmine.any(TransferContext));
 
     expect(shared.configuration).toEqual(jasmine.any(Object));

@@ -53,7 +53,7 @@ var BlanketOrderViewDao = function () {
 };
 util.inherits(BlanketOrderViewDao, DaoBase);
 
-BlanketOrderViewDao.prototype.fetch = function (filter) {
+BlanketOrderViewDao.prototype.fetch = function (connection, filter) {
   console.log('--- Blanket order view DAO.fetch');
 
   var key = filter;
@@ -71,7 +71,7 @@ BlanketOrderViewDao.prototype.fetch = function (filter) {
   return order;
 };
 
-BlanketOrderViewDao.prototype.fetchByName = function (filter) {
+BlanketOrderViewDao.prototype.fetchByName = function (connection, filter) {
   console.log('--- Blanket order view DAO.fetchByName');
 
   for (var key in global.orders) {

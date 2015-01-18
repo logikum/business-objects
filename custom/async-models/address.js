@@ -94,7 +94,7 @@ function fromCto (ctx, dto) {
 //region Data portal methods
 
 function dataCreate (ctx, callback) {
-  ctx.dao.create(function (err, dto) {
+  ctx.dao.create(ctx.connection, function (err, dto) {
     if (err)
        callback(err);
     else {
@@ -131,7 +131,7 @@ function dataInsert (ctx, callback) {
     line2:      ctx.getValue('line2'),
     postalCode: ctx.getValue('postalCode')
   };
-  ctx.dao.insert(dto, function (err, dto) {
+  ctx.dao.insert(ctx.connection, dto, function (err, dto) {
     if (err)
       callback(err);
     else {
@@ -152,7 +152,7 @@ function dataUpdate (ctx, callback) {
       line2:      ctx.getValue('line2'),
       postalCode: ctx.getValue('postalCode')
     };
-    ctx.dao.update(dto, function (err, dto) {
+    ctx.dao.update(ctx.connection, dto, function (err, dto) {
       if (err)
         callback(err);
       else
@@ -163,7 +163,7 @@ function dataUpdate (ctx, callback) {
 
 function dataRemove (ctx, callback) {
   var primaryKey = ctx.getValue('addressKey');
-  ctx.dao.remove(primaryKey, function (err) {
+  ctx.dao.remove(ctx.connection, primaryKey, function (err) {
     if (err)
       callback(err);
     else

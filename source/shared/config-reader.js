@@ -6,6 +6,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var ConnectionManagerBase = require('../data-access/connection-manager-base.js');
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
 var configHelper = require('./config-helper.js');
@@ -35,6 +36,15 @@ for (var i = 0; i < options.length; i++) {
 // Test if configuration file was found.
 if (cfg) {
 
+  // Evaluate the connection manager.
+  if (cfg.connectionManager) {
+    var cmConstructor = configHelper.getFunction(cfg.connectionManager, 'connectionManager', ConfigurationError);
+    config.connectionManager = new cmConstructor();
+    if (!(config.connectionManager instanceof ConnectionManagerBase))
+      throw new ConfigurationError('wrongConMan');
+  } else
+    throw new ConfigurationError('noConMan');
+
   // Evaluate the data access object builder.
   if (cfg.daoBuilder) {
     config.daoBuilder = configHelper.getFunction(cfg.daoBuilder, 'daoBuilder', ConfigurationError);
@@ -43,13 +53,14 @@ if (cfg) {
   }
 
   // Evaluate the user information reader.
+  var fnUserReader = null;
   if (cfg.userReader) {
-    config.userReader = configHelper.getFunction(cfg.userReader, 'userReader', ConfigurationError);
+    fnUserReader = configHelper.getFunction(cfg.userReader, 'userReader', ConfigurationError);
   }
   config.getUser = function () {
     var user = null;
-    if (config.userReader) {
-      user = config.userReader();
+    if (fnUserReader) {
+      user = fnUserReader();
       if (user === undefined)
         user = null;
       else if (user !== null && !(user instanceof UserInfo) && user.super_ !== UserInfo)
@@ -58,11 +69,9 @@ if (cfg) {
     return user;
   };
 
-  // Evaluate the unauthorized behavior.
-  if (cfg.noAccessBehavior !== undefined && cfg.noAccessBehavior !== null) {
-    config.noAccessBehavior = configHelper.isEnumMember(
-        cfg.noAccessBehavior, NoAccessBehavior, 'noAccessBehavior', ConfigurationError
-    );
+  // Evaluate the locale reader.
+  if (cfg.localeReader) {
+    config.localeReader = configHelper.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
   }
 
   // Evaluate the path of locale.
@@ -70,9 +79,11 @@ if (cfg) {
     config.pathOfLocales = configHelper.getDirectory(cfg.pathOfLocales, 'pathOfLocales', ConfigurationError);
   }
 
-  // Evaluate the locale reader.
-  if (cfg.localeReader) {
-    config.localeReader = configHelper.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
+  // Evaluate the unauthorized behavior.
+  if (cfg.noAccessBehavior !== undefined && cfg.noAccessBehavior !== null) {
+    config.noAccessBehavior = configHelper.isEnumMember(
+        cfg.noAccessBehavior, NoAccessBehavior, 'noAccessBehavior', ConfigurationError
+    );
   }
 }
 

@@ -103,10 +103,10 @@ var EditableChildCollectionSyncCreator = function(name, itemType) {
       });
     };
 
-    this.save = function () {
+    this.save = function (connection) {
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
-        item = item.save();
+        item = item.save(connection);
       }
       items = items.filter(function (item) {
         return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);

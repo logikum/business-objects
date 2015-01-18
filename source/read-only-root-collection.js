@@ -89,50 +89,84 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(dao, user);
-      return dataContext;
+      return dataContext.setState(connection, false);
+    }
+
+    function runStatements (main, callback) {
+      // Open connection.
+      config.connectionManager.openConnection(
+          extensions.dataSource, function (errOpen, connection) {
+            if (errOpen)
+              callback(errOpen);
+            else
+              main(connection, function (err, result) {
+                // Close connection.
+                config.connectionManager.closeConnection(
+                    extensions.dataSource, connection, function (errClose, connClosed) {
+                      connection = connClosed;
+                      if (err)
+                        callback(err);
+                      else if (errClose)
+                        callback(errClose);
+                      else
+                        callback(null, result);
+                    });
+              });
+          });
     }
 
     function data_fetch (filter, method, callback) {
       // Helper function for post-fetch actions.
-      function finish (err, data) {
-        if (err)
-          callback(err);
-        else {
-          // Load children.
-          if (data instanceof Array && data.length) {
-            data.forEach(function (dto) {
-              var count = 0;
-              var error = null;
-              itemType.load(self, dto, function (err, item) {
-                if (err)
-                  error = error || err;
-                else
-                  items.push(item);
-                // Check if all items are done.
-                if (++count === data.length) {
-                  callback(error);
-                }
-              });
+      function finish (data, cb) {
+        // Load children.
+        if (data instanceof Array && data.length) {
+          data.forEach(function (dto) {
+            var count = 0;
+            var error = null;
+            itemType.load(self, dto, function (err, item) {
+              if (err)
+                error = error || err;
+              else
+                items.push(item);
+              // Check if all items are done.
+              if (++count === data.length) {
+                cb(error, self);
+              }
             });
-          } else
-            callback(null, self);
+          });
+        } else
+          cb(null, self);
+      }
+      // Main activity.
+      function main (connection, cb) {
+        // Execute fetch.
+        if (extensions.dataFetch) {
+          // *** Custom fetch.
+          extensions.dataFetch.call(self, getDataContext(connection), filter, method, function (err, dto) {
+            if (err)
+              cb(err);
+            else
+              finish(dto, cb);
+          });
+        } else {
+          // *** Standard fetch.
+          // Root element fetches data from repository.
+          dao.checkMethod(method);
+          dao[method](connection, filter, function (err, dto) {
+            if (err)
+              cb(err);
+            else
+              finish(dto, cb);
+          });
         }
       }
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
-        if (extensions.dataFetch) {
-          // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), filter, method, finish);
-        } else {
-          // Standard fetch.
-          // Root element fetches data from repository.
-          dao.checkMethod(method);
-          dao[method](filter, finish);
-        }
-      } else
+      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method))
+        runStatements(main, callback);
+      else
         callback(null, self);
     }
 

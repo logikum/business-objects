@@ -89,7 +89,7 @@ function fromCto (ctx, dto) {
 //region Data portal methods
 
 function dataCreate (ctx) {
-  var dto = ctx.dao.create();
+  var dto = ctx.dao.create(ctx.connection);
   ctx.setValue('quantity',  dto.quantity);
   ctx.setValue('totalMass', dto.totalMass);
   ctx.setValue('required',  dto.required);
@@ -117,7 +117,7 @@ function dataInsert (ctx) {
     shipTo:       ctx.getValue('shipTo'),
     shipDate:     ctx.getValue('shipDate')
   };
-  dto = ctx.dao.insert(dto);
+  dto = ctx.dao.insert(ctx.connection, dto);
   ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
 }
 
@@ -131,13 +131,13 @@ function dataUpdate (ctx) {
       shipTo:           ctx.getValue('shipTo'),
       shipDate:         ctx.getValue('shipDate')
     };
-    dto = ctx.dao.update(dto);
+    dto = ctx.dao.update(ctx.connection, dto);
   }
 }
 
 function dataRemove (ctx) {
   var primaryKey = ctx.getValue('orderScheduleKey');
-  ctx.dao.remove(primaryKey);
+  ctx.dao.remove(ctx.connection, primaryKey);
 }
 
 //endregion

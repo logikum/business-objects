@@ -36,6 +36,7 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
     var dao = null;
     var user = null;
     var dataContext = null;
+    var connection = null;
 
     this.name = name;
 
@@ -89,31 +90,39 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(dao, user);
-      return dataContext;
+      return dataContext.setState(connection, false);
     }
 
     function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
-        var dto = null;
-        if (extensions.dataFetch) {
-          // Custom fetch.
-          dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
-        } else {
-          // Standard fetch.
-          // Root element fetches data from repository.
-          dao.checkMethod(method);
-          dto = dao[method](filter);
-        }
-        // Load children.
-        if (dto instanceof Array) {
-          dto.forEach(function (data) {
-            var item = itemType.load(self, data);
-            items.push(item);
-          });
+        try {
+          // Open connection.
+          connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Execute fetch.
+          var dto = null;
+          if (extensions.dataFetch) {
+            // *** Custom fetch.
+            dto = extensions.dataFetch.call(self, getDataContext(connection), filter, method);
+          } else {
+            // *** Standard fetch.
+            // Root element fetches data from repository.
+            dao.checkMethod(method);
+            dto = dao[method](connection, filter);
+          }
+          // Load children.
+          if (dto instanceof Array) {
+            dto.forEach(function (data) {
+              var item = itemType.load(self, data);
+              items.push(item);
+            });
+          }
+        } finally {
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         }
       }
     }

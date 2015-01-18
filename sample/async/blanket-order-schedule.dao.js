@@ -8,13 +8,13 @@ var BlanketOrderScheduleDao = function() {
 };
 util.inherits(BlanketOrderScheduleDao, DaoBase);
 
-BlanketOrderScheduleDao.prototype.create = function(callback) {
+BlanketOrderScheduleDao.prototype.create = function(connection, callback) {
   console.log('--- Blanket order schedule DAO.create');
 
   callback(null, {});
 };
 
-BlanketOrderScheduleDao.prototype.fetch = function(filter, callback) {
+BlanketOrderScheduleDao.prototype.fetch = function(connection, filter, callback) {
   console.log('--- Blanket order schedule DAO.fetch');
 
   if (!global.schedules[filter])
@@ -23,7 +23,7 @@ BlanketOrderScheduleDao.prototype.fetch = function(filter, callback) {
     callback(null, global.schedules[filter]);
 };
 
-BlanketOrderScheduleDao.prototype.fetchForItem = function(filter, callback) {
+BlanketOrderScheduleDao.prototype.fetchForItem = function(connection, filter, callback) {
   console.log('--- Blanket order schedule DAO.fetchForItem');
 
   var schedules = [];
@@ -37,7 +37,7 @@ BlanketOrderScheduleDao.prototype.fetchForItem = function(filter, callback) {
   callback(null, schedules);
 };
 
-BlanketOrderScheduleDao.prototype.insert = function(data, callback) {
+BlanketOrderScheduleDao.prototype.insert = function(connection, data, callback) {
   console.log('--- Blanket order schedule DAO.insert');
 
   data.orderScheduleKey = ++global.scheduleKey;
@@ -45,7 +45,7 @@ BlanketOrderScheduleDao.prototype.insert = function(data, callback) {
   callback(null, data);
 };
 
-BlanketOrderScheduleDao.prototype.update = function(data, callback) {
+BlanketOrderScheduleDao.prototype.update = function(connection, data, callback) {
   console.log('--- Blanket order schedule DAO.update');
 
   if (!global.schedules[data.orderScheduleKey])
@@ -56,7 +56,7 @@ BlanketOrderScheduleDao.prototype.update = function(data, callback) {
   }
 };
 
-BlanketOrderScheduleDao.prototype.remove = function(filter, callback) {
+BlanketOrderScheduleDao.prototype.remove = function(connection, filter, callback) {
   console.log('--- Blanket order schedule DAO.remove');
 
   if (global.schedules[filter])

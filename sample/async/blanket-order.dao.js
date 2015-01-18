@@ -16,13 +16,13 @@ var BlanketOrderDao = function() {
 };
 util.inherits(BlanketOrderDao, DaoBase);
 
-BlanketOrderDao.prototype.create = function(callback) {
+BlanketOrderDao.prototype.create = function(connection, callback) {
   console.log('--- Blanket order DAO.create');
 
   callback(null, {});
 };
 
-BlanketOrderDao.prototype.fetch = function(filter, callback) {
+BlanketOrderDao.prototype.fetch = function(connection, filter, callback) {
   console.log('--- Blanket order DAO.fetch');
 
   var key = filter;
@@ -32,14 +32,14 @@ BlanketOrderDao.prototype.fetch = function(filter, callback) {
   }
 
   var order = global.orders[key];
-  daoAddress.fetch(order.orderKey, function (err, address) {
+  daoAddress.fetch(connection, order.orderKey, function (err, address) {
     if (err) {
       callback(err);
       return;
     }
     order.address = address;
 
-    daoOrderItem.fetchForOrder(order.orderKey, function (err, items) {
+    daoOrderItem.fetchForOrder(connection, order.orderKey, function (err, items) {
       if (err) {
         callback(err);
         return;
@@ -49,7 +49,7 @@ BlanketOrderDao.prototype.fetch = function(filter, callback) {
       var count = 0;
       for (var i = 0; i < order.items.length; i++) {
         var item = order.items[i];
-        daoOrderSchedule.fetchForItem(item.orderItemKey, function (err, schedules) {
+        daoOrderSchedule.fetchForItem(connection, item.orderItemKey, function (err, schedules) {
           if (err) {
             callback(err);
             return;
@@ -64,7 +64,7 @@ BlanketOrderDao.prototype.fetch = function(filter, callback) {
   });
 };
 
-BlanketOrderDao.prototype.fetchByName = function(filter, callback) {
+BlanketOrderDao.prototype.fetchByName = function(connection, filter, callback) {
   console.log('--- Blanket order DAO.fetchByName');
 
   var found = false;
@@ -74,14 +74,14 @@ BlanketOrderDao.prototype.fetchByName = function(filter, callback) {
       if (order.vendorName === filter) {
         found = true;
 
-        daoAddress.fetch(order.orderKey, function (err, address) {
+        daoAddress.fetch(connection, order.orderKey, function (err, address) {
           if (err) {
             callback(err);
             return;
           }
           order.address = address;
 
-          daoOrderItem.fetchForOrder(order.orderKey, function (err, items) {
+          daoOrderItem.fetchForOrder(connection, order.orderKey, function (err, items) {
             if (err) {
               callback(err);
               return;
@@ -91,7 +91,7 @@ BlanketOrderDao.prototype.fetchByName = function(filter, callback) {
             var count = 0;
             for (var i = 0; i < order.items.length; i++) {
               var item = order.items[i];
-              daoOrderSchedule.fetchForItem(item.orderItemKey, function (err, schedules) {
+              daoOrderSchedule.fetchForItem(connection, item.orderItemKey, function (err, schedules) {
                 if (err) {
                   callback(err);
                   return;
@@ -112,7 +112,7 @@ BlanketOrderDao.prototype.fetchByName = function(filter, callback) {
     callback(new Error('Blanket order not found.'));
 };
 
-BlanketOrderDao.prototype.insert = function(data, callback) {
+BlanketOrderDao.prototype.insert = function(connection, data, callback) {
   console.log('--- Blanket order DAO.insert');
 
   data.orderKey = ++global.orderKey;
@@ -122,7 +122,7 @@ BlanketOrderDao.prototype.insert = function(data, callback) {
   callback(null, data);
 };
 
-BlanketOrderDao.prototype.update = function(data, callback) {
+BlanketOrderDao.prototype.update = function(connection, data, callback) {
   console.log('--- Blanket order DAO.update');
 
   var key = data.orderKey;
@@ -135,7 +135,7 @@ BlanketOrderDao.prototype.update = function(data, callback) {
   }
 };
 
-BlanketOrderDao.prototype.remove = function(filter, callback) {
+BlanketOrderDao.prototype.remove = function(connection, filter, callback) {
   console.log('--- Blanket order DAO.remove');
 
   var key = filter;

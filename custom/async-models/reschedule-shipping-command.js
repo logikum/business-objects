@@ -51,11 +51,11 @@ function dataExecute (ctx, method, callback) {
     orderScheduleKey: ctx.getValue('orderScheduleKey')
   };
   if (method === 'reschedule')
-    ctx.dao.reschedule(dto, cb);
+    ctx.dao.reschedule(ctx.connection, dto, cb);
   else
-    dto = ctx.dao.execute(dto, cb);
+    dto = ctx.dao.execute(ctx.connection, dto, cb);
   // or:
-  // ctx.dao[method](dto, cb);
+  // ctx.dao[method](ctx.connection, dto, cb);
 }
 
 //endregion

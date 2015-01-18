@@ -8,13 +8,13 @@ var AddressDao = function() {
 };
 util.inherits(AddressDao, DaoBase);
 
-AddressDao.prototype.create = function(callback) {
+AddressDao.prototype.create = function(connection, callback) {
   console.log('--- Blanket order address DAO.create');
 
   callback(null, {});
 };
 
-AddressDao.prototype.fetch = function(filter, callback) {
+AddressDao.prototype.fetch = function(connection, filter, callback) {
   console.log('--- Blanket order address DAO.fetch');
 
   for (var key in global.addresses) {
@@ -29,7 +29,7 @@ AddressDao.prototype.fetch = function(filter, callback) {
   callback(null, {});
 };
 
-AddressDao.prototype.insert = function(data, callback) {
+AddressDao.prototype.insert = function(connection, data, callback) {
   console.log('--- Blanket order address DAO.insert');
 
   data.addressKey = ++global.addressKey;
@@ -38,7 +38,7 @@ AddressDao.prototype.insert = function(data, callback) {
   callback(null, data);
 };
 
-AddressDao.prototype.update = function(data, callback) {
+AddressDao.prototype.update = function(connection, data, callback) {
   console.log('--- Blanket order address DAO.update');
 
   var key = data.addressKey;
@@ -50,7 +50,7 @@ AddressDao.prototype.update = function(data, callback) {
   }
 };
 
-AddressDao.prototype.remove = function(filter, callback) {
+AddressDao.prototype.remove = function(connection, filter, callback) {
   console.log('--- Blanket order address DAO.remove');
 
   var key = filter;

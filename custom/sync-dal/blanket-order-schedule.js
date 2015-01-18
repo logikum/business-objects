@@ -8,7 +8,7 @@ var BlanketOrderScheduleDao = function() {
 };
 util.inherits(BlanketOrderScheduleDao, DaoBase);
 
-BlanketOrderScheduleDao.prototype.create = function() {
+BlanketOrderScheduleDao.prototype.create = function(connection) {
   console.log('--- Blanket order schedule DAO.create');
 
   return {
@@ -20,7 +20,7 @@ BlanketOrderScheduleDao.prototype.create = function() {
   };
 };
 
-BlanketOrderScheduleDao.prototype.fetch = function(filter) {
+BlanketOrderScheduleDao.prototype.fetch = function(connection, filter) {
   console.log('--- Blanket order schedule DAO.fetch');
 
   if (!global.schedules[filter])
@@ -28,7 +28,7 @@ BlanketOrderScheduleDao.prototype.fetch = function(filter) {
   return global.schedules[filter];
 };
 
-BlanketOrderScheduleDao.prototype.fetchForItem = function(filter) {
+BlanketOrderScheduleDao.prototype.fetchForItem = function(connection, filter) {
   console.log('--- Blanket order schedule DAO.fetchForItem');
 
   var schedules = [];
@@ -42,7 +42,7 @@ BlanketOrderScheduleDao.prototype.fetchForItem = function(filter) {
   return schedules;
 };
 
-BlanketOrderScheduleDao.prototype.insert = function(data) {
+BlanketOrderScheduleDao.prototype.insert = function(connection, data) {
   console.log('--- Blanket order schedule DAO.insert');
 
   data.orderScheduleKey = ++global.scheduleKey;
@@ -50,7 +50,7 @@ BlanketOrderScheduleDao.prototype.insert = function(data) {
   return data;
 };
 
-BlanketOrderScheduleDao.prototype.update = function(data) {
+BlanketOrderScheduleDao.prototype.update = function(connection, data) {
   console.log('--- Blanket order schedule DAO.update');
 
   if (!global.schedules[data.orderScheduleKey])
@@ -59,7 +59,7 @@ BlanketOrderScheduleDao.prototype.update = function(data) {
   return data;
 };
 
-BlanketOrderScheduleDao.prototype.remove = function(filter) {
+BlanketOrderScheduleDao.prototype.remove = function(connection, filter) {
   console.log('--- Blanket order schedule DAO.remove');
 
   if (global.schedules[filter])

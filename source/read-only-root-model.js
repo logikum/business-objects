@@ -161,49 +161,77 @@ var ReadOnlyRootModelCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(
-          dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+          dao, user, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext;
+      return dataContext.setState(connection, false);
+    }
+
+    function runStatements (main, callback) {
+      // Open connection.
+      config.connectionManager.openConnection(
+          extensions.dataSource, function (errOpen, connection) {
+            if (errOpen)
+              callback(errOpen);
+            else
+              main(connection, function (err, result) {
+                // Close connection.
+                config.connectionManager.closeConnection(
+                    extensions.dataSource, connection, function (errClose, connClosed) {
+                      connection = connClosed;
+                      if (err)
+                        callback(err);
+                      else if (errClose)
+                        callback(errClose);
+                      else
+                        callback(null, result);
+                    });
+              });
+          });
     }
 
     function data_fetch (filter, method, callback) {
       // Helper function for post-fetch actions.
-      function finish (dto) {
+      function finish (dto, cb) {
         // Fetch children as well.
         fetchChildren(dto, function (err) {
           if (err)
-            callback(err);
+            cb(err);
           else
-            callback(null, self);
+            cb(null, self);
         });
       }
-      // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
+      // Main activity.
+      function main (connection, cb) {
+        // Execute fetch.
         if (extensions.dataFetch) {
-          // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
+          // *** Custom fetch.
+          extensions.dataFetch.call(self, getDataContext(connection), filter, method, function (err, dto) {
             if (err)
-              callback(err);
+              cb(err);
             else
-              finish(dto);
+              finish(dto, cb);
           });
         } else {
-          // Standard fetch.
+          // *** Standard fetch.
           // Root element fetches data from repository.
           dao.checkMethod(method);
-          dao[method](filter, function (err, dto) {
-            if (err) {
-              callback(err);
-            } else {
+          dao[method](connection, filter, function (err, dto) {
+            if (err)
+              cb(err);
+            else {
               fromDto.call(self, dto);
-              finish(dto);
+              finish(dto, cb);
             }
           });
         }
-      } else
+      }
+      // Check permissions.
+      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method))
+        runStatements(main, callback);
+      else
         callback(null, self);
     }
 

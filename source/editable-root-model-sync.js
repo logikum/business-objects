@@ -47,6 +47,7 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
     var dao = null;
     var user = null;
     var dataContext = null;
+    var connection = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -335,24 +336,24 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
       });
     }
 
-    function insertChildren() {
+    function insertChildren(connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
-        child.save();
+        child.save(connection);
       });
     }
 
-    function updateChildren() {
+    function updateChildren(connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
-        child.save();
+        child.save(connection);
       });
     }
 
-    function removeChildren() {
+    function removeChildren(connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
-        child.save();
+        child.save(connection);
       });
     }
 
@@ -360,100 +361,146 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(
-            dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+            dao, user, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setSelfDirty(isDirty);
+      return dataContext.setState(connection, isDirty);
     }
 
     function data_create () {
-      if (extensions.dataCreate) {
-        // Custom create.
-        extensions.dataCreate.call(self, getDataContext());
-      } else {
-        // Standard create.
-        dao.checkMethod('create');
-        var dto = dao.create();
-        fromDto.call(self, dto);
+      try {
+        // Open connection.
+        connection = config.connectionManager.openConnection(extensions.dataSource);
+        // Execute creation.
+        if (extensions.dataCreate) {
+          // *** Custom creation.
+          extensions.dataCreate.call(self, getDataContext(connection));
+        } else {
+          // *** Standard creation.
+          dao.checkMethod('create');
+          var dto = dao.create(connection);
+          fromDto.call(self, dto);
+        }
+        markAsCreated();
+      } finally {
+        // Close connection.
+        connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
       }
-      markAsCreated();
     }
 
     function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
-        var dto = null;
-        if (extensions.dataFetch) {
-          // Custom fetch.
-          dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
-        } else {
-          // Standard fetch.
-          // Root element fetches data from repository.
-          dao.checkMethod(method);
-          dto = dao[method](filter);
-          fromDto.call(self, dto);
+        try {
+          // Open connection.
+          connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Execute fetch.
+          var dto = null;
+          if (extensions.dataFetch) {
+            // *** Custom fetch.
+            dto = extensions.dataFetch.call(self, getDataContext(connection), filter, method);
+          } else {
+            // *** Standard fetch.
+            // Root element fetches data from repository.
+            dao.checkMethod(method);
+            dto = dao[method](connection, filter);
+            fromDto.call(self, dto);
+          }
+          // Fetch children as well.
+          fetchChildren(dto);
+          markAsPristine();
+        } finally {
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         }
-        // Fetch children as well.
-        fetchChildren(dto);
-        markAsPristine();
       }
     }
 
     function data_insert () {
       // Check permissions.
       if (canDo(Action.createObject)) {
-        if (extensions.dataInsert) {
-          // Custom insert.
-          extensions.dataInsert.call(self, getDataContext());
-        } else {
-          // Standard insert.
-          var dto = toDto.call(self);
-          dao.checkMethod('insert');
-          dto = dao.insert(dto);
-          fromDto.call(self, dto);
+        try {
+          // Start transaction.
+          connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Execute insert.
+          if (extensions.dataInsert) {
+            // *** Custom insert.
+            extensions.dataInsert.call(self, getDataContext(connection));
+          } else {
+            // *** Standard insert.
+            var dto = toDto.call(self);
+            dao.checkMethod('insert');
+            dto = dao.insert(connection, dto);
+            fromDto.call(self, dto);
+          }
+          // Insert children as well.
+          insertChildren(connection);
+          markAsPristine();
+          // Finish transaction.
+          connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
+        } catch (e) {
+          // Undo transaction.
+          connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
         }
-        // Insert children as well.
-        insertChildren();
-        markAsPristine();
       }
     }
 
     function data_update () {
       // Check permissions.
       if (canDo(Action.updateObject)) {
-        if (extensions.dataUpdate) {
-          // Custom update.
-          extensions.dataUpdate.call(self, getDataContext());
-        } else if (isDirty) {
-          // Standard update.
-          var dto = toDto.call(self);
-          dao.checkMethod('update');
-          dto = dao.update(dto);
-          fromDto.call(self, dto);
+        try {
+          // Start transaction.
+          connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Execute update.
+          if (extensions.dataUpdate) {
+            // *** Custom update.
+            extensions.dataUpdate.call(self, getDataContext(connection));
+          } else if (isDirty) {
+            // *** Standard update.
+            var dto = toDto.call(self);
+            dao.checkMethod('update');
+            dto = dao.update(connection, dto);
+            fromDto.call(self, dto);
+          }
+          // Update children as well.
+          updateChildren(connection);
+          markAsPristine();
+          // Finish transaction.
+          connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
+        } catch (e) {
+          // Undo transaction.
+          connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
         }
-        // Update children as well.
-        updateChildren();
-        markAsPristine();
       }
     }
 
     function data_remove () {
       // Check permissions.
       if (canDo(Action.removeObject)) {
-        // Remove children first.
-        removeChildren();
-        if (extensions.dataRemove) {
-          // Custom removal.
-          extensions.dataRemove.call(self, getDataContext());
-        } else {
-          // Standard removal.
-          var filter = properties.getKey(getPropertyValue);
-          dao.checkMethod('remove');
-          dao.remove(filter);
+        try {
+          // Start transaction.
+          connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Remove children first.
+          removeChildren(connection);
+          // Execute removal.
+          if (extensions.dataRemove) {
+            // Custom removal.
+            extensions.dataRemove.call(self, getDataContext(connection));
+          } else {
+            // Standard removal.
+            var filter = properties.getKey(getPropertyValue);
+            dao.checkMethod('remove');
+            dao.remove(connection, filter);
+          }
+          markAsRemoved();
+          // Finish transaction.
+          connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
+        } catch (e) {
+          // Undo transaction.
+          connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
         }
-        markAsRemoved();
       }
     }
 

@@ -43,6 +43,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
     var dao = null;
     var user = null;
     var dataContext = null;
+    var connection = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -143,30 +144,40 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(
-          dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+          dao, user, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setSelfDirty(false);
+      return dataContext.setState(connection, false);
     }
 
     function data_execute (method) {
       // Check permissions.
       if (method === 'execute' ? canDo(Action.executeCommand) : canExecute(method)) {
-        var dto = {};
-        if (extensions.dataExecute) {
-          // Custom execute.
-          dto = extensions.dataExecute.call(self, getDataContext(), method);
-        } else {
-          // Standard execute.
-          dto = toDto.call(self);
-          dao.checkMethod(method);
-          dto = dao[method](dto);
-          fromDto.call(self, dto);
+        try {
+          // Start transaction.
+          connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Execute command.
+          var dto = {};
+          if (extensions.dataExecute) {
+            // *** Custom execute.
+            dto = extensions.dataExecute.call(self, getDataContext(connection), method);
+          } else {
+            // *** Standard execute.
+            dto = toDto.call(self);
+            dao.checkMethod(method);
+            dto = dao[method](connection, dto);
+            fromDto.call(self, dto);
+          }
+          // Load children as well.
+          loadChildren(dto);
+          // Finish transaction.
+          connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
+        } catch (e) {
+          // Undo transaction.
+          connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
         }
-        // Load children as well.
-        loadChildren(dto);
       }
     }
 

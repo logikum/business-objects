@@ -88,7 +88,9 @@
     "directory": "The value of {0} property of business objects' configuration is not a valid directory path: {1}",
     "function": "The file defined by the {0} property of business objects' configuration must return a function: {1}",
     "enumMember": "The value of {0} property of business objects' configuration must be a {1} item.",
-    "userInfo": "The function defined by the userReader property of business objects' configuration must return a UserInfo object."
+    "userInfo": "The function defined by the userReader property of business objects' configuration must return a UserInfo object.",
+    "noConMan": "The connection manager is required.",
+    "wrongConMan": "The connection manager must inherit ConnectionManagerBase type."
   },
   "I18nError": {
     "default": "An error occurred in the business objects' localization.",

@@ -160,9 +160,9 @@ var ReadOnlyChildModelCreator = function(properties, rules, extensions) {
     function getDataContext() {
       if (!dataContext)
         dataContext = new DataContext(
-          null, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+          null, user, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext;
+      return dataContext.setState(null, false);
     }
 
     function data_fetch (filter, method, callback) {

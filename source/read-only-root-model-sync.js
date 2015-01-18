@@ -42,6 +42,7 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
     var dao = null;
     var user = null;
     var dataContext = null;
+    var connection = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -145,30 +146,38 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(
-            dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+            dao, user, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext;
+      return dataContext.setState(connection, false);
     }
 
     function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
-        var dto = null;
-        if (extensions.dataFetch) {
-          // Custom fetch.
-          dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
-        } else {
-          // Standard fetch.
-          // Root element fetches data from repository.
-          dao.checkMethod(method);
-          dto = dao[method](filter);
-          fromDto.call(self, dto);
+        try {
+          // Open connection.
+          connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Execute fetch.
+          var dto = null;
+          if (extensions.dataFetch) {
+            // *** Custom fetch.
+            dto = extensions.dataFetch.call(self, getDataContext(connection), filter, method);
+          } else {
+            // *** Standard fetch.
+            // Root element fetches data from repository.
+            dao.checkMethod(method);
+            dto = dao[method](connection, filter);
+            fromDto.call(self, dto);
+          }
+          // Fetch children as well.
+          fetchChildren(dto);
+        } finally {
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         }
-        // Fetch children as well.
-        fetchChildren(dto);
       }
     }
 

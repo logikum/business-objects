@@ -350,24 +350,24 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
       });
     }
 
-    function insertChildren() {
+    function insertChildren(connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
-        child.save();
+        child.save(connection);
       });
     }
 
-    function updateChildren() {
+    function updateChildren(connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
-        child.save();
+        child.save(connection);
       });
     }
 
-    function removeChildren() {
+    function removeChildren(connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
-        child.save();
+        child.save(connection);
       });
     }
 
@@ -375,36 +375,46 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext(connection) {
       if (!dataContext)
         dataContext = new DataContext(
-            dao, user, false, properties.toArray(), getPropertyValue, setPropertyValue
+            dao, user, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setSelfDirty(isDirty);
+      return dataContext.setState(connection, isDirty);
     }
 
     function data_create () {
-      if (extensions.dataCreate) {
-        // Custom create.
-        extensions.dataCreate.call(self, getDataContext());
-      } else {
-        // Standard create.
-        dao.checkMethod('create');
-        var dto = dao.create();
-        fromDto.call(self, dto);
+      var connection = null;
+      try {
+        // Open connection.
+        connection = config.connectionManager.openConnection(extensions.dataSource);
+        // Execute creation.
+        if (extensions.dataCreate) {
+          // *** Custom creation.
+          extensions.dataCreate.call(self, getDataContext(connection));
+        } else {
+          // *** Standard creation.
+          dao.checkMethod('create');
+          var dto = dao.create(connection);
+          fromDto.call(self, dto);
+        }
+        markAsCreated();
+      } finally {
+        // Close connection.
+        connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
       }
-      markAsCreated();
     }
 
     function data_fetch (filter, method) {
       // Check permissions.
       if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
+        // Execute fetch.
         var dto = null;
         if (extensions.dataFetch) {
-          // Custom fetch.
-          dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
+          // *** Custom fetch.
+          dto = extensions.dataFetch.call(self, getDataContext(null), filter, method);
         } else {
-          // Standard fetch.
+          // *** Standard fetch.
           // Child element gets data from parent.
           dto = filter;
           fromDto.call(self, dto);
@@ -415,7 +425,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
       }
     }
 
-    function data_insert () {
+    function data_insert (connection) {
       // Check permissions.
       if (canDo(Action.createObject)) {
         // Copy the values of parent keys.
@@ -428,55 +438,57 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
           if (parentValue !== undefined)
             setPropertyValue(referenceProperty, parentValue);
         }
-        // End of copy.
+        // Execute insert.
         if (extensions.dataInsert) {
-          // Custom insert.
-          extensions.dataInsert.call(self, getDataContext());
+          // *** Custom insert.
+          extensions.dataInsert.call(self, getDataContext(connection));
         } else {
-          // Standard insert.
+          // *** Standard insert.
           var dto = toDto.call(self);
           dao.checkMethod('insert');
-          dto = dao.insert(dto);
+          dto = dao.insert(connection, dto);
           fromDto.call(self, dto);
         }
         // Insert children as well.
-        insertChildren();
+        insertChildren(connection);
         markAsPristine();
       }
     }
 
-    function data_update () {
+    function data_update (connection) {
       // Check permissions.
       if (canDo(Action.updateObject)) {
+        // Execute update.
         if (extensions.dataUpdate) {
-          // Custom update.
-          extensions.dataUpdate.call(self, getDataContext());
+          // *** Custom update.
+          extensions.dataUpdate.call(self, getDataContext(connection));
         } else if (isDirty) {
-          // Standard update.
+          // *** Standard update.
           var dto = toDto.call(self);
           dao.checkMethod('update');
-          dto = dao.update(dto);
+          dto = dao.update(connection, dto);
           fromDto.call(self, dto);
         }
         // Update children as well.
-        updateChildren();
+        updateChildren(connection);
         markAsPristine();
       }
     }
 
-    function data_remove () {
+    function data_remove (connection) {
       // Check permissions.
       if (canDo(Action.removeObject)) {
         // Remove children first.
-        removeChildren();
+        removeChildren(connection);
+        // Execute delete.
         if (extensions.dataRemove) {
-          // Custom removal.
-          extensions.dataRemove.call(self, getDataContext());
+          // *** Custom removal.
+          extensions.dataRemove.call(self, getDataContext(connection));
         } else {
-          // Standard removal.
+          // *** Standard removal.
           var filter = properties.getKey(getPropertyValue);
           dao.checkMethod('remove');
-          dao.remove(filter);
+          dao.remove(connection, filter);
         }
         markAsRemoved();
       }
@@ -494,17 +506,17 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
       data_fetch(filter, method || 'fetch');
     };
 
-    this.save = function() {
+    this.save = function(connection) {
       if (this.isValid()) {
         switch (state) {
           case MODEL_STATE.created:
-            data_insert();
+            data_insert(connection);
             return this;
           case MODEL_STATE.changed:
-            data_update();
+            data_update(connection);
             return this;
           case MODEL_STATE.markedForRemoval:
-            data_remove();
+            data_remove(connection);
             return null;
           default:
             return this;
