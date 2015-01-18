@@ -451,8 +451,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
           });
         } else {
           // *** Standard creation.
-          dao.checkMethod('create');
-          dao.create(connection, function (err, dto) {
+          dao.$runMethod('create', connection, function (err, dto) {
             if (err)
               cb(err);
             else {
@@ -526,8 +525,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
         } else {
           // *** Standard insert.
           var dto = toDto.call(self);
-          dao.checkMethod('insert');
-          dao.insert(conn, dto, function (err, dto) {
+          dao.$runMethod('insert', conn, dto, function (err, dto) {
             if (err)
               cb(err);
             else {
@@ -582,8 +580,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
         } else if (isDirty) {
           // *** Standard update.
           var dto = toDto.call(self);
-          dao.checkMethod('update');
-          dao.update(conn, dto, function (err, dto) {
+          dao.$runMethod('update', conn, dto, function (err, dto) {
             if (err)
               cb(err);
             else {
@@ -628,8 +625,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
             } else {
               // *** Standard removal.
               var filter = properties.getKey(getPropertyValue);
-              dao.checkMethod('remove');
-              dao.remove(conn, filter, function (err) {
+              dao.$runMethod('remove', conn, filter, function (err) {
                 if (err)
                   cb(err);
                 else

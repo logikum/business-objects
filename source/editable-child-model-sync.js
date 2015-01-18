@@ -394,8 +394,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
           extensions.dataCreate.call(self, getDataContext(connection));
         } else {
           // *** Standard creation.
-          dao.checkMethod('create');
-          var dto = dao.create(connection);
+          var dto = dao.$runMethod('create', connection);
           fromDto.call(self, dto);
         }
         markAsCreated();
@@ -445,8 +444,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
         } else {
           // *** Standard insert.
           var dto = toDto.call(self);
-          dao.checkMethod('insert');
-          dto = dao.insert(connection, dto);
+          dto = dao.$runMethod('insert', connection, dto);
           fromDto.call(self, dto);
         }
         // Insert children as well.
@@ -465,8 +463,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
         } else if (isDirty) {
           // *** Standard update.
           var dto = toDto.call(self);
-          dao.checkMethod('update');
-          dto = dao.update(connection, dto);
+          dto = dao.$runMethod('update', connection, dto);
           fromDto.call(self, dto);
         }
         // Update children as well.
@@ -487,8 +484,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
         } else {
           // *** Standard removal.
           var filter = properties.getKey(getPropertyValue);
-          dao.checkMethod('remove');
-          dao.remove(connection, filter);
+          dao.$runMethod('remove', connection, filter);
         }
         markAsRemoved();
       }

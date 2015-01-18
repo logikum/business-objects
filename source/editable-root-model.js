@@ -465,8 +465,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
           });
         } else {
           // *** Standard creation.
-          dao.checkMethod('create');
-          dao.create(connection, function (err, dto) {
+          dao.$runMethod('create', connection, function (err, dto) {
             if (err)
               cb(err);
             else {
@@ -506,8 +505,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
         } else {
           // *** Standard fetch.
           // Root element fetches data from repository.
-          dao.checkMethod(method);
-          dao[method](connection, filter, function (err, dto) {
+          dao.$runMethod(method, connection, filter, function (err, dto) {
             if (err)
               cb(err);
             else {
@@ -551,8 +549,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
         } else {
           // *** Standard insert.
           var dto = toDto.call(self);
-          dao.checkMethod('insert');
-          dao.insert(connection, dto, function (err, dto) {
+          dao.$runMethod('insert', connection, dto, function (err, dto) {
             if (err)
               cb(err);
             else {
@@ -596,8 +593,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
         } else if (isDirty) {
           // *** Standard update.
           var dto = toDto.call(self);
-          dao.checkMethod('update');
-          dao.update(connection, dto, function (err, dto) {
+          dao.$runMethod('update', connection, dto, function (err, dto) {
             if (err)
               cb(err);
             else {
@@ -642,8 +638,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
             } else {
               // *** Standard removal.
               var filter = properties.getKey(getPropertyValue);
-              dao.checkMethod('remove');
-              dao.remove(connection, filter, function (err) {
+              dao.$runMethod('remove', connection, filter, function (err) {
                 if (err)
                   cb(err);
                 else

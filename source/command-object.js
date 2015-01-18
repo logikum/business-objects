@@ -222,8 +222,7 @@ var CommandObjectCreator = function(properties, rules, extensions) {
         } else {
           // *** Standard execute.
           var dto = toDto.call(self);
-          dao.checkMethod(method);
-          dao[method](connection, dto, function (err, dto) {
+          dao.$runMethod(method, connection, dto, function (err, dto) {
             if (err)
               cb(err);
             else {

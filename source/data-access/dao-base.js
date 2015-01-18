@@ -32,20 +32,32 @@ var DaoBase = function (name) {
 };
 
 /**
- * Checks if the requested method exists on the data access object.
+ * Executes the named method on the data access object.
  *
- * @function bo.dataAccess.DaoBase#check
+ * @function bo.dataAccess.DaoBase#$runMethod
  * @param {string} methodName - The name of the method to check.
+ * @param {...*} [methodArg] - The arguments of the method to execute.
+ *    The last argument must be a callback function in case of asynchronous models.
+ * @returns {*} The result of the method (for synchronous models).
  *
  * @throws {@link bo.dataAccess.DaoError DaoError}: The method name must be a non-empty string.
  * @throws {@link bo.dataAccess.DaoError DaoError}: Data access object has no method with the requested name.
  */
-DaoBase.prototype.checkMethod = function (methodName) {
+DaoBase.prototype.$runMethod = function (methodName) {
+
+  var args = Array.prototype.slice.call(arguments);
+  methodName = args.shift();
 
   if (typeof methodName !== 'string' || methodName.trim().length === 0)
     throw new DaoError('m_manString', 'checkMethod', 'methodName');
   if (!this[methodName] || typeof this[methodName] !== 'function')
     throw new DaoError('noMethod', this.name, methodName);
+
+  var callback = args.length ? args[args.length - 1] : null;
+  if (typeof callback === 'function')
+    this[methodName].apply(this, args);
+  else
+    return this[methodName].apply(this, args);
 };
 
 Object.seal(DaoBase.prototype);

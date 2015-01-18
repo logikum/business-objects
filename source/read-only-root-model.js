@@ -217,8 +217,7 @@ var ReadOnlyRootModelCreator = function(properties, rules, extensions) {
         } else {
           // *** Standard fetch.
           // Root element fetches data from repository.
-          dao.checkMethod(method);
-          dao[method](connection, filter, function (err, dto) {
+          dao.$runMethod(method, connection, filter, function (err, dto) {
             if (err)
               cb(err);
             else {

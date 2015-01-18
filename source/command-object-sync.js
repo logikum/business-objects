@@ -166,8 +166,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
           } else {
             // *** Standard execute.
             dto = toDto.call(self);
-            dao.checkMethod(method);
-            dto = dao[method](connection, dto);
+            dto = dao.$runMethod(method, connection, dto);
             fromDto.call(self, dto);
           }
           // Load children as well.

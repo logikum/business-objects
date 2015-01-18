@@ -168,8 +168,7 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
           } else {
             // *** Standard fetch.
             // Root element fetches data from repository.
-            dao.checkMethod(method);
-            dto = dao[method](connection, filter);
+            dto = dao.$runMethod(method, connection, filter);
             fromDto.call(self, dto);
           }
           // Fetch children as well.

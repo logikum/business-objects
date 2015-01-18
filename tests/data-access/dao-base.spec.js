@@ -30,17 +30,17 @@ describe('Base data access object', function () {
     expect(dao.name).toBe('Darts');
   });
 
-  it('checkMethod method work', function() {
+  it('$runMethod method work', function() {
     var dao = new DaoBase('Sample');
     dao.select = function () {};
     dao.count = 51;
 
-    var check01 = function () { dao.checkMethod(); };
-    var check02 = function () { dao.checkMethod(51); };
-    var check03 = function () { dao.checkMethod(''); };
-    var check04 = function () { dao.checkMethod('create'); };
-    var check05 = function () { dao.checkMethod('select'); };
-    var check06 = function () { dao.checkMethod('count'); };
+    var check01 = function () { dao.$runMethod(); };
+    var check02 = function () { dao.$runMethod(51); };
+    var check03 = function () { dao.$runMethod(''); };
+    var check04 = function () { dao.$runMethod('create'); };
+    var check05 = function () { dao.$runMethod('select'); };
+    var check06 = function () { dao.$runMethod('count'); };
 
     expect(check01).toThrow();
     expect(check02).toThrow();

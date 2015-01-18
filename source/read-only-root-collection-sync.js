@@ -110,8 +110,7 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
           } else {
             // *** Standard fetch.
             // Root element fetches data from repository.
-            dao.checkMethod(method);
-            dto = dao[method](connection, filter);
+            dto = dao.$runMethod(method, connection, filter);
           }
           // Load children.
           if (dto instanceof Array) {
