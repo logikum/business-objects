@@ -60,6 +60,16 @@ DaoBase.prototype.$runMethod = function (methodName) {
     return this[methodName].apply(this, args);
 };
 
+/**
+ * Determines if create method exists.
+ *
+ * @function bo.dataAccess.DaoBase#$hasCreate
+ * @returns {boolean} True when create method exists, otherwise false.
+ */
+DaoBase.prototype.$hasCreate = function () {
+  return this['create'] !== undefined && typeof this['create'] === 'function';
+};
+
 Object.seal(DaoBase.prototype);
 
 module.exports = DaoBase;

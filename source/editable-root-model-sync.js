@@ -372,26 +372,28 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
     }
 
     function data_create () {
-      try {
-        // Open connection.
-        connection = config.connectionManager.openConnection(extensions.dataSource);
-        // Execute creation.
-        if (extensions.dataCreate) {
-          // *** Custom creation.
-          extensions.dataCreate.call(self, getDataContext(connection));
-        } else {
-          // *** Standard creation.
-          var dto = dao.$runMethod('create', connection);
-          fromDto.call(self, dto);
+      if (extensions.dataCreate || dao.$hasCreate()) {
+        try {
+          // Open connection.
+          connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Execute creation.
+          if (extensions.dataCreate) {
+            // *** Custom creation.
+            extensions.dataCreate.call(self, getDataContext(connection));
+          } else {
+            // *** Standard creation.
+            var dto = dao.$runMethod('create', connection);
+            fromDto.call(self, dto);
+          }
+          markAsCreated();
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+        } catch (e) {
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+          // Wrap the intercepted error.
+          throw new DataPortalError(MODEL_TYPE, properties.name, 'create', e);
         }
-        markAsCreated();
-        // Close connection.
-        connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
-      } catch (e) {
-        // Close connection.
-        connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
-        // Wrap the intercepted error.
-        throw new DataPortalError(MODEL_TYPE, properties.name, 'create', e);
       }
     }
 

@@ -481,7 +481,9 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
           });
         }
       }
-      runStatements(main, 'create', callback);
+      if (extensions.dataCreate || dao.$hasCreate()) {
+        runStatements(main, 'create', callback);
+      }
     }
 
     function data_fetch (filter, method, callback) {

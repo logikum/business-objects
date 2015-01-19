@@ -467,7 +467,9 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
           });
         }
       }
-      runStatements(main, callback);
+      if (extensions.dataCreate || dao.$hasCreate()) {
+        runStatements(main, callback);
+      }
     }
 
     function data_fetch (filter, method, callback) {

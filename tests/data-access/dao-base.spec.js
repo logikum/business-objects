@@ -30,7 +30,7 @@ describe('Base data access object', function () {
     expect(dao.name).toBe('Darts');
   });
 
-  it('$runMethod method work', function() {
+  it('$runMethod method works', function() {
     var dao = new DaoBase('Sample');
     dao.select = function () {};
     dao.count = 51;
@@ -48,5 +48,15 @@ describe('Base data access object', function () {
     expect(check04).toThrow();
     expect(check05).not.toThrow();
     expect(check06).toThrow();
+  });
+
+  it('$hasCreate method works', function() {
+    var dao1 = new DaoBase('Editable');
+    dao1.create = function () {};
+    var dao2 = new DaoBase('Command');
+    dao2.execute = function () {};
+
+    expect(dao1.$hasCreate()).toBe(true);
+    expect(dao2.$hasCreate()).toBe(false);
   });
 });
