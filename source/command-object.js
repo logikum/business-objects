@@ -24,6 +24,9 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
+var DataPortalError = require('./shared/data-portal-error.js');
+
+var MODEL_TYPE = 'Command object';
 
 var CommandObjectCreator = function(properties, rules, extensions) {
 
@@ -168,12 +171,16 @@ var CommandObjectCreator = function(properties, rules, extensions) {
       return dataContext.setState(connection, false);
     }
 
+    function wrapError (err) {
+      return new DataPortalError(MODEL_TYPE, properties.name, 'execute', err);
+    }
+
     function runTransaction (main, callback) {
       // Start transaction.
       config.connectionManager.beginTransaction(
           extensions.dataSource, function (errBegin, connection) {
             if (errBegin)
-              callback(errBegin);
+              callback(wrapError(errBegin));
             else
               main(connection, function (err, result) {
                 if (err)
@@ -181,7 +188,7 @@ var CommandObjectCreator = function(properties, rules, extensions) {
                   config.connectionManager.rollbackTransaction(
                       extensions.dataSource, connection, function (errRollback, connClosed) {
                         connection = connClosed;
-                        callback(err);
+                        callback(wrapError(err));
                       });
                 else
                 // Finish transaction.
@@ -189,7 +196,7 @@ var CommandObjectCreator = function(properties, rules, extensions) {
                       extensions.dataSource, connection, function (errCommit, connClosed) {
                         connection = connClosed;
                         if (errCommit)
-                          callback(errCommit);
+                          callback(wrapError(errCommit));
                         else
                           callback(null, result);
                       });

@@ -24,8 +24,10 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
+var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
+var MODEL_TYPE = 'Editable root model';
 
 var EditableRootModelCreator = function(properties, rules, extensions) {
 
@@ -394,12 +396,16 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
       return dataContext.setState(connection, isDirty);
     }
 
-    function runStatements (main, callback) {
+    function wrapError (action, err) {
+      return new DataPortalError(MODEL_TYPE, properties.name, action, err);
+    }
+
+    function runStatements (main, action, callback) {
       // Open connection.
       config.connectionManager.openConnection(
           extensions.dataSource, function (errOpen, connection) {
             if (errOpen)
-              callback(errOpen);
+              callback(wrapError(action, errOpen));
             else
               main(connection, function (err, result) {
                 // Close connection.
@@ -407,9 +413,9 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
                     extensions.dataSource, connection, function (errClose, connClosed) {
                       connection = connClosed;
                       if (err)
-                        callback(err);
+                        callback(wrapError(action, err));
                       else if (errClose)
-                        callback(errClose);
+                        callback(wrapError(action, errClose));
                       else
                         callback(null, result);
                     });
@@ -417,12 +423,12 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
           });
     }
 
-    function runTransaction (main, callback) {
+    function runTransaction (main, action, callback) {
       // Start transaction.
       config.connectionManager.beginTransaction(
           extensions.dataSource, function (errBegin, connection) {
             if (errBegin)
-              callback(errBegin);
+              callback(wrapError(action, errBegin));
             else
               main(connection, function (err, result) {
                 if (err)
@@ -430,7 +436,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
                   config.connectionManager.rollbackTransaction(
                       extensions.dataSource, connection, function (errRollback, connClosed) {
                         connection = connClosed;
-                        callback(err);
+                        callback(wrapError(action, err));
                       });
                 else
                 // Finish transaction.
@@ -438,7 +444,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
                       extensions.dataSource, connection, function (errCommit, connClosed) {
                         connection = connClosed;
                         if (errCommit)
-                          callback(errCommit);
+                          callback(wrapError(action, errCommit));
                         else
                           callback(null, result);
                       });
@@ -475,7 +481,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
           });
         }
       }
-      runStatements(main, callback);
+      runStatements(main, 'create', callback);
     }
 
     function data_fetch (filter, method, callback) {
@@ -517,7 +523,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method))
-        runStatements(main, callback);
+        runStatements(main, 'fetch', callback);
       else
         callback(null, self);
     }
@@ -561,7 +567,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (canDo(Action.createObject))
-        runTransaction(main, callback);
+        runTransaction(main, 'insert', callback);
       else
         callback(null, self);
     }
@@ -608,7 +614,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (canDo(Action.updateObject))
-        runTransaction(main, callback);
+        runTransaction(main, 'update', callback);
       else
         callback(null, self);
     }
@@ -650,7 +656,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (canDo(Action.removeObject))
-        runTransaction(main, callback);
+        runTransaction(main, 'remove', callback);
       else
         callback(null, null);
     }

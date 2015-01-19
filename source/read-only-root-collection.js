@@ -16,6 +16,9 @@ var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
+var DataPortalError = require('./shared/data-portal-error.js');
+
+var MODEL_TYPE = 'Read-only root collection';
 
 var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) {
 
@@ -95,12 +98,16 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
       return dataContext.setState(connection, false);
     }
 
+    function wrapError (err) {
+      return new DataPortalError(MODEL_TYPE, properties.name, 'fetch', err);
+    }
+
     function runStatements (main, callback) {
       // Open connection.
       config.connectionManager.openConnection(
           extensions.dataSource, function (errOpen, connection) {
             if (errOpen)
-              callback(errOpen);
+              callback(wrapError(errOpen));
             else
               main(connection, function (err, result) {
                 // Close connection.
@@ -108,9 +115,9 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
                     extensions.dataSource, connection, function (errClose, connClosed) {
                       connection = connClosed;
                       if (err)
-                        callback(err);
+                        callback(wrapError(err));
                       else if (errClose)
-                        callback(errClose);
+                        callback(wrapError(errClose));
                       else
                         callback(null, result);
                     });

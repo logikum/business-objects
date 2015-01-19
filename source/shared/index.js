@@ -20,6 +20,7 @@ var PropertyFlag = require('./property-flag.js');
 
 var ArgumentError = require('./argument-error.js');
 var ConfigurationError = require('./configuration-error.js');
+var DataPortalError = require('./data-portal-error.js');
 var EnumerationError = require('./enumeration-error.js');
 var ModelError = require('./model-error.js');
 var NotImplementedError = require('./not-implemented-error.js');
@@ -52,6 +53,8 @@ var NotImplementedError = require('./not-implemented-error.js');
  *      to create a new error related to an argument.
  * @property {function} ConfigurationError - {@link bo.shared.ConfigurationError Configuration error} constructor
  *      to create a new error related to configuration.
+ * @property {function} DataPortalError - {@link bo.shared.DataPortalError Data portal error} constructor
+ *      to create a new error related to data portal actions.
  * @property {function} EnumerationError - {@link bo.shared.EnumerationError Enumeration error} constructor
  *      to create a new error related to an enumeration.
  * @property {function} ModelError - {@link bo.shared.ModelError Model error} constructor
@@ -100,6 +103,7 @@ var index = {
 
   ArgumentError: ArgumentError,
   ConfigurationError: ConfigurationError,
+  DataPortalError: DataPortalError,
   EnumerationError: EnumerationError,
   ModelError: ModelError,
   NotImplementedError: NotImplementedError

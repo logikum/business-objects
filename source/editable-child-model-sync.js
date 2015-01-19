@@ -25,8 +25,10 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
+var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
+var MODEL_TYPE = 'Editable child model';
 
 var EditableChildModelSyncCreator = function(properties, rules, extensions) {
 
@@ -398,9 +400,13 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
           fromDto.call(self, dto);
         }
         markAsCreated();
-      } finally {
         // Close connection.
         connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+      } catch (e) {
+        // Close connection.
+        connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+        // Wrap the intercepted error.
+        throw new DataPortalError(MODEL_TYPE, properties.name, 'create', e);
       }
     }
 

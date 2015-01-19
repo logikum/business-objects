@@ -24,6 +24,9 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
+var DataPortalError = require('./shared/data-portal-error.js');
+
+var MODEL_TYPE = 'Command object';
 
 var CommandObjectSyncCreator = function(properties, rules, extensions) {
 
@@ -176,6 +179,8 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
         } catch (e) {
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
+          // Wrap the intercepted error.
+          throw new DataPortalError(MODEL_TYPE, properties.name, 'execute', e);
         }
       }
     }

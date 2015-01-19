@@ -24,6 +24,9 @@ var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
+var DataPortalError = require('./shared/data-portal-error.js');
+
+var MODEL_TYPE = 'Read-only root model';
 
 var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
 
@@ -173,9 +176,13 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
           }
           // Fetch children as well.
           fetchChildren(dto);
-        } finally {
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+        } catch (e) {
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+          // Wrap the intercepted error.
+          throw new DataPortalError(MODEL_TYPE, properties.name, 'fetch', e);
         }
       }
     }

@@ -130,6 +130,14 @@
     "daoType": "The data access object must inherit DaoBase type: {0}",
     "noMethod": "{0} object has no method named {1}."
   },
+  "DataPortalError": {
+    "create": "Creating {0} has failed.",
+    "fetch": "Fetching {0} has failed.",
+    "insert": "Inserting {0} has failed.",
+    "update": "Updating {0} has failed.",
+    "remove": "Removing {0} has failed.",
+    "execute": "Executing {0} has failed."
+  },
   "Rules": {
     "required": "Property {0} is required.",
     "dependency": "--- dependency rule ---",
