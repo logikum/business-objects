@@ -1,7 +1,3 @@
-/**
- * Enumeration module.
- * @module shared/enumeration
- */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');

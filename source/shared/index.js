@@ -44,6 +44,8 @@ var NotImplementedError = require('./not-implemented-error.js');
  * @property {function} TransferContext - {@link bo.shared.TransferContext TransferContext} constructor
  *      to create new context object for custom client transfer objects.
  *
+ * @property {namespace} ensureArgument - {@link bo.shared.ensureArgument ensureArgument} namespace
+ *      provides methods to check arguments.
  * @property {function} Enumeration - {@link bo.shared.Enumeration Enumeration} constructor
  *      to create new enumeration.
  * @property {function} PropertyFlag - {@link bo.shared.PropertyFlag PropertyFlag} constructor
@@ -92,11 +94,6 @@ var index = {
    * @see {@link module:shared/config-reader} for further information.
    */
   configuration: configuration,
-  /**
-   * Argument checker utility.
-   * @memberof bo/shared
-   * @see {@link module:shared/ensure-argument} for further information.
-   */
   ensureArgument: ensureArgument,
   Enumeration: Enumeration,
   PropertyFlag: PropertyFlag,

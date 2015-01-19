@@ -8,8 +8,8 @@
 
     "defined": "The argument must be supplied.",
     "required": "The argument is required.",
-    "string": "The argument must be a string.",
-    "optString": "The argument must be a string or null.",
+    "string": "The argument must be a string value.",
+    "optString": "The argument must be a string value or null.",
     "manString": "The argument must be a non-empty string.",
     "optNumber": "The argument must be a number value or null.",
     "manNumber": "The argument must be a number value.",

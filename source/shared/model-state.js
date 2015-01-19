@@ -1,7 +1,3 @@
-/**
- * Model state module.
- * @module shared/model-state
- */
 'use strict';
 
 var util = require('util');
