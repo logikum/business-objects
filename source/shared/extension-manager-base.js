@@ -1,35 +1,38 @@
-/**
- * Base extension manager module.
- * @module shared/extension-manager-base
- */
 'use strict';
 
 var ensureArgument = require('./ensure-argument.js');
 var ModelError = require('./model-error.js');
 
 /**
+ * @classdesc
+ *    Provides properties to customize models' behavior.
+ * @description
+ *    Creates a new base extension manager object.
  *
- * @param dataSource
+ * @memberof bo.shared
  * @constructor
+ * @param {string} dataSource - The name of the data source.
+ * @param {string} modelPath - The full path of the model.
+ * @param {number} addArgs - The count of additional arguments for data portal methods of a model group.
  *
- * dataSource   string      The name of the data source.
- * modelPath    string      The path of the model definition.
- * daoBuilder   string      Returns the data access object of the model for the data source.
- * toDto        function    Convert model instance to data transfer object.
- * fromDto      function    Convert data transfer object to model instance.
- * toCto        function    Convert model instance to client transfer object.
- * fromCto      function    Convert client transfer object to model instance.
- * dataCreate   function    Returns the property values of a new instance from the data source.
- * dataFetch    function    Returns the property values of an existing instance from the data source.
- * dataInsert   function    Saves a new instance in the data source.
- * dataUpdate   function    Saves an existing instance in the data source.
- * dataRemove   function    Deletes an existing instance from the data source.
- * dataExecute  function    Executes a server side command.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The data source must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The model path must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError ArgumentError}: The additional argument count must be an integer.
  */
 function ExtensionManagerBase(dataSource, modelPath, addArgs) {
 
+  /**
+   * The name of the data source.
+   * @type {string}
+   * @readonly
+   */
   this.dataSource = ensureArgument.isMandatoryString(dataSource,
       'c_manString', 'ExtensionManager', 'dataSource');
+  /**
+   * The path of the model definition.
+   * @type {string}
+   * @readonly
+   */
   this.modelPath = ensureArgument.isMandatoryString(modelPath,
       'c_manString', 'ExtensionManager', 'modelPath');
   addArgs = ensureArgument.isMandatoryInteger(addArgs,
@@ -51,6 +54,72 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
     { name: 'dataExecute', length: 1 + addArgs }
   ];
 
+  /**
+   * Factory method to create the data access object for a model instance.
+   * @name bo.shared.ExtensionManagerBase#daoBuilder
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Converts the model instance to data transfer object.
+   * @name bo.shared.ExtensionManagerBase#toDto
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Converts the data transfer object to model instance.
+   * @name bo.shared.ExtensionManagerBase#fromDto
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Converts the model instance to client transfer object.
+   * @name bo.shared.ExtensionManagerBase#toCto
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Converts the client transfer object to model instance.
+   * @name bo.shared.ExtensionManagerBase#fromCto
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Returns the property values of a new instance from the data source.
+   * @name bo.shared.ExtensionManagerBase#dataCreate
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Returns the property values of an existing instance from the data source.
+   * @name bo.shared.ExtensionManagerBase#dataFetch
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Saves a new instance into the data source.
+   * @name bo.shared.ExtensionManagerBase#dataInsert
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Saves an existing instance into the data source.
+   * @name bo.shared.ExtensionManagerBase#dataUpdate
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Deletes an existing instance from the data source.
+   * @name bo.shared.ExtensionManagerBase#dataRemove
+   * @type {function}
+   * @readonly
+   */
+  /**
+   * Executes a command on the data source.
+   * @name bo.shared.ExtensionManagerBase#dataExecute
+   * @type {function}
+   * @readonly
+   */
   definitions.map(function(definition) {
     methods[definition.name] = null;
 

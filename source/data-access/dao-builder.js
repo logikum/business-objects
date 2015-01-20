@@ -6,11 +6,12 @@ var DaoBase = require('./dao-base.js');
 var DaoError = require('./dao-error.js');
 
 /**
- * Checks if the requested method exists on the data access object.
+ * Factory method to create the data access object for a model instance.
  *
  * @function bo.dataAccess.daoBuilder
- * @param {!string} dataSource - The name of the data source.
- * @param {!string} modelPath - The path of the model which the data access object belongs to.
+ * @param {string} dataSource - The name of the data source.
+ * @param {string} modelPath - The model definition path of the model instance
+ *      that the data access object belongs to.
  *
  * @throws {@link bo.dataAccess.DaoError DaoError}: The name of the data source must be a non-empty string.
  * @throws {@link bo.dataAccess.DaoError DaoError}: The model path must be a non-empty string.

@@ -8,7 +8,7 @@ var EnumerationError = require('./enumeration-error.js');
  *
  * @memberof bo.shared
  * @constructor
- * @param {!string} name - The name of the enumeration.
+ * @param {string} name - The name of the enumeration.
  *
  * @classdesc Serves as the base class for enumerations.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The enumeration name must be a non-empty string.

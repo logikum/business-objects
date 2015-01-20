@@ -30,12 +30,16 @@ var NotImplementedError = require('./not-implemented-error.js');
  *
  * @namespace bo.shared
  *
- * @property {function} PropertyInfo - {@link bo.shared.PropertyInfo PropertyInfo} constructor
- *      to create new property definition.
- * @property {function} PropertyManager - {@link bo.shared.PropertyManager PropertyManager} constructor
- *      to create a new property manager.
- * @property {function} DataStore - {@link bo.shared.DataStore DataStore} constructor
- *      to create new data store.
+ * @property {function} PropertyInfo - {@link bo.shared.PropertyInfo PropertyInfo}
+ *      constructor to create new property definition.
+ * @property {function} PropertyManager - {@link bo.shared.PropertyManager PropertyManager}
+ *      constructor to create a new property manager.
+ * @property {function} DataStore - {@link bo.shared.DataStore DataStore}
+ *      constructor to create new data store.
+ * @property {function} ExtensionManager - {@link bo.shared.ExtensionManager ExtensionManager}
+ *      constructor to create new a new extension manager object for an asynchronous model.
+ * @property {function} ExtensionManagerSync - {@link bo.shared.ExtensionManagerSync ExtensionManagerSync}
+ *      constructor to create new a new extension manager object for a synchronous model.
  *
  * @property {function} UserInfo - {@link bo.shared.UserInfo UserInfo} constructor
  *      to create new base object for user information.
@@ -44,6 +48,8 @@ var NotImplementedError = require('./not-implemented-error.js');
  * @property {function} TransferContext - {@link bo.shared.TransferContext TransferContext} constructor
  *      to create new context object for custom client transfer objects.
  *
+ * @property {namespace} configuration - {@link bo.shared.configuration configuration} namespace
+ *      provides configuration of business objects.
  * @property {namespace} ensureArgument - {@link bo.shared.ensureArgument ensureArgument} namespace
  *      provides methods to check arguments.
  * @property {function} Enumeration - {@link bo.shared.Enumeration Enumeration} constructor
@@ -69,17 +75,7 @@ var index = {
   PropertyManager: PropertyManager,
   DataStore: DataStore,
   //ExtensionManagerBase: ExtensionManagerBase,
-  /**
-   * Extensions of an asynchronous model.
-   * @memberof bo/shared
-   * @see {@link module:shared/extension-manager} for further information.
-   */
   ExtensionManager: ExtensionManager,
-  /**
-   * Extensions of a synchronous model.
-   * @memberof bo/shared
-   * @see {@link module:shared/extension-manager-sync} for further information.
-   */
   ExtensionManagerSync: ExtensionManagerSync,
 
   //ModelState: ModelState,
@@ -88,11 +84,6 @@ var index = {
   TransferContext: TransferContext,
 
   //configHelper: configHelper,
-  /**
-   * Default configuration of business objects.
-   * @memberof bo/shared
-   * @see {@link module:shared/config-reader} for further information.
-   */
   configuration: configuration,
   ensureArgument: ensureArgument,
   Enumeration: Enumeration,

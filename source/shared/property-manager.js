@@ -11,7 +11,7 @@ var DataType = require('../data-types/data-type.js');
  *
  * @memberof bo.shared
  * @constructor
- * @param {!string} name - The name of the business object model.
+ * @param {string} name - The name of the business object model.
  * @param {...bo.shared.PropertyInfo} [property] - Description of a model property.
  *
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.

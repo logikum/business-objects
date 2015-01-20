@@ -4,9 +4,9 @@ var i18n = require('../../source/locales/i18n.js');
 
 describe('Internationalization', function () {
   var currentLocale = '';
-  function localeReader () { return currentLocale; }
+  function getLocale () { return currentLocale; }
   var pathOfLocales = '/locales';
-  i18n.initialize(pathOfLocales, localeReader);
+  i18n.initialize(pathOfLocales, getLocale);
 
   it('constructor expects 0-2 arguments', function () {
     var build01 = function () { return new i18n(); };

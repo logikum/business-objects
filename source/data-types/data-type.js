@@ -9,7 +9,7 @@ var NotImplementedError = require('../shared/not-implemented-error.js');
  *
  * @memberof bo.dataTypes
  * @constructor
- * @param {!string} name - The name of the data type.
+ * @param {string} name - The name of the data type.
  *
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
  */

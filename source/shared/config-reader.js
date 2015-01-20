@@ -1,7 +1,3 @@
-/**
- * Configuration module.
- * @module shared/config-reader
- */
 'use strict';
 
 var fs = require('fs');
@@ -71,7 +67,7 @@ if (cfg) {
 
   // Evaluate the locale reader.
   if (cfg.localeReader) {
-    config.localeReader = configHelper.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
+    config.getLocale = configHelper.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
   }
 
   // Evaluate the path of locale.
@@ -89,4 +85,14 @@ if (cfg) {
 
 Object.freeze(config);
 
+/**
+ * Configuration for business objects.
+ * @namespace bo.shared.configuration
+ * @property {bo.dataAccess.ConnectionManagerBase} connectionManager - Connection manager instance.
+ * @property {function} daoBuilder - Factory method to create data access objects.
+ * @property {function} getUser - Returns the current user.
+ * @property {function} getLocale - Returns the current locale.
+ * @property {string} pathOfLocales - The full path of the directory containing project locales.
+ * @property {bo.rules.NoAccessBehavior} noAccessBehavior - The default behavior for unauthorized operations.
+ */
 module.exports = config;
