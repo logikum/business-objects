@@ -1,7 +1,10 @@
 console.log('Testing rules/rule-list.js...');
 
 var RuleList = require('../../source/rules/rule-list.js');
-var Rule = require('../../source/rules/rule-base.js');
+var InformationRule = require('../../source/common-rules/information-rule.js');
+var RequiredRule = require('../../source/common-rules/required-rule.js');
+var PropertyInfo = require('../../source/shared/property-info.js');
+var Text = require('../../source/data-types/text.js');
 
 describe('Rule list', function () {
 
@@ -13,8 +16,8 @@ describe('Rule list', function () {
 
   it('add method expects a non-empty string and a rule argument', function() {
     var rl = new RuleList();
-    var rule = new Rule('IPAddress');
-    rule.initialize('message', 13, true);
+    var pi = new PropertyInfo('property', new Text());
+    var rule = new RequiredRule(pi, 'message', 13, true);
 
     var add01 = function () { rl.add(); };
     var add02 = function () { rl.add('property'); };
@@ -33,10 +36,9 @@ describe('Rule list', function () {
 
   it('add method creates an array property', function() {
     var rl = new RuleList();
-    var rule1 = new Rule('rule_01');
-    rule1.initialize('message #1', 7, false);
-    var rule2 = new Rule('rule_02');
-    rule2.initialize('message #2', 13, true);
+    var pi = new PropertyInfo('property', new Text());
+    var rule1 = new InformationRule(pi, 'message #1', 7, false);
+    var rule2 = new RequiredRule(pi, 'message #2', 13, true);
     rl.add('property', rule1);
     rl.add('property', rule2);
 
@@ -51,10 +53,9 @@ describe('Rule list', function () {
 
   it('sort method arranges items by priority', function() {
     var rl = new RuleList();
-    var rule1 = new Rule('rule_01');
-    rule1.initialize('message #1', 7, false);
-    var rule2 = new Rule('rule_02');
-    rule2.initialize('message #2', 13, true);
+    var pi = new PropertyInfo('property', new Text());
+    var rule1 = new InformationRule(pi, 'message #1', 7, false);
+    var rule2 = new RequiredRule(pi, 'message #2', 13, true);
     rl.add('property', rule1);
     rl.add('property', rule2);
     rl.sort();

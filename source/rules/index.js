@@ -23,9 +23,26 @@ var BrokenRuleList = require('./broken-rule-list.js');
 var BrokenRules = require('./broken-rules.js');
 
 /**
- * List of rule components.
+ * Contains components used by authorization and validation rules.
  *
  * @namespace bo.rules
+ *
+ * @property {function} AuthorizationError - {@link bo.rules.AuthorizationError Authorization error}
+ *      constructor creates a new error related to a broken authorization rule.
+ * @property {object} NoAccessBehavior - {@link bo.rules.NoAccessBehavior No access behavior}
+ *      object specifies the behavior options of failed authorization rules.
+ *
+ * @property {function} RuleList - {@link bo.rules.RuleList Rule list}
+ *      constructor creates a new rule list instance.
+ * @property {object} RuleSeverity - {@link bo.rules.RuleSeverity Rule severity}
+ *      object specifies the severity options of rule failures.
+ * @property {function} RuleBase - {@link bo.rules.RuleBase Base rule}
+ *      constructor creates a new base rule instance.
+ * @property {function} ResultBase - {@link bo.rules.ResultBase Base rule result}
+ *      constructor creates a new base rule result instance.
+ *
+ * @property {function} BrokenRule - {@link bo.rules.BrokenRule Broken rule}
+ *      constructor creates a new broken rule instance.
  */
 var index = {
   /**
@@ -72,11 +89,6 @@ var index = {
    * @see {@link module:rules/authorization-result} for further information.
    */
   AuthorizationResult: AuthorizationResult,
-  /**
-   * Authorization error type.
-   * @memberof bo/rules
-   * @see {@link module:rules/authorization-error} for further information.
-   */
   AuthorizationError: AuthorizationError,
   /**
    * Enumeration of authorization actions.
@@ -104,31 +116,10 @@ var index = {
    * @see {@link module:rules/rule-manager} for further information.
    */
   RuleList: RuleList,
-  /**
-   * Enumeration of rule severities.
-   * @memberof bo/rules
-   * @see {@link module:rules/rule-severity} for further information.
-   */
   RuleSeverity: RuleSeverity,
-  /**
-   * Bsae object for rules.
-   * @memberof bo/rules
-   * @see {@link module:rules/rule-base} for further information.
-   */
   RuleBase: RuleBase,
-  /**
-   * Bsae object for rule results.
-   * @memberof bo/rules
-   * @see {@link module:rules/result-base} for further information.
-   */
   ResultBase: ResultBase,
 
-
-  /**
-   * Representation of a failed rule.
-   * @memberof bo/rules
-   * @see {@link module:rules/broken-rule} for further information.
-   */
   BrokenRule: BrokenRule,
   /**
    * Collection of broken rules of a model.

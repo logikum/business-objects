@@ -1,16 +1,27 @@
-/**
- * Base rule module.
- * @module rules/rule-base
- */
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');
 var ArgumentError = require('../shared/argument-error.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
+/**
+ * @classdesc Serves as the base class for rules.
+ * @description Creates a new rule object.
+ *
+ * @memberof bo.rules
+ * @constructor
+ * @param {string} ruleName - The name of the rule.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
+ */
 var RuleBase = function (ruleName) {
 
   ruleName = ensureArgument.isMandatoryString(ruleName, 'c_manString', 'Rule', 'ruleName');
+  /**
+   * The name of the data access object.
+   * @type {string}
+   * @readonly
+   */
   Object.defineProperty(this, 'ruleName', {
     get: function () {
       return ruleName;
@@ -18,12 +29,38 @@ var RuleBase = function (ruleName) {
     enumeration: true
   });
 
+  /**
+   * Human-readable description of the rule failure.
+   * @type {string}
+   * @readonly
+   */
   this.message = null;
+  /**
+   * The priority of the rule. Higher number means higher priority.
+   * @type {number}
+   * @default
+   * @readonly
+   */
   this.priority = 10;
+  /**
+   * Indicates whether processing of the rules for a property stops when the rule fails.
+   * @type {boolean}
+   * @default
+   * @readonly
+   */
   this.stopsProcessing = false;
 };
 
-// function (message | priority | stopsProcessing)
+/**
+ * Sets the properties of the rule.
+ *
+ * @function bo.rules.RuleBase#initialize
+ * @param {string} message - Human-readable description of the rule failure.
+ * @param {number} [priority=10] - The priority of the rule.
+ * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+ *
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The message must be a non-empty string.
+ */
 RuleBase.prototype.initialize = function () {
 
   // Remove null and undefined arguments.
@@ -51,11 +88,31 @@ RuleBase.prototype.initialize = function () {
   ensureArgument.isMandatoryString(this.message, 'm_manString', 'Rule', 'method', 'message');
 };
 
-RuleBase.prototype.execute = function () {
+/**
+ * Abstract method to check if the rule is valid for the property.
+ *
+ * @abstract
+ * @function bo.rules.RuleBase#execute
+ * @param {Array.<*>} inputs - An array of the values of the required properties.
+ *
+ * @throws {@link bo.shared.NotImplementedError Not implemented error}: The Rule.execute method is not implemented.
+ */
+RuleBase.prototype.execute = function (inputs) {
   throw new NotImplementedError('method', 'Rule', 'execute');
 };
 
-RuleBase.prototype.result = function () {
+/**
+ * Abstract method that returns the result of the rule checking.
+ *
+ * @abstract
+ * @function bo.rules.RuleBase#result
+ * @param {string} [message] - Human-readable description of the rule failure.
+ * @param {bo.rules.RuleSeverity} [severity] - The severity of the rule failure.
+ * @returns {object} An object that describes the result of the rule checking.
+ *
+ * @throws {@link bo.shared.NotImplementedError Not implemented error}: The Rule.result method is not implemented.
+ */
+RuleBase.prototype.result = function (message, severity) {
   throw new NotImplementedError('method', 'Rule', 'result');
 };
 
