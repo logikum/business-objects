@@ -1,0 +1,16 @@
+{
+  "introduction": {
+    "title": "Introduction to business objects",
+    "children": {
+      "editable-models": {
+        "title": "Editable Models"
+      },
+      "read-only-models": {
+        "title": "Read-Only Models"
+      }
+    }
+  },
+  "quick-start": {
+    "title": "Quick Start"
+  }
+}
