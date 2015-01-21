@@ -14,6 +14,7 @@ var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
 var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
+var PropertyContext = require('./shared/property-context.js');
 var ExtensionManager = require('./shared/extension-manager.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
@@ -53,6 +54,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
     var user = null;
+    var propertyContext = null;
     var dataContext = null;
 
     // Set up business rules.
@@ -241,6 +243,12 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
         return null;
     }
 
+    function getPropertyContext(primaryProperty) {
+      if (!propertyContext)
+        propertyContext = new PropertyContext(properties.toArray(), readPropertyValue);
+      return propertyContext.with(primaryProperty);
+    }
+
     properties.map(function(property) {
 
       if (property.type instanceof DataType) {
@@ -249,7 +257,10 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
 
         Object.defineProperty(self, property.name, {
           get: function () {
-            return readPropertyValue(property);
+            if (property.getter)
+              return property.getter(getPropertyContext(property));
+            else
+              return readPropertyValue(property);
           },
           set: function (value) {
             throw new ModelError('readOnly', properties.name , property.name);

@@ -14,6 +14,7 @@ var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
 var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
+var PropertyContext = require('./shared/property-context.js');
 var ExtensionManager = require('./shared/extension-manager.js');
 var DataStore = require('./shared/data-store.js');
 var DataContext = require('./shared/data-context.js');
@@ -51,6 +52,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     var isValidated = false;
     var dao = null;
     var user = null;
+    var propertyContext = null;
     var dataContext = null;
 
     // Set up business rules.
@@ -755,6 +757,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       }
     }
 
+    function getPropertyContext(primaryProperty) {
+      if (!propertyContext)
+        propertyContext = new PropertyContext(properties.toArray(), readPropertyValue, writePropertyValue);
+      return propertyContext.with(primaryProperty);
+    }
+
     properties.map(function(property) {
 
       if (property.type instanceof DataType) {
@@ -763,12 +771,18 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
         Object.defineProperty(self, property.name, {
           get: function () {
-            return readPropertyValue(property);
+            if (property.getter)
+              return property.getter(getPropertyContext(property));
+            else
+              return readPropertyValue(property);
           },
           set: function (value) {
             if (property.isReadOnly)
               throw new ModelError('readOnly', properties.name , property.name);
-            writePropertyValue(property, value);
+            if (property.setter)
+              property.setter(getPropertyContext(property), value);
+            else
+              writePropertyValue(property, value);
           },
           enumerable: true
         });

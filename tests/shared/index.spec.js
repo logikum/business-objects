@@ -6,6 +6,7 @@ var UserReader = require('../../sample/get-user.js');
 
 var PropertyInfo = require('../../source/shared/property-info.js');
 var PropertyManager = require('../../source/shared/property-manager.js');
+var PropertyContext = require('../../source/shared/property-context.js');
 var ExtensionManager = require('../../source/shared/extension-manager.js');
 var ExtensionManagerSync = require('../../source/shared/extension-manager-sync.js');
 
@@ -40,6 +41,7 @@ describe('Shared component index', function () {
 
     expect(new shared.PropertyInfo('property', new Text())).toEqual(jasmine.any(PropertyInfo));
     expect(new shared.PropertyManager('list')).toEqual(jasmine.any(PropertyManager));
+    expect(new shared.PropertyContext([], getValue, setValue)).toEqual(jasmine.any(PropertyContext));
     expect(new shared.ExtensionManager('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManager));
     expect(new shared.ExtensionManagerSync('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManagerSync));
 

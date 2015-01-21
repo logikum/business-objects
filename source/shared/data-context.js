@@ -7,21 +7,21 @@ var UserInfo = require('./user-info.js');
 
 /**
  * @classdesc
- *    Provides the context for custom model actions.
+ *    Provides the context for custom data portal actions.
  * @description
  *    Creates a new data context object.
  *      </br></br>
  *    <i><b>Warning:</b> Data context objects are created in models internally.
  *    They are intended only to make publicly available the context
- *    for custom model actions.</i>
+ *    for custom data portal actions.</i>
  *
  * @memberof bo.shared
  * @constructor
  * @param {object} dao - The data access object of the current model.
  * @param {bo.shared.UserInfo} user - The current user.
  * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
- * @param {function} getValue - A function that returns the current value of a property.
- * @param {function} setValue - A function that changes the current value of a property.
+ * @param {function} [getValue] - A function that returns the current value of a property.
+ * @param {function} [setValue] - A function that changes the current value of a property.
  *
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The dao argument must be an object.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The user must be an UserInfo object.
@@ -63,7 +63,8 @@ function DataContext(dao, user, properties, getValue, setValue) {
 
   /**
    * Indicates whether the current model itself has been changed.
-   * @type {boolean}
+   * @name bo.shared.DataContext#connection
+   * @type {object}
    * @readonly
    */
   Object.defineProperty(self, 'connection', {
@@ -75,6 +76,7 @@ function DataContext(dao, user, properties, getValue, setValue) {
 
   /**
    * Indicates whether the current model itself has been changed.
+   * @name bo.shared.DataContext#isSelfDirty
    * @type {boolean}
    * @readonly
    */
@@ -110,7 +112,7 @@ function DataContext(dao, user, properties, getValue, setValue) {
    * Gets the current value of a model property.
    *
    * @param {string} propertyName - The name of the property.
-   * @returns {*} The value of a model property.
+   * @returns {*} The value of the model property.
    *
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The model has no property with the given name.

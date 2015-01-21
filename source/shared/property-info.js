@@ -31,7 +31,7 @@ var CollectionBase = require('../collection-base.js');
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The type must be a data type, a model or a collection.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The flags must be PropertyFlag items.
  */
-function PropertyInfo(name, type, flags) {
+function PropertyInfo(name, type, flags, getter, setter) {
 
   /**
    * The name of the property.
@@ -56,6 +56,22 @@ function PropertyInfo(name, type, flags) {
    */
   this.type = ensureArgument.isMandatoryType(type, [ DataType, ModelBase, CollectionBase ],
       'c_manType', 'PropertyInfo', 'type');
+
+  /**
+   * The custom getter function of the property.
+   * @type {function=}
+   * @readonly
+   */
+  this.getter = ensureArgument.isOptionalFunction(getter,
+      'c_optFunction', 'PropertyInfo', 'getter');
+
+  /**
+   * The custom setter function of the property.
+   * @type {function=}
+   * @readonly
+   */
+  this.setter = ensureArgument.isOptionalFunction(setter,
+      'c_optFunction', 'PropertyInfo', 'setter');
 
   flags = type instanceof DataType ?
     ensureArgument.isMandatoryInteger(flags || PropertyFlag.none,

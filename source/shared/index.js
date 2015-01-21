@@ -2,6 +2,7 @@
 
 var PropertyInfo = require('./property-info.js');
 var PropertyManager = require('./property-manager.js');
+var PropertyContext = require('./property-context.js');
 var DataStore = require('./data-store.js');
 //var ExtensionManagerBase = require('./extension-manager-base.js');
 var ExtensionManager = require('./extension-manager.js');
@@ -30,49 +31,52 @@ var NotImplementedError = require('./not-implemented-error.js');
  *
  * @namespace bo.shared
  *
- * @property {function} PropertyInfo - {@link bo.shared.PropertyInfo PropertyInfo}
+ * @property {function} PropertyInfo - {@link bo.shared.PropertyInfo Property definition}
  *      constructor to create new property definition.
- * @property {function} PropertyManager - {@link bo.shared.PropertyManager PropertyManager}
+ * @property {function} PropertyManager - {@link bo.shared.PropertyManager Property manager}
  *      constructor to create a new property manager.
+ * @property {function} PropertyContext - {@link bo.shared.PropertyContext Property context}
+ *      constructor to create new context object for custom property functions.
  * @property {function} DataStore - {@link bo.shared.DataStore DataStore}
  *      constructor to create new data store.
- * @property {function} ExtensionManager - {@link bo.shared.ExtensionManager ExtensionManager}
+ * @property {function} ExtensionManager - {@link bo.shared.ExtensionManager Extension manager}
  *      constructor to create new a new extension manager object for an asynchronous model.
- * @property {function} ExtensionManagerSync - {@link bo.shared.ExtensionManagerSync ExtensionManagerSync}
+ * @property {function} ExtensionManagerSync - {@link bo.shared.ExtensionManagerSync Extension manager}
  *      constructor to create new a new extension manager object for a synchronous model.
  *
- * @property {function} UserInfo - {@link bo.shared.UserInfo UserInfo} constructor
- *      to create new base object for user information.
- * @property {function} DataContext - {@link bo.shared.DataContext DataContext} constructor
- *      to create new context object for custom data transfer objects.
- * @property {function} TransferContext - {@link bo.shared.TransferContext TransferContext} constructor
- *      to create new context object for custom client transfer objects.
+ * @property {function} UserInfo - {@link bo.shared.UserInfo User data}
+ *      constructor to create new base object for user information.
+ * @property {function} DataContext - {@link bo.shared.DataContext Data context}
+ *      constructor to create new context object for custom data portal functions.
+ * @property {function} TransferContext - {@link bo.shared.TransferContext Transfer context}
+ *      constructor to create new context object for custom client and data transfer functions.
  *
- * @property {namespace} configuration - {@link bo.shared.configuration configuration} namespace
- *      provides configuration of business objects.
- * @property {namespace} ensureArgument - {@link bo.shared.ensureArgument ensureArgument} namespace
- *      provides methods to check arguments.
- * @property {function} Enumeration - {@link bo.shared.Enumeration Enumeration} constructor
- *      to create new enumeration.
- * @property {function} PropertyFlag - {@link bo.shared.PropertyFlag PropertyFlag} constructor
- *      to create new flag set for a property definition.
+ * @property {object} configuration - {@link bo.shared.configuration Configuration}
+ *      namespace provides configuration of business objects.
+ * @property {object} ensureArgument - {@link bo.shared.ensureArgument Argument verification}
+ *      namespace provides methods to check arguments.
+ * @property {function} Enumeration - {@link bo.shared.Enumeration Enumeration}
+ *      constructor to create new enumeration.
+ * @property {function} PropertyFlag - {@link bo.shared.PropertyFlag Property flag}
+ *      constructor to create new flag set for a property definition.
  *
- * @property {function} ArgumentError - {@link bo.shared.ArgumentError Argument error} constructor
- *      to create a new error related to an argument.
- * @property {function} ConfigurationError - {@link bo.shared.ConfigurationError Configuration error} constructor
- *      to create a new error related to configuration.
- * @property {function} DataPortalError - {@link bo.shared.DataPortalError Data portal error} constructor
- *      to create a new error related to data portal actions.
- * @property {function} EnumerationError - {@link bo.shared.EnumerationError Enumeration error} constructor
- *      to create a new error related to an enumeration.
- * @property {function} ModelError - {@link bo.shared.ModelError Model error} constructor
- *      to create a new error related to a model.
- * @property {function} NotImplementedError - {@link bo.shared.NotImplementedError Not implemented error} constructor
- *      to create a new error related to a not implemented function.
+ * @property {function} ArgumentError - {@link bo.shared.ArgumentError Argument error}
+ *      constructor to create a new error related to an argument.
+ * @property {function} ConfigurationError - {@link bo.shared.ConfigurationError Configuration error}
+ *      constructor to create a new error related to configuration.
+ * @property {function} DataPortalError - {@link bo.shared.DataPortalError Data portal error}
+ *      constructor to create a new error related to data portal actions.
+ * @property {function} EnumerationError - {@link bo.shared.EnumerationError Enumeration error}
+ *      constructor to create a new error related to an enumeration.
+ * @property {function} ModelError - {@link bo.shared.ModelError Model error}
+ *      constructor to create a new error related to a model.
+ * @property {function} NotImplementedError - {@link bo.shared.NotImplementedError Not implemented error}
+ *      constructor to create a new error related to a not implemented function.
  */
 var index = {
   PropertyInfo: PropertyInfo,
   PropertyManager: PropertyManager,
+  PropertyContext: PropertyContext,
   DataStore: DataStore,
   //ExtensionManagerBase: ExtensionManagerBase,
   ExtensionManager: ExtensionManager,

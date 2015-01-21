@@ -164,6 +164,8 @@
     "default": "An error occurred in the model.",
     "readCollection": "Cannot read properties of {0}.{1} collection.",
     "writeCollection": "Cannot write properties of {0}.{1} collection.",
+    "readProperty": "{0}.{1} property cannot be read.",
+    "writeProperty": "{0}.{1} property cannot be written.",
     "noProperty": "{0} model has no property named {1}.",
     "getValue": "Read-only model's properties cannot be copied to data transfer object.",
     "setValue": "Read-only model's properties cannot be copied from client transfer object.",
