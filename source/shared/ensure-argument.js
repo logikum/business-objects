@@ -71,6 +71,9 @@ function typeNames (types) {
  * @property {function} isMandatoryType - {@link bo.shared.ensureArgument#isMandatoryType isMandatoryType}
  *      function checks if value is a given type.
  *
+ * @property {function} isModelType - {@link bo.shared.ensureArgument#isModelType isModelType}
+ *      function checks if value is an instance of a given model type..
+ *
  * @property {function} isEnumMember - {@link bo.shared.ensureArgument#isEnumMember isEnumMember}
  *      function checks if value is member of a given enumeration.
  *
@@ -383,7 +386,7 @@ var ensureArgument = {
    *
    * @function bo.shared.ensureArgument#isOptionalType
    * @param {(object|null)} [value=null] - The value to check.
-   * @param {constructor} type - The type that value must inherit.
+   * @param {(constructor|Array.<constructor>)} type - The type that value must inherit.
    * @param {string} [message] - Human-readable description of the error.
    * @param {...*} [messageParams] - Optional interpolation parameters of the message.
    * @returns {(object|null)} The checked value.
@@ -395,7 +398,7 @@ var ensureArgument = {
       value = null;
     var types = type instanceof Array ? type : [ type ];
     if (value !== null && !(types.some(function (option) {
-        return value instanceof option || value.super_ === option;
+        return value && (value instanceof option || value.super_ === option);
       })))
       failed(arguments, 3, message || 'optType', typeNames(types));
     return value;
@@ -406,7 +409,7 @@ var ensureArgument = {
    *
    * @function bo.shared.ensureArgument#isMandatoryType
    * @param {object} [value] - The value to check.
-   * @param {constructor} type - The type that value must inherit.
+   * @param {(constructor|Array.<constructor>)} type - The type that value must inherit.
    * @param {string} [message] - Human-readable description of the error.
    * @param {...*} [messageParams] - Optional interpolation parameters of the message.
    * @returns {object} The checked value.
@@ -416,7 +419,7 @@ var ensureArgument = {
   isMandatoryType: function (value, type, message) {
     var types = type instanceof Array ? type : [ type ];
     if (!(types.some(function (option) {
-        return value instanceof option || value.super_ === option;
+        return value && (value instanceof option || value.super_ === option);
       })))
       failed(arguments, 3, message || 'manType', typeNames(types));
     return value;
@@ -424,7 +427,32 @@ var ensureArgument = {
 
   //endregion
 
-  //region EnumMember
+  //region Model
+
+  /**
+   * Checks if value is an instance of a given model type.
+   *
+   * @function bo.shared.ensureArgument#isModelType
+   * @param {(object|null)} [value=null] - The value to check.
+   * @param {(constructor|Array.<constructor>)} model - The model type that value must be an instance of.
+   * @param {string} [message] - Human-readable description of the error.
+   * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+   * @returns {(object|null)} The checked value.
+   *
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The argument must be a model type.
+   */
+  isModelType: function (value, model, message) {
+    var models = model instanceof Array ? model : [ model ];
+    if (!(models.some(function (modelType) {
+          return value && value.constructor && value.constructor.modelType === modelType;
+        })))
+      failed(arguments, 3, message || 'modelType', models.join(' | '));
+    return value;
+  },
+
+  //endregion
+
+  //region Enumeration
 
   /**
    * Checks if value is member of a given enumeration.

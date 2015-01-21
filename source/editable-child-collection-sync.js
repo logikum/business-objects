@@ -6,21 +6,26 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
-var ModelBase = require('./model-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
+var ModelError = require('./shared/model-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 
-var EditableChildCollectionSyncCreator = function(name, itemType) {
+var EditableChildCollectionSyncFactory = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
-      'c_manString', 'EditableChildCollectionSyncCreator', 'name');
-  itemType = ensureArgument.isMandatoryType(itemType, ModelBase,
-      'c_itemType', 'EditableChildCollectionSyncCreator', 'EditableChildModelSync');
+      'c_manString', 'EditableChildCollectionSync', 'name');
+
+  // Verify the model type of the item type.
+  if (itemType.modelType !== 'EditableChildModelSync')
+    throw new ModelError('invalidItem',
+        itemType.prototype.name, itemType.modelType, 'EditableChildCollectionSync', 'EditableChildModelSync');
 
   var EditableChildCollectionSync = function (parent) {
 
-    parent = ensureArgument.isMandatoryType(parent, ModelBase, 'c_parent', name, 'EditableModelSync');
+    // Verify the model type of the parent model.
+    parent = ensureArgument.isModelType(parent, ['EditableRootModelSync', 'EditableChildModelSync'],
+        'c_modelType', name, 'parent');
 
     var self = this;
     var items = [];
@@ -152,7 +157,9 @@ var EditableChildCollectionSyncCreator = function(name, itemType) {
   };
   util.inherits(EditableChildCollectionSync, CollectionBase);
 
+  EditableChildCollectionSync.modelType = 'EditableChildCollectionSync';
+
   return EditableChildCollectionSync;
 };
 
-module.exports = EditableChildCollectionSyncCreator;
+module.exports = EditableChildCollectionSyncFactory;

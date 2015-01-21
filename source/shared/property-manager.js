@@ -4,6 +4,7 @@ var ensureArgument = require('./ensure-argument.js');
 var ArgumentError = require('./argument-error.js');
 var PropertyInfo = require('./property-info.js');
 var DataType = require('../data-types/data-type.js');
+var ModelError = require('./model-error.js');
 
 /**
  * @classdesc Provides methods to manage the properties of a business object model.
@@ -24,6 +25,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
   var changed_k = false;  // for key
   var children = [];
   var key;
+  var isFrozen = false;
 
   /**
    * The name of the business object model.
@@ -35,7 +37,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
 
   Array.prototype.slice.call(arguments, 1)
       .forEach(function (arg) {
-        items.push(ensureArgument.isMandatoryType(arg, PropertyInfo, 'propManCtor'));
+        items.push(ensureArgument.isMandatoryType(arg, PropertyInfo, 'c_pm'));
         changed_c = true;
         changed_k = true;
       });
@@ -48,8 +50,12 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * @param {!bo.shared.PropertyInfo} property - Description of the model property to be added.
    *
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The property must be PropertyInfo object.
+   * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.
    */
   this.add = function (property) {
+    if (isFrozen)
+      throw new ModelError('frozen', this.name);
+
     items.push(ensureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'PropertyManager', 'add', 'property'));
     changed_c = true;
@@ -76,8 +82,12 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The type must be a data type, a model or a collection.
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The flags must be PropertyFlag items.
+   * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.
    */
   this.create = function (name, type, flags) {
+    if (isFrozen)
+      throw new ModelError('frozen', this.name);
+
     var property = new PropertyInfo(name, type, flags);
     items.push(property);
     changed_c = true;
@@ -120,7 +130,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
       if (items[i].name === name)
         return items[i];
     }
-    throw new ArgumentError(message || 'propManItem', name);
+    throw new ArgumentError(message || 'm_property', this.name, name);
   };
 
   /**
@@ -205,6 +215,39 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
   this.childCount = function () {
     checkChildren();
     return children.length;
+  };
+
+  /**
+   * Verifies the model types of child models and freezes properties of the model.
+   *
+   * @param {Array.<string>} allowedTypes - The names of the model types of the allowed child models.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The allowed types must be
+   *      an array of string values or a single string value.
+   * @throws {@link bo.shared.ModelError Model error}: The type of a model property
+   *      should be an allowed type.
+   */
+  this.verifyChildTypes = function (allowedTypes) {
+    allowedTypes = ensureArgument.isMandatoryArray(allowedTypes, String,
+        'm_manArrayPrim', 'PropertyManager', 'verifyChildTypes', 'allowedTypes');
+
+    checkChildren();
+    var child;
+
+    for (var i = 0; i < children.length; i++) {
+      var matches = false;
+      child = children[i];
+      for (var j = 0; j < allowedTypes.length; j++) {
+        if (child.type.modelType == allowedTypes[j]) {
+          matches = true;
+          break;
+        }
+      }
+      if (!matches)
+        throw new ModelError('invalidChild',
+            this.name, child.name, child.type.modelType, allowedTypes.join(' | '));
+    }
+    isFrozen = true;
   };
 
   //endregion

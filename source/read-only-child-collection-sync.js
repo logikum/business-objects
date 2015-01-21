@@ -6,19 +6,24 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
-var ModelBase = require('./model-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
+var ModelError = require('./shared/model-error.js');
 
-var ReadOnlyChildCollectionSyncCreator = function(name, itemType) {
+var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
-      'c_manString', 'ReadOnlyChildCollectionSyncCreator', 'name');
-  itemType = ensureArgument.isMandatoryType(itemType, ModelBase,
-      'c_itemType', 'ReadOnlyChildCollectionSyncCreator', 'ReadOnlyChildModelSync');
+      'c_manString', 'ReadOnlyChildCollectionSync', 'name');
+
+  // Verify the model type of the item type.
+  if (itemType.modelType !== 'ReadOnlyChildModelSync')
+    throw new ModelError('invalidItem', itemType.prototype.name, itemType.modelType,
+        'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync');
 
   var ReadOnlyChildCollectionSync = function (parent) {
 
-    parent = ensureArgument.isMandatoryType(parent, ModelBase, 'c_parent', name, 'ReadOnlyModelSync');
+    // Verify the model type of the parent model.
+    parent = ensureArgument.isModelType(parent, ['ReadOnlyRootModelSync', 'ReadOnlyChildModelSync'],
+        'c_modelType', name);
 
     var self = this;
     var items = [];
@@ -94,7 +99,9 @@ var ReadOnlyChildCollectionSyncCreator = function(name, itemType) {
   };
   util.inherits(ReadOnlyChildCollectionSync, CollectionBase);
 
+  ReadOnlyChildCollectionSync.modelType = 'ReadOnlyChildCollectionSync';
+
   return ReadOnlyChildCollectionSync;
 };
 
-module.exports = ReadOnlyChildCollectionSyncCreator;
+module.exports = ReadOnlyChildCollectionSyncFactory;

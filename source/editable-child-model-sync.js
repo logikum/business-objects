@@ -6,7 +6,6 @@
 
 var util = require('util');
 var ModelBase = require('./model-base.js');
-var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
@@ -28,21 +27,32 @@ var ValidationContext = require('./rules/validation-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
-var MODEL_TYPE = 'Editable child model';
+var MODEL_DESC = 'Editable child model';
 
-var EditableChildModelSyncCreator = function(properties, rules, extensions) {
+var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'EditableChildModelSyncCreator', 'properties');
+      'c_manType', 'EditableChildModelSync', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'EditableChildModelSyncCreator', 'rules');
+      'c_manType', 'EditableChildModelSync', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', 'EditableChildModelSyncCreator', 'extensions');
+      'c_manType', 'EditableChildModelSync', 'extensions');
+
+  // Verify the model types of child models.
+  properties.verifyChildTypes([ 'EditableChildCollectionSync', 'EditableChildModelSync' ]);
 
   var EditableChildModelSync = function(parent) {
 
-    parent = ensureArgument.isMandatoryType(parent, [ ModelBase, CollectionBase ],
-        'c_parent', properties.name, 'EditableModelSync');
+    // Verify the model type of the parent model.
+    parent = ensureArgument.isModelType(parent,
+        [
+          //'EditableRootCollectionSync',
+          'EditableChildCollectionSync',
+          'EditableRootModelSync',
+          'EditableChildModelSync',
+          'CommandObjectSync'
+        ],
+        'c_modelType', properties.name, 'parent');
 
     var self = this;
     var state = null;
@@ -407,7 +417,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'create', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'create', e);
         }
       }
     }
@@ -631,6 +641,7 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
   };
   util.inherits(EditableChildModelSync, ModelBase);
 
+  EditableChildModelSync.modelType = 'EditableChildModelSync';
   EditableChildModelSync.prototype.name = properties.name;
 
   //region Factory methods
@@ -652,4 +663,4 @@ var EditableChildModelSyncCreator = function(properties, rules, extensions) {
   return EditableChildModelSync;
 };
 
-module.exports = EditableChildModelSyncCreator;
+module.exports = EditableChildModelSyncFactory;

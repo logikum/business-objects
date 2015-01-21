@@ -218,6 +218,10 @@ describe('Property manager', function () {
     expect(pm.childCount()).toBe(3);
   });
 
+  it('verifyChildTypes method works', function() {
+
+  });
+
   //endregion
 
   //region Key

@@ -6,7 +6,6 @@
 
 var util = require('util');
 var ModelBase = require('./model-base.js');
-var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
@@ -26,16 +25,19 @@ var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
-var MODEL_TYPE = 'Read-only root model';
+var MODEL_DESC = 'Read-only root model';
 
-var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
+var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'ReadOnlyRootModelSyncCreator', 'properties');
+      'c_manType', 'ReadOnlyRootModelSync', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyRootModelSyncCreator', 'rules');
+      'c_manType', 'ReadOnlyRootModelSync', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', 'ReadOnlyRootModelSyncCreator', 'extensions');
+      'c_manType', 'ReadOnlyRootModelSync', 'extensions');
+
+  // Verify the model type of child models.
+  properties.verifyChildTypes([ 'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync' ]);
 
   var ReadOnlyRootModelSync = function() {
 
@@ -182,7 +184,7 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'fetch', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'fetch', e);
         }
       }
     }
@@ -266,6 +268,7 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
   };
   util.inherits(ReadOnlyRootModelSync, ModelBase);
 
+  ReadOnlyRootModelSync.modelType = 'ReadOnlyRootModelSync';
   ReadOnlyRootModelSync.prototype.name = properties.name;
 
   //region Factory methods
@@ -281,4 +284,4 @@ var ReadOnlyRootModelSyncCreator = function(properties, rules, extensions) {
   return ReadOnlyRootModelSync;
 };
 
-module.exports = ReadOnlyRootModelSyncCreator;
+module.exports = ReadOnlyRootModelSyncFactory;

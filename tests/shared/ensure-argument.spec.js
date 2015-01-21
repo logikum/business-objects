@@ -4,6 +4,8 @@ var numbers = require('./numbers.js');
 var ensureArgument = require('../../source/shared/ensure-argument.js');
 var ModelBase = require('../../source/model-base.js');
 
+var ClearScheduleCommand = require('../../sample/sync/clear-schedule-command.js');
+
 describe('Argument checking object', function () {
 
   it('has the necessary methods', function () {
@@ -32,7 +34,9 @@ describe('Argument checking object', function () {
     // Type
     expect(ensureArgument.isOptionalType).toBeDefined();
     expect(ensureArgument.isMandatoryType).toBeDefined();
-    // EnumMember
+    // Model
+    expect(ensureArgument.isModelType).toBeDefined();
+    // Enumeration
     expect(ensureArgument.isEnumMember).toBeDefined();
     // Array
     expect(ensureArgument.isOptionalArray).toBeDefined();
@@ -585,7 +589,31 @@ describe('Argument checking object', function () {
 
   //endregion
 
-  //region EnumMember
+  //region Model
+
+  it('isModelType method works', function () {
+    var cmd = ClearScheduleCommand.create();
+
+    function call01() { return ensureArgument.isModelType(undefined, 'CommandObjectSync'); }
+    function call02() { return ensureArgument.isModelType(null, 'CommandObjectSync'); }
+    function call03() { return ensureArgument.isModelType({}, 'CommandObjectSync'); }
+    function call04() { return ensureArgument.isModelType(cmd, 'CommandObject'); }
+    function call05() { return ensureArgument.isModelType(cmd, 'CommandObject', 'Invalid model type!'); }
+
+    var cmd01 = ensureArgument.isModelType(cmd, 'CommandObjectSync');
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow('Invalid model type!');
+
+    expect(cmd01).toBe(cmd);
+  });
+
+  //endregion
+
+  //region Enumeration
 
   it('isEnumMember method works', function () {
     var Numbers = numbers.three;

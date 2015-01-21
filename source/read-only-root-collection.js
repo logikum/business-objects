@@ -6,9 +6,9 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
-var ModelBase = require('./model-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
+var ModelError = require('./shared/model-error.js');
 
 var ExtensionManager = require('./shared/extension-manager.js');
 var DataContext = require('./shared/data-context.js');
@@ -18,18 +18,21 @@ var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
-var MODEL_TYPE = 'Read-only root collection';
+var MODEL_DESC = 'Read-only root collection';
 
-var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) {
+var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) {
 
   name = ensureArgument.isMandatoryString(name,
-      'c_manString', 'ReadOnlyRootCollectionCreator', 'name');
-  itemType = ensureArgument.isMandatoryType(itemType, ModelBase,
-      'c_itemType', 'ReadOnlyRootCollectionCreator', 'ReadOnlyChildModel');
+      'c_manString', 'ReadOnlyRootCollection', 'name');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyRootCollectionCreator', 'rules');
+      'c_manType', 'ReadOnlyRootCollection', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'ReadOnlyRootCollectionCreator', 'extensions');
+      'c_manType', 'ReadOnlyRootCollection', 'extensions');
+
+  // Verify the model type of the item type.
+  if (itemType.modelType !== 'ReadOnlyChildModel')
+    throw new ModelError('invalidItem', itemType.prototype.name, itemType.modelType,
+        'ReadOnlyRootCollection', 'ReadOnlyChildModel');
 
   var ReadOnlyRootCollection = function () {
 
@@ -99,7 +102,7 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
     }
 
     function wrapError (err) {
-      return new DataPortalError(MODEL_TYPE, properties.name, 'fetch', err);
+      return new DataPortalError(MODEL_DESC, properties.name, 'fetch', err);
     }
 
     function runStatements (main, callback) {
@@ -249,7 +252,9 @@ var ReadOnlyRootCollectionCreator = function(name, itemType, rules, extensions) 
 
   //endregion
 
+  ReadOnlyRootCollection.modelType = 'ReadOnlyRootCollection';
+
   return ReadOnlyRootCollection;
 };
 
-module.exports = ReadOnlyRootCollectionCreator;
+module.exports = ReadOnlyRootCollectionFactory;

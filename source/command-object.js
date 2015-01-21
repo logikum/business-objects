@@ -26,16 +26,19 @@ var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
-var MODEL_TYPE = 'Command object';
+var MODEL_DESC = 'Command object';
 
-var CommandObjectCreator = function(properties, rules, extensions) {
+var CommandObjectFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'CommandObjectCreator', 'properties');
+      'c_manType', 'CommandObject', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'CommandObjectCreator', 'rules');
+      'c_manType', 'CommandObject', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'CommandObjectCreator', 'extensions');
+      'c_manType', 'CommandObject', 'extensions');
+
+  // Verify the model types of child models.
+  properties.verifyChildTypes([ 'ReadOnlyChildModel', 'ReadOnlyChildCollection' ]);
 
   var CommandObject = function() {
 
@@ -172,7 +175,7 @@ var CommandObjectCreator = function(properties, rules, extensions) {
     }
 
     function wrapError (err) {
-      return new DataPortalError(MODEL_TYPE, properties.name, 'execute', err);
+      return new DataPortalError(MODEL_DESC, properties.name, 'execute', err);
     }
 
     function runTransaction (main, callback) {
@@ -364,6 +367,7 @@ var CommandObjectCreator = function(properties, rules, extensions) {
   };
   util.inherits(CommandObject, ModelBase);
 
+  CommandObject.modelType = 'CommandObject';
   CommandObject.prototype.name = properties.name;
 
   //region Factory methods
@@ -378,4 +382,4 @@ var CommandObjectCreator = function(properties, rules, extensions) {
   return CommandObject;
 };
 
-module.exports = CommandObjectCreator;
+module.exports = CommandObjectFactory;

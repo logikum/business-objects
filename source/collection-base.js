@@ -4,7 +4,7 @@
  */
 'use strict';
 
-function CollectionBase () {
+function CollectionBase (modelType) {
 }
 
 module.exports = CollectionBase;

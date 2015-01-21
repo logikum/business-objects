@@ -26,16 +26,19 @@ var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
-var MODEL_TYPE = 'Command object';
+var MODEL_DESC = 'Command object';
 
-var CommandObjectSyncCreator = function(properties, rules, extensions) {
+var CommandObjectSyncFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'CommandObjectSyncCreator', 'properties');
+      'c_manType', 'CommandObjectSync', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'CommandObjectSyncCreator', 'rules');
+      'c_manType', 'CommandObjectSync', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', 'CommandObjectSyncCreator', 'extensions');
+      'c_manType', 'CommandObjectSync', 'extensions');
+
+  // Verify the model types of child models.
+  properties.verifyChildTypes([ 'ReadOnlyChildModelSync', 'ReadOnlyChildCollectionSync' ]);
 
   var CommandObjectSync = function() {
 
@@ -180,7 +183,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'execute', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'execute', e);
         }
       }
     }
@@ -297,6 +300,7 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
   };
   util.inherits(CommandObjectSync, ModelBase);
 
+  CommandObjectSync.modelType = 'CommandObjectSync';
   CommandObjectSync.prototype.name = properties.name;
 
   //region Factory methods
@@ -310,4 +314,4 @@ var CommandObjectSyncCreator = function(properties, rules, extensions) {
   return CommandObjectSync;
 };
 
-module.exports = CommandObjectSyncCreator;
+module.exports = CommandObjectSyncFactory;

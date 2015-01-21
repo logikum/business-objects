@@ -27,16 +27,19 @@ var ValidationContext = require('./rules/validation-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
-var MODEL_TYPE = 'Editable root model';
+var MODEL_DESC = 'Editable root model';
 
-var EditableRootModelCreator = function(properties, rules, extensions) {
+var EditableRootModelFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'EditableRootModelCreator', 'properties');
+      'c_manType', 'EditableRootModel', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'EditableRootModelCreator', 'rules');
+      'c_manType', 'EditableRootModel', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'EditableRootModelCreator', 'extensions');
+      'c_manType', 'EditableRootModel', 'extensions');
+
+  // Verify the model types of child models.
+  properties.verifyChildTypes([ 'EditableChildCollection', 'EditableChildModel' ]);
 
   var EditableRootModel = function() {
 
@@ -397,7 +400,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
     }
 
     function wrapError (action, err) {
-      return new DataPortalError(MODEL_TYPE, properties.name, action, err);
+      return new DataPortalError(MODEL_DESC, properties.name, action, err);
     }
 
     function runStatements (main, action, callback) {
@@ -798,6 +801,7 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
   };
   util.inherits(EditableRootModel, ModelBase);
 
+  EditableRootModel.modelType = 'EditableRootModel';
   EditableRootModel.prototype.name = properties.name;
 
   //region Factory methods
@@ -831,4 +835,4 @@ var EditableRootModelCreator = function(properties, rules, extensions) {
   return EditableRootModel;
 };
 
-module.exports = EditableRootModelCreator;
+module.exports = EditableRootModelFactory;

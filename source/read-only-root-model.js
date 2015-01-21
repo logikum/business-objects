@@ -6,7 +6,6 @@
 
 var util = require('util');
 var ModelBase = require('./model-base.js');
-var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
@@ -26,16 +25,19 @@ var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
-var MODEL_TYPE = 'Read-only root model';
+var MODEL_DESC = 'Read-only root model';
 
-var ReadOnlyRootModelCreator = function(properties, rules, extensions) {
+var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'ReadOnlyRootModelCreator', 'properties');
+      'c_manType', 'ReadOnlyRootModel', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyRootModelCreator', 'rules');
+      'c_manType', 'ReadOnlyRootModel', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'ReadOnlyRootModelCreator', 'extensions');
+      'c_manType', 'ReadOnlyRootModel', 'extensions');
+
+  // Verify the model type of child models.
+  properties.verifyChildTypes([ 'ReadOnlyChildCollection', 'ReadOnlyChildModel' ]);
 
   var ReadOnlyRootModel = function() {
 
@@ -173,7 +175,7 @@ var ReadOnlyRootModelCreator = function(properties, rules, extensions) {
     }
 
     function wrapError (err) {
-      return new DataPortalError(MODEL_TYPE, properties.name, 'fetch', err);
+      return new DataPortalError(MODEL_DESC, properties.name, 'fetch', err);
     }
 
     function runStatements (main, callback) {
@@ -322,6 +324,7 @@ var ReadOnlyRootModelCreator = function(properties, rules, extensions) {
   };
   util.inherits(ReadOnlyRootModel, ModelBase);
 
+  ReadOnlyRootModel.modelType = 'ReadOnlyRootModel';
   ReadOnlyRootModel.prototype.name = properties.name;
 
   //region Factory methods
@@ -345,4 +348,4 @@ var ReadOnlyRootModelCreator = function(properties, rules, extensions) {
   return ReadOnlyRootModel;
 };
 
-module.exports = ReadOnlyRootModelCreator;
+module.exports = ReadOnlyRootModelFactory;

@@ -6,7 +6,6 @@
 
 var util = require('util');
 var ModelBase = require('./model-base.js');
-var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
@@ -25,19 +24,30 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
-var ReadOnlyChildModelCreator = function(properties, rules, extensions) {
+var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'ReadOnlyChildModelCreator', 'properties');
+      'c_manType', 'ReadOnlyChildModel', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyChildModelCreator', 'rules');
+      'c_manType', 'ReadOnlyChildModel', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'ReadOnlyChildModelCreator', 'extensions');
+      'c_manType', 'ReadOnlyChildModel', 'extensions');
+
+  // Verify the model type of child models.
+  properties.verifyChildTypes([ 'ReadOnlyChildCollection', 'ReadOnlyChildModel' ]);
 
   var ReadOnlyChildModel = function(parent) {
 
-    parent = ensureArgument.isMandatoryType(parent, [ ModelBase, CollectionBase ],
-        'c_parent', properties.name, 'ReadOnlyModel');
+    // Verify the model type of the parent model.
+    parent = ensureArgument.isModelType(parent,
+        [
+          'ReadOnlyRootCollection',
+          'ReadOnlyChildCollection',
+          'ReadOnlyRootModel',
+          'ReadOnlyChildModel',
+          'CommandObject'
+        ],
+        'c_modelType', properties.name, 'parent');
 
     var self = this;
     var store = new DataStore();
@@ -275,6 +285,7 @@ var ReadOnlyChildModelCreator = function(properties, rules, extensions) {
   };
   util.inherits(ReadOnlyChildModel, ModelBase);
 
+  ReadOnlyChildModel.modelType = 'ReadOnlyChildModel';
   ReadOnlyChildModel.prototype.name = properties.name;
 
   //region Factory methods
@@ -294,4 +305,4 @@ var ReadOnlyChildModelCreator = function(properties, rules, extensions) {
   return ReadOnlyChildModel;
 };
 
-module.exports = ReadOnlyChildModelCreator;
+module.exports = ReadOnlyChildModelFactory;

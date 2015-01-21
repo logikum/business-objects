@@ -27,16 +27,19 @@ var ValidationContext = require('./rules/validation-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
-var MODEL_TYPE = 'Editable root model';
+var MODEL_DESC = 'Editable root model';
 
-var EditableRootModelSyncCreator = function(properties, rules, extensions) {
+var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'EditableRootModelSyncCreator', 'properties');
+      'c_manType', 'EditableRootModelSync', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'EditableRootModelSyncCreator', 'rules');
+      'c_manType', 'EditableRootModelSync', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', 'EditableRootModelSyncCreator', 'extensions');
+      'c_manType', 'EditableRootModelSync', 'extensions');
+
+  // Verify the model types of child models.
+  properties.verifyChildTypes([ 'EditableChildCollectionSync', 'EditableChildModelSync' ]);
 
   var EditableRootModelSync = function() {
 
@@ -392,7 +395,7 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'create', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'create', e);
         }
       }
     }
@@ -423,7 +426,7 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'fetch', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'fetch', e);
         }
       }
     }
@@ -453,7 +456,7 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'insert', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'insert', e);
         }
       }
     }
@@ -483,7 +486,7 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'update', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'update', e);
         }
       }
     }
@@ -512,7 +515,7 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'remove', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'remove', e);
         }
       }
     }
@@ -650,6 +653,7 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
   };
   util.inherits(EditableRootModelSync, ModelBase);
 
+  EditableRootModelSync.modelType = 'EditableRootModelSync';
   EditableRootModelSync.prototype.name = properties.name;
 
   //region Factory methods
@@ -671,4 +675,4 @@ var EditableRootModelSyncCreator = function(properties, rules, extensions) {
   return EditableRootModelSync;
 };
 
-module.exports = EditableRootModelSyncCreator;
+module.exports = EditableRootModelSyncFactory;

@@ -3,8 +3,6 @@
     "default": "The passed value is invalid.",
     "enumType": "{0} is not an enumeration type.",
     "rule": "A Rule constructor can accept three kind of argument: a string as the message, an integer as the priority and a Boolean as the stopsProcessing argument.",
-    "propManCtor": "All arguments of PropertyManager constructor but the first must be a PropertyInfo object.",
-    "propManItem": "The PropertyManager has no item named {0}.",
 
     "defined": "The argument must be supplied.",
     "required": "The argument is required.",
@@ -23,6 +21,7 @@
     "manFunction": "The argument must be a function.",
     "optType": "The argument must be a {0} object or null.",
     "manType": "The argument must be a {0} object.",
+    "modelType": "The argument must be {0} type.",
     "enumMember": "The argument must be a {0} item.",
     "optArray": "The argument must be an array of {0} objects, or a single {0} object or null.",
     "manArray": "The argument must be an array of {0} objects or a single {0} object.",
@@ -46,6 +45,7 @@
     "c_manFunction": "The {1} argument of {0} constructor must be a function.",
     "c_optType": "The {1} argument of {0} constructor must be a {2} object or null.",
     "c_manType": "The {1} argument of {0} constructor must be a {2} object.",
+    "c_modelType": "The {1} argument of {0} constructor must be {2} type.",
     "c_enumMember": "The {1} argument of {0} constructor must be a {2} item.",
     "c_optArray": "The {1} argument of {0} constructor must be an array of {2} objects, or a single {2} object or null.",
     "c_manArray": "The {1} argument of {0} constructor must be an array of {2} objects or a single {2} object.",
@@ -69,17 +69,17 @@
     "m_manFunction": "The {2} argument of {0}.{1} method must be a function.",
     "m_optType": "The {2} argument of {0}.{1} method must be a {3} object or null.",
     "m_manType": "The {2} argument of {0}.{1} method must be a {3} object.",
+    "m_modelType": "The {2} argument of {0}.{1} method must be {3} type.",
     "m_enumMember": "The {2} argument of {0}.{1} method must be a {3} item.",
     "m_optArray": "The {2} argument of {0}.{1} method must be an array of {3} objects, or a single {3} object or null.",
     "m_manArray": "The {2} argument of {0}.{1} method must be an array of {3} objects or a single {3} object.",
-    "m_optArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values, or a single {3} values or null.",
-    "m_manArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values or a single {3} values.",
+    "m_optArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values, or a single {3} value or null.",
+    "m_manArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values or a single {3} value.",
 
-    "c_itemType": "The itemType argument of {0} must be {1} type.",
-    "c_parent": "The parent argument of {0} constructor must be {1} type.",
+    "c_pm": "All arguments of PropertyManager constructor but the first must be a PropertyInfo object.",
+    "m_property": "The {0} object has no property named {1}.",
     "m_notInit": "The {2} argument of {0}.{1} method is not initialized.",
-    "m_null": "The {2} argument of {0}.{1} method must be null.",
-    "p_enumMember": "The value of {0}.{1} property must be a {2} item."
+    "m_null": "The {2} argument of {0}.{1} method must be null."
   },
   "ConfigurationError": {
     "default": "An error occurred in the business objects' configuration.",
@@ -171,7 +171,10 @@
     "transition": "Illegal state transition: {0} => {1}",
     "propertyArg0": "The {1} property of {0} expects a function without arguments.",
     "propertyArg1": "The {1} property of {0} expects a function with 1 argument.",
-    "propertyArgN": "The {1} property of {0} expects a function with {2} arguments."
+    "propertyArgN": "The {1} property of {0} expects a function with {2} arguments.",
+    "invalidItem": "The model type of {0} is {1}, but the item type of {2} must be {3}.",
+    "invalidChild": "The model type of {1} property of {0} is {2}, but it should be {3}.",
+    "frozen": "Cannot change the definition of {0} after creation."
   },
   "default": "This is a test message."
 }

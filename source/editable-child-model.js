@@ -6,7 +6,6 @@
 
 var util = require('util');
 var ModelBase = require('./model-base.js');
-var CollectionBase = require('./collection-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
@@ -28,21 +27,32 @@ var ValidationContext = require('./rules/validation-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
-var MODEL_TYPE = 'Editable child model';
+var MODEL_DESC = 'Editable child model';
 
-var EditableChildModelCreator = function(properties, rules, extensions) {
+var EditableChildModelFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'EditableChildModelCreator', 'properties');
+      'c_manType', 'EditableChildModel', 'properties');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'EditableChildModelCreator', 'rules');
+      'c_manType', 'EditableChildModel', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'EditableChildModelCreator', 'extensions');
+      'c_manType', 'EditableChildModel', 'extensions');
+
+  // Verify the model types of child models.
+  properties.verifyChildTypes([ 'EditableChildCollection', 'EditableChildModel' ]);
 
   var EditableChildModel = function(parent) {
 
-    parent = ensureArgument.isMandatoryType(parent, [ ModelBase, CollectionBase ],
-        'c_parent', properties.name, 'EditableModel');
+    // Verify the model type of the parent model.
+    parent = ensureArgument.isModelType(parent,
+        [
+          //'EditableRootCollection',
+          'EditableChildCollection',
+          'EditableRootModel',
+          'EditableChildModel',
+          'CommandObject'
+        ],
+        'c_modelType', properties.name, 'parent');
 
     var self = this;
     var state = null;
@@ -412,7 +422,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
     }
 
     function wrapError (err) {
-      return new DataPortalError(MODEL_TYPE, properties.name, 'create', err);
+      return new DataPortalError(MODEL_DESC, properties.name, 'create', err);
     }
 
     function runStatements (main, callback) {
@@ -785,6 +795,7 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
   };
   util.inherits(EditableChildModel, ModelBase);
 
+  EditableChildModel.modelType = 'EditableChildModel';
   EditableChildModel.prototype.name = properties.name;
 
   //region Factory methods
@@ -814,4 +825,4 @@ var EditableChildModelCreator = function(properties, rules, extensions) {
   return EditableChildModel;
 };
 
-module.exports = EditableChildModelCreator;
+module.exports = EditableChildModelFactory;

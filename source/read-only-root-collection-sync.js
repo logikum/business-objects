@@ -6,9 +6,9 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
-var ModelBase = require('./model-base.js');
 var config = require('./shared/config-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
+var ModelError = require('./shared/model-error.js');
 
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataContext = require('./shared/data-context.js');
@@ -18,18 +18,21 @@ var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
-var MODEL_TYPE = 'Read-only root collection';
+var MODEL_DESC = 'Read-only root collection';
 
-var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensions) {
+var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensions) {
 
   name = ensureArgument.isMandatoryString(name,
-      'c_manString', 'ReadOnlyRootCollectionSyncCreator', 'name');
-  itemType = ensureArgument.isMandatoryType(itemType, ModelBase,
-      'c_itemType', 'ReadOnlyRootCollectionSyncCreator', 'ReadOnlyChildModelSync');
+      'c_manString', 'ReadOnlyRootCollectionSync', 'name');
   rules = ensureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyRootCollectionSyncCreator', 'rules');
+      'c_manType', 'ReadOnlyRootCollectionSync', 'rules');
   extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', 'ReadOnlyRootCollectionSyncCreator', 'extensions');
+      'c_manType', 'ReadOnlyRootCollectionSync', 'extensions');
+
+  // Verify the model type of the item type.
+  if (itemType.modelType !== 'ReadOnlyChildModelSync')
+    throw new ModelError('invalidItem', itemType.prototype.name, itemType.modelType,
+        'ReadOnlyRootCollectionSync', 'ReadOnlyChildModelSync');
 
   var ReadOnlyRootCollectionSync = function () {
 
@@ -128,7 +131,7 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_TYPE, properties.name, 'fetch', e);
+          throw new DataPortalError(MODEL_DESC, properties.name, 'fetch', e);
         }
       }
     }
@@ -198,7 +201,9 @@ var ReadOnlyRootCollectionSyncCreator = function(name, itemType, rules, extensio
 
   //endregion
 
+  ReadOnlyRootCollectionSync.modelType = 'ReadOnlyRootCollectionSync';
+
   return ReadOnlyRootCollectionSync;
 };
 
-module.exports = ReadOnlyRootCollectionSyncCreator;
+module.exports = ReadOnlyRootCollectionSyncFactory;
