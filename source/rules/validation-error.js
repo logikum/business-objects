@@ -6,12 +6,12 @@
 
 var t = require('../locales/i18n-bo.js')('Rules');
 var ensureArgument = require('../shared/ensure-argument.js');
-var BrokenRules = require('./broken-rules.js');
+var BrokenRuleResponse = require('./broken-rule-response.js');
 var RuleSeverity = require('./rule-severity.js');
 
 function ValidationError(brokenRules, message) {
 
-  brokenRules = ensureArgument.isMandatoryType(brokenRules, BrokenRules,
+  brokenRules = ensureArgument.isMandatoryType(brokenRules, BrokenRuleResponse,
       'c_manType', 'ValidationError', 'brokenRules');
 
   this.name = 'ValidationError';

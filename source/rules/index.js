@@ -20,18 +20,27 @@ var ResultBase = require('./result-base.js');
 
 var BrokenRule = require('./broken-rule.js');
 var BrokenRuleList = require('./broken-rule-list.js');
-var BrokenRules = require('./broken-rules.js');
+var BrokenRuleResponse = require('./broken-rule-response.js');
 
 /**
  * Contains components used by authorization and validation rules.
  *
  * @namespace bo.rules
  *
+ * @property {function} ValidationContext - {@link bo.rules.ValidationContext Validation context}
+ *      constructor creates a new validation context instance.
+ *
+ * @property {function} AuthorizationContext - {@link bo.rules.AuthorizationContext Authorization context}
+ *      constructor creates a new authorization context instance.
  * @property {function} AuthorizationError - {@link bo.rules.AuthorizationError Authorization error}
  *      constructor creates a new error related to a broken authorization rule.
+ * @property {object} AuthorizationAction - {@link bo.rules.AuthorizationAction Authorization action}
+ *      object specifies the operations of models to authorize.
  * @property {object} NoAccessBehavior - {@link bo.rules.NoAccessBehavior No access behavior}
  *      object specifies the behavior options of failed authorization rules.
  *
+ * @property {function} RuleManager - {@link bo.rules.RuleManager Rule manager}
+ *      constructor creates a new manager instance.
  * @property {function} RuleList - {@link bo.rules.RuleList Rule list}
  *      constructor creates a new rule list instance.
  * @property {object} RuleSeverity - {@link bo.rules.RuleSeverity Rule severity}
@@ -43,6 +52,10 @@ var BrokenRules = require('./broken-rules.js');
  *
  * @property {function} BrokenRule - {@link bo.rules.BrokenRule Broken rule}
  *      constructor creates a new broken rule instance.
+ * @property {function} BrokenRuleList - {@link bo.rules.BrokenRuleList Broken rule list}
+ *      constructor creates a new broken rule list instance.
+ * @property {function} BrokenRuleResponse - {@link bo.rules.BrokenRuleResponse Broken rule response}
+ *      constructor creates a new broken rule response instance.
  */
 var index = {
   /**
@@ -51,11 +64,6 @@ var index = {
    * @see {@link module:rules/validation-rule} for further information.
    */
   ValidationRule: ValidationRule,
-  /**
-   * Validation context for validation rules.
-   * @memberof bo/rules
-   * @see {@link module:rules/validation-context} for further information.
-   */
   ValidationContext: ValidationContext,
   /**
    * Validation result of validation rules.
@@ -77,11 +85,6 @@ var index = {
    * @see {@link module:rules/authorization-rule} for further information.
    */
   AuthorizationRule: AuthorizationRule,
-  /**
-   * Authorization context for authorization rules.
-   * @memberof bo/rules
-   * @see {@link module:rules/authorization-context} for further information.
-   */
   AuthorizationContext: AuthorizationContext,
   /**
    * Authorization result of authorization rules.
@@ -90,49 +93,19 @@ var index = {
    */
   AuthorizationResult: AuthorizationResult,
   AuthorizationError: AuthorizationError,
-  /**
-   * Enumeration of authorization actions.
-   * @memberof bo/rules
-   * @see {@link module:rules/authorization-action} for further information.
-   */
   AuthorizationAction: AuthorizationAction,
-  /**
-   * Enumeration of actions for unauthorized accesses.
-   * @memberof bo/rules
-   * @see {@link module:rules/authorization-action} for further information.
-   */
   NoAccessBehavior: NoAccessBehavior,
 
 
-  /**
-   * Validates a model and check the permissions of the user.
-   * @memberof bo/rules
-   * @see {@link module:rules/rule-manager} for further information.
-   */
   RuleManager: RuleManager,
-  /**
-   * Collection of rule definitions of a model.
-   * @memberof bo/rules
-   * @see {@link module:rules/rule-manager} for further information.
-   */
   RuleList: RuleList,
   RuleSeverity: RuleSeverity,
   RuleBase: RuleBase,
   ResultBase: ResultBase,
 
   BrokenRule: BrokenRule,
-  /**
-   * Collection of broken rules of a model.
-   * @memberof bo/rules
-   * @see {@link module:rules/broken-rule-list} for further information.
-   */
   BrokenRuleList: BrokenRuleList,
-  /**
-   * Client side representation of broken rules.
-   * @memberof bo/rules
-   * @see {@link module:rules/broken-rules} for further information.
-   */
-  BrokenRules: BrokenRules
+  BrokenRuleResponse: BrokenRuleResponse
 };
 
 // Immutable object.

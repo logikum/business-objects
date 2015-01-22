@@ -1,18 +1,18 @@
-console.log('Testing rules/broken-rules.js...');
+console.log('Testing rules/broken-rule-response.js...');
 
-var BrokenRules = require('../../source/rules/broken-rules.js');
+var BrokenRuleResponse = require('../../source/rules/broken-rule-response.js');
 var RuleSeverity = require('../../source/rules/rule-severity.js');
 
-describe('Broken rules', function () {
+describe('Broken rule response', function () {
 
   it('constructor expects no argument', function () {
-    var build01 = function () { return new BrokenRules(); };
+    var build01 = function () { return new BrokenRuleResponse(); };
 
     expect(build01).not.toThrow();
   });
 
   it('add method expects two non-empty string and a severity argument', function() {
-    var brs = new BrokenRules();
+    var brs = new BrokenRuleResponse();
 
     var add01 = function () { brs.add(); };
     var add02 = function () { brs.add('property'); };
@@ -34,7 +34,7 @@ describe('Broken rules', function () {
   });
 
   it('add method creates an array property', function() {
-    var brs = new BrokenRules();
+    var brs = new BrokenRuleResponse();
     brs.add('property', 'message #1', RuleSeverity.information);
     brs.add('property', 'message #2', RuleSeverity.error);
 

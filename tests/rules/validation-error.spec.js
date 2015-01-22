@@ -1,7 +1,7 @@
 console.log('Testing rules/validation-error.js...');
 
 var ValidationError = require('../../source/rules/validation-error.js');
-var BrokenRules = require('../../source/rules/broken-rules.js');
+var BrokenRules = require('../../source/rules/broken-rule-response.js');
 var RuleSeverity = require('../../source/rules/rule-severity.js');
 
 describe('Validation error', function () {

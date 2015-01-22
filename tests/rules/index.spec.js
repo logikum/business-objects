@@ -20,7 +20,7 @@ var RuleSeverity = require('../../source/rules/rule-severity.js');
 var RuleBase = require('../../source/rules/rule-base.js');
 var ResultBase = require('../../source/rules/result-base.js');
 
-var BrokenRules = require('../../source/rules/broken-rules.js');
+var BrokenRuleResponse = require('../../source/rules/broken-rule-response.js');
 var BrokenRuleList = require('../../source/rules/broken-rule-list.js');
 var BrokenRule = require('../../source/rules/broken-rule.js');
 
@@ -31,7 +31,7 @@ describe('Rule component index', function () {
   function getProperty () { }
   var rule = new RuleBase('required');
   var brokenRules = new BrokenRuleList('modelName');
-  var brs = new BrokenRules();
+  var brs = new BrokenRuleResponse();
   var user = new UserInfo('user-code');
 
   it('properties return correct components', function () {
@@ -54,7 +54,7 @@ describe('Rule component index', function () {
     expect(new rules.RuleBase('memberOf')).toEqual(jasmine.any(RuleBase));
     expect(new rules.ResultBase()).toEqual(jasmine.any(ResultBase));
 
-    expect(new rules.BrokenRules()).toEqual(jasmine.any(BrokenRules));
+    expect(new rules.BrokenRuleResponse()).toEqual(jasmine.any(BrokenRuleResponse));
     expect(new rules.BrokenRuleList('model')).toEqual(jasmine.any(BrokenRuleList));
     expect(new rules.BrokenRule('name', false, 'property', 'message', RuleSeverity.error)).toEqual(jasmine.any(BrokenRule));
   });

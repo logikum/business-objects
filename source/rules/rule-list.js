@@ -14,7 +14,7 @@ var ValidationRule = require('./validation-rule.js');
 function RuleList() {
 
   /**
-   * Adds a new rule to the list of rules of its owner.
+   * Adds a new rule to the list of rules of its owner property.
    *
    * @function bo.rules.RuleList#add
    * @param {string} id - The identifier of the rule list, typically the property name.

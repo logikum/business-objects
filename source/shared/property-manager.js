@@ -47,7 +47,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
   /**
    * Adds a new property to the business object model.
    *
-   * @param {!bo.shared.PropertyInfo} property - Description of the model property to be added.
+   * @param {bo.shared.PropertyInfo} property - Description of the model property to add.
    *
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The property must be PropertyInfo object.
    * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.

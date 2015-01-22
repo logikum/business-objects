@@ -1,7 +1,3 @@
-/**
- * Rule manager module.
- * @module rules/rule-manager
- */
 'use strict';
 
 var ensureArgument = require('../shared/ensure-argument.js');
@@ -10,10 +6,18 @@ var RuleList = require('./rule-list.js');
 var ValidationRule = require('./validation-rule.js');
 var ValidationContext = require('./validation-context.js');
 var AuthorizationRule = require('./authorization-rule.js');
+var AuthorizationContext = require('./authorization-context.js');
 var RuleSeverity = require('./rule-severity.js');
 var NoAccessBehavior = require('./no-access-behavior.js');
 var PropertyInfo = require('../shared/property-info.js');
 
+/**
+ * @classdesc Provides methods to manage the rules of a business object model.
+ * @description Creates a new rule manager object.
+ *
+ * @memberof bo.rules
+ * @constructor
+ */
 var RuleManager = function () {
 
   var self = this;
@@ -21,6 +25,12 @@ var RuleManager = function () {
   var authorizationRules = new RuleList();
   var noAccessBehavior = null;
 
+  /**
+   * Defines the default behavior for unauthorized operations.
+   * @name {bo.rules.RuleManager#noAccessBehavior}
+   * @type {bo.rules.NoAccessBehavior}
+   * @default {bo.rules.NoAccessBehavior#throwError}
+   */
   Object.defineProperty(this, 'noAccessBehavior', {
     get: function () {
       return noAccessBehavior;
@@ -32,6 +42,14 @@ var RuleManager = function () {
     enumeration: true
   });
 
+  /**
+   * Initializes the rule manager: sorts the rules by priority and
+   * sets the default behavior for unauthorized operations.
+   *
+   * @param {bo.rules.NoAccessBehavior} defaultBehavior - The default behavior for unauthorized operations.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The severity must be a NoAccessBehavior item.
+   */
   this.initialize = function (defaultBehavior) {
     this.noAccessBehavior = defaultBehavior;
     validationRules.sort();
@@ -46,6 +64,14 @@ var RuleManager = function () {
     }
   };
 
+  /**
+   * Adds a new rule to the business object model.
+   *
+   * @param {(bo.rules.ValidationRule|bo.rules.AuthorizationRule)} rule - The rule to add.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The rule must be a Rule object.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The rule is not initialized.
+   */
   this.add = function (rule) {
 
     if (rule instanceof ValidationRule) {
@@ -62,6 +88,15 @@ var RuleManager = function () {
       throw new ArgumentError('m_manType', 'RuleManager', 'add', 'rule', 'Rule');
   };
 
+  /**
+   * Validates a property - executes all validation rules of the property.
+   *
+   * @param {bo.shared.PropertyInfo} property - The model property to validate.
+   * @param {bo.rules.ValidationContext} context - The context of the property validation.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The property must be a PropertyInfo object.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The context must be a ValidationContext object.
+   */
   this.validate = function (property, context) {
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'RuleManager', 'validate', 'property');
@@ -93,7 +128,17 @@ var RuleManager = function () {
     }
   };
 
+  /**
+   * Validates a property - executes all validation rules of the property.
+   *
+   * @param {bo.rules.AuthorizationContext} context - The context of the action authorization.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The context must be a AuthorizationContext object.
+   * @throws {@link bo.rules.AuthorizationError Authorization error}: The user has no permission to execute the action.
+   */
   this.hasPermission = function (context) {
+    context = ensureArgument.isMandatoryType(context, AuthorizationContext,
+        'm_manType', 'RuleManager', 'hasPermission', 'context');
     var isAllowed = true;
 
     var rules = authorizationRules[context.ruleId];
