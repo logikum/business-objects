@@ -15,7 +15,12 @@ var cr = bo.commonRules;
 var Address = require('./address.js');
 var BlanketOrderItems = require('./blanket-order-items.js');
 
-var orderKey = new Property('orderKey', dt.Integer, F.key | F.readOnly);
+function getOrderCode (ctx) {
+  return ctx.getValue('orderKey').toString(2);
+}
+
+var orderKey = new Property('orderKey', dt.Integer, F.key | F.readOnly | F.notOnCto);
+var orderCode = new Property('orderCode', dt.Text, F.readOnly | F.notOnDto, getOrderCode);
 var vendorName = new Property('vendorName', dt.Text);
 var contractDate = new Property('contractDate', dt.DateTime);
 var totalPrice = new Property('totalPrice', dt.Decimal);
@@ -29,6 +34,7 @@ var modifiedDate = new Property('modifiedDate', dt.DateTime, F.readOnly);
 var properties = new Properties(
   'BlanketOrder',
   orderKey,
+  orderCode,
   vendorName,
   contractDate,
   totalPrice,
@@ -80,7 +86,7 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    orderKey:     this.orderKey,
+    orderCode:    this.orderCode,
     vendorName:   this.vendorName,
     contractDate: this.contractDate,
     totalPrice:   this.totalPrice,
@@ -91,15 +97,16 @@ function toCto (ctx) {
   };
 }
 
-function fromCto (ctx, dto) {
-  //this.orderKey =     dto.orderKey;
-  this.vendorName =   dto.vendorName;
-  this.contractDate = dto.contractDate;
-  this.totalPrice =   dto.totalPrice;
-  this.schedules =    dto.schedules;
-  this.enabled =      dto.enabled;
-  //this.createdDate =  dto.createdDate;
-  //this.modifiedDate = dto.modifiedDate;
+function fromCto (ctx, cto) {
+  //this.orderKey =     cto.orderKey;
+  //this.orderCode =    cto.orderCode;
+  this.vendorName =   cto.vendorName;
+  this.contractDate = cto.contractDate;
+  this.totalPrice =   cto.totalPrice;
+  this.schedules =    cto.schedules;
+  this.enabled =      cto.enabled;
+  //this.createdDate =  cto.createdDate;
+  //this.modifiedDate = cto.modifiedDate;
 }
 
 //endregion
@@ -121,7 +128,7 @@ function dataFetch (ctx, filter, method) {
     // filter: vendorName
     dto = ctx.dao.fetchByName(ctx.connection, filter);
   else
-    // filter: primaryKey
+    // filter: primaryKey encoded
     dto = ctx.dao.fetch(ctx.connection, filter);
   // or:
   // var dto = ctx.dao[method](ctx.connection, filter);
@@ -189,8 +196,8 @@ var BlanketOrderFactory = {
   create: function () {
     return BlanketOrder.create();
   },
-  get: function (key) {
-    return BlanketOrder.fetch(key);
+  get: function (code) {
+    return BlanketOrder.fetch(code);
   },
   getByName: function (name) {
     return BlanketOrder.fetch(name, 'fetchByName');

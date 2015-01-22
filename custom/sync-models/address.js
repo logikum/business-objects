@@ -11,8 +11,13 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var addressKey = new Property('addressKey', dt.Integer, F.key | F.readOnly);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly);
+function getAddressCode (ctx) {
+  return ctx.getValue('addressKey').toString(2);
+}
+
+var addressKey = new Property('addressKey', dt.Integer, F.key | F.readOnly | F.notOnCto);
+var addressCode = new Property('addressCode', dt.Text, F.readOnly | F.notOnDto, getAddressCode);
+var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly | F.notOnCto);
 var country = new Property('country', dt.Text);
 var state = new Property('state', dt.Text);
 var city = new Property('city', dt.Text);
@@ -23,6 +28,7 @@ var postalCode = new Property('postalCode', dt.Text);
 var properties = new Properties(
   'Address',
   addressKey,
+  addressCode,
   orderKey,
   country,
   state,
@@ -67,26 +73,26 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    addressKey: this.addressKey,
-    orderKey:   this.orderKey,
-    country:    this.country,
-    state:      this.state,
-    city:       this.city,
-    line1:      this.line1,
-    line2:      this.line2,
-    postalCode: this.postalCode
+    addressCode: this.addressCode,
+    country:     this.country,
+    state:       this.state,
+    city:        this.city,
+    line1:       this.line1,
+    line2:       this.line2,
+    postalCode:  this.postalCode
   };
 }
 
-function fromCto (ctx, dto) {
-  //this.addressKey = dto.addressKey;
-  //this.orderKey =   dto.orderKey;
-  this.country =    dto.country;
-  this.state =      dto.state;
-  this.city =       dto.city;
-  this.line1 =      dto.line1;
-  this.line2 =      dto.line2;
-  this.postalCode = dto.postalCode;
+function fromCto (ctx, cto) {
+  //this.addressKey =  cto.addressKey;
+  //this.addressCode = cto.addressCode;
+  //this.orderKey =    cto.orderKey;
+  this.country =     cto.country;
+  this.state =       cto.state;
+  this.city =        cto.city;
+  this.line1 =       cto.line1;
+  this.line2 =       cto.line2;
+  this.postalCode =  cto.postalCode;
 }
 
 //endregion

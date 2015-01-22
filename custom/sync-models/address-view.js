@@ -11,8 +11,13 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var addressKey = new Property('addressKey', dt.Integer, F.key);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey);
+function getAddressCode (ctx) {
+  return ctx.getValue('addressKey').toString(2);
+}
+
+var addressKey = new Property('addressKey', dt.Integer, F.key | F.notOnCto);
+var addressCode = new Property('addressCode', dt.Text, F.notOnDto, getAddressCode);
+var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.notOnCto);
 var country = new Property('country', dt.Text);
 var state = new Property('state', dt.Text);
 var city = new Property('city', dt.Text);
@@ -23,6 +28,7 @@ var postalCode = new Property('postalCode', dt.Text);
 var properties = new Properties(
   'AddressView',
   addressKey,
+  addressCode,
   orderKey,
   country,
   state,
@@ -50,14 +56,13 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    addressKey: this.addressKey,
-    orderKey:   this.orderKey,
-    country:    this.country,
-    state:      this.state,
-    city:       this.city,
-    line1:      this.line1,
-    line2:      this.line2,
-    postalCode: this.postalCode
+    addressCode: this.addressCode,
+    country:     this.country,
+    state:       this.state,
+    city:        this.city,
+    line1:       this.line1,
+    line2:       this.line2,
+    postalCode:  this.postalCode
   };
 }
 

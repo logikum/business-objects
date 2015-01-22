@@ -15,7 +15,12 @@ var cr = bo.commonRules;
 var AddressView = require('./address-view.js');
 var BlanketOrderItemsView = require('./blanket-order-items-view.js');
 
-var orderKey = new Property('orderKey', dt.Integer, F.key);
+function getOrderCode (ctx) {
+  return ctx.getValue('orderKey').toString(2);
+}
+
+var orderKey = new Property('orderKey', dt.Integer, F.key | F.notOnCto);
+var orderCode = new Property('orderCode', dt.Text, F.notOnDto, getOrderCode);
 var vendorName = new Property('vendorName', dt.Text);
 var contractDate = new Property('contractDate', dt.DateTime);
 var totalPrice = new Property('totalPrice', dt.Decimal);
@@ -29,6 +34,7 @@ var modifiedDate = new Property('modifiedDate', dt.DateTime);
 var properties = new Properties(
   'BlanketOrderView',
   orderKey,
+  orderCode,
   vendorName,
   contractDate,
   totalPrice,
@@ -61,7 +67,7 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    orderKey:     this.orderKey,
+    orderCode:    this.orderCode,
     vendorName:   this.vendorName,
     contractDate: this.contractDate,
     totalPrice:   this.totalPrice,

@@ -13,8 +13,13 @@ var cr = bo.commonRules;
 
 var BlanketOrderSchedulesView = require('./blanket-order-schedules-view.js');
 
-var orderItemKey = new Property('orderItemKey', dt.Integer, F.key);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey);
+function getItemCode (ctx) {
+  return ctx.getValue('orderItemKey').toString(2);
+}
+
+var orderItemKey = new Property('orderItemKey', dt.Integer, F.key | F.notOnCto);
+var orderItemCode = new Property('orderItemCode', dt.Integer, F.notOnDto, getItemCode);
+var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.notOnCto);
 var productName = new Property('productName', dt.Text);
 var obsolete = new Property('obsolete', dt.Boolean);
 var expiry = new Property('expiry', dt.DateTime);
@@ -25,6 +30,7 @@ var schedules = new Property('schedules', BlanketOrderSchedulesView);
 var properties = new Properties(
   'BlanketOrderItemView',
   orderItemKey,
+  orderItemCode,
   orderKey,
   productName,
   obsolete,
@@ -51,13 +57,12 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    orderItemKey:     this.orderItemKey,
-    orderKey:   this.orderKey,
-    productName: this.productName,
-    obsolete:   this.obsolete,
-    expiry:    this.expiry,
-    quantity:      this.quantity,
-    unitPrice: this.unitPrice
+    orderItemCode:  this.orderItemCode,
+    productName:    this.productName,
+    obsolete:       this.obsolete,
+    expiry:         this.expiry,
+    quantity:       this.quantity,
+    unitPrice:      this.unitPrice
   };
 }
 

@@ -11,8 +11,13 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var orderScheduleKey = new Property('orderScheduleKey', dt.Integer, F.key | F.readOnly);
-var orderItemKey = new Property('orderItemKey', dt.Integer, F.parentKey | F.readOnly);
+function getScheduleCode (ctx) {
+  return ctx.getValue('orderScheduleKey').toString(2);
+}
+
+var orderScheduleKey = new Property('orderScheduleKey', dt.Integer, F.key | F.readOnly | F.notOnCto);
+var orderScheduleCode = new Property('orderScheduleCode', dt.Integer, F.readOnly | F.notOnDto, getScheduleCode);
+var orderItemKey = new Property('orderItemKey', dt.Integer, F.parentKey | F.readOnly | F.notOnCto);
 var quantity = new Property('quantity', dt.Integer);
 var totalMass = new Property('totalMass', dt.Decimal);
 var required = new Property('required', dt.Boolean);
@@ -22,6 +27,7 @@ var shipDate = new Property('shipDate', dt.DateTime);
 var properties = new Properties(
   'BlanketOrderSchedule',
   orderScheduleKey,
+  orderScheduleCode,
   orderItemKey,
   quantity,
   totalMass,
@@ -64,24 +70,24 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    orderScheduleKey: this.orderScheduleKey,
-    orderItemKey:     this.orderItemKey,
-    quantity:         this.quantity,
-    totalMass:        this.totalMass,
-    required:         this.required,
-    shipTo:           this.shipTo,
-    shipDate:         this.shipDate
+    orderScheduleCode:  this.orderScheduleCode,
+    quantity:           this.quantity,
+    totalMass:          this.totalMass,
+    required:           this.required,
+    shipTo:             this.shipTo,
+    shipDate:           this.shipDate
   };
 }
 
-function fromCto (ctx, dto) {
-  //this.orderScheduleKey = dto.orderScheduleKey;
-  //this.orderItemKey =     dto.orderItemKey;
-  this.quantity =         dto.quantity;
-  this.totalMass =        dto.totalMass;
-  this.required =         dto.required;
-  this.shipTo =           dto.shipTo;
-  this.shipDate =         dto.shipDate;
+function fromCto (ctx, cto) {
+  //this.orderScheduleKey =   cto.orderScheduleKey;
+  //this.orderScheduleCode =  cto.orderScheduleCode;
+  //this.orderItemKey =       cto.orderItemKey;
+  this.quantity =           cto.quantity;
+  this.totalMass =          cto.totalMass;
+  this.required =           cto.required;
+  this.shipTo =             cto.shipTo;
+  this.shipDate =           cto.shipDate;
 }
 
 //endregion

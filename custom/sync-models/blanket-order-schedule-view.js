@@ -11,8 +11,13 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var orderScheduleKey = new Property('orderScheduleKey', dt.Integer, F.key);
-var orderItemKey = new Property('orderItemKey', dt.Integer, F.parentKey);
+function getScheduleCode (ctx) {
+  return ctx.getValue('orderScheduleKey').toString(2);
+}
+
+var orderScheduleKey = new Property('orderScheduleKey', dt.Integer, F.key | F.notOnCto);
+var orderScheduleCode = new Property('orderScheduleCode', dt.Integer, F.notOnDto, getScheduleCode);
+var orderItemKey = new Property('orderItemKey', dt.Integer, F.parentKey | F.notOnCto);
 var quantity = new Property('quantity', dt.Integer);
 var totalMass = new Property('totalMass', dt.Decimal);
 var required = new Property('required', dt.Boolean);
@@ -22,6 +27,7 @@ var shipDate = new Property('shipDate', dt.DateTime);
 var properties = new Properties(
   'BlanketOrderScheduleView',
   orderScheduleKey,
+  orderScheduleCode,
   orderItemKey,
   quantity,
   totalMass,
@@ -47,13 +53,12 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    orderScheduleKey: this.orderScheduleKey,
-    orderItemKey:     this.orderItemKey,
-    quantity:         this.quantity,
-    totalMass:        this.totalMass,
-    required:         this.required,
-    shipTo:           this.shipTo,
-    shipDate:         this.shipDate
+    orderScheduleCode:  this.orderScheduleCode,
+    quantity:           this.quantity,
+    totalMass:          this.totalMass,
+    required:           this.required,
+    shipTo:             this.shipTo,
+    shipDate:           this.shipDate
   };
 }
 

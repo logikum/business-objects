@@ -13,8 +13,13 @@ var cr = bo.commonRules;
 
 var BlanketOrderSchedules = require('./blanket-order-schedules.js');
 
-var orderItemKey = new Property('orderItemKey', dt.Integer, F.key | F.readOnly);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly);
+function getItemCode (ctx) {
+  return ctx.getValue('orderItemKey').toString(2);
+}
+
+var orderItemKey = new Property('orderItemKey', dt.Integer, F.key | F.readOnly | F.notOnCto);
+var orderItemCode = new Property('orderItemCode', dt.Integer, F.readOnly | F.notOnDto, getItemCode);
+var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly | F.notOnCto);
 var productName = new Property('productName', dt.Text);
 var obsolete = new Property('obsolete', dt.Boolean);
 var expiry = new Property('expiry', dt.DateTime);
@@ -25,6 +30,7 @@ var schedules = new Property('schedules', BlanketOrderSchedules);
 var properties = new Properties(
   'BlanketOrderItem',
   orderItemKey,
+  orderItemCode,
   orderKey,
   productName,
   obsolete,
@@ -68,24 +74,24 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    orderItemKey:     this.orderItemKey,
-    orderKey:   this.orderKey,
-    productName: this.productName,
-    obsolete:   this.obsolete,
-    expiry:    this.expiry,
-    quantity:      this.quantity,
-    unitPrice: this.unitPrice
+    orderItemCode:  this.orderItemCode,
+    productName:    this.productName,
+    obsolete:       this.obsolete,
+    expiry:         this.expiry,
+    quantity:       this.quantity,
+    unitPrice:      this.unitPrice
   };
 }
 
-function fromCto (ctx, dto) {
-  //this.orderItemKey = dto.orderItemKey;
-  //this.orderKey =     dto.orderKey;
-  this.productName =  dto.productName;
-  this.obsolete =     dto.obsolete;
-  this.expiry =       dto.expiry;
-  this.quantity =     dto.quantity;
-  this.unitPrice =    dto.unitPrice;
+function fromCto (ctx, cto) {
+  //this.orderItemKey =  cto.orderItemKey;
+  //this.orderItemCode = cto.orderItemCode;
+  //this.orderKey =      cto.orderKey;
+  this.productName =   cto.productName;
+  this.obsolete =      cto.obsolete;
+  this.expiry =        cto.expiry;
+  this.quantity =      cto.quantity;
+  this.unitPrice =     cto.unitPrice;
 }
 
 //endregion
