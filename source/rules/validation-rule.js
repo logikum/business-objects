@@ -85,7 +85,7 @@ function ValidationRule(ruleName) {
   /**
    * Returns the values of the properties that are used by the rule.
    *
-   * @param {function} getValue - The function that returns the value of a property.
+   * @param {internal~getValue} getValue - A function that returns the value of a property.
    * @returns {object} An object that properties hold the values of the input properties of.
    *
    * @throws {@link bo.shared.ArgumentError Argument error}: The getValue argument must be a function..

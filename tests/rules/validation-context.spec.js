@@ -4,7 +4,7 @@ var ValidationContext = require('../../source/rules/validation-context.js');
 var BrokenRuleList = require('../../source/rules/broken-rule-list.js');
 
 describe('Validation context', function () {
-  function getProperty () { }
+  function getValue () { }
   var brokenRules = new BrokenRuleList('modelName');
 
   it('constructor expects two arguments', function () {
@@ -12,9 +12,9 @@ describe('Validation context', function () {
     var build02 = function () { return new ValidationContext('getProperty'); };
     var build03 = function () { return new ValidationContext('getProperty', {}); };
     var build04 = function () { return new ValidationContext('getProperty', brokenRules); };
-    var build05 = function () { return new ValidationContext(getProperty, 'brokenRules'); };
-    var build06 = function () { return new ValidationContext(getProperty, brokenRules); };
-    var build07 = function () { return new ValidationContext(getProperty); };
+    var build05 = function () { return new ValidationContext(getValue, 'brokenRules'); };
+    var build06 = function () { return new ValidationContext(getValue, brokenRules); };
+    var build07 = function () { return new ValidationContext(getValue); };
     var build08 = function () { return new ValidationContext(null, null); };
 
     expect(build01).toThrow();
@@ -28,18 +28,18 @@ describe('Validation context', function () {
   });
 
   it('has two properties', function() {
-    var ctx = new ValidationContext(getProperty, brokenRules);
+    var ctx = new ValidationContext(getValue, brokenRules);
 
-    expect(ctx.getProperty).toBe(getProperty);
+    expect(ctx.getValue).toBe(getValue);
     expect(ctx.brokenRules).toBe(brokenRules);
   });
 
   it('has read-only properties', function() {
-    var ctx = new ValidationContext(getProperty, brokenRules);
-    ctx.getProperty = null;
+    var ctx = new ValidationContext(getValue, brokenRules);
+    ctx.getValue = null;
     ctx.brokenRules = null;
 
-    expect(ctx.getProperty).not.toBeNull();
+    expect(ctx.getValue).not.toBeNull();
     expect(ctx.brokenRules).not.toBeNull();
   });
 });

@@ -20,8 +20,8 @@ var UserInfo = require('./user-info.js');
  * @param {object} dao - The data access object of the current model.
  * @param {bo.shared.UserInfo} user - The current user.
  * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
- * @param {function} [getValue] - A function that returns the current value of a property.
- * @param {function} [setValue] - A function that changes the current value of a property.
+ * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
+ * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
  *
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The dao argument must be an object.
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The user must be an UserInfo object.

@@ -295,7 +295,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * the current values of the key properties.
    *
    * @protected
-   * @param {function} getPropertyValue - A function that returns
+   * @param {internal~getValue} getPropertyValue - A function that returns
    *    the current value of the given property.
    * @returns {*} The key value of the model.
    */
@@ -309,7 +309,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    *
    * @protected
    * @param {object} data - Data object whose properties can contain the values of the model key.
-   * @param {function} getPropertyValue - A function that returns
+   * @param {internal~getValue} getPropertyValue - A function that returns
    *    the current value of the given property.
    * @returns {boolean} True when the values are equal, false otherwise.
    */

@@ -110,7 +110,7 @@ var RuleManager = function () {
       for (var i = 0; i < rules.length; i++) {
         var rule = rules[i];
 
-        var result = rule.execute(rule.getInputValues(context.getProperty));
+        var result = rule.execute(rule.getInputValues(context.getValue));
 
         if (result) {
           if (result.severity !== RuleSeverity.success) {
