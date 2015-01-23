@@ -3,7 +3,7 @@
 var ensureArgument = require('../shared/ensure-argument.js');
 var PropertyInfo = require('../shared/property-info.js');
 var BrokenRule = require('./broken-rule.js');
-var BrokenRuleResponse = require('./broken-rule-response.js');
+var BrokenRulesOutput = require('./broken-rules-output.js');
 var RuleSeverity = require('./rule-severity.js');
 
 /**
@@ -117,7 +117,7 @@ var BrokenRuleList = function (modelName) {
    * Transforms the broken rules into a format that can be sent to the client.
    *
    * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
-   * @returns {bo.rules.BrokenRuleResponse} The response object to send.
+   * @returns {bo.rules.BrokenRulesOutput} The response object to send.
    *
    * @throws {@link bo.shared.ArgumentError Argument error}: The namespace must be a string.
    */
@@ -129,7 +129,7 @@ var BrokenRuleList = function (modelName) {
     var data = null;
 
     if (length) {
-      data = new BrokenRuleResponse();
+      data = new BrokenRulesOutput();
 
       var ns = namespace ? namespace + ':' : '';
       for (var property in items) {

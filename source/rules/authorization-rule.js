@@ -1,7 +1,3 @@
-/**
- * Authorization rule module.
- * @module rules/authorization-rule
- */
 'use strict';
 
 var util = require('util');
@@ -15,6 +11,18 @@ var AuthorizationResult = require('./authorization-result.js');
 var AuthorizationError = require('./authorization-error.js');
 var NoAccessBehavior = require('./no-access-behavior.js');
 
+/**
+ * @classdesc Represents an authorization rule.
+ * @description Creates a new authorization rule object.
+ *
+ * @memberof bo.rules
+ * @constructor
+ * @param {string} ruleName - The name of the rule.
+ *
+ * @extends bo.rules.RuleBase
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
+ */
 function AuthorizationRule(ruleName) {
   AuthorizationRule.super_.call(this, ruleName);
 
@@ -22,8 +30,19 @@ function AuthorizationRule(ruleName) {
   var noAccessBehavior = NoAccessBehavior.throwError;
   var propertyName = '';
 
+  /**
+   * The identifier of the authorization action. Generally it is the action value,
+   * or when target is not empty, the action value and the target name separated by
+   * a dot, respectively.
+   * @type {string}
+   * @readonly
+   */
   this.ruleId = null;
 
+  /**
+   * The action to do when the rule fails.
+   * @type {bo.rules.NoAccessBehavior}
+   */
   Object.defineProperty(this, 'noAccessBehavior', {
     get: function () {
       return noAccessBehavior;
@@ -35,6 +54,21 @@ function AuthorizationRule(ruleName) {
     enumeration: true
   });
 
+  /**
+   * Sets the properties of the rule.
+   *
+   * @param {bo.rules.AuthorizationAction} action - The action to be authorized.
+   * @param {(bo.shared.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The action must be a AuthorizationAction item.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The target must be a PropertyInfo object in case of property read or write.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The target must be a non-empty string in case of method execution.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The target must be null in case of model actions.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+   */
   this.initialize = function (action, target, message, priority, stopsProcessing) {
 
     action = ensureArgument.isEnumMember(action, AuthorizationAction, null,
@@ -72,6 +106,17 @@ function AuthorizationRule(ruleName) {
     }
   }
 
+  /**
+   * Returns the result of the rule executed.
+   * If the rule fails and the noAccessBehavior property is
+   * {@link bo.rules.NoAccessBehavior#throwError}, throws an authorization error.
+   *
+   * @param {string} [message] - Human-readable description of the rule failure.
+   * @param {bo.rules.RuleSeverity} severity - The severity of the failed rule.
+   * @returns {bo.rules.AuthorizationResult} The result of the authorization rule.
+   *
+   * @throws {@link bo.shared.AuthorizationError Authorization error}: The user has no permission to execute the action.
+   */
   this.result = function (message, severity) {
     if (noAccessBehavior === NoAccessBehavior.throwError) {
       throw new AuthorizationError(message || this.message);

@@ -1,20 +1,20 @@
-console.log('Testing rules/validation-error.js...');
+console.log('Testing rules/validation-response.js...');
 
-var ValidationError = require('../../source/rules/validation-error.js');
-var BrokenRules = require('../../source/rules/broken-rule-response.js');
+var ValidationResponse = require('../../source/rules/validation-response.js');
+var BrokenRules = require('../../source/rules/broken-rules-output.js');
 var RuleSeverity = require('../../source/rules/rule-severity.js');
 
-describe('Validation error', function () {
+describe('Validation response', function () {
   var brs = new BrokenRules();
   brs.add('property', 'message #1', RuleSeverity.information);
   brs.add('property', 'message #2', RuleSeverity.error);
 
   it('constructor expects one or two arguments', function () {
-    var build01 = function () { return new ValidationError(); };
-    var build02 = function () { return new ValidationError({}); };
-    var build03 = function () { return new ValidationError(brs); };
-    var build04 = function () { return new ValidationError(brs, 2); };
-    var build05 = function () { return new ValidationError(brs, 'Something is wrong.'); };
+    var build01 = function () { return new ValidationResponse(); };
+    var build02 = function () { return new ValidationResponse({}); };
+    var build03 = function () { return new ValidationResponse(brs); };
+    var build04 = function () { return new ValidationResponse(brs, 2); };
+    var build05 = function () { return new ValidationResponse(brs, 'Something is wrong.'); };
 
     expect(build01).toThrow();
     expect(build02).toThrow();
@@ -24,7 +24,7 @@ describe('Validation error', function () {
   });
 
   it('has five properties', function() {
-    var ve = new ValidationError(brs, 'Something is wrong.');
+    var ve = new ValidationResponse(brs, 'Something is wrong.');
 
     expect(ve.name).toBe('ValidationError');
     expect(ve.status).toBe(422);
@@ -38,7 +38,7 @@ describe('Validation error', function () {
   });
 
   it('has read.only properties', function() {
-    var ve = new ValidationError(brs, 'Something is wrong.');
+    var ve = new ValidationResponse(brs, 'Something is wrong.');
     ve.name = 'name';
     ve.status = 404;
     ve.message = 'Good bye!';

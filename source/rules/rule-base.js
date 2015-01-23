@@ -59,7 +59,7 @@ var RuleBase = function (ruleName) {
  * @param {number} [priority=10] - The priority of the rule.
  * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
  *
- * @throws {@link bo.dataAccess.DaoError Dao error}: The message must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
 RuleBase.prototype.initialize = function () {
 

@@ -1,7 +1,3 @@
-/**
- * Validation rule module.
- * @module rules/validation-rule
- */
 'use strict';
 
 var util = require('util');
@@ -11,11 +7,39 @@ var RuleSeverity = require('./rule-severity.js');
 var ValidationResult = require('./validation-result.js');
 var PropertyInfo = require('../shared/property-info.js');
 
+/**
+ * @classdesc Represents a validation rule.
+ * @description Creates a new validation rule object.
+ *
+ * @memberof bo.rules
+ * @constructor
+ * @param {string} ruleName - The name of the rule.
+ *
+ * @extends bo.rules.RuleBase
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
+ */
 function ValidationRule(ruleName) {
   ValidationRule.super_.call(this, ruleName);
 
+  /**
+   * The definition of the property the rule relates to.
+   * @type {bo.shared.PropertyInfo}
+   * @readonly
+   */
   this.primaryProperty = null;
 
+  /**
+   * Sets the properties of the rule.
+   *
+   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+   */
   this.initialize = function (primaryProperty, message, priority, stopsProcessing) {
 
     this.primaryProperty = ensureArgument.isMandatoryType(primaryProperty, PropertyInfo,
@@ -28,6 +52,13 @@ function ValidationRule(ruleName) {
   var inputProperties = [];
   var affectedProperties = [];
 
+  /**
+   * Adds an additional property to the rule that will use its value.
+   *
+   * @param {bo.shared.PropertyInfo} property - An input property that value is used by the rule of.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The input property must be a PropertyInfo object.
+   */
   this.addInputProperty = function (property) {
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'ValidationRule', 'addInputProperty', 'property');
@@ -36,6 +67,13 @@ function ValidationRule(ruleName) {
       inputProperties.push(property);
   };
 
+  /**
+   * Adds an additional property that is influenced by the rule.
+   *
+   * @param {bo.shared.PropertyInfo} property - An affected property influenced by the rule.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The affected property must be a PropertyInfo object.
+   */
   this.addAffectedProperty = function (property) {
     property = ensureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'ValidationRule', 'addAffectedProperty', 'property');
@@ -44,6 +82,14 @@ function ValidationRule(ruleName) {
       affectedProperties.push(property);
   };
 
+  /**
+   * Returns the values of the properties that are used by the rule.
+   *
+   * @param {function} getValue - The function that returns the value of a property.
+   * @returns {object} An object that properties hold the values of the input properties of.
+   *
+   * @throws {@link bo.shared.ArgumentError Argument error}: The getValue argument must be a function..
+   */
   this.getInputValues = function (getValue) {
     getValue = ensureArgument.isMandatoryFunction(getValue,
         'm_manFunction', 'ValidationRule', 'getInputValues', 'getValue');
@@ -57,6 +103,13 @@ function ValidationRule(ruleName) {
     return inputValues;
   };
 
+  /**
+   * Returns the result of the rule executed.
+   *
+   * @param {string} [message] - Human-readable description of the rule failure.
+   * @param {bo.rules.RuleSeverity} severity - The severity of the failed rule.
+   * @returns {bo.rules.ValidationResult} The result of the validation rule.
+   */
   this.result = function (message, severity) {
 
     var result = new ValidationResult(this.ruleName, this.primaryProperty.name, message || this.message);

@@ -4,13 +4,18 @@ var ensureArgument = require('../shared/ensure-argument.js');
 var RuleSeverity = require('./rule-severity.js');
 
 /**
- * @classdesc Represents the client side format of broken rules.
- * @description Creates a new broken rule response instance.
+ * @classdesc
+ *      Represents the public format of broken rules.
+ *      The object properties are arrays, one for each model property that
+ *      has broken rule. The array elements are objects with a message and
+ *      a severity property, representing the broken rules.
+ * @description
+ *      Creates a new broken rules output instance.
  *
  * @memberof bo.rules
  * @constructor
  */
-function BrokenRuleResponse () {
+function BrokenRulesOutput () {
 
   /**
    * Adds a broken rule item to the response object.
@@ -26,13 +31,13 @@ function BrokenRuleResponse () {
   this.add = function (propertyName, message, severity) {
 
     propertyName = ensureArgument.isMandatoryString(propertyName,
-        'm_manString', 'BrokenRuleResponse', 'add', 'propertyName');
+        'm_manString', 'BrokenRulesOutput', 'add', 'propertyName');
 
     var brokenRule = {
       message: ensureArgument.isMandatoryString(message,
-          'm_manString', 'BrokenRuleResponse', 'add', 'message'),
+          'm_manString', 'BrokenRulesOutput', 'add', 'message'),
       severity: ensureArgument.isEnumMember(severity, RuleSeverity, null,
-          'm_enumType', 'BrokenRuleResponse', 'add', 'severity')
+          'm_enumType', 'BrokenRulesOutput', 'add', 'severity')
     };
 
     if (this[propertyName])
@@ -42,4 +47,4 @@ function BrokenRuleResponse () {
   };
 }
 
-module.exports = BrokenRuleResponse;
+module.exports = BrokenRulesOutput;
