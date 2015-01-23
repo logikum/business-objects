@@ -1,35 +1,44 @@
 'use strict';
 
+var ensureArgument = require('../shared/ensure-argument.js');
 var BrokenRule = require('./broken-rule.js');
 var RuleSeverity = require('./rule-severity.js');
 
 /**
- * @classdesc Serves as the base class for rule results of failed rules.
+ * @classdesc Serves as the base class for the failed result of executing a rule.
  * @description Creates a new rule result object.
  *
  * @memberof bo.rules
  * @constructor
+ * @param {string} ruleName - The name of the rule.
+ * @param {string} propertyName - The name of the property the rule belongs to.
+ * @param {string} message - Human-readable description of the reason of the failure.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
-var ResultBase = function () {
+var ResultBase = function (ruleName, propertyName, message) {
 
   /**
    * The name of the rule.
    * @type {string}
    * @readonly
    */
-  this.ruleName = null;
+  this.ruleName = ensureArgument.isMandatoryString(ruleName,
+      'c_manString', 'RuleResult', 'ruleName');
   /**
    * The name of the property the rule belongs to.
    * @type {string}
    * @readonly
    */
-  this.propertyName = null;
+  this.propertyName = propertyName || '';
   /**
    * Human-readable description of the reason of the failure.
    * @type {string}
    * @readonly
    */
-  this.message = null;
+  this.message = ensureArgument.isMandatoryString(message,
+      'c_manString', 'RuleResult', 'message');
   /**
    * The severity of the rule failure.
    * @type {bo.rules.RuleSeverity}

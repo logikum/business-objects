@@ -52,7 +52,7 @@ describe('Rule component index', function () {
     expect(new rules.RuleList('property', rule)).toEqual(jasmine.any(RuleList));
     expect(rules.RuleSeverity).toEqual(jasmine.any(Enumeration));
     expect(new rules.RuleBase('memberOf')).toEqual(jasmine.any(RuleBase));
-    expect(new rules.ResultBase()).toEqual(jasmine.any(ResultBase));
+    expect(new rules.ResultBase('rule', '', 'message')).toEqual(jasmine.any(ResultBase));
 
     expect(new rules.BrokenRuleResponse()).toEqual(jasmine.any(BrokenRuleResponse));
     expect(new rules.BrokenRuleList('model')).toEqual(jasmine.any(BrokenRuleList));

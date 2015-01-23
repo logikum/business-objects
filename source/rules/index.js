@@ -29,9 +29,13 @@ var BrokenRuleResponse = require('./broken-rule-response.js');
  *
  * @property {function} ValidationContext - {@link bo.rules.ValidationContext Validation context}
  *      constructor creates a new validation context instance.
+ * @property {function} ValidationResult - {@link bo.rules.ValidationResult Validation result}
+ *      constructor creates a new validation result instance.
  *
  * @property {function} AuthorizationContext - {@link bo.rules.AuthorizationContext Authorization context}
  *      constructor creates a new authorization context instance.
+ * @property {function} AuthorizationResult - {@link bo.rules.AuthorizationResult Authorization result}
+ *      constructor creates a new authorization result instance.
  * @property {function} AuthorizationError - {@link bo.rules.AuthorizationError Authorization error}
  *      constructor creates a new error related to a broken authorization rule.
  * @property {object} AuthorizationAction - {@link bo.rules.AuthorizationAction Authorization action}
@@ -65,11 +69,6 @@ var index = {
    */
   ValidationRule: ValidationRule,
   ValidationContext: ValidationContext,
-  /**
-   * Validation result of validation rules.
-   * @memberof bo/rules
-   * @see {@link module:rules/validation-result} for further information.
-   */
   ValidationResult: ValidationResult,
   /**
    * Validation error type.
@@ -78,7 +77,6 @@ var index = {
    */
   ValidationError: ValidationError,
 
-
   /**
    * Authorization rule for models.
    * @memberof bo/rules
@@ -86,16 +84,10 @@ var index = {
    */
   AuthorizationRule: AuthorizationRule,
   AuthorizationContext: AuthorizationContext,
-  /**
-   * Authorization result of authorization rules.
-   * @memberof bo/rules
-   * @see {@link module:rules/authorization-result} for further information.
-   */
   AuthorizationResult: AuthorizationResult,
   AuthorizationError: AuthorizationError,
   AuthorizationAction: AuthorizationAction,
   NoAccessBehavior: NoAccessBehavior,
-
 
   RuleManager: RuleManager,
   RuleList: RuleList,
