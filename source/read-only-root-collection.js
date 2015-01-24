@@ -6,7 +6,7 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
-var config = require('./shared/config-reader.js');
+var config = require('./shared/configuration-reader.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
 

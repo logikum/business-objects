@@ -13,11 +13,11 @@ var UserInfo = require('./user-info.js');
 var DataContext = require('./data-context.js');
 var TransferContext = require('./transfer-context.js');
 
-//var configHelper = require('./config-helper.js');
-var configuration = require('./config-reader.js');
+var configuration = require('./configuration-reader.js');
 var ensureArgument = require('./ensure-argument.js');
 var Enumeration = require('./enumeration.js');
 var PropertyFlag = require('./property-flag.js');
+//var Utility = require('./utility.js');
 
 var ArgumentError = require('./argument-error.js');
 var ConfigurationError = require('./configuration-error.js');
@@ -51,8 +51,6 @@ var NotImplementedError = require('./not-implemented-error.js');
  * @property {function} TransferContext - {@link bo.shared.TransferContext Transfer context}
  *      constructor to create new context object for custom client and data transfer functions.
  *
- * @property {object} configuration - {@link bo.shared.configuration Configuration}
- *      namespace provides configuration of business objects.
  * @property {object} ensureArgument - {@link bo.shared.ensureArgument Argument verification}
  *      namespace provides methods to check arguments.
  * @property {function} Enumeration - {@link bo.shared.Enumeration Enumeration}
@@ -87,11 +85,16 @@ var index = {
   DataContext: DataContext,
   TransferContext: TransferContext,
 
-  //configHelper: configHelper,
-  configuration: configuration,
+  /**
+   * Returns the configuration of business objects.
+   * @function bo.shared.getConfiguration
+   * @returns {bo.configuration} The configuration of business objects.
+   */
+  getConfiguration: function () { return configuration; },
   ensureArgument: ensureArgument,
   Enumeration: Enumeration,
   PropertyFlag: PropertyFlag,
+  //Utility: Utility,
 
   ArgumentError: ArgumentError,
   ConfigurationError: ConfigurationError,

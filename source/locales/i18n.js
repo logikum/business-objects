@@ -1,13 +1,9 @@
-/**
- * Internationalization of business objects.
- * @module i18n
- */
 'use strict';
 
 var fs = require('fs');
 var path = require('path');
 var util = require('util');
-var configHelper = require('../shared/config-helper.js');
+var Utility = require('../shared/utility.js');
 
 var locales = {};
 var getCurrentLocale = function () { return 'default'; };
@@ -47,6 +43,18 @@ function readLocales (namespace, localePath) {
 
 //region Custom error
 
+/**
+ * @classdesc Represents an internationalization error.
+ * @description Creates an internationalization error object.
+ *
+ * @memberof bo
+ * @constructor
+ * @param {string} [message] - Human-readable description of the error.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+ *
+ * @extends {Error}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
+ */
 function I18nError() {
   I18nError.super_.call(this);
 
@@ -61,10 +69,25 @@ util.inherits(I18nError, Error);
 
 //region Define message handler
 
+/**
+ * @classdesc Provide methods to get localized messages.
+ * @description Creates a new message localizer object.
+ *
+ * @memberof bo
+ * @constructor
+ * @param {string} [namespace=$default] - The namespace of the messages.
+ * @param {string} [keyRoot] - The key root of the messages.
+ *
+ * @extends {Error}
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
+ *
+ * @throws {@link bo.I18nError i18n error}: The namespace must be a string value or null.
+ * @throws {@link bo.I18nError i18n error}: The key root must be a string value or null.
+ */
 var i18n = function (namespace, keyRoot) {
 
-  namespace = configHelper.isOptionalString(namespace, 'namespace', I18nError);
-  keyRoot = configHelper.isOptionalString(keyRoot, 'keyRoot', I18nError);
+  namespace = Utility.isOptionalString(namespace, 'namespace', I18nError);
+  keyRoot = Utility.isOptionalString(keyRoot, 'keyRoot', I18nError);
 
   this.namespace = namespace || '$default';
   this.keyRoot = keyRoot || '';
@@ -76,34 +99,63 @@ var i18n = function (namespace, keyRoot) {
   Object.freeze(this);
 };
 
+/**
+ * Reads the localized messages of the user project and the business objects package.
+ *
+ * @function bo.i18n.initialize
+ * @param {string} pathOfLocales - The relative path of the messages of the user project.
+ * @param {function} localeReader - A function that returns the current locale.
+ */
 i18n.initialize = function (pathOfLocales, localeReader) {
   if (isInitialized)
     throw new I18nError('ready');
 
   if (pathOfLocales) {
     readProjectLocales(
-        configHelper.getDirectory(pathOfLocales, 'pathOfLocales', I18nError)
+        Utility.getDirectory(pathOfLocales, 'pathOfLocales', I18nError)
     );
   }
   if (localeReader) {
     getCurrentLocale = typeof localeReader === 'function' ?
         localeReader :
-        configHelper.getFunction(localeReader, 'localeReader', I18nError)
+        Utility.getFunction(localeReader, 'localeReader', I18nError)
     ;
   }
   isInitialized = true;
 };
 
+/**
+ * Gets a localized message of a given key.
+ *
+ * @function bo.i18n#get
+ * @param {string} messageKey - The key of the required message.
+ * @returns {string} The localized message for the current locale, if not found
+ *      then the message for the default locale, otherwise the message key.
+ *
+ * @throws {@link bo.I18nError i18n error}: The message key must be a non-empty string.
+ */
 i18n.prototype.get = function (messageKey) {
   var args = Array.prototype.slice.call(arguments);
   args.unshift(this.namespace);
   return this.getWithNs.apply(this, args);
 };
 
+/**
+ * Gets a localized message of a given key.
+ *
+ * @function bo.i18n#getWithNs
+ * @param {string} namespace - The namespace of the required message.
+ * @param {string} messageKey - The key of the required message.
+ * @returns {string} The localized message for the current locale, if not found
+ *      then the message for the default locale, otherwise the message key.
+ *
+ * @throws {@link bo.I18nError i18n error}: The namespace must be a non-empty string.
+ * @throws {@link bo.I18nError i18n error}: The message key must be a non-empty string.
+ */
 i18n.prototype.getWithNs = function (namespace, messageKey) {
 
-  namespace = configHelper.isMandatoryString(namespace, 'namespace', I18nError);
-  messageKey = configHelper.isMandatoryString(messageKey, 'messageKey', I18nError);
+  namespace = Utility.isMandatoryString(namespace, 'namespace', I18nError);
+  messageKey = Utility.isMandatoryString(messageKey, 'messageKey', I18nError);
 
   var keys = (this.keyRoot + messageKey).split('.');
   var messageArgs = arguments;

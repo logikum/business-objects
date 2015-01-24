@@ -1,7 +1,3 @@
-/**
- * Is-in-all-roles rule module.
- * @module common-rules/is-in-all-roles-rule
- */
 'use strict';
 
 var util = require('util');
@@ -10,9 +6,36 @@ var ensureArgument = require('../shared/ensure-argument.js');
 var AuthorizationRule = require('../rules/authorization-rule.js');
 var UserInfo = require('../shared/user-info.js');
 
+/**
+ * @classdesc The rule ensures that the user is member of a group of roles.
+ * @description Creates a new is-in-all-roles rule object.
+ *
+ * @memberof bo.commonRules
+ * @constructor
+ * @param {bo.rules.AuthorizationAction} action - The action to be authorized.
+ * @param {(bo.shared.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
+ * @param {Array.<string>} roles - The names of the roles the user is member of.
+ * @param {string} message - Human-readable description of the rule failure.
+ * @param {number} [priority=100] - The priority of the rule.
+ * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+ *
+ * @extends bo.rules.AuthorizationRule
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The action must be a AuthorizationAction item.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The target must be a PropertyInfo object in case of property read or write.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The target must be a non-empty string in case of method execution.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The target must be null in case of model actions.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The roles must be an array of string values.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ */
 function IsInAllRolesRule(action, target, roles, message, priority, stopsProcessing) {
   IsInAllRolesRule.super_.call(this, 'IsInAllRoles');
 
+  /**
+   * The names of the roles the user is member of.
+   * @type {Array.<string>}
+   * @readonly
+   */
   this.roles = ensureArgument.isMandatoryArray(roles, String, 'c_manArrayPrim', 'IsInAllRolesRule', 'roles');
 
   // Initialize base properties.
@@ -29,6 +52,14 @@ function IsInAllRolesRule(action, target, roles, message, priority, stopsProcess
 }
 util.inherits(IsInAllRolesRule, AuthorizationRule);
 
+/**
+ * Checks if the  user is member of the defined group of roles.
+ *
+ * @abstract
+ * @function bo.commonRules.IsInAllRolesRule#execute
+ * @param {bo.shared.UserInfo} userInfo - Information about the current user.
+ * @returns {(bo.rules.AuthorizationResult|undefined)} Information about the failure.
+ */
 IsInAllRolesRule.prototype.execute = function (userInfo) {
   userInfo = ensureArgument.isOptionalType(userInfo, UserInfo,
     'm_optType', 'IsInAllRolesRule', 'execute', 'userInfo', 'UserInfo');

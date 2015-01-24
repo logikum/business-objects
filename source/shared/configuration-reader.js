@@ -5,7 +5,7 @@ var path = require('path');
 var ConnectionManagerBase = require('../data-access/connection-manager-base.js');
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
-var configHelper = require('./config-helper.js');
+var Utility = require('./utility.js');
 var ConfigurationError = require('./configuration-error.js');
 var UserInfo = require('./user-info.js');
 
@@ -34,7 +34,7 @@ if (cfg) {
 
   // Evaluate the connection manager.
   if (cfg.connectionManager) {
-    var cmConstructor = configHelper.getFunction(cfg.connectionManager, 'connectionManager', ConfigurationError);
+    var cmConstructor = Utility.getFunction(cfg.connectionManager, 'connectionManager', ConfigurationError);
     config.connectionManager = new cmConstructor();
     if (!(config.connectionManager instanceof ConnectionManagerBase))
       throw new ConfigurationError('wrongConMan');
@@ -43,7 +43,7 @@ if (cfg) {
 
   // Evaluate the data access object builder.
   if (cfg.daoBuilder) {
-    config.daoBuilder = configHelper.getFunction(cfg.daoBuilder, 'daoBuilder', ConfigurationError);
+    config.daoBuilder = Utility.getFunction(cfg.daoBuilder, 'daoBuilder', ConfigurationError);
   } else {
     config.daoBuilder = daoBuilder;
   }
@@ -51,7 +51,7 @@ if (cfg) {
   // Evaluate the user information reader.
   var fnUserReader = null;
   if (cfg.userReader) {
-    fnUserReader = configHelper.getFunction(cfg.userReader, 'userReader', ConfigurationError);
+    fnUserReader = Utility.getFunction(cfg.userReader, 'userReader', ConfigurationError);
   }
   config.getUser = function () {
     var user = null;
@@ -67,17 +67,17 @@ if (cfg) {
 
   // Evaluate the locale reader.
   if (cfg.localeReader) {
-    config.getLocale = configHelper.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
+    config.getLocale = Utility.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
   }
 
   // Evaluate the path of locale.
   if (cfg.pathOfLocales) {
-    config.pathOfLocales = configHelper.getDirectory(cfg.pathOfLocales, 'pathOfLocales', ConfigurationError);
+    config.pathOfLocales = Utility.getDirectory(cfg.pathOfLocales, 'pathOfLocales', ConfigurationError);
   }
 
   // Evaluate the unauthorized behavior.
   if (cfg.noAccessBehavior !== undefined && cfg.noAccessBehavior !== null) {
-    config.noAccessBehavior = configHelper.isEnumMember(
+    config.noAccessBehavior = Utility.isEnumMember(
         cfg.noAccessBehavior, NoAccessBehavior, 'noAccessBehavior', ConfigurationError
     );
   }
@@ -87,7 +87,7 @@ Object.freeze(config);
 
 /**
  * Configuration for business objects.
- * @namespace bo.shared.configuration
+ * @namespace bo.configuration
  * @property {bo.dataAccess.ConnectionManagerBase} connectionManager - Connection manager instance.
  * @property {function} daoBuilder - Factory method to create data access objects.
  * @property {function} getUser - Returns the current user.

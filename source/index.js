@@ -38,6 +38,8 @@ var i18n = require('./locales/i18n.js');
  * @property {namespace} rules - {@link bo.rules Rules namespace} contains components of validation and authorization rules.
  * @property {namespace} commonRules - {@link bo.commonRules Common rules namespace} contains frequently used rules.
  * @property {namespace} dataAccess - {@link bo.dataAccess Data access namespace} contains data access components.
+ * @property {function} i18n - {@link bo.i18n Internationalization}
+ *      constructor to create new a message localizer object.
  */
 var index = {
   //ModelBase: ModelBase,
@@ -147,11 +149,6 @@ var index = {
   rules: rules,
   commonRules: commonRules,
   dataAccess: dataAccess,
-  /**
-   * Internationalization of business objects.
-   * @memberof bo
-   * @see {@link module:i18n} for further information.
-   */
   i18n: i18n
 };
 

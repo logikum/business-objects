@@ -1,8 +1,8 @@
-console.log('Testing shared/config-reader.js...');
+console.log('Testing shared/configuration-reader.js...');
 
 var path = require('path');
 var ConnectionManager = require('../../sample/connection-manager.js');
-var configuration = require('../../source/shared/config-reader.js');
+var configuration = require('../../source/shared/configuration-reader.js');
 var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
 var daoBuilder = require('../../source/data-access/dao-builder.js');
 var getLocale = require('../../sample/get-locale.js');

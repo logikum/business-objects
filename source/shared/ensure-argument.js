@@ -465,8 +465,8 @@ var ensureArgument = {
    * @param {...*} [messageParams] - Optional interpolation parameters of the message.
    * @returns {number} The checked value.
    *
-   * @throws {@link bo.shared.ArgumentError ArgumentError}: TYPE is not an enumeration type.
-   * @throws {@link bo.shared.ArgumentError ArgumentError}: The argument must be a TYPE item.
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: Type is not an enumeration type.
+   * @throws {@link bo.shared.ArgumentError ArgumentError}: The argument must be an enumeration type item.
    */
   isEnumMember: function (value, type, defaultValue, message) {
     if (!(type && type.hasMember && type.constructor &&
