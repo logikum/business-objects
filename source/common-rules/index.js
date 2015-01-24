@@ -23,21 +23,21 @@ var NullResultOption = require('./null-result-option.js');
  *
  * @namespace bo.commonRules
  *
- * @property {function} isInRole - Creator function for {@link bo.commonRules.IsInRoleRule is-in-role} rules.
- * @property {function} isInAnyRole - Creator function for {@link bo.commonRules.IsInAnyRoleRule is-in-any-role} rules.
- * @property {function} isInAllRoles - Creator function for {@link bo.commonRules.IsInAllRolesRule is-in-all-role} rules.
- * @property {function} isNotInRole - Creator function for {@link bo.commonRules.IsNotInRoleRule is-not-in-role} rules.
- * @property {function} isNotInAnyRole - Creator function for {@link bo.commonRules.IsNotInAnyRoleRule is-not-in-any-role} rules.
+ * @property {function} isInRole - Factory method to create {@link bo.commonRules.IsInRoleRule is-in-role} rules.
+ * @property {function} isInAnyRole - Factory method to create {@link bo.commonRules.IsInAnyRoleRule is-in-any-role} rules.
+ * @property {function} isInAllRoles - Factory method to create {@link bo.commonRules.IsInAllRolesRule is-in-all-role} rules.
+ * @property {function} isNotInRole - Factory method to create {@link bo.commonRules.IsNotInRoleRule is-not-in-role} rules.
+ * @property {function} isNotInAnyRole - Factory method to create {@link bo.commonRules.IsNotInAnyRoleRule is-not-in-any-role} rules.
  *
- * @property {function} required - Creator function for {@link bo.commonRules.RequiredRule required} rules.
- * @property {function} maxLength - Creator function for {@link bo.commonRules.MaxLengthRule max-length} rules.
- * @property {function} minLength - Creator function for {@link bo.commonRules.MinLengthRule min-length} rules.
- * @property {function} lengthIs - Creator function for {@link bo.commonRules.LengthIsRule length-is} rules.
- * @property {function} maxValue - Creator function for {@link bo.commonRules.MaxValueRule max-value} rules.
- * @property {function} minValue - Creator function for {@link bo.commonRules.MinValueRule min-value} rules.
- * @property {function} expression - Creator function for {@link bo.commonRules.ExpressionRule expression} rules.
- * @property {function} dependency - Creator function for {@link bo.commonRules.DependencyRule dependency} rules.
- * @property {function} information - Creator function for {@link bo.commonRules.InformationRule information} rules.
+ * @property {function} required - Factory method to create {@link bo.commonRules.RequiredRule required} rules.
+ * @property {function} maxLength - Factory method to create {@link bo.commonRules.MaxLengthRule max-length} rules.
+ * @property {function} minLength - Factory method to create {@link bo.commonRules.MinLengthRule min-length} rules.
+ * @property {function} lengthIs - Factory method to create {@link bo.commonRules.LengthIsRule length-is} rules.
+ * @property {function} maxValue - Factory method to create {@link bo.commonRules.MaxValueRule max-value} rules.
+ * @property {function} minValue - Factory method to create {@link bo.commonRules.MinValueRule min-value} rules.
+ * @property {function} expression - Factory method to create {@link bo.commonRules.ExpressionRule expression} rules.
+ * @property {function} dependency - Factory method to create {@link bo.commonRules.DependencyRule dependency} rules.
+ * @property {function} information - Factory method to create {@link bo.commonRules.InformationRule information} rules.
  *
  * @property {object} nullResultOption - Enumeration of expression rule actions in case of a {@link bo.commonRules.NullResultOption null value}.
  */

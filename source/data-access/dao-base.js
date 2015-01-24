@@ -20,6 +20,7 @@ var DaoBase = function (name) {
 
   /**
    * The name of the data access object.
+   * @name bo.dataAccess.DaoBase#name
    * @type {string}
    * @readonly
    */

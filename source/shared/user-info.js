@@ -19,6 +19,7 @@ function UserInfo (userCode) {
 
   /**
    * The identifier of the user.
+   * @name bo.shared.UserInfo#userCode
    * @type {string}
    */
   Object.defineProperty(this, 'userCode', {

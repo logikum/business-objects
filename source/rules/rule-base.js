@@ -18,7 +18,8 @@ var RuleBase = function (ruleName) {
 
   ruleName = ensureArgument.isMandatoryString(ruleName, 'c_manString', 'Rule', 'ruleName');
   /**
-   * The name of the data access object.
+   * The name of the rule object.
+   * @name bo.rules.RuleBase#ruleName
    * @type {string}
    * @readonly
    */

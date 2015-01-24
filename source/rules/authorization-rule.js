@@ -41,6 +41,7 @@ function AuthorizationRule(ruleName) {
 
   /**
    * The action to do when the rule fails.
+   * @name bo.rules.AuthorizationRule#noAccessBehavior
    * @type {bo.rules.NoAccessBehavior}
    */
   Object.defineProperty(this, 'noAccessBehavior', {

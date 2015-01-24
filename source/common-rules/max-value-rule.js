@@ -1,7 +1,3 @@
-/**
- * Max-value rule module.
- * @module common-rules/max-value-rule
- */
 'use strict';
 
 var util = require('util');
@@ -9,9 +5,32 @@ var t = require('../locales/i18n-bo.js')('Rules');
 var ensureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
+/**
+ * @classdesc The rule ensures that the value of the property does not exceed a given value.
+ * @description Creates a new max-value rule object.
+ *
+ * @memberof bo.commonRules
+ * @constructor
+ * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+ * @param {number} maxValue - The maximum value of the property.
+ * @param {string} message - Human-readable description of the rule failure.
+ * @param {number} [priority] - The priority of the rule.
+ * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+ *
+ * @extends bo.rules.ValidationRule
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The maximum value is required.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ */
 function MaxValueRule(primaryProperty, maxValue, message, priority, stopsProcessing) {
   MaxValueRule.super_.call(this, 'MaxValue');
 
+  /**
+   * The maximum value of the property.
+   * @type {number}
+   * @readonly
+   */
   this.maxValue = ensureArgument.hasValue(maxValue, 'c_required', 'MaxValueRule', 'maxValue');
 
   // Initialize base properties.
@@ -27,6 +46,14 @@ function MaxValueRule(primaryProperty, maxValue, message, priority, stopsProcess
 }
 util.inherits(MaxValueRule, ValidationRule);
 
+/**
+ * Checks if the value of the property does not exceed the defined value.
+ *
+ * @abstract
+ * @function bo.commonRules.MaxValueRule#execute
+ * @param {Array.<*>} inputs - An array of the values of the required properties.
+ * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
+ */
 MaxValueRule.prototype.execute = function (inputs) {
 
   var value = inputs[this.primaryProperty.name];
