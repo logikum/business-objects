@@ -78,9 +78,6 @@ util.inherits(I18nError, Error);
  * @param {string} [namespace=$default] - The namespace of the messages.
  * @param {string} [keyRoot] - The key root of the messages.
  *
- * @extends {Error}
- * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
- *
  * @throws {@link bo.I18nError i18n error}: The namespace must be a string value or null.
  * @throws {@link bo.I18nError i18n error}: The key root must be a string value or null.
  */

@@ -11,7 +11,7 @@ var EnumerationError = require('./enumeration-error.js');
  * @param {string} name - The name of the enumeration.
  *
  * @classdesc Serves as the base class for enumerations.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The enumeration name must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The enumeration name must be a non-empty string.
  */
 function Enumeration (name) {
   this.$name = EnsureArgument.isMandatoryString(name,
@@ -41,8 +41,8 @@ Enumeration.prototype.count = function () {
  * @param {number} value - The enumeration item that name to be returned of.
  * @returns {string} The name of the enumeration item.
  *
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The value must be a number.
- * @throws {@link bo.shared.EnumerationError EnumerationError}: The passed value is not an enumeration item.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The value must be a number.
+ * @throws {@link bo.shared.EnumerationError Enumeration error}: The passed value is not an enumeration item.
  */
 Enumeration.prototype.getName = function (value) {
   value = EnsureArgument.isMandatoryNumber(value,
@@ -64,8 +64,8 @@ Enumeration.prototype.getName = function (value) {
  * @param {string} name - The enumeration item that value to be returned of.
  * @returns {number} The value of the enumeration item.
  *
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
- * @throws {@link bo.shared.EnumerationError EnumerationError}: The passed name is not an enumeration item.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
+ * @throws {@link bo.shared.EnumerationError Enumeration error}: The passed name is not an enumeration item.
  */
 Enumeration.prototype.getValue = function (name) {
   name = EnsureArgument.isMandatoryString(name,
@@ -89,7 +89,7 @@ Enumeration.prototype.getValue = function (name) {
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  *
- * @throws {@link bo.shared.EnumerationError EnumerationError}: The passed value is not an enumeration item.
+ * @throws {@link bo.shared.EnumerationError Enumeration error}: The passed value is not an enumeration item.
  */
 Enumeration.prototype.check = function (value, message) {
   for (var propertyName in this) {

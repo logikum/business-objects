@@ -11,7 +11,7 @@ var NotImplementedError = require('./not-implemented-error.js');
  * @constructor
  * @param {string} [userCode] - The identifier of the user.
  *
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The userCode must be a string or null.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The userCode must be a string or null.
  */
 function UserInfo (userCode) {
 
@@ -41,7 +41,7 @@ function UserInfo (userCode) {
  * @param {strng} role - The name of the role.
  * @returns {boolean} True if the user is a member of the role, otherwise false.
  *
- * @throws {@link bo.shared.NotImplementedError NotImplementedError}: The UserInfo.isInRole method is not implemented.
+ * @throws {@link bo.shared.NotImplementedError Not implemented error}: The UserInfo.isInRole method is not implemented.
  */
 UserInfo.prototype.isInRole = function (role) {
   throw new NotImplementedError('method', 'UserInfo', 'isInRole');

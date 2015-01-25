@@ -27,9 +27,9 @@ var CollectionBase = require('../collection-base.js');
  * @param {*} type - The data type of the property.
  * @param {?bo.shared.PropertyFlag} flags - Other attributes of the property.
  *
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The type must be a data type, a model or a collection.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The flags must be PropertyFlag items.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The type must be a data type, a model or a collection.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The flags must be PropertyFlag items.
  */
 function PropertyInfo(name, type, flags, getter, setter) {
 

@@ -23,12 +23,12 @@ var UserInfo = require('./user-info.js');
  * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
  * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
  *
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The dao argument must be an object.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The user must be an UserInfo object.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The properties must be an array
+ * @throws {@link bo.shared.ArgumentError Argument error}: The dao argument must be an object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The user must be an UserInfo object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be an array
  *    of PropertyInfo objects, or a single PropertyInfo object or null.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The getValue argument must be a function.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The setValue argument must be a function.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The getValue argument must be a function.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The setValue argument must be a function.
  */
 function DataContext(dao, user, properties, getValue, setValue) {
   var self = this;
@@ -114,9 +114,9 @@ function DataContext(dao, user, properties, getValue, setValue) {
    * @param {string} propertyName - The name of the property.
    * @returns {*} The value of the model property.
    *
-   * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
-   * @throws {@link bo.shared.ArgumentError ArgumentError}: The model has no property with the given name.
-   * @throws {@link bo.shared.ModelError ModelError}: Cannot read the properties of a collection.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The model has no property with the given name.
+   * @throws {@link bo.shared.ModelError Model error}: Cannot read the properties of a collection.
    */
   this.getValue = function (propertyName) {
     propertyName = EnsureArgument.isMandatoryString(propertyName,
@@ -133,10 +133,10 @@ function DataContext(dao, user, properties, getValue, setValue) {
    * @param {string} propertyName - The name of the property.
    * @param {*} value - The new value of the property.
    *
-   * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
-   * @throws {@link bo.shared.ArgumentError ArgumentError}: The model has no property with the given name.
-   * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value has wrong data type.
-   * @throws {@link bo.shared.ModelError ModelError}: Cannot write the properties of a collection.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
+   * @throws {@link bo.shared.ArgumentError Argument error}: The model has no property with the given name.
+   * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value has wrong data type.
+   * @throws {@link bo.shared.ModelError Model error}: Cannot write the properties of a collection.
    */
   this.setValue = function (propertyName, value) {
     propertyName = EnsureArgument.isMandatoryString(propertyName,

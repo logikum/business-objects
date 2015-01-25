@@ -11,7 +11,7 @@ var DaoError = require('./dao-error.js');
  * @constructor
  * @param {string} name - The name of the data access object.
  *
- * @throws {@link bo.dataAccess.DaoError DaoError}: The data access object name must be a non-empty string.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The data access object name must be a non-empty string.
  */
 var DaoBase = function (name) {
 
@@ -41,8 +41,8 @@ var DaoBase = function (name) {
  *    The last argument must be a callback function in case of asynchronous models.
  * @returns {*} The result of the method (for synchronous models).
  *
- * @throws {@link bo.dataAccess.DaoError DaoError}: The method name must be a non-empty string.
- * @throws {@link bo.dataAccess.DaoError DaoError}: Data access object has no method with the requested name.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The method name must be a non-empty string.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: Data access object has no method with the requested name.
  */
 DaoBase.prototype.$runMethod = function (methodName) {
 

@@ -18,8 +18,8 @@ var BrokenRuleList = require('./broken-rule-list.js');
  * @param {internal~getValue} getValue - A function that returns the a property value.
  * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
  *
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The getProperty argument must be a function.
- * @throws {@link bo.shared.ArgumentError ArgumentError}: The broken rules must be a BrokenRuleList object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The getProperty argument must be a function.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
 function ValidationContext(getValue, brokenRules) {
 

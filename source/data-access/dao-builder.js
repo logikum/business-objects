@@ -13,12 +13,12 @@ var DaoError = require('./dao-error.js');
  * @param {string} modelPath - The model definition path of the model instance
  *      that the data access object belongs to.
  *
- * @throws {@link bo.dataAccess.DaoError DaoError}: The name of the data source must be a non-empty string.
- * @throws {@link bo.dataAccess.DaoError DaoError}: The model path must be a non-empty string.
- * @throws {@link bo.dataAccess.DaoError DaoError}: The model path is not a valid file path.
- * @throws {@link bo.dataAccess.DaoError DaoError}: The required data access file does not exist.
- * @throws {@link bo.dataAccess.DaoError DaoError}: The data access file must return a constructor.
- * @throws {@link bo.dataAccess.DaoError DaoError}: The data access object must inherit DaoBase type.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The name of the data source must be a non-empty string.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The model path must be a non-empty string.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The model path is not a valid file path.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The required data access file does not exist.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The data access file must return a constructor.
+ * @throws {@link bo.dataAccess.DaoError Dao error}: The data access object must inherit DaoBase type.
  */
 var daoBuilder = function (dataSource, modelPath) {
 
