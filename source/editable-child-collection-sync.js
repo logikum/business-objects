@@ -2,7 +2,7 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
-var ensureArgument = require('./shared/ensure-argument.js');
+var EnsureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
@@ -20,7 +20,7 @@ var MODEL_STATE = require('./shared/model-state.js');
  */
 var EditableChildCollectionSyncFactory = function(name, itemType) {
 
-  name = ensureArgument.isMandatoryString(name,
+  name = EnsureArgument.isMandatoryString(name,
       'c_manString', 'EditableChildCollectionSync', 'name');
 
   // Verify the model type of the item type.
@@ -40,7 +40,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
   var EditableChildCollectionSync = function (parent) {
 
     // Verify the model type of the parent model.
-    parent = ensureArgument.isModelType(parent, ['EditableRootModelSync', 'EditableChildModelSync'],
+    parent = EnsureArgument.isModelType(parent, ['EditableRootModelSync', 'EditableChildModelSync'],
         'c_modelType', name, 'parent');
 
     var self = this;

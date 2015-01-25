@@ -15,7 +15,7 @@ var DataContext = require('../../source/shared/data-context.js');
 var TransferContext = require('../../source/shared/transfer-context.js');
 
 //var configuration = require('../../source/shared/configuration-reader.js');
-//var ensureArgument = require('../../source/shared/ensure-argument.js');
+var EnsureArgument = require('../../source/shared/ensure-argument.js');
 var Enumeration = require('../../source/shared/enumeration.js');
 //var PropertyFlag = require('../../source/shared/property-flag.js');
 
@@ -50,7 +50,7 @@ describe('Shared component index', function () {
     expect(new shared.TransferContext([], getValue, setValue)).toEqual(jasmine.any(TransferContext));
 
     expect(shared.getConfiguration()).toEqual(jasmine.any(Object));
-    expect(shared.ensureArgument).toEqual(jasmine.any(Object));
+    expect(shared.EnsureArgument).toEqual(EnsureArgument);
     expect(new shared.Enumeration('item')).toEqual(jasmine.any(Enumeration));
     expect(shared.PropertyFlag).toEqual(jasmine.any(Object));
 

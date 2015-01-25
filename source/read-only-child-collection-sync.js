@@ -2,7 +2,7 @@
 
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
-var ensureArgument = require('./shared/ensure-argument.js');
+var EnsureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
 
 /**
@@ -18,7 +18,7 @@ var ModelError = require('./shared/model-error.js');
  */
 var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
 
-  name = ensureArgument.isMandatoryString(name,
+  name = EnsureArgument.isMandatoryString(name,
       'c_manString', 'ReadOnlyChildCollectionSync', 'name');
 
   // Verify the model type of the item type.
@@ -38,7 +38,7 @@ var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
   var ReadOnlyChildCollectionSync = function (parent) {
 
     // Verify the model type of the parent model.
-    parent = ensureArgument.isModelType(parent, ['ReadOnlyRootModelSync', 'ReadOnlyChildModelSync'],
+    parent = EnsureArgument.isModelType(parent, ['ReadOnlyRootModelSync', 'ReadOnlyChildModelSync'],
         'c_modelType', name);
 
     var self = this;

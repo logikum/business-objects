@@ -2,7 +2,7 @@
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 var NullResultOption = require('./null-result-option.js');
 
@@ -34,14 +34,14 @@ function ExpressionRule(primaryProperty, regex, option, message, priority, stops
    * @type {number}
    * @readonly
    */
-  this.regex = ensureArgument.isMandatoryType(regex, RegExp,
+  this.regex = EnsureArgument.isMandatoryType(regex, RegExp,
       'c_manType', 'ExpressionRule', 'regex');
   /**
    * The action to execute when the value of the property is null.
    * @type {number}
    * @readonly
    */
-  this.option = ensureArgument.isEnumMember(option, NullResultOption, null,
+  this.option = EnsureArgument.isEnumMember(option, NullResultOption, null,
       'c_enumMember', 'ExpressionRule', 'option', 'NullResultOption');
 
   // Initialize base properties.

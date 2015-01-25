@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var ArgumentError = require('./argument-error.js');
 var PropertyInfo = require('./property-info.js');
 var DataType = require('../data-types/data-type.js');
@@ -32,12 +32,12 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * @type {string}
    * @readonly
    */
-  this.name = ensureArgument.isMandatoryString(name,
+  this.name = EnsureArgument.isMandatoryString(name,
       'c_manString', 'PropertyManager', 'name');
 
   Array.prototype.slice.call(arguments, 1)
       .forEach(function (arg) {
-        items.push(ensureArgument.isMandatoryType(arg, PropertyInfo, 'c_pm'));
+        items.push(EnsureArgument.isMandatoryType(arg, PropertyInfo, 'c_pm'));
         changed_c = true;
         changed_k = true;
       });
@@ -56,7 +56,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
     if (isFrozen)
       throw new ModelError('frozen', this.name);
 
-    items.push(ensureArgument.isMandatoryType(property, PropertyInfo,
+    items.push(EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'PropertyManager', 'add', 'property'));
     changed_c = true;
     changed_k = true;
@@ -104,7 +104,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The property must be PropertyInfo object.
    */
   this.contains = function (property) {
-    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'PropertyManager', 'contains', 'property');
 
     return items.some(function (item) {
@@ -123,7 +123,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * @throws {@link bo.shared.ArgumentError ArgumentError}: The name must be a non-empty string.
    */
   this.getByName = function (name, message) {
-    name = ensureArgument.isMandatoryString(name,
+    name = EnsureArgument.isMandatoryString(name,
         'm_manString', 'PropertyManager', 'getByName', 'name');
 
     for (var i = 0; i < items.length; i++) {
@@ -228,7 +228,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    *      should be an allowed type.
    */
   this.verifyChildTypes = function (allowedTypes) {
-    allowedTypes = ensureArgument.isMandatoryArray(allowedTypes, String,
+    allowedTypes = EnsureArgument.isMandatoryArray(allowedTypes, String,
         'm_manArrayPrim', 'PropertyManager', 'verifyChildTypes', 'allowedTypes');
 
     checkChildren();

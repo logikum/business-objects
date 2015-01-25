@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var RuleSeverity = require('./rule-severity.js');
 
 /**
@@ -28,31 +28,31 @@ function BrokenRule(ruleName, isPreserved, propertyName, message, severity) {
    * The name of the failed rule.
    * @type {string}
    */
-  this.ruleName = ensureArgument.isMandatoryString(ruleName,
+  this.ruleName = EnsureArgument.isMandatoryString(ruleName,
       'c_manString', 'BrokenRule', 'ruleName');
   /**
    * Indicates whether the broken rule is preserved when a new verification starts.
    * @type {boolean}
    */
-  this.isPreserved = ensureArgument.isMandatoryBoolean(isPreserved || false,
+  this.isPreserved = EnsureArgument.isMandatoryBoolean(isPreserved || false,
       'c_manBoolean', 'BrokenRule' , 'isPreserved');
   /**
    * The name of the property the failed rule belongs to.
    * @type {string}
    */
-  this.propertyName = ensureArgument.isString(propertyName || '',
+  this.propertyName = EnsureArgument.isString(propertyName || '',
       'c_string', 'BrokenRule', 'propertyName');
   /**
    * Human-readable description of the reason of the failure.
    * @type {string}
    */
-  this.message = ensureArgument.isMandatoryString(message,
+  this.message = EnsureArgument.isMandatoryString(message,
       'c_manString', 'BrokenRule', 'message');
   /**
    * The severity of the rule failure.
    * @type {bo.rules.RuleSeverity}
    */
-  this.severity = ensureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
+  this.severity = EnsureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
       'c_enumType', 'BrokenRule', 'severity');
 }
 

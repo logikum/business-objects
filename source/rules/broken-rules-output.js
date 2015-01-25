@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var RuleSeverity = require('./rule-severity.js');
 
 /**
@@ -30,13 +30,13 @@ function BrokenRulesOutput () {
    */
   this.add = function (propertyName, message, severity) {
 
-    propertyName = ensureArgument.isMandatoryString(propertyName,
+    propertyName = EnsureArgument.isMandatoryString(propertyName,
         'm_manString', 'BrokenRulesOutput', 'add', 'propertyName');
 
     var brokenRule = {
-      message: ensureArgument.isMandatoryString(message,
+      message: EnsureArgument.isMandatoryString(message,
           'm_manString', 'BrokenRulesOutput', 'add', 'message'),
-      severity: ensureArgument.isEnumMember(severity, RuleSeverity, null,
+      severity: EnsureArgument.isEnumMember(severity, RuleSeverity, null,
           'm_enumType', 'BrokenRulesOutput', 'add', 'severity')
     };
 

@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var RuleBase = require('./rule-base.js');
 var RuleSeverity = require('./rule-severity.js');
 var ValidationResult = require('./validation-result.js');
@@ -42,7 +42,7 @@ function ValidationRule(ruleName) {
    */
   this.initialize = function (primaryProperty, message, priority, stopsProcessing) {
 
-    this.primaryProperty = ensureArgument.isMandatoryType(primaryProperty, PropertyInfo,
+    this.primaryProperty = EnsureArgument.isMandatoryType(primaryProperty, PropertyInfo,
         'm_manType', 'ValidationRule', 'initialize', 'primaryProperty');
 
     // Initialize base properties.
@@ -60,7 +60,7 @@ function ValidationRule(ruleName) {
    * @throws {@link bo.shared.ArgumentError Argument error}: The input property must be a PropertyInfo object.
    */
   this.addInputProperty = function (property) {
-    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'ValidationRule', 'addInputProperty', 'property');
 
     if (inputProperties.indexOf(property) < 0)
@@ -75,7 +75,7 @@ function ValidationRule(ruleName) {
    * @throws {@link bo.shared.ArgumentError Argument error}: The affected property must be a PropertyInfo object.
    */
   this.addAffectedProperty = function (property) {
-    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'ValidationRule', 'addAffectedProperty', 'property');
 
     if (affectedProperties.indexOf(property) < 0)
@@ -91,7 +91,7 @@ function ValidationRule(ruleName) {
    * @throws {@link bo.shared.ArgumentError Argument error}: The getValue argument must be a function..
    */
   this.getInputValues = function (getValue) {
-    getValue = ensureArgument.isMandatoryFunction(getValue,
+    getValue = EnsureArgument.isMandatoryFunction(getValue,
         'm_manFunction', 'ValidationRule', 'getInputValues', 'getValue');
 
     var inputValues = {};
@@ -113,7 +113,7 @@ function ValidationRule(ruleName) {
   this.result = function (message, severity) {
 
     var result = new ValidationResult(this.ruleName, this.primaryProperty.name, message || this.message);
-    result.severity = ensureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
+    result.severity = EnsureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
         'm_manFunction', 'ValidationRule', 'result', 'severity');
     result.stopsProcessing = this.stopsProcessing;
     result.isPreserved = false;

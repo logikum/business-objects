@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
 
@@ -33,11 +33,11 @@ function TransferContext(properties, getValue, setValue) {
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
-  this.properties = ensureArgument.isOptionalArray(properties, PropertyInfo,
+  this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
       'c_optArray', 'TransferContext', 'properties');
-  getValue = ensureArgument.isOptionalFunction(getValue,
+  getValue = EnsureArgument.isOptionalFunction(getValue,
       'c_optFunction', 'TransferContext', 'getValue');
-  setValue = ensureArgument.isOptionalFunction(setValue,
+  setValue = EnsureArgument.isOptionalFunction(setValue,
       'c_optFunction', 'TransferContext', 'setValue');
 
   function getByName (name) {
@@ -59,7 +59,7 @@ function TransferContext(properties, getValue, setValue) {
    */
   this.getValue = function (propertyName) {
     if (getValue) {
-      propertyName = ensureArgument.isMandatoryString(propertyName,
+      propertyName = EnsureArgument.isMandatoryString(propertyName,
           'm_manString', 'TransferContext', 'getValue', 'propertyName');
       return getValue(getByName(propertyName));
     } else
@@ -78,7 +78,7 @@ function TransferContext(properties, getValue, setValue) {
    */
   this.setValue = function (propertyName, value) {
     if (setValue) {
-      propertyName = ensureArgument.isMandatoryString(propertyName,
+      propertyName = EnsureArgument.isMandatoryString(propertyName,
           'm_manString', 'TransferContext', 'setValue', 'propertyName');
       if (value !== undefined) {
         setValue(getByName(propertyName), value);

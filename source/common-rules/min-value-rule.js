@@ -2,7 +2,7 @@
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
@@ -31,7 +31,7 @@ function MinValueRule(primaryProperty, minValue, message, priority, stopsProcess
    * @type {number}
    * @readonly
    */
-  this.minValue = ensureArgument.hasValue(minValue, 'c_required', 'MinValueRule', 'minValue');
+  this.minValue = EnsureArgument.hasValue(minValue, 'c_required', 'MinValueRule', 'minValue');
 
   // Initialize base properties.
   this.initialize(

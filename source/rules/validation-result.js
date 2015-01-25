@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ResultBase = require('./result-base.js');
 
 /**
@@ -22,7 +22,7 @@ var ResultBase = require('./result-base.js');
  */
 function ValidationResult(ruleName, propertyName, message) {
 
-  propertyName = ensureArgument.isMandatoryString(propertyName,
+  propertyName = EnsureArgument.isMandatoryString(propertyName,
       'c_manString', 'ValidationResult', 'propertyName');
 
   ValidationResult.super_.call(this, ruleName, propertyName, message);

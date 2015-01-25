@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ArgumentError = require('../shared/argument-error.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
@@ -16,7 +16,7 @@ var NotImplementedError = require('../shared/not-implemented-error.js');
  */
 var RuleBase = function (ruleName) {
 
-  ruleName = ensureArgument.isMandatoryString(ruleName, 'c_manString', 'Rule', 'ruleName');
+  ruleName = EnsureArgument.isMandatoryString(ruleName, 'c_manString', 'Rule', 'ruleName');
   /**
    * The name of the rule object.
    * @name bo.rules.RuleBase#ruleName
@@ -86,7 +86,7 @@ RuleBase.prototype.initialize = function () {
       }
     }
   }
-  ensureArgument.isMandatoryString(this.message, 'm_manString', 'Rule', 'method', 'message');
+  EnsureArgument.isMandatoryString(this.message, 'm_manString', 'Rule', 'method', 'message');
 };
 
 /**

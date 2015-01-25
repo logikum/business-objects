@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var ModelError = require('./model-error.js');
 
 /**
@@ -26,16 +26,16 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
    * @type {string}
    * @readonly
    */
-  this.dataSource = ensureArgument.isMandatoryString(dataSource,
+  this.dataSource = EnsureArgument.isMandatoryString(dataSource,
       'c_manString', 'ExtensionManager', 'dataSource');
   /**
    * The path of the model definition.
    * @type {string}
    * @readonly
    */
-  this.modelPath = ensureArgument.isMandatoryString(modelPath,
+  this.modelPath = EnsureArgument.isMandatoryString(modelPath,
       'c_manString', 'ExtensionManager', 'modelPath');
-  addArgs = ensureArgument.isMandatoryInteger(addArgs,
+  addArgs = EnsureArgument.isMandatoryInteger(addArgs,
       'c_manInteger', 'ExtensionManager', 'addArgs');
 
   var self = this;

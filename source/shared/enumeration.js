@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var EnumerationError = require('./enumeration-error.js');
 
 /**
@@ -14,7 +14,7 @@ var EnumerationError = require('./enumeration-error.js');
  * @throws {@link bo.shared.ArgumentError ArgumentError}: The enumeration name must be a non-empty string.
  */
 function Enumeration (name) {
-  this.$name = ensureArgument.isMandatoryString(name,
+  this.$name = EnsureArgument.isMandatoryString(name,
       'c_manString', 'Enumeration', 'name')
 }
 
@@ -45,7 +45,7 @@ Enumeration.prototype.count = function () {
  * @throws {@link bo.shared.EnumerationError EnumerationError}: The passed value is not an enumeration item.
  */
 Enumeration.prototype.getName = function (value) {
-  value = ensureArgument.isMandatoryNumber(value,
+  value = EnsureArgument.isMandatoryNumber(value,
       'm_manNumber', 'Enumeration', 'getName', 'value');
 
   for (var propertyName in this) {
@@ -68,7 +68,7 @@ Enumeration.prototype.getName = function (value) {
  * @throws {@link bo.shared.EnumerationError EnumerationError}: The passed name is not an enumeration item.
  */
 Enumeration.prototype.getValue = function (name) {
-  name = ensureArgument.isMandatoryString(name,
+  name = EnsureArgument.isMandatoryString(name,
       'm_manString', 'Enumeration', 'getValue', 'name');
 
   for (var propertyName in this) {

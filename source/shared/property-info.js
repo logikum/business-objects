@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var DataType = require('../data-types/data-type.js');
 var PropertyFlag = require('../shared/property-flag.js');
 var ModelBase = require('../model-base.js');
@@ -38,7 +38,7 @@ function PropertyInfo(name, type, flags, getter, setter) {
    * @type {string}
    * @readonly
    */
-  this.name = ensureArgument.isMandatoryString(name,
+  this.name = EnsureArgument.isMandatoryString(name,
       'c_manString', 'PropertyInfo', 'name');
 
   /**
@@ -54,7 +54,7 @@ function PropertyInfo(name, type, flags, getter, setter) {
    * @type {*}
    * @readonly
    */
-  this.type = ensureArgument.isMandatoryType(type, [ DataType, ModelBase, CollectionBase ],
+  this.type = EnsureArgument.isMandatoryType(type, [ DataType, ModelBase, CollectionBase ],
       'c_manType', 'PropertyInfo', 'type');
 
   /**
@@ -62,7 +62,7 @@ function PropertyInfo(name, type, flags, getter, setter) {
    * @type {function=}
    * @readonly
    */
-  this.getter = ensureArgument.isOptionalFunction(getter,
+  this.getter = EnsureArgument.isOptionalFunction(getter,
       'c_optFunction', 'PropertyInfo', 'getter');
 
   /**
@@ -70,11 +70,11 @@ function PropertyInfo(name, type, flags, getter, setter) {
    * @type {function=}
    * @readonly
    */
-  this.setter = ensureArgument.isOptionalFunction(setter,
+  this.setter = EnsureArgument.isOptionalFunction(setter,
       'c_optFunction', 'PropertyInfo', 'setter');
 
   flags = type instanceof DataType ?
-    ensureArgument.isMandatoryInteger(flags || PropertyFlag.none,
+    EnsureArgument.isMandatoryInteger(flags || PropertyFlag.none,
         'c_optInteger', 'PropertyInfo', 'flags') :
     PropertyFlag.readOnly | PropertyFlag.notOnDto | PropertyFlag.notOnCto;
 

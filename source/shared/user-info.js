@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var NotImplementedError = require('./not-implemented-error.js');
 
 /**
@@ -15,7 +15,7 @@ var NotImplementedError = require('./not-implemented-error.js');
  */
 function UserInfo (userCode) {
 
-  userCode = ensureArgument.isOptionalString(userCode, 'c_optString', 'UserInfo', 'userCode');
+  userCode = EnsureArgument.isOptionalString(userCode, 'c_optString', 'UserInfo', 'userCode');
 
   /**
    * The identifier of the user.
@@ -27,7 +27,7 @@ function UserInfo (userCode) {
       return userCode;
     },
     set: function (value) {
-      userCode = ensureArgument.isMandatoryString(userCode, 'p_optString', 'UserInfo', 'userCode');
+      userCode = EnsureArgument.isMandatoryString(userCode, 'p_optString', 'UserInfo', 'userCode');
     },
     enumeration: true
   });

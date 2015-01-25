@@ -3,7 +3,7 @@
 var util = require('util');
 var ModelBase = require('./model-base.js');
 var config = require('./shared/configuration-reader.js');
-var ensureArgument = require('./shared/ensure-argument.js');
+var EnsureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
 
 var DataType = require('./data-types/data-type.js');
@@ -39,11 +39,11 @@ var MODEL_DESC = 'Read-only root model';
  */
 var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
 
-  properties = ensureArgument.isMandatoryType(properties, PropertyManager,
+  properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
       'c_manType', 'ReadOnlyRootModelSync', 'properties');
-  rules = ensureArgument.isMandatoryType(rules, RuleManager,
+  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
       'c_manType', 'ReadOnlyRootModelSync', 'rules');
-  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManagerSync,
+  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManagerSync,
       'c_manType', 'ReadOnlyRootModelSync', 'extensions');
 
   // Verify the model type of child models.

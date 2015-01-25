@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var PropertyInfo = require('./property-info.js');
 var CollectionBase = require('../collection-base.js');
 var ModelBase = require('../model-base.js');
@@ -27,9 +27,9 @@ function DataStore() {
    */
   this.initValue = function (property, value) {
 
-    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'DataStore', 'initValue', 'property');
-    value = ensureArgument.isOptionalType(value, [ CollectionBase, ModelBase ],
+    value = EnsureArgument.isOptionalType(value, [ CollectionBase, ModelBase ],
         'm_optType', 'DataStore', 'initValue', 'value');
 
     data[property.name] = value;
@@ -45,7 +45,7 @@ function DataStore() {
    */
   this.getValue = function (property) {
 
-    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'DataStore', 'getValue', 'property');
 
     return data[property.name];
@@ -63,9 +63,9 @@ function DataStore() {
    */
   this.setValue = function (property, value) {
 
-    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'DataStore', 'setValue', 'property');
-    value = ensureArgument.isDefined(value,
+    value = EnsureArgument.isDefined(value,
         'm_defined', 'DataStore', 'setValue', 'value');
 
     property.type.check(value);

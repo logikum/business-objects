@@ -3,7 +3,7 @@
 var util = require('util');
 var CollectionBase = require('./collection-base.js');
 var config = require('./shared/configuration-reader.js');
-var ensureArgument = require('./shared/ensure-argument.js');
+var EnsureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
 
 var ExtensionManager = require('./shared/extension-manager.js');
@@ -33,11 +33,11 @@ var MODEL_DESC = 'Read-only root collection';
  */
 var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) {
 
-  name = ensureArgument.isMandatoryString(name,
+  name = EnsureArgument.isMandatoryString(name,
       'c_manString', 'ReadOnlyRootCollection', 'name');
-  rules = ensureArgument.isMandatoryType(rules, RuleManager,
+  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
       'c_manType', 'ReadOnlyRootCollection', 'rules');
-  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
+  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
       'c_manType', 'ReadOnlyRootCollection', 'extensions');
 
   // Verify the model type of the item type.

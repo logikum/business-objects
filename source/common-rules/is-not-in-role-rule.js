@@ -2,7 +2,7 @@
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var AuthorizationRule = require('../rules/authorization-rule.js');
 var UserInfo = require('../shared/user-info.js');
 
@@ -36,7 +36,7 @@ function IsNotInRoleRule(action, target, role, message, priority, stopsProcessin
    * @type {string}
    * @readonly
    */
-  this.role = ensureArgument.isMandatoryString(role, 'c_manString', 'IsNotInRoleRule', 'role');
+  this.role = EnsureArgument.isMandatoryString(role, 'c_manString', 'IsNotInRoleRule', 'role');
 
   // Initialize base properties.
   this.initialize(
@@ -62,7 +62,7 @@ util.inherits(IsNotInRoleRule, AuthorizationRule);
  */
 IsNotInRoleRule.prototype.execute = function (userInfo) {
 
-  userInfo = ensureArgument.isOptionalType(userInfo, UserInfo,
+  userInfo = EnsureArgument.isOptionalType(userInfo, UserInfo,
     'm_optType', 'IsNotInRoleRule', 'execute', 'userInfo', 'UserInfo');
 
   var hasPermission = !userInfo.isInRole(this.role);

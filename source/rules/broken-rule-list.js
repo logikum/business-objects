@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var PropertyInfo = require('../shared/property-info.js');
 var BrokenRule = require('./broken-rule.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
@@ -18,7 +18,7 @@ var RuleSeverity = require('./rule-severity.js');
  */
 var BrokenRuleList = function (modelName) {
 
-  modelName = ensureArgument.isMandatoryString(modelName,
+  modelName = EnsureArgument.isMandatoryString(modelName,
       'c_manString', 'BrokenRuleList', 'modelName');
 
   var items = {};
@@ -32,7 +32,7 @@ var BrokenRuleList = function (modelName) {
    * @throws {@link bo.shared.ArgumentError Argument error}: The rule must be a BrokenRule object.
    */
   this.add = function (brokenRule) {
-    brokenRule = ensureArgument.isMandatoryType(brokenRule, BrokenRule,
+    brokenRule = EnsureArgument.isMandatoryType(brokenRule, BrokenRule,
         'm_manType', 'BrokenRuleList', 'add', 'brokenRule');
 
     if (items[brokenRule.propertyName])
@@ -123,7 +123,7 @@ var BrokenRuleList = function (modelName) {
    */
   this.output = function (namespace) {
 
-    namespace = ensureArgument.isOptionalString(namespace,
+    namespace = EnsureArgument.isOptionalString(namespace,
         'm_optString', 'BrokenRuleList', 'output', 'namespace');
 
     var data = null;

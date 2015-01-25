@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
 var UserInfo = require('./user-info.js');
@@ -40,25 +40,25 @@ function DataContext(dao, user, properties, getValue, setValue) {
    * @type {object}
    * @readonly
    */
-  this.dao = ensureArgument.isMandatoryObject(dao || {},
+  this.dao = EnsureArgument.isMandatoryObject(dao || {},
       'c_manObject', 'DataContext', 'dao');
   /**
    * The current user.
    * @type {bo.shared.UserInfo}
    * @readonly
    */
-  this.user = ensureArgument.isOptionalType(user, UserInfo,
+  this.user = EnsureArgument.isOptionalType(user, UserInfo,
       'c_optType', 'DataContext', 'user');
   /**
    * Array of property definitions that may appear on the data transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
-  this.properties = ensureArgument.isOptionalArray(properties, PropertyInfo,
+  this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
       'c_optArray', 'DataContext', 'properties');
-  getValue = ensureArgument.isOptionalFunction(getValue,
+  getValue = EnsureArgument.isOptionalFunction(getValue,
       'c_optFunction', 'DataContext', 'getValue');
-  setValue = ensureArgument.isOptionalFunction(setValue,
+  setValue = EnsureArgument.isOptionalFunction(setValue,
       'c_optFunction', 'DataContext', 'setValue');
 
   /**
@@ -119,7 +119,7 @@ function DataContext(dao, user, properties, getValue, setValue) {
    * @throws {@link bo.shared.ModelError ModelError}: Cannot read the properties of a collection.
    */
   this.getValue = function (propertyName) {
-    propertyName = ensureArgument.isMandatoryString(propertyName,
+    propertyName = EnsureArgument.isMandatoryString(propertyName,
         'm_manString', 'DataContext', 'getValue', 'propertyName');
     if (getValue)
       return getValue(getByName(propertyName));
@@ -139,7 +139,7 @@ function DataContext(dao, user, properties, getValue, setValue) {
    * @throws {@link bo.shared.ModelError ModelError}: Cannot write the properties of a collection.
    */
   this.setValue = function (propertyName, value) {
-    propertyName = ensureArgument.isMandatoryString(propertyName,
+    propertyName = EnsureArgument.isMandatoryString(propertyName,
         'm_manString', 'DataContext', 'setValue', 'propertyName');
     if (setValue) {
       if (value !== undefined) {

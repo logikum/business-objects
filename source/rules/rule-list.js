@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var AuthorizationRule = require('./authorization-rule.js');
 var ValidationRule = require('./validation-rule.js');
 
@@ -25,9 +25,9 @@ function RuleList() {
    */
   this.add = function (id, rule) {
 
-    id = ensureArgument.isMandatoryString(id,
+    id = EnsureArgument.isMandatoryString(id,
         'm_manString', 'RuleList', 'add', 'id');
-    rule = ensureArgument.isMandatoryType(rule, [ValidationRule, AuthorizationRule],
+    rule = EnsureArgument.isMandatoryType(rule, [ValidationRule, AuthorizationRule],
         'm_manType', 'RuleList', 'add', 'rule');
 
     if (this[id])

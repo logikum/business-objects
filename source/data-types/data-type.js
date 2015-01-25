@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
 /**
@@ -20,7 +20,7 @@ function DataType (name) {
    * @type {string}
    * @readonly
    */
-  this.name = ensureArgument.isMandatoryString(name, 'c_manString', 'DataType', 'name');
+  this.name = EnsureArgument.isMandatoryString(name, 'c_manString', 'DataType', 'name');
 
   // Immutable object.
   Object.freeze(this);

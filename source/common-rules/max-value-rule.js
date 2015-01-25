@@ -2,7 +2,7 @@
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
@@ -31,7 +31,7 @@ function MaxValueRule(primaryProperty, maxValue, message, priority, stopsProcess
    * @type {number}
    * @readonly
    */
-  this.maxValue = ensureArgument.hasValue(maxValue, 'c_required', 'MaxValueRule', 'maxValue');
+  this.maxValue = EnsureArgument.hasValue(maxValue, 'c_required', 'MaxValueRule', 'maxValue');
 
   // Initialize base properties.
   this.initialize(

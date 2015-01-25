@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
 
@@ -47,11 +47,11 @@ function PropertyContext (properties, getValue, setValue) {
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
-  this.properties = ensureArgument.isOptionalArray(properties, PropertyInfo,
+  this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
       'c_optArray', 'PropertyContext', 'properties');
-  getValue = ensureArgument.isOptionalFunction(getValue,
+  getValue = EnsureArgument.isOptionalFunction(getValue,
       'c_optFunction', 'PropertyContext', 'getValue');
-  setValue = ensureArgument.isOptionalFunction(setValue,
+  setValue = EnsureArgument.isOptionalFunction(setValue,
       'c_optFunction', 'PropertyContext', 'setValue');
 
   /**
@@ -61,7 +61,7 @@ function PropertyContext (properties, getValue, setValue) {
    * @returns {bo.shared.PropertyContext} The property context object itself.
    */
   this.with = function (property) {
-    primaryProperty = ensureArgument.isMandatoryType(property, PropertyInfo,
+    primaryProperty = EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'PropertyContext', 'with', 'property');
     return this;
   };
@@ -85,7 +85,7 @@ function PropertyContext (properties, getValue, setValue) {
    * @throws {@link bo.shared.ModelError ModelError}: The property cannot be read.
    */
   this.getValue = function (propertyName) {
-    propertyName = ensureArgument.isMandatoryString(propertyName,
+    propertyName = EnsureArgument.isMandatoryString(propertyName,
         'm_manString', 'PropertyContext', 'getValue', 'propertyName');
     if (getValue)
       return getValue(getByName(propertyName));
@@ -105,7 +105,7 @@ function PropertyContext (properties, getValue, setValue) {
    * @throws {@link bo.shared.ModelError ModelError}: The property cannot be written.
    */
   this.setValue = function (propertyName, value) {
-    propertyName = ensureArgument.isMandatoryString(propertyName,
+    propertyName = EnsureArgument.isMandatoryString(propertyName,
         'm_manString', 'PropertyContext', 'setValue', 'propertyName');
     if (setValue) {
       if (value !== undefined) {

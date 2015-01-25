@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ResultBase = require('./result-base.js');
 
 /**
@@ -22,7 +22,7 @@ var ResultBase = require('./result-base.js');
  */
 function AuthorizationResult(ruleName, targetName, message) {
 
-  targetName = ensureArgument.isString(targetName || '',
+  targetName = EnsureArgument.isString(targetName || '',
       'c_string', 'AuthorizationResult', 'targetName');
 
   AuthorizationResult.super_.call(this, ruleName, targetName, message);

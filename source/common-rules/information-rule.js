@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 var RuleSeverity = require('../rules/rule-severity.js');
 
@@ -24,7 +24,7 @@ var RuleSeverity = require('../rules/rule-severity.js');
 function InformationRule(primaryProperty, message, priority, stopsProcessing) {
   InformationRule.super_.call(this, 'Information');
 
-  ensureArgument.isMandatoryString(message, 'c_manString', 'InformationRule', 'message');
+  EnsureArgument.isMandatoryString(message, 'c_manString', 'InformationRule', 'message');
 
   // Initialize base properties.
   this.initialize(

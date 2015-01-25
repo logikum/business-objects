@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var ensureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./ensure-argument.js');
 var t = require('../locales/i18n-bo.js')('DataPortalError');
 
 /**
@@ -32,21 +32,21 @@ function DataPortalError(modeltype, modelName, action, interceptedError) {
    * The type of the model the intercepted error occurred in.
    * @type {string}
    */
-  this.modelType = ensureArgument.isMandatoryString(modeltype,
+  this.modelType = EnsureArgument.isMandatoryString(modeltype,
       'c_manString', 'DataPortalError', 'modeltype');
 
   /**
    * The name of the model the intercepted error occurred in.
    * @type {string}
    */
-  this.modelName = ensureArgument.isMandatoryString(modelName,
+  this.modelName = EnsureArgument.isMandatoryString(modelName,
       'c_manString', 'DataPortalError', 'modelName');
 
   /**
    * The name of the action executing that the intercepted error occurred in.
    * @type {string}
    */
-  this.action = ensureArgument.isMandatoryString(action,
+  this.action = EnsureArgument.isMandatoryString(action,
       'c_manString', 'DataPortalError', 'action');
 
   /**

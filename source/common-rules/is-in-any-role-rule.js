@@ -2,7 +2,7 @@
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var AuthorizationRule = require('../rules/authorization-rule.js');
 var UserInfo = require('../shared/user-info.js');
 
@@ -36,7 +36,7 @@ function IsInAnyRoleRule(action, target, roles, message, priority, stopsProcessi
    * @type {Array.<string>}
    * @readonly
    */
-  this.roles = ensureArgument.isMandatoryArray(roles, String, 'c_manArrayPrim', 'IsInAnyRoleRule', 'roles');
+  this.roles = EnsureArgument.isMandatoryArray(roles, String, 'c_manArrayPrim', 'IsInAnyRoleRule', 'roles');
 
   // Initialize base properties.
   this.initialize(
@@ -61,7 +61,7 @@ util.inherits(IsInAnyRoleRule, AuthorizationRule);
  * @returns {(bo.rules.AuthorizationResult|undefined)} Information about the failure.
  */
 IsInAnyRoleRule.prototype.execute = function (userInfo) {
-  userInfo = ensureArgument.isOptionalType(userInfo, UserInfo,
+  userInfo = EnsureArgument.isOptionalType(userInfo, UserInfo,
     'm_optType', 'IsInAnyRoleRule', 'execute', 'userInfo', 'UserInfo');
 
   var hasPermission = false;

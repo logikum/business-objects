@@ -3,7 +3,7 @@
 var util = require('util');
 var ModelBase = require('./model-base.js');
 var config = require('./shared/configuration-reader.js');
-var ensureArgument = require('./shared/ensure-argument.js');
+var EnsureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
 
 var DataType = require('./data-types/data-type.js');
@@ -41,11 +41,11 @@ var MODEL_DESC = 'Editable child model';
  */
 var EditableChildModelFactory = function(properties, rules, extensions) {
 
-  properties = ensureArgument.isMandatoryType(properties, PropertyManager,
+  properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
       'c_manType', 'EditableChildModel', 'properties');
-  rules = ensureArgument.isMandatoryType(rules, RuleManager,
+  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
       'c_manType', 'EditableChildModel', 'rules');
-  extensions = ensureArgument.isMandatoryType(extensions, ExtensionManager,
+  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
       'c_manType', 'EditableChildModel', 'extensions');
 
   // Verify the model types of child models.
@@ -63,7 +63,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
   var EditableChildModel = function(parent) {
 
     // Verify the model type of the parent model.
-    parent = ensureArgument.isModelType(parent,
+    parent = EnsureArgument.isModelType(parent,
         [
           //'EditableRootCollection',
           'EditableChildCollection',

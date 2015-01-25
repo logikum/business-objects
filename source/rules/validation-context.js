@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 
 /**
@@ -28,14 +28,14 @@ function ValidationContext(getValue, brokenRules) {
    * @type {internal~getValue}
    * @readonly
    */
-  this.getValue = ensureArgument.isMandatoryFunction(getValue,
+  this.getValue = EnsureArgument.isMandatoryFunction(getValue,
       'c_manFunction', 'ValidationContext', 'getValue');
   /**
    * The list of the broken rules.
    * @type {bo.rules.BrokenRuleList}
    * @readonly
    */
-  this.brokenRules = ensureArgument.isMandatoryType(brokenRules, BrokenRuleList,
+  this.brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRuleList,
       'c_manType', 'ValidationContext', 'brokenRules');
 
   // Immutable object.

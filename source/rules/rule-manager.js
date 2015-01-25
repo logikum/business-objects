@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ArgumentError = require('../shared/argument-error.js');
 var RuleList = require('./rule-list.js');
 var ValidationRule = require('./validation-rule.js');
@@ -36,7 +36,7 @@ var RuleManager = function () {
       return noAccessBehavior;
     },
     set: function (value) {
-      noAccessBehavior = ensureArgument.isEnumMember(value, NoAccessBehavior, NoAccessBehavior.throwError,
+      noAccessBehavior = EnsureArgument.isEnumMember(value, NoAccessBehavior, NoAccessBehavior.throwError,
           'p_enumType', 'RuleManager', 'noAccessBehavior');
     },
     enumeration: true
@@ -98,9 +98,9 @@ var RuleManager = function () {
    * @throws {@link bo.shared.ArgumentError Argument error}: The context must be a ValidationContext object.
    */
   this.validate = function (property, context) {
-    property = ensureArgument.isMandatoryType(property, PropertyInfo,
+    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', 'RuleManager', 'validate', 'property');
-    context = ensureArgument.isMandatoryType(context, ValidationContext,
+    context = EnsureArgument.isMandatoryType(context, ValidationContext,
         'm_manType', 'RuleManager', 'validate', 'context');
 
     context.brokenRules.clear(property);
@@ -137,7 +137,7 @@ var RuleManager = function () {
    * @throws {@link bo.rules.AuthorizationError Authorization error}: The user has no permission to execute the action.
    */
   this.hasPermission = function (context) {
-    context = ensureArgument.isMandatoryType(context, AuthorizationContext,
+    context = EnsureArgument.isMandatoryType(context, AuthorizationContext,
         'm_manType', 'RuleManager', 'hasPermission', 'context');
     var isAllowed = true;
 

@@ -1,6 +1,6 @@
 'use strict';
 
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var UserInfo = require('../shared/user-info.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 var AuthorizationAction = require('./authorization-action.js');
@@ -29,23 +29,23 @@ var AuthorizationAction = require('./authorization-action.js');
  */
 function AuthorizationContext(action, targetName, user, brokenRules) {
 
-  action = ensureArgument.isEnumMember(action, AuthorizationAction, null,
+  action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
       'c_enumType', 'AuthorizationContext', 'action');
-  targetName = ensureArgument.isString(targetName,
+  targetName = EnsureArgument.isString(targetName,
       'c_string', 'AuthorizationContext', 'targetName');
   /**
    * User information.
    * @type {bo.shared.UserInfo=}
    * @readonly
    */
-  this.user = ensureArgument.isOptionalType(user, UserInfo,
+  this.user = EnsureArgument.isOptionalType(user, UserInfo,
       'c_optType', 'AuthorizationContext', 'user');
   /**
    * The list of the broken rules.
    * @type {bo.rules.BrokenRuleList}
    * @readonly
    */
-  this.brokenRules = ensureArgument.isMandatoryType(brokenRules, BrokenRuleList,
+  this.brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRuleList,
       'c_manType', 'AuthorizationContext', 'brokenRules');
 
   /**

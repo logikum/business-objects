@@ -1,7 +1,7 @@
 'use strict';
 
 var t = require('../locales/i18n-bo.js')('Rules');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
 var RuleSeverity = require('./rule-severity.js');
 
@@ -23,7 +23,7 @@ var RuleSeverity = require('./rule-severity.js');
  */
 function ValidationResponse(brokenRules, message) {
 
-  brokenRules = ensureArgument.isMandatoryType(brokenRules, BrokenRulesOutput,
+  brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRulesOutput,
       'c_manType', 'ValidationResponse', 'brokenRules');
 
   /**
@@ -42,7 +42,7 @@ function ValidationResponse(brokenRules, message) {
    * Human-readable description of the reason of the failure.
    * @type {string}
    */
-  this.message = ensureArgument.isString(message || t('invalid'),
+  this.message = EnsureArgument.isString(message || t('invalid'),
       'c_string', 'ValidationResponse', 'message');
   /**
    * The object of the broken rules.

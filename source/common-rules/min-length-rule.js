@@ -2,7 +2,7 @@
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
@@ -31,7 +31,7 @@ function MinLengthRule(primaryProperty, minLength, message, priority, stopsProce
    * @type {number}
    * @readonly
    */
-  this.minLength = ensureArgument.isMandatoryInteger(minLength, 'c_manInteger', 'MinLengthRule', 'minLength');
+  this.minLength = EnsureArgument.isMandatoryInteger(minLength, 'c_manInteger', 'MinLengthRule', 'minLength');
 
   // Initialize base properties.
   this.initialize(

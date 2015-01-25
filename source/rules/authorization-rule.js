@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var ensureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../shared/ensure-argument.js');
 var ArgumentError = require('../shared/argument-error.js');
 var PropertyInfo = require('../shared/property-info.js');
 var RuleBase = require('./rule-base.js');
@@ -49,7 +49,7 @@ function AuthorizationRule(ruleName) {
       return noAccessBehavior;
     },
     set: function (value) {
-      noAccessBehavior = ensureArgument.isEnumMember(value, NoAccessBehavior, null,
+      noAccessBehavior = EnsureArgument.isEnumMember(value, NoAccessBehavior, null,
           'p_enumType', 'AuthorizationRule', 'noAccessBehavior');
     },
     enumeration: true
@@ -72,18 +72,18 @@ function AuthorizationRule(ruleName) {
    */
   this.initialize = function (action, target, message, priority, stopsProcessing) {
 
-    action = ensureArgument.isEnumMember(action, AuthorizationAction, null,
+    action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
         'm_enumType', 'AuthorizationRule', 'initialize', 'action');
     this.ruleId = AuthorizationAction.getName(action);
 
     if (action === AuthorizationAction.readProperty || action === AuthorizationAction.writeProperty) {
-      target = ensureArgument.isMandatoryType(target, PropertyInfo,
+      target = EnsureArgument.isMandatoryType(target, PropertyInfo,
           'm_manType', 'AuthorizationRule', 'initialize', 'target');
       propertyName = target.name;
       this.ruleId += '.' + target.name;
 
     } else if (action === AuthorizationAction.executeMethod) {
-      target = ensureArgument.isMandatoryString(target,
+      target = EnsureArgument.isMandatoryString(target,
           'm_manString', 'AuthorizationRule', 'initialize', 'target');
       this.ruleId += '.' + target;
 
