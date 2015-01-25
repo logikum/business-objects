@@ -1,7 +1,3 @@
-/**
- * Asynchronous read-only child model module.
- * @module read-only-child-model
- */
 'use strict';
 
 var util = require('util');
@@ -25,6 +21,19 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
+/**
+ * Factory method to create definitions of asynchronous read-only child models.
+ *
+ * @function bo.ReadOnlyChildModel
+ * @param {bo.shared.PropertyManager} properties - The property definitions.
+ * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
+ * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+ * @returns {ReadOnlyChildModel} The constructor of an asynchronous read-only child model.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be a PropertyManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
+ */
 var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
@@ -37,6 +46,15 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollection', 'ReadOnlyChildModel' ]);
 
+  /**
+   * @classdesc Represents the definition of an asynchronous read-only child model.
+   * @description Creates a new asynchronous read-only child model instance.
+   *
+   * @name ReadOnlyChildModel
+   * @constructor
+   *
+   * @extends ModelBase
+   */
   var ReadOnlyChildModel = function(parent) {
 
     // Verify the model type of the parent model.

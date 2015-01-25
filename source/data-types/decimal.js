@@ -27,7 +27,7 @@ util.inherits(Decimal, DataType);
  * @function bo.dataTypes.Decimal#check
  * @param {?data} value - The value to check.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Decimal.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Decimal.
  */
 Decimal.prototype.check = function (value) {
 
@@ -42,7 +42,7 @@ Decimal.prototype.check = function (value) {
  * @param {!data} value - The value to check.
  * @returns {boolean} True if the value is Decimal and not null, otherwise false.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Decimal.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Decimal.
  */
 Decimal.prototype.hasValue = function (value) {
 

@@ -1,7 +1,3 @@
-/**
- * Synchronous editable child collection module.
- * @module editable-child-collection-sync
- */
 'use strict';
 
 var util = require('util');
@@ -11,6 +7,17 @@ var ModelError = require('./shared/model-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 
+/**
+ * Factory method to create definitions of synchronous editable child collections.
+ *
+ * @function bo.EditableChildCollectionSync
+ * @param {string} name - The name of the collection.
+ * @param {EditableChildModelSync} itemType - The model type of the collection items.
+ * @returns {EditableChildCollectionSync} The constructor of a synchronous editable child collection.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The collection name must be a non-empty string.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModelSync.
+ */
 var EditableChildCollectionSyncFactory = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
@@ -21,6 +28,15 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
     throw new ModelError('invalidItem',
         itemType.prototype.name, itemType.modelType, 'EditableChildCollectionSync', 'EditableChildModelSync');
 
+  /**
+   * @classdesc Represents the definition of a synchronous editable child collection.
+   * @description Creates a new synchronous editable child collection instance.
+   *
+   * @name EditableChildCollectionSync
+   * @constructor
+   *
+   * @extends CollectionBase
+   */
   var EditableChildCollectionSync = function (parent) {
 
     // Verify the model type of the parent model.

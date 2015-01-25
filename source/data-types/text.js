@@ -27,7 +27,7 @@ util.inherits(Text, DataType);
  * @function bo.dataTypes.Text#check
  * @param {?data} value - The value to check.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Text.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Text.
  */
 Text.prototype.check = function (value) {
   if (value !== null && typeof value !== 'string'  && !(value instanceof String))
@@ -41,7 +41,7 @@ Text.prototype.check = function (value) {
  * @param {!data} value - The value to check.
  * @returns {boolean} True if the value is Text and not null, otherwise false.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Text.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Text.
  */
 Text.prototype.hasValue = function (value) {
   this.check(value);

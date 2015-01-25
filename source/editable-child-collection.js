@@ -1,7 +1,3 @@
-/**
- * Asynchronous editable child collection module.
- * @module editable-child-collection
- */
 'use strict';
 
 var util = require('util');
@@ -11,6 +7,17 @@ var ModelError = require('./shared/model-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 
+/**
+ * Factory method to create definitions of asynchronous editable child collections.
+ *
+ * @function bo.EditableChildCollection
+ * @param {string} name - The name of the collection.
+ * @param {EditableChildModel} itemType - The model type of the collection items.
+ * @returns {EditableChildCollection} The constructor of an asynchronous editable child collection.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The collection name must be a non-empty string.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModel.
+ */
 var EditableChildCollectionFactory = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
@@ -21,6 +28,15 @@ var EditableChildCollectionFactory = function(name, itemType) {
     throw new ModelError('invalidItem',
         itemType.prototype.name, itemType.modelType, 'EditableChildCollection', 'EditableChildModel');
 
+  /**
+   * @classdesc Represents the definition of an asynchronous editable child collection.
+   * @description Creates a new asynchronous editable child collection instance.
+   *
+   * @name EditableChildCollection
+   * @constructor
+   *
+   * @extends CollectionBase
+   */
   var EditableChildCollection = function (parent) {
 
     // Verify the model type of the parent model.

@@ -1,7 +1,3 @@
-/**
- * Synchronous editable child model module.
- * @module editable-child-model-sync
- */
 'use strict';
 
 var util = require('util');
@@ -30,6 +26,19 @@ var DataPortalError = require('./shared/data-portal-error.js');
 var MODEL_STATE = require('./shared/model-state.js');
 var MODEL_DESC = 'Editable child model';
 
+/**
+ * Factory method to create definitions of synchronous editable child models.
+ *
+ * @function bo.EditableChildModelSync
+ * @param {bo.shared.PropertyManager} properties - The property definitions.
+ * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
+ * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+ * @returns {EditableChildModelSync} The constructor of a synchronous editable child model.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be a PropertyManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ */
 var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
@@ -42,6 +51,15 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'EditableChildCollectionSync', 'EditableChildModelSync' ]);
 
+  /**
+   * @classdesc Represents the definition of a synchronous editable child model.
+   * @description Creates a new synchronous editable child model instance.
+   *
+   * @name EditableChildModelSync
+   * @constructor
+   *
+   * @extends ModelBase
+   */
   var EditableChildModelSync = function(parent) {
 
     // Verify the model type of the parent model.

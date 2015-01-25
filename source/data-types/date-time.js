@@ -27,7 +27,7 @@ util.inherits(DateTime, DataType);
  * @function bo.dataTypes.DateTime#check
  * @param {?data} value - The value to check.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not DateTime.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not DateTime.
  */
 DateTime.prototype.check = function (value) {
 
@@ -42,7 +42,7 @@ DateTime.prototype.check = function (value) {
  * @param {!data} value - The value to check.
  * @returns {boolean} True if the value is DateTime and not null, otherwise false.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not DateTime.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not DateTime.
  */
 DateTime.prototype.hasValue = function (value) {
 

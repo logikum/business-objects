@@ -27,7 +27,7 @@ util.inherits(Boolean, DataType);
  * @function bo.dataTypes.Boolean#check
  * @param {?data} value - The value to check.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Boolean.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Boolean.
  */
 Boolean.prototype.check = function (value) {
 
@@ -42,7 +42,7 @@ Boolean.prototype.check = function (value) {
  * @param {!data} value - The value to check.
  * @returns {boolean} True if the value is Boolean and not null, otherwise false.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Boolean.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Boolean.
  */
 Boolean.prototype.hasValue = function (value) {
 

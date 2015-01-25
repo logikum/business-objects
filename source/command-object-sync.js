@@ -1,7 +1,3 @@
-/**
- * Synchronous command object module.
- * @module command-object-sync
- */
 'use strict';
 
 var util = require('util');
@@ -28,6 +24,19 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Command object';
 
+/**
+ * Factory method to create definitions of synchronous command object models.
+ *
+ * @function bo.CommandObjectSync
+ * @param {bo.shared.PropertyManager} properties - The property definitions.
+ * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
+ * @param {bo.shared.ExtensionManagerSync} extensions - The customization of the model.
+ * @returns {CommandObjectSync} The constructor of a synchronous command object model.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be a PropertyManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ */
 var CommandObjectSyncFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
@@ -40,6 +49,15 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildModelSync', 'ReadOnlyChildCollectionSync' ]);
 
+  /**
+   * @classdesc Represents the definition of a synchronous command object model.
+   * @description Creates a new synchronous command object model instance.
+   *
+   * @name CommandObjectSync
+   * @constructor
+   *
+   * @extends ModelBase
+   */
   var CommandObjectSync = function() {
 
     var self = this;

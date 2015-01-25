@@ -27,7 +27,7 @@ util.inherits(Integer, DataType);
  * @function bo.dataTypes.Integer#check
  * @param {?data} value - The value to check.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Integer.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Integer.
  */
 Integer.prototype.check = function (value) {
   if (value !== null &&
@@ -43,7 +43,7 @@ Integer.prototype.check = function (value) {
  * @param {!data} value - The value to check.
  * @returns {boolean} True if the value is Integer and not null, otherwise false.
  *
- * @throws {@link bo.dataTypes.DataTypeError DataTypeError}: The passed value is not Integer.
+ * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Integer.
  */
 Integer.prototype.hasValue = function (value) {
   this.check(value);

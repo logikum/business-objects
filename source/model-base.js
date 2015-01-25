@@ -1,10 +1,12 @@
-/**
- * Base object for models.
- * @module model-base
- */
 'use strict';
 
-function ModelBase (modelType) {
+/**
+ * @classdesc Serves as the base class for models.
+ * @description Creates a base model instance.
+ *
+ * @constructor
+ */
+function ModelBase () {
 }
 
 module.exports = ModelBase;

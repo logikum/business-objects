@@ -1,7 +1,3 @@
-/**
- * Asynchronous command object module.
- * @module command-object
- */
 'use strict';
 
 var util = require('util');
@@ -28,6 +24,19 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Command object';
 
+/**
+ * Factory method to create definitions of asynchronous command object models.
+ *
+ * @function bo.CommandObject
+ * @param {bo.shared.PropertyManager} properties - The property definitions.
+ * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
+ * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+ * @returns {CommandObject} The constructor of an asynchronous command object model.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be a PropertyManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
+ */
 var CommandObjectFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
@@ -40,6 +49,15 @@ var CommandObjectFactory = function(properties, rules, extensions) {
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildModel', 'ReadOnlyChildCollection' ]);
 
+  /**
+   * @classdesc Represents the definition of an asynchronous command object model.
+   * @description Creates a new asynchronous command object model instance.
+   *
+   * @name CommandObject
+   * @constructor
+   *
+   * @extends ModelBase
+   */
   var CommandObject = function() {
 
     var self = this;

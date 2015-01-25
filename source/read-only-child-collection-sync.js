@@ -1,7 +1,3 @@
-/**
- * Synchronous read-only child collection module.
- * @module read-only-child-collection-sync
- */
 'use strict';
 
 var util = require('util');
@@ -9,6 +5,17 @@ var CollectionBase = require('./collection-base.js');
 var ensureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
 
+/**
+ * Factory method to create definitions of synchronous read-only child collections.
+ *
+ * @function bo.ReadOnlyChildCollectionSync
+ * @param {string} name - The name of the collection.
+ * @param {ReadOnlyChildModelSync} itemType - The model type of the collection items.
+ * @returns {ReadOnlyChildCollectionSync} The constructor of a asynchronous read-only child collection.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The collection name must be a non-empty string.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModelSync.
+ */
 var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
 
   name = ensureArgument.isMandatoryString(name,
@@ -19,6 +26,15 @@ var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
     throw new ModelError('invalidItem', itemType.prototype.name, itemType.modelType,
         'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync');
 
+  /**
+   * @classdesc Represents the definition of a synchronous read-only child collection.
+   * @description Creates a new synchronous read-only child collection instance.
+   *
+   * @name ReadOnlyChildCollectionSync
+   * @constructor
+   *
+   * @extends CollectionBase
+   */
   var ReadOnlyChildCollectionSync = function (parent) {
 
     // Verify the model type of the parent model.

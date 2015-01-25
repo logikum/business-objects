@@ -1,7 +1,3 @@
-/**
- * Synchronous read-only child model module.
- * @module read-only-child-model-sync
- */
 'use strict';
 
 var util = require('util');
@@ -25,6 +21,19 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
+/**
+ * Factory method to create definitions of synchronous read-only child models.
+ *
+ * @function bo.ReadOnlyChildModelSync
+ * @param {bo.shared.PropertyManager} properties - The property definitions.
+ * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
+ * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+ * @returns {ReadOnlyChildModelSync} The constructor of a synchronous read-only child model.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be a PropertyManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ */
 var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
@@ -37,6 +46,15 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync' ]);
 
+  /**
+   * @classdesc Represents the definition of a synchronous read-only child model.
+   * @description Creates a new synchronous read-only child model instance.
+   *
+   * @name ReadOnlyChildModelSync
+   * @constructor
+   *
+   * @extends ModelBase
+   */
   var ReadOnlyChildModelSync = function(parent) {
 
     // Verify the model type of the parent model.

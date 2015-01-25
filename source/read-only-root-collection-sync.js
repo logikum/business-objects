@@ -1,7 +1,3 @@
-/**
- * Synchronous read-only root collection module.
- * @module read-only-root-collection-sync
- */
 'use strict';
 
 var util = require('util');
@@ -20,6 +16,21 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Read-only root collection';
 
+/**
+ * Factory method to create definitions of synchronous read-only root collections.
+ *
+ * @function bo.ReadOnlyRootCollectionSync
+ * @param {string} name - The name of the collection.
+ * @param {ReadOnlyChildModelSync} itemType - The model type of the collection items.
+ * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
+ * @param {bo.shared.ExtensionManagerSync} extensions - The customization of the collection.
+ * @returns {ReadOnlyRootCollectionSync} The constructor of a synchronous read-only root collection.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The collection name must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModelSync.
+ */
 var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensions) {
 
   name = ensureArgument.isMandatoryString(name,
@@ -34,6 +45,15 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
     throw new ModelError('invalidItem', itemType.prototype.name, itemType.modelType,
         'ReadOnlyRootCollectionSync', 'ReadOnlyChildModelSync');
 
+  /**
+   * @classdesc Represents the definition of a synchronous read-only root collection.
+   * @description Creates a new synchronous read-only root collection instance.
+   *
+   * @name ReadOnlyRootCollectionSync
+   * @constructor
+   *
+   * @extends ModelBase
+   */
   var ReadOnlyRootCollectionSync = function () {
 
     var self = this;

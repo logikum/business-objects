@@ -1,7 +1,3 @@
-/**
- * Synchronous read-only root model module.
- * @module read-only-root-model-sync
- */
 'use strict';
 
 var util = require('util');
@@ -28,6 +24,19 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Read-only root model';
 
+/**
+ * Factory method to create definitions of synchronous read-only root models.
+ *
+ * @function bo.ReadOnlyRootModelSync
+ * @param {bo.shared.PropertyManager} properties - The property definitions.
+ * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
+ * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+ * @returns {ReadOnlyRootModelSync} The constructor of a synchronous read-only root model.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be a PropertyManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ */
 var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
 
   properties = ensureArgument.isMandatoryType(properties, PropertyManager,
@@ -40,6 +49,15 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync' ]);
 
+  /**
+   * @classdesc Represents the definition of a synchronous read-only root model.
+   * @description Creates a new synchronous read-only root model instance.
+   *
+   * @name ReadOnlyRootModelSync
+   * @constructor
+   *
+   * @extends ModelBase
+   */
   var ReadOnlyRootModelSync = function() {
 
     var self = this;

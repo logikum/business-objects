@@ -45,103 +45,22 @@ var index = {
   //ModelBase: ModelBase,
   //CollectionBase: CollectionBase,
 
-  /**
-   * Creator function for asynchronous editable root models.
-   * @memberof bo
-   * @see {@link module:editable-root-model} for further information.
-   */
   EditableRootModel: EditableRootModel,
-  /**
-   * Creator function for asynchronous editable child models.
-   * @memberof bo
-   * @see {@link module:editable-child-model} for further information.
-   */
   EditableChildModel: EditableChildModel,
-  /**
-   * Creator function for asynchronous editable child collections.
-   * @memberof bo
-   * @see {@link module:editable-child-collection} for further information.
-   */
   EditableChildCollection: EditableChildCollection,
-  /**
-   * Creator function for asynchronous read-only root models.
-   * @memberof bo
-   * @see {@link module:read-only-root-model} for further information.
-   */
   ReadOnlyRootModel: ReadOnlyRootModel,
-  /**
-   * Creator function for asynchronous read-only child models.
-   * @memberof bo
-   * @see {@link module:read-only-child-model} for further information.
-   */
   ReadOnlyChildModel: ReadOnlyChildModel,
-  /**
-   * Creator function for asynchronous read-only root collections.
-   * @memberof bo
-   * @see {@link module:read-only-root-collection} for further information.
-   */
   ReadOnlyRootCollection: ReadOnlyRootCollection,
-  /**
-   * Creator function for asynchronous read-only child collections.
-   * @memberof bo
-   * @see {@link module:read-only-child-collection} for further information.
-   */
   ReadOnlyChildCollection: ReadOnlyChildCollection,
-  /**
-   * Creator function for asynchronous command objects.
-   * @memberof bo
-   * @see {@link module:command-object} for further information.
-   */
   CommandObject: CommandObject,
 
-
-  /**
-   * Creator function for synchronous editable root models.
-   * @memberof bo
-   * @see {@link module:editable-root-model-sync} for further information.
-   */
   EditableRootModelSync: EditableRootModelSync,
-  /**
-   * Creator function for synchronous editable child models.
-   * @memberof bo
-   * @see {@link module:editable-child-model-sync} for further information.
-   */
   EditableChildModelSync: EditableChildModelSync,
-  /**
-   * Creator function for synchronous editable child collections.
-   * @memberof bo
-   * @see {@link module:editable-child-collection-sync} for further information.
-   */
   EditableChildCollectionSync: EditableChildCollectionSync,
-  /**
-   * Creator function for synchronous read-only root models.
-   * @memberof bo
-   * @see {@link module:read-only-child-root-sync} for further information.
-   */
   ReadOnlyRootModelSync: ReadOnlyRootModelSync,
-  /**
-   * Creator function for synchronous read-only child models.
-   * @memberof bo
-   * @see {@link module:read-only-child-model-sync} for further information.
-   */
   ReadOnlyChildModelSync: ReadOnlyChildModelSync,
-  /**
-   * Creator function for synchronous read-only root collections.
-   * @memberof bo
-   * @see {@link module:read-only-root-collection-sync} for further information.
-   */
   ReadOnlyRootCollectionSync: ReadOnlyRootCollectionSync,
-  /**
-   * Creator function for synchronous read-only child collections.
-   * @memberof bo
-   * @see {@link module:read-only-child-collection-sync} for further information.
-   */
   ReadOnlyChildCollectionSync: ReadOnlyChildCollectionSync,
-  /**
-   * Creator function for synchronous command objects.
-   * @memberof bo
-   * @see {@link module:command-object-sync} for further information.
-   */
   CommandObjectSync: CommandObjectSync,
 
   dataTypes: dataTypes,
