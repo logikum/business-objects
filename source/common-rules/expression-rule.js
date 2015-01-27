@@ -27,7 +27,7 @@ var NullResultOption = require('./null-result-option.js');
  * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function ExpressionRule(primaryProperty, regex, option, message, priority, stopsProcessing) {
-  ExpressionRule.super_.call(this, 'Expression');
+  ValidationRule.call(this, 'Expression');
 
   /**
    * The regular expression that the property value has to conform.

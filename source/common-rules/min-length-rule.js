@@ -24,7 +24,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function MinLengthRule(primaryProperty, minLength, message, priority, stopsProcessing) {
-  MinLengthRule.super_.call(this, 'MinLength');
+  ValidationRule.call(this, 'MinLength');
 
   /**
    * The minimum length of the property value.

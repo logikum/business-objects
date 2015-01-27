@@ -14,7 +14,7 @@ var DataTypeError = require('./data-type-error.js');
  * @extends bo.dataTypes.DataType
  */
 function Text() {
-  Text.super_.call(this, 'Text');
+  DataType.call(this);
 
   // Immutable object.
   Object.freeze(this);

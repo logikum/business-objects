@@ -1,31 +1,55 @@
 console.log('Testing shared/enumeration.js...');
 
-var numbers = require('./numbers.js');
+var util = require('util');
 var Enumeration = require('../../source/shared/enumeration.js');
 
+//region Test enumerations
+
+function Numbers1() {
+  Enumeration.call(this);
+
+  this.one = 0;
+
+  Object.freeze(this);
+}
+util.inherits(Numbers1, Enumeration);
+
+function Numbers2() {
+  Enumeration.call(this);
+
+  this.one = 0;
+  this.two = 1;
+
+  Object.freeze(this);
+}
+util.inherits(Numbers2, Enumeration);
+
+function Numbers3() {
+  Enumeration.call(this);
+
+  this.one = 0;
+  this.two = 1;
+  this.three = 2;
+
+  Object.freeze(this);
+}
+util.inherits(Numbers3, Enumeration);
+
+//endregion
+
 describe('Enumeration', function() {
-  var numbers1 = numbers.one;
-  var numbers2 = numbers.two;
-  var numbers3 = numbers.three;
+  var numbers1 = null;
+  var numbers2 = null;
+  var numbers3 = null;
 
-  it('constructor expects one argument', function() {
+  it('constructor expects no argument', function() {
     function build01() { var options = new Enumeration(); }
-    function build02() { var options = new Enumeration(''); }
-    function build03() { var options = new Enumeration('Options'); }
-    function build04() { var options = new Enumeration(100); }
-    function build05() { var options = new Enumeration(true); }
-    function build06() { var options = new Enumeration({name:'Options'}); }
-    function build07() { var options = new Enumeration(['Options']); }
-    function build08() { var options = new Enumeration(new Date(2000, 12, 31)); }
 
-    expect(build01).toThrow();
-    expect(build02).toThrow();
-    expect(build03).not.toThrow();
-    expect(build04).toThrow();
-    expect(build05).toThrow();
-    expect(build06).toThrow();
-    expect(build07).toThrow();
-    expect(build08).toThrow();
+    expect(build01).not.toThrow();
+
+    numbers1 = new Numbers1();
+    numbers2 = new Numbers2();
+    numbers3 = new Numbers3();
   });
 
   it('$name property returns the type name', function() {

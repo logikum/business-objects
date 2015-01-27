@@ -16,14 +16,14 @@ var t = require('../locales/i18n-bo.js')('EnumerationError');
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
 function EnumerationError() {
-  EnumerationError.super_.call(this);
+  Error.call(this);
 
   /**
    * The name of the error type.
    * @type {string}
-   * @default
+   * @default EnumerationError
    */
-  this.name = 'EnumerationError';
+  this.name = this.constructor.name;
 
   /**
    * Human-readable description of the error.

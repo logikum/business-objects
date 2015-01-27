@@ -16,14 +16,14 @@ var t = require('../locales/i18n-bo.js')('AuthorizationError');
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
 function AuthorizationError() {
-  AuthorizationError.super_.call(this);
+  Error.call(this);
 
   /**
    * The name of the error type.
    * @type {string}
-   * @default
+   * @default AuthorizationError
    */
-  this.name = 'AuthorizationError';
+  this.name = this.constructor.name;
 
   /**
    * Human-readable description of the error.

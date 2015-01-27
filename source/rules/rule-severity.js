@@ -13,7 +13,7 @@ var Enumeration = require('../shared/enumeration.js');
  * @extends bo.shared.Enumeration
  */
 function RuleSeverity() {
-  RuleSeverity.super_.call(this, 'RuleSeverity');
+  Enumeration.call(this);
 
   /**
    * The rule executed successfully.

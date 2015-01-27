@@ -8,19 +8,23 @@ var ValidationResult = require('./validation-result.js');
 var PropertyInfo = require('../shared/property-info.js');
 
 /**
- * @classdesc Represents a validation rule.
- * @description Creates a new validation rule object.
+ * @classdesc
+ *      Represents a validation rule.
+ * @description
+ *      Creates a new validation rule object.
+ *      The rule instances should be frozen.
  *
  * @memberof bo.rules
  * @constructor
  * @param {string} ruleName - The name of the rule.
+ *    It is typically the name of the constructor, without the Rule suffix.
  *
  * @extends bo.rules.RuleBase
  *
  * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
  */
 function ValidationRule(ruleName) {
-  ValidationRule.super_.call(this, ruleName);
+  RuleBase.call(this, ruleName);
 
   /**
    * The definition of the property the rule relates to.

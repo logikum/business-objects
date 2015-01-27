@@ -21,7 +21,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function RequiredRule(primaryProperty, message, priority, stopsProcessing) {
-  RequiredRule.super_.call(this, 'Required');
+  ValidationRule.call(this, 'Required');
 
   // Initialize base properties.
   this.initialize(

@@ -25,7 +25,7 @@ var Enumeration = require('../shared/enumeration.js');
  * @extends bo.shared.Enumeration
  */
 function AuthorizationAction() {
-  AuthorizationAction.super_.call(this, 'AuthorizationAction');
+  Enumeration.call(this);
 
   /**
    * The user tries to get the value of a property.

@@ -1,26 +1,25 @@
 'use strict';
 
-var EnsureArgument = require('../shared/ensure-argument.js');
 var NotImplementedError = require('../shared/not-implemented-error.js');
 
 /**
- * @classdesc Serves as the base class for data type definitions.
- * @description Creates a new data type definition.
+ * @classdesc
+ *      Serves as the base class for data type definitions.
+ * @description
+ *      Creates a new data type definition.
+ *      The data type instances should be frozen.
  *
  * @memberof bo.dataTypes
  * @constructor
- * @param {string} name - The name of the data type.
- *
- * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
  */
 function DataType (name) {
 
   /**
-   * The name of the data type.
+   * The name of the data type. The default value is the name of the constructor.
    * @type {string}
    * @readonly
    */
-  this.name = EnsureArgument.isMandatoryString(name, 'c_manString', 'DataType', 'name');
+  this.name = this.constructor.name;
 
   // Immutable object.
   Object.freeze(this);

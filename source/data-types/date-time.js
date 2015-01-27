@@ -14,7 +14,7 @@ var DataTypeError = require('./data-type-error.js');
  * @extends bo.dataTypes.DataType
  */
 function DateTime() {
-  DateTime.super_.call(this, 'DateTime');
+  DataType.call(this);
 
   // Immutable object.
   Object.freeze(this);

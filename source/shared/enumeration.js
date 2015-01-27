@@ -4,18 +4,22 @@ var EnsureArgument = require('./ensure-argument.js');
 var EnumerationError = require('./enumeration-error.js');
 
 /**
- * Creates a new enumeration.
+ * @classdesc
+ *      Serves as the base class for enumerations.
+ * @description
+ *      Creates a new enumeration.
+ *      The enumeration instances should be frozen.
  *
  * @memberof bo.shared
  * @constructor
- * @param {string} name - The name of the enumeration.
- *
- * @classdesc Serves as the base class for enumerations.
- * @throws {@link bo.shared.ArgumentError Argument error}: The enumeration name must be a non-empty string.
  */
-function Enumeration (name) {
-  this.$name = EnsureArgument.isMandatoryString(name,
-      'c_manString', 'Enumeration', 'name')
+function Enumeration () {
+  /**
+   * The name of the enumeration. The default value is the name of the constructor.
+   * @type {string}
+   * @readonly
+   */
+  this.$name = this.constructor.name;
 }
 
 /**

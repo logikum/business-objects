@@ -3,37 +3,23 @@ console.log('Testing data-types/data-type.js...');
 var DataType = require('../../source/data-types/data-type.js');
 
 describe('Base data type', function() {
-  var dt = new DataType('name');
+  var dt = null;
 
-  it('constructor expects a non-empty string argument', function () {
-    var build01 = function () { return new DataType(); };
-    var build02 = function () { return new DataType(null); };
-    var build03 = function () { return new DataType(''); };
-    var build04 = function () { return new DataType('float'); };
-    var build05 = function () { return new DataType(false); };
-    var build06 = function () { return new DataType(125); };
-    var build07 = function () { return new DataType({}); };
-    var build08 = function () { return new DataType(['float']); };
+  it('constructor expects no argument', function () {
+    var build01 = function () { dt = new DataType(); };
 
-    expect(build01).toThrow();
-    expect(build02).toThrow();
-    expect(build03).toThrow();
-    expect(build04).not.toThrow();
-    expect(build05).toThrow();
-    expect(build06).toThrow();
-    expect(build07).toThrow();
-    expect(build08).toThrow();
+    expect(build01).not.toThrow();
   });
 
   it('has one property', function() {
 
-    expect(dt.name).toBe('name');
+    expect(dt.name).toBe('DataType');
   });
 
   it('has one read-only property and two fixed methods', function() {
     dt.name = 'anonymous';
 
-    expect(dt.name).toBe('name');
+    expect(dt.name).toBe('DataType');
 
     dt.check = undefined;
     dt.hasValue = undefined;

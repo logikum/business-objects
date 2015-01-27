@@ -22,7 +22,7 @@ var RuleSeverity = require('../rules/rule-severity.js');
  * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function InformationRule(primaryProperty, message, priority, stopsProcessing) {
-  InformationRule.super_.call(this, 'Information');
+  ValidationRule.call(this, 'Information');
 
   EnsureArgument.isMandatoryString(message, 'c_manString', 'InformationRule', 'message');
 

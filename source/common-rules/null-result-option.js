@@ -15,7 +15,7 @@ var Enumeration = require('../shared/enumeration.js');
  * @extends bo.shared.Enumeration
  */
 function NullResultOption() {
-  NullResultOption.super_.call(this, 'NullResultOption');
+  Enumeration.call(this);
 
   /**
    * The result of the rule will be success.

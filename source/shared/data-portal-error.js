@@ -19,14 +19,14 @@ var t = require('../locales/i18n-bo.js')('DataPortalError');
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
 function DataPortalError(modeltype, modelName, action, interceptedError) {
-  DataPortalError.super_.call(this);
+  Error.call(this);
 
   /**
    * The name of the error type.
    * @type {string}
-   * @default
+   * @default DataPortalError
    */
-  this.name = 'DataPortalError';
+  this.name = this.constructor.name;
 
   /**
    * The type of the model the intercepted error occurred in.

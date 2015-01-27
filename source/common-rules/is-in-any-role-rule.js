@@ -29,7 +29,7 @@ var UserInfo = require('../shared/user-info.js');
  * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function IsInAnyRoleRule(action, target, roles, message, priority, stopsProcessing) {
-  IsInAnyRoleRule.super_.call(this, 'IsInAnyRole');
+  AuthorizationRule.call(this, 'IsInAnyRole');
 
   /**
    * The names of the roles the user can be member of.

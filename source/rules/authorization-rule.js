@@ -12,19 +12,23 @@ var AuthorizationError = require('./authorization-error.js');
 var NoAccessBehavior = require('./no-access-behavior.js');
 
 /**
- * @classdesc Represents an authorization rule.
- * @description Creates a new authorization rule object.
+ * @classdesc
+ *      Represents an authorization rule.
+ * @description
+ *      Creates a new authorization rule object.
+ *      The rule instances should be frozen.
  *
  * @memberof bo.rules
  * @constructor
  * @param {string} ruleName - The name of the rule.
+ *    It is typically the name of the constructor, without the Rule suffix.
  *
  * @extends bo.rules.RuleBase
  *
  * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
  */
 function AuthorizationRule(ruleName) {
-  AuthorizationRule.super_.call(this, ruleName);
+  RuleBase.call(this, ruleName);
 
   var self = this;
   var noAccessBehavior = NoAccessBehavior.throwError;

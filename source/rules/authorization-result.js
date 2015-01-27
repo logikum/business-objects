@@ -25,7 +25,7 @@ function AuthorizationResult(ruleName, targetName, message) {
   targetName = EnsureArgument.isString(targetName || '',
       'c_string', 'AuthorizationResult', 'targetName');
 
-  AuthorizationResult.super_.call(this, ruleName, targetName, message);
+  ResultBase.call(this, ruleName, targetName, message);
 }
 util.inherits(AuthorizationResult, ResultBase);
 

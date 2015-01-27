@@ -1,7 +1,8 @@
 console.log('Testing shared/ensure-argument.js...');
 
-var numbers = require('./numbers.js');
+var util = require('util');
 var EnsureArgument = require('../../source/shared/ensure-argument.js');
+var Enumeration = require('../../source/shared/enumeration.js');
 var ModelBase = require('../../source/model-base.js');
 
 var ClearScheduleCommand = require('../../sample/sync/clear-schedule-command.js');
@@ -616,7 +617,15 @@ describe('Argument checking object', function () {
   //region Enumeration
 
   it('isEnumMember method works', function () {
-    var Numbers = numbers.three;
+    function Numbers1() {
+      Enumeration.call(this);
+      this.one = 0;
+      this.two = 1;
+      this.three = 2;
+      Object.freeze(this);
+    }
+    util.inherits(Numbers1, Enumeration);
+    var Numbers = new Numbers1();
 
     function call01() { return EnsureArgument.isEnumMember(undefined, Numbers); }
     function call02() { return EnsureArgument.isEnumMember(null, Numbers); }

@@ -16,14 +16,14 @@ var t = require('../locales/i18n-bo.js')('ConfigurationError');
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
 function ConfigurationError() {
-  ConfigurationError.super_.call(this);
+  Error.call(this);
 
   /**
    * The name of the error type.
    * @type {string}
-   * @default
+   * @default ConfigurationError
    */
-  this.name = 'ConfigurationError';
+  this.name = this.constructor.name;
 
   /**
    * Human-readable description of the error.

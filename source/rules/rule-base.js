@@ -6,7 +6,9 @@ var NotImplementedError = require('../shared/not-implemented-error.js');
 
 /**
  * @classdesc Serves as the base class for rules.
- * @description Creates a new rule object.
+ * @description
+ *      Creates a new rule object.
+ *      The rule instances should be frozen.
  *
  * @memberof bo.rules
  * @constructor
@@ -19,6 +21,7 @@ var RuleBase = function (ruleName) {
   ruleName = EnsureArgument.isMandatoryString(ruleName, 'c_manString', 'Rule', 'ruleName');
   /**
    * The name of the rule object.
+   * The default value usually the name of the constructor, without the Rule suffix.
    * @name bo.rules.RuleBase#ruleName
    * @type {string}
    * @readonly

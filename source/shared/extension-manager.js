@@ -21,7 +21,7 @@ var ExtensionManagerBase = require('./extension-manager-base.js');
  * @throws {@link bo.shared.ArgumentError Argument error}: The model path must be a non-empty string.
  */
 function ExtensionManager(dataSource, modelPath) {
-  ExtensionManager.super_.call(this, dataSource, modelPath, 2);
+  ExtensionManagerBase.call(this, dataSource, modelPath, 2);
 
   Object.freeze(this);
 }

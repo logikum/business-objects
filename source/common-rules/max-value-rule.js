@@ -24,7 +24,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function MaxValueRule(primaryProperty, maxValue, message, priority, stopsProcessing) {
-  MaxValueRule.super_.call(this, 'MaxValue');
+  ValidationRule.call(this, 'MaxValue');
 
   /**
    * The maximum value of the property.

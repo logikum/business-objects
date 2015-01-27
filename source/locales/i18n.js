@@ -56,11 +56,21 @@ function readLocales (namespace, localePath) {
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
 function I18nError() {
-  I18nError.super_.call(this);
+  Error.call(this);
 
   var i18nLocales = new i18n('$bo', 'i18n');
 
-  this.name = 'I18nError';
+  /**
+   * The name of the error type.
+   * @type {string}
+   * @default I18nError
+   */
+  this.name = this.constructor.name;
+
+  /**
+   * Human-readable description of the error.
+   * @type {string}
+   */
   this.message = i18nLocales.get.apply(i18nLocales, arguments.length ? arguments : ['default']);
 }
 util.inherits(I18nError, Error);

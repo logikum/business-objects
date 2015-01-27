@@ -14,7 +14,7 @@ var DataTypeError = require('./data-type-error.js');
  * @extends bo.dataTypes.DataType
  */
 function Integer() {
-  Integer.super_.call(this, 'Integer');
+  DataType.call(this);
 
   // Immutable object.
   Object.freeze(this);

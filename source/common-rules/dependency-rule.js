@@ -29,7 +29,7 @@ var PropertyInfo = require('../shared/property-info.js');
  * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function DependencyRule(primaryProperty, dependencies, message, priority, stopsProcessing) {
-  DependencyRule.super_.call(this, 'Dependency');
+  ValidationRule.call(this, 'Dependency');
 
   var self = this;
 

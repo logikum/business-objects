@@ -13,7 +13,7 @@ var Enumeration = require('./enumeration.js');
  * @extends bo.shared.Enumeration
  */
 function ModelState() {
-  ModelState.super_.call(this, 'ModelState');
+  Enumeration.call(this);
 
   /**
    * The model instance is unchanged.

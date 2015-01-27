@@ -25,7 +25,7 @@ function ValidationResult(ruleName, propertyName, message) {
   propertyName = EnsureArgument.isMandatoryString(propertyName,
       'c_manString', 'ValidationResult', 'propertyName');
 
-  ValidationResult.super_.call(this, ruleName, propertyName, message);
+  ResultBase.call(this, ruleName, propertyName, message);
 
   /**
    * An array of properties that are affected by the rule.

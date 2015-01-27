@@ -21,7 +21,7 @@ var Enumeration = require('../shared/enumeration.js');
  * @extends bo.shared.Enumeration
  */
 function NoAccessBehavior() {
-  NoAccessBehavior.super_.call(this, 'NoAccessBehavior');
+  Enumeration.call(this);
 
   /**
    * The rule throws an {@link bo.rules.AuthorizationError authorization error}.
