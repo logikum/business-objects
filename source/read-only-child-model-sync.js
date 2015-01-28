@@ -56,6 +56,7 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    */
   var ReadOnlyChildModelSync = function(parent) {
+    ModelBase.call(this);
 
     // Verify the model type of the parent model.
     parent = EnsureArgument.isModelType(parent,

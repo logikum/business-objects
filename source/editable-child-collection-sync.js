@@ -38,6 +38,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
    * @extends CollectionBase
    */
   var EditableChildCollectionSync = function (parent) {
+    CollectionBase.call(this);
 
     // Verify the model type of the parent model.
     parent = EnsureArgument.isModelType(parent, ['EditableRootModelSync', 'EditableChildModelSync'],

@@ -59,6 +59,7 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    */
   var ReadOnlyRootModel = function() {
+    ModelBase.call(this);
 
     var self = this;
     var store = new DataStore();

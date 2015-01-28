@@ -55,6 +55,7 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
    * @extends ModelBase
    */
   var ReadOnlyRootCollection = function () {
+    CollectionBase.call(this);
 
     var self = this;
     var items = [];

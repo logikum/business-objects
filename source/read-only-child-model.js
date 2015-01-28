@@ -56,6 +56,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    */
   var ReadOnlyChildModel = function(parent) {
+    ModelBase.call(this);
 
     // Verify the model type of the parent model.
     parent = EnsureArgument.isModelType(parent,

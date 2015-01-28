@@ -61,6 +61,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    */
   var EditableRootModel = function() {
+    ModelBase.call(this);
 
     var self = this;
     var state = null;

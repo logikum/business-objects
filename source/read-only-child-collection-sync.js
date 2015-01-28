@@ -36,6 +36,7 @@ var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
    * @extends CollectionBase
    */
   var ReadOnlyChildCollectionSync = function (parent) {
+    CollectionBase.call(this);
 
     // Verify the model type of the parent model.
     parent = EnsureArgument.isModelType(parent, ['ReadOnlyRootModelSync', 'ReadOnlyChildModelSync'],

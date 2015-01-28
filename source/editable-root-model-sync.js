@@ -61,6 +61,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    */
   var EditableRootModelSync = function() {
+    ModelBase.call(this);
 
     var self = this;
     var state = null;
