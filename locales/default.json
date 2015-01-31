@@ -12,7 +12,7 @@
       "Utah": "Salt Lake City"
     }
   },
-  "template1": "Hello, {0}!",
-  "template2": "{0} is a famous {1}.",
-  "template3": "Result: {0} * {1} = {2}"
+  "pattern1": "Hello, {0}!",
+  "pattern2": "{0} is a famous {1}.",
+  "pattern3": "Result: {0} * {1} = {2}"
 }

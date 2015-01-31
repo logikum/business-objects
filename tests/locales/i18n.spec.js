@@ -36,14 +36,12 @@ describe('Internationalization', function () {
     expect(build12).toThrow();
   });
 
-  it('get method works', function() {
+  it('get method works wth simple key', function() {
     var i1 = new i18n();
     var i2 = new i18n('$bo');
     var i3 = new i18n('dashboard');
 
-    expect(
-        i1.get('property1')
-    ).toBe('value1');
+    expect(i1.get('property1')).toBe('value1');
     expect(i1.get('-invalid-key-')).toBe('-invalid-key-');
 
     expect(i2.get('default')).toBe('This is a test message.');
@@ -53,36 +51,36 @@ describe('Internationalization', function () {
     expect(i3.get('-invalid-key-')).toBe('-invalid-key-');
   });
 
-  it('getWithNs method works', function() {
+  it('getWithNs method works with namespace', function() {
     var i1 = new i18n();
     var i2 = new i18n('$bo');
     var i3 = new i18n('dashboard');
 
-    expect(i1.getWithNs('$default', 'property1')).toBe('value1');
-    expect(i1.getWithNs('$default', '-invalid-key-')).toBe('-invalid-key-');
-    expect(i1.getWithNs('$bo', 'default')).toBe('This is a test message.');
-    expect(i1.getWithNs('dashboard', 'developer')).toBe('Steve Jobs');
+    expect(i1.get('$default:property1')).toBe('value1');
+    expect(i1.get('$default:-invalid-key-')).toBe('$default:-invalid-key-');
+    expect(i1.get('$bo:default')).toBe('This is a test message.');
+    expect(i1.get('dashboard:developer')).toBe('Steve Jobs');
 
-    expect(i2.getWithNs('$bo', 'default')).toBe('This is a test message.');
-    expect(i2.getWithNs('$bo', '-invalid-key-')).toBe('-invalid-key-');
-    expect(i2.getWithNs('$default', 'property2')).toBe('value2');
-    expect(i2.getWithNs('dashboard', 'designer')).toBe('Mary Poppins');
+    expect(i2.get('$bo:default')).toBe('This is a test message.');
+    expect(i2.get('$bo:-invalid-key-')).toBe('$bo:-invalid-key-');
+    expect(i2.get('$default:property2')).toBe('value2');
+    expect(i2.get('dashboard:designer')).toBe('Mary Poppins');
 
-    expect(i3.getWithNs('dashboard', 'manager')).toBe('John Smith');
-    expect(i3.getWithNs('dashboard', '-invalid-key-')).toBe('-invalid-key-');
-    expect(i3.getWithNs('$default', 'property3')).toBe('value3');
-    expect(i3.getWithNs('$bo', 'default')).toBe('This is a test message.');
+    expect(i3.get('dashboard:manager')).toBe('John Smith');
+    expect(i3.get('dashboard:-invalid-key-')).toBe('dashboard:-invalid-key-');
+    expect(i3.get('$default:property3')).toBe('value3');
+    expect(i3.get('$bo:default')).toBe('This is a test message.');
   });
 
-  it('parameter replacement works', function() {
+  it('get method works with parameter replacement', function() {
     var i1 = new i18n();
 
-    expect(i1.get('template1', 'world')).toBe('Hello, world!');
-    expect(i1.get('template2', 'Albert Einstein', 'scientist')).toBe('Albert Einstein is a famous scientist.');
-    expect(i1.get('template3', 3, 7, 21)).toBe('Result: 3 * 7 = 21');
+    expect(i1.get('pattern1', 'world')).toBe('Hello, world!');
+    expect(i1.get('pattern2', 'Albert Einstein', 'scientist')).toBe('Albert Einstein is a famous scientist.');
+    expect(i1.get('pattern3', 3, 7, 21)).toBe('Result: 3 * 7 = 21');
   });
 
-  it('get method works with extended message keys', function() {
+  it('get method works with extended keys', function() {
     var i1 = new i18n();
     var i2 = new i18n(null, 'capitols');
 
@@ -103,27 +101,43 @@ describe('Internationalization', function () {
     expect(i2.get('USA.Utah')).toBe('Salt Lake City');
   });
 
-  it('works with specific locale', function() {
+  it('get method works with specific locale', function() {
     var i1 = new i18n();
+
+    // Existing locale.
     currentLocale = 'hu-HU';
 
     expect(i1.get('capitols.France')).toBe('Párizs');
     expect(i1.get('capitols.Egypt')).toBe('Kairó');
     expect(i1.get('capitols.Japan')).toBe('Tokió');
 
-    expect(i1.getWithNs('dashboard', 'manager')).toBe('Kovács János');
-    expect(i1.getWithNs('dashboard', 'developer')).toBe('Dolgos István');
-    expect(i1.getWithNs('dashboard', 'designer')).toBe('Popper Mária');
+    expect(i1.get('dashboard:manager')).toBe('Kovács János');
+    expect(i1.get('dashboard:developer')).toBe('Dolgos István');
+    expect(i1.get('dashboard:designer')).toBe('Popper Mária');
 
-    // Use missing locale.
+    // --- With overwritten locale.
+    expect(i1.get('default*capitols.France')).toBe('Paris');
+    expect(i1.get('default*dashboard:manager')).toBe('John Smith');
+    expect(i1.get('fr*capitols.France')).toBe('Paris');
+    expect(i1.get('fr*dashboard:manager')).toBe('John Smith');
+
+    // Missing locale.
     currentLocale = 'fr';
 
     expect(i1.get('capitols.France')).toBe('Paris');
     expect(i1.get('capitols.Egypt')).toBe('Cairo');
     expect(i1.get('capitols.Japan')).toBe('Tokyo');
 
-    expect(i1.getWithNs('dashboard', 'manager')).toBe('John Smith');
-    expect(i1.getWithNs('dashboard', 'developer')).toBe('Steve Jobs');
-    expect(i1.getWithNs('dashboard', 'designer')).toBe('Mary Poppins');
+    expect(i1.get('dashboard:manager')).toBe('John Smith');
+    expect(i1.get('dashboard:developer')).toBe('Steve Jobs');
+    expect(i1.get('dashboard:designer')).toBe('Mary Poppins');
+
+    // --- With overwritten locale.
+    expect(i1.get('default*capitols.France')).toBe('Paris');
+    expect(i1.get('default*dashboard:manager')).toBe('John Smith');
+    expect(i1.get('hu-HU*capitols.France')).toBe('Párizs');
+    expect(i1.get('hu-HU*dashboard:manager')).toBe('Kovács János');
+
+    currentLocale = '';
   });
 });

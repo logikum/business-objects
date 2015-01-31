@@ -31,7 +31,8 @@ var Utility = function () {};
  */
 Utility.getFunction = function (relativePath, name, errorType) {
 
-  if (typeof relativePath !== 'string' && !(relativePath instanceof String))
+  if ((typeof relativePath !== 'string' && !(relativePath instanceof String)) ||
+      relativePath.trim().length === 0)
     throw new errorType('string', name);
 
   var fullPath = path.join(process.cwd(), relativePath);
@@ -62,7 +63,8 @@ Utility.getFunction = function (relativePath, name, errorType) {
  */
 Utility.getDirectory = function (relativePath, name, errorType) {
 
-  if (typeof relativePath !== 'string' && !(relativePath instanceof String))
+  if ((typeof relativePath !== 'string' && !(relativePath instanceof String)) ||
+      relativePath.trim().length === 0)
     throw new errorType('string', name);
 
   var fullPath = path.join(process.cwd(), relativePath);

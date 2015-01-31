@@ -5,24 +5,28 @@ var path = require('path');
 var util = require('util');
 var Utility = require('../shared/utility.js');
 
+var NEUTRAL = 'default';
+var NS_ROOT = '$default';
+var NS_BO = '$bo';
+
 var locales = {};
-var getCurrentLocale = function () { return 'default'; };
+var getCurrentLocale = function () { return NEUTRAL; };
 var isInitialized = false;
 
 //region Read locales
 
 // Read business-objects locales.
-readLocales('$bo', path.join(process.cwd(), 'source/locales'));
+readLocales(NS_BO, path.join(process.cwd(), 'source/locales'));
 
 function readProjectLocales (pathOfLocales) {
   // Read default namespace.
-  readLocales('$default', pathOfLocales);
+  readLocales(NS_ROOT, pathOfLocales);
 
   // Read other namespaces.
   fs.readdirSync(pathOfLocales).filter(function (directoryName) {
     return fs.statSync(path.join(pathOfLocales, directoryName)).isDirectory() &&
-        path.extname(directoryName) !== '$default' &&
-        path.extname(directoryName) !== '$bo';
+        path.extname(directoryName) !== NS_ROOT &&
+        path.extname(directoryName) !== NS_BO;
   }).forEach(function (directoryName) {
     readLocales(directoryName, path.join(pathOfLocales, directoryName));
   });
@@ -34,7 +38,7 @@ function readLocales (namespace, localePath) {
     return fs.statSync(path.join(localePath, fileName)).isFile() && path.extname(fileName) === '.json';
   }).forEach(function (fileName) {
     var filePath = path.join(localePath, fileName);
-    if (fs.statSync(filePath).isFile())
+    //if (fs.statSync(filePath).isFile())
       locales[namespace][path.basename(fileName, '.json')] = require(filePath);
   });
 }
@@ -96,7 +100,7 @@ var i18n = function (namespace, keyRoot) {
   namespace = Utility.isOptionalString(namespace, 'namespace', I18nError);
   keyRoot = Utility.isOptionalString(keyRoot, 'keyRoot', I18nError);
 
-  this.namespace = namespace || '$default';
+  this.namespace = namespace || NS_ROOT;
   this.keyRoot = keyRoot || '';
 
   if (this.keyRoot && this.keyRoot.substr(-1) !== '.')
@@ -107,68 +111,127 @@ var i18n = function (namespace, keyRoot) {
 };
 
 /**
- * Reads the localized messages of the user project and the business objects package.
+ * Reads the localized messages of the project.
  *
  * @function bo.i18n.initialize
- * @param {string} pathOfLocales - The relative path of the messages of the user project.
- * @param {function} localeReader - A function that returns the current locale.
+ * @param {string} pathOfLocales - The relative path of the directory that contains the project messages.
+ * @param {function} [getLocale] - A function that returns the current locale.
+ *
+ * @throws {@link bo.I18nError i18n error}: The path of locales must be a non-empty string.
+ * @throws {@link bo.I18nError i18n error}: The path of locales is not a valid directory path.
+ * @throws {@link bo.I18nError i18n error}: The locale getter must be a function.
  */
-i18n.initialize = function (pathOfLocales, localeReader) {
+i18n.initialize = function (pathOfLocales, getLocale) {
   if (isInitialized)
     throw new I18nError('ready');
 
-  if (pathOfLocales) {
-    readProjectLocales(
-        Utility.getDirectory(pathOfLocales, 'pathOfLocales', I18nError)
-    );
+  readProjectLocales(
+      Utility.getDirectory(pathOfLocales, 'pathOfLocales', I18nError)
+  );
+
+  if (getLocale) {
+    if (typeof getLocale === 'function')
+      getCurrentLocale = getLocale;
+    else
+      throw new I18nError('function', 'getLocale');
   }
-  if (localeReader) {
-    getCurrentLocale = typeof localeReader === 'function' ?
-        localeReader :
-        Utility.getFunction(localeReader, 'localeReader', I18nError)
-    ;
-  }
+
   isInitialized = true;
 };
 
+/* locale*namespace:key1.key2.key3 */
 /**
- * Gets a localized message of a given key.
+ * Gets a localized message of a given identifier.
+ * The message identifier has the pattern: [locale*][namespace:]key1[[.key2]...]
+ * Examples:
+ * <dl>
+ *   <dt>australia</dt>
+ *   <dd>Simple key with default namespace and current locale.</dd>
+ *   <dt>europe.spain.andalusia</dt>
+ *   <dd>Extended key with default namespace and current locale.</dd>
+ *   <dt>geography:australia</dt>
+ *   <dd>Simple key with specified namespace and current locale.</dd>
+ *   <dt>geography:europe.spain.andalusia</dt>
+ *   <dd>Extended key with specified namespace and current locale.</dd>
+ *   <dt>hu\*australia</dt>
+ *   <dd>Simple key with default namespace and specified language.</dd>
+ *   <dt>hu-HU\*europe.spain.andalusia</dt>
+ *   <dd>Extended key with default namespace and specified language with region.</dd>
+ *   <dt>hu\*geography:australia</dt>
+ *   <dd>Simple key with specified namespace and specified language.</dd>
+ *   <dt>hu-HU\*geography:europe.spain.andalusia</dt>
+ *   <dd>Extended key with specified namespace and specified language with region.</dd>
+ * </dl>
+ * If localizer is created with a namespace and the message identifier omits the namespace,
+ * then the localizer namespace will applied. Examples for initial namespace <i>economy</i>:
+ * <dl>
+ *   <dt>australia</dt>
+ *   <dd>It is interpreted as <i>economy:australia</i></dd>
+ *   <dt>hu-HU\*europe.spain.andalusia</dt>
+ *   <dd>It is interpreted as <i>hu-HU\*economy:europe.spain.andalusia</i></dd>
+ *   <dt>geography:australia</dt>
+ *   <dd>It remains <i>geography:australia</i></dd>
+ *   <dt>hu-HU\*geography:europe.spain.andalusia</dt>
+ *   <dd>It remains <i>hu-HU\*geography:europe.spain.andalusia</i></dd>
+ * </dl>
+ * If localizer is created with a key root and the message identifier omits the namespace,
+ * then the key root is inserted before the key part of the specified identifier.
+ * Examples for initial key root <i>earth</i>:
+ * <dl>
+ *   <dt>australia</dt>
+ *   <dd>It is interpreted as <i>earth.australia</i></dd>
+ *   <dt>hu-HU\*europe.spain.andalusia</dt>
+ *   <dd>It is interpreted as <i>hu-HU\*earth.europe.spain.andalusia</i></dd>
+ *   <dt>geography:australia</dt>
+ *   <dd>It remains <i>geography:australia</i></dd>
+ *   <dt>hu-HU\*geography:europe.spain.andalusia</dt>
+ *   <dd>It remains <i>hu-HU\*geography:europe.spain.andalusia</i></dd>
+ * </dl>
  *
  * @function bo.i18n#get
- * @param {string} messageKey - The key of the required message.
+ * @param {string} messageId - The identifier of the required message.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {string} The localized message for the current locale, if not found
  *      then the message for the default locale, otherwise the message key.
  *
  * @throws {@link bo.I18nError i18n error}: The message key must be a non-empty string.
  */
-i18n.prototype.get = function (messageKey) {
-  var args = Array.prototype.slice.call(arguments);
-  args.unshift(this.namespace);
-  return this.getWithNs.apply(this, args);
-};
+i18n.prototype.get = function (messageId, messageParams) {
+  var locale, namespace, messageKey;
+  var asterisk = messageId.indexOf('*');
+  var colon = messageId.indexOf(':');
 
-/**
- * Gets a localized message of a given key.
- *
- * @function bo.i18n#getWithNs
- * @param {string} namespace - The namespace of the required message.
- * @param {string} messageKey - The key of the required message.
- * @returns {string} The localized message for the current locale, if not found
- *      then the message for the default locale, otherwise the message key.
- *
- * @throws {@link bo.I18nError i18n error}: The namespace must be a non-empty string.
- * @throws {@link bo.I18nError i18n error}: The message key must be a non-empty string.
- */
-i18n.prototype.getWithNs = function (namespace, messageKey) {
+  // Determine locale.
+  if (asterisk > -1)
+    locale = messageId.substr(0, asterisk);
+  asterisk++;
+  locale = locale || getCurrentLocale() || NEUTRAL;
 
-  namespace = Utility.isMandatoryString(namespace, 'namespace', I18nError);
-  messageKey = Utility.isMandatoryString(messageKey, 'messageKey', I18nError);
+  // Determine namespace.
+  if (colon > -1)
+    namespace = messageId.substring(asterisk, colon);
+  colon++;
+  namespace = namespace || this.namespace;
 
-  var keys = (this.keyRoot + messageKey).split('.');
+  // Determine message key.
+  messageKey = messageId.substr(Math.max(asterisk, colon));
+  if (!colon)
+    messageKey = this.keyRoot + messageKey;
+
+  var keys = messageKey.split('.').filter(function (key) {
+    return key.trim().length > 0;
+  });
+  if (!keys.length)
+    throw new I18nError('messageId');
+
+  // If message is not found then the identifier is returned.
+  var message = messageId;
+  var found = false;
   var messageArgs = arguments;
 
+  // Replace message parameters with passed arguments.
   function replacer(match) {
-    var index = new Number(match.substr(1, match.length - 2)) + 2;
+    var index = new Number(match.substr(1, match.length - 2)) + 1;
     var replacement = '';
     if (index < messageArgs.length) {
       var arg = messageArgs[index];
@@ -180,6 +243,7 @@ i18n.prototype.getWithNs = function (namespace, messageKey) {
     return replacement;
   }
 
+  // Find the message in the tree.
   function readMessage(messages) {
     var base = messages;
     for (var i = 0; i < keys.length; i++) {
@@ -193,29 +257,27 @@ i18n.prototype.getWithNs = function (namespace, messageKey) {
     }
   }
 
+  // Use the required message set.
   var ns = locales[namespace];
-  var locale = getCurrentLocale();
-
-  var message = messageKey;
 
   // When namespace is valid...
   if (ns) {
-    var found = false;
     // Get message of specific locale.
     if (ns[locale])
       found = readMessage(ns[locale]);
-    // Get message of main locale.
-    if (!found && l_Main && ns[l_Main]) {
-      var l_Main = locale.substr(0, locale.indexOf('-'));
-      found = readMessage(ns[l_Main]);
+    // Get message of general locale.
+    if (!found) {
+      var general = locale.substr(0, locale.lastIndexOf('-'));
+      if (general && ns[general])
+        found = readMessage(ns[general]);
     }
     // Get message of default locale.
-    if (!found && ns['default'])
-      readMessage(ns['default']);
+    if (!found && locale !== NEUTRAL && ns[NEUTRAL])
+      readMessage(ns[NEUTRAL]);
   }
 
   // Format message with optional arguments.
-  if (arguments.length > 2) {
+  if (found && messageArgs.length > 1) {
     message = message.replace(/{\d+}/g, replacer);
   }
 

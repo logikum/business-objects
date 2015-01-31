@@ -60,15 +60,25 @@ if (cfg) {
       if (user === undefined)
         user = null;
       else if (user !== null && !(user instanceof UserInfo) && user.super_ !== UserInfo)
-        throw new ConfigurationError('userInfo');
+        throw new ConfigurationError('userReader');
     }
     return user;
   };
 
   // Evaluate the locale reader.
+  var fnGetLocale = null;
   if (cfg.localeReader) {
-    config.getLocale = Utility.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
+    fnGetLocale = Utility.getFunction(cfg.localeReader, 'localeReader', ConfigurationError);
   }
+  config.getLocale = function () {
+    var locale = '';
+    if (fnGetLocale) {
+      locale = fnGetLocale() || '';
+      if (typeof locale !== 'string' && !(locale instanceof String))
+        throw new ConfigurationError('localeReader');
+    }
+    return locale;
+  };
 
   // Evaluate the path of locale.
   if (cfg.pathOfLocales) {

@@ -5,7 +5,6 @@ var ConnectionManager = require('../../sample/connection-manager.js');
 var configuration = require('../../source/shared/configuration-reader.js');
 var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
 var daoBuilder = require('../../source/data-access/dao-builder.js');
-var getLocale = require('../../sample/get-locale.js');
 
 describe('Business objects configuration reader object', function() {
 
@@ -61,7 +60,7 @@ describe('Business objects configuration reader object', function() {
 
   it('has a locale reader method', function() {
 
-    expect(configuration.getLocale).toBe(getLocale);
+    expect(configuration.getLocale).toEqual(jasmine.any(Function));
 
     var locale = configuration.getLocale();
 

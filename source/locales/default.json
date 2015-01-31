@@ -83,23 +83,24 @@
   },
   "ConfigurationError": {
     "default": "An error occurred in the business objects' configuration.",
-    "string": "The value of {0} property of business objects' configuration must be a string.",
+    "string": "The value of {0} property of business objects' configuration must be a non-empty string.",
     "file": "The value of {0} property of business objects' configuration is not a valid file path: {1}",
     "directory": "The value of {0} property of business objects' configuration is not a valid directory path: {1}",
     "function": "The file defined by the {0} property of business objects' configuration must return a function: {1}",
     "enumMember": "The value of {0} property of business objects' configuration must be a {1} item.",
-    "userInfo": "The function defined by the userReader property of business objects' configuration must return a UserInfo object.",
+    "userReader": "The function defined by the userReader property of business objects' configuration must return a UserInfo object.",
+    "localeReader": "The function defined by the localeReader property of business objects' configuration must return a string value.",
     "noConMan": "The connection manager is required.",
     "wrongConMan": "The connection manager must inherit ConnectionManagerBase type."
   },
   "I18nError": {
     "default": "An error occurred in the business objects' localization.",
-    "string": "The value of {0} property of i18n.initialize method must be a string.",
-    "file": "The value of {0} property of i18n.initialize method is not a valid file path: {1}",
+    "string": "The value of {0} property of i18n.initialize method must be a non-empty string.",
     "directory": "The value of {0} property of i18n.initialize method is not a valid directory path: {1}",
-    "function": "The file defined by the {0} property of i18n.initialize method must return a function: {1}",
+    "function": "The value of {0} property of i18n.initialize method must return a function.",
     "c_optString": "The {0} argument of i18n constructor must be a string or null.",
     "m_manString": "The {0} argument of i18n.get method must be a non-empty string.",
+    "messageId": "The identifier of the message is invalid. Use the [locale*][namespace:]key1[[.key2]...] format.",
     "ready": "i18n is already initialized."
   },
   "DataTypeError": {
