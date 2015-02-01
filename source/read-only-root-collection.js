@@ -7,11 +7,15 @@ var EnsureArgument = require('./shared/ensure-argument.js');
 var ModelError = require('./shared/model-error.js');
 
 var ExtensionManager = require('./shared/extension-manager.js');
-var DataContext = require('./shared/data-context.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
+
+var DataPortalAction = require('./shared/data-portal-action.js');
+var DataPortalContext = require('./shared/data-portal-context.js');
+var DataPortalEvent = require('./shared/data-portal-event.js');
+var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Read-only root collection';
@@ -116,9 +120,9 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
 
     //region Data portal methods
 
-    function getDataContext(connection) {
+    function getDataContext (connection) {
       if (!dataContext)
-        dataContext = new DataContext(dao, user);
+        dataContext = new DataPortalContext(dao);
       return dataContext.setState(connection, false);
     }
 

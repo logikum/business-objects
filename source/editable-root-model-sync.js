@@ -13,7 +13,6 @@ var PropertyManager = require('./shared/property-manager.js');
 var PropertyContext = require('./shared/property-context.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataStore = require('./shared/data-store.js');
-var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
@@ -21,6 +20,11 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
+
+var DataPortalAction = require('./shared/data-portal-action.js');
+var DataPortalContext = require('./shared/data-portal-context.js');
+var DataPortalEvent = require('./shared/data-portal-event.js');
+var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
@@ -387,12 +391,16 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext(connection) {
+    function getDataContext (connection) {
       if (!dataContext)
-        dataContext = new DataContext(
-            dao, user, properties.toArray(), getPropertyValue, setPropertyValue
+        dataContext = new DataPortalContext(
+            dao, properties.toArray(), getPropertyValue, setPropertyValue
         );
       return dataContext.setState(connection, isDirty);
+    }
+
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
     }
 
     function data_create () {
@@ -400,6 +408,12 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
         try {
           // Open connection.
           connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preCreate),
+              getEventArgs(DataPortalAction.create),
+              self
+          );
           // Execute creation.
           if (extensions.dataCreate) {
             // *** Custom creation.
@@ -410,13 +424,27 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
             fromDto.call(self, dto);
           }
           markAsCreated();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postCreate),
+              getEventArgs(DataPortalAction.create),
+              self
+          );
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = new DataPortalError(MODEL_DESC, properties.name, 'create', e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postCreate),
+              getEventArgs(DataPortalAction.create, null, dpError),
+              self
+          );
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
-          // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_DESC, properties.name, 'create', e);
+          // Rethrow error.
+          throw dpError;
         }
       }
     }
@@ -427,6 +455,12 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
         try {
           // Open connection.
           connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preFetch),
+              getEventArgs(DataPortalAction.fetch, method),
+              self
+          );
           // Execute fetch.
           var dto = null;
           if (extensions.dataFetch) {
@@ -441,13 +475,27 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Fetch children as well.
           fetchChildren(dto);
           markAsPristine();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method),
+              self
+          );
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = new DataPortalError(MODEL_DESC, properties.name, 'fetch', e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method, dpError),
+              self
+          );
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
-          // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_DESC, properties.name, 'fetch', e);
+          // Rethrow error.
+          throw dpError;
         }
       }
     }
@@ -458,6 +506,12 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
         try {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preInsert),
+              getEventArgs(DataPortalAction.insert),
+              self
+          );
           // Execute insert.
           if (extensions.dataInsert) {
             // *** Custom insert.
@@ -471,13 +525,27 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Insert children as well.
           insertChildren(connection);
           markAsPristine();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postInsert),
+              getEventArgs(DataPortalAction.insert),
+              self
+          );
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = new DataPortalError(MODEL_DESC, properties.name, 'insert', e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postInsert),
+              getEventArgs(DataPortalAction.insert, null, dpError),
+              self
+          );
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
-          // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_DESC, properties.name, 'insert', e);
+          // Rethrow error.
+          throw dpError;
         }
       }
     }
@@ -488,6 +556,12 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
         try {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preUpdate),
+              getEventArgs(DataPortalAction.update),
+              self
+          );
           // Execute update.
           if (extensions.dataUpdate) {
             // *** Custom update.
@@ -501,13 +575,27 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Update children as well.
           updateChildren(connection);
           markAsPristine();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postUpdate),
+              getEventArgs(DataPortalAction.update),
+              self
+          );
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = new DataPortalError(MODEL_DESC, properties.name, 'update', e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postUpdate),
+              getEventArgs(DataPortalAction.update, null, dpError),
+              self
+          );
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
-          // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_DESC, properties.name, 'update', e);
+          // Rethrow error.
+          throw dpError;
         }
       }
     }
@@ -518,6 +606,12 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
         try {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preRemove),
+              getEventArgs(DataPortalAction.remove),
+              self
+          );
           // Remove children first.
           removeChildren(connection);
           // Execute removal.
@@ -530,13 +624,27 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
             var dto = dao.$runMethod('remove', connection, filter);
           }
           markAsRemoved();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postRemove),
+              getEventArgs(DataPortalAction.remove),
+              self
+          );
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = new DataPortalError(MODEL_DESC, properties.name, 'remove', e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postRemove),
+              getEventArgs(DataPortalAction.remove, null, dpError),
+              self
+          );
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
-          // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_DESC, properties.name, 'remove', e);
+          // Rethrow error.
+          throw dpError;
         }
       }
     }

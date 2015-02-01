@@ -10,7 +10,7 @@ var ExtensionManagerSync = require('./extension-manager-sync.js');
 
 //var ModelState = require('./model-state.js');
 var UserInfo = require('./user-info.js');
-var DataContext = require('./data-context.js');
+var DataPortalContext = require('./data-portal-context.js');
 var TransferContext = require('./transfer-context.js');
 
 var configuration = require('./configuration-reader.js');
@@ -46,7 +46,7 @@ var NotImplementedError = require('./not-implemented-error.js');
  *
  * @property {function} UserInfo - {@link bo.shared.UserInfo User data}
  *      constructor to create new base object for user information.
- * @property {function} DataContext - {@link bo.shared.DataContext Data context}
+ * @property {function} DataPortalContext - {@link bo.shared.DataPortalContext Data context}
  *      constructor to create new context object for custom data portal functions.
  * @property {function} TransferContext - {@link bo.shared.TransferContext Transfer context}
  *      constructor to create new context object for custom client and data transfer functions.
@@ -82,7 +82,7 @@ var index = {
 
   //ModelState: ModelState,
   UserInfo: UserInfo,
-  DataContext: DataContext,
+  DataPortalContext: DataPortalContext,
   TransferContext: TransferContext,
 
   /**

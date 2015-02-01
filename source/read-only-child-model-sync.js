@@ -13,13 +13,18 @@ var PropertyManager = require('./shared/property-manager.js');
 var PropertyContext = require('./shared/property-context.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataStore = require('./shared/data-store.js');
-var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
+
+var DataPortalAction = require('./shared/data-portal-action.js');
+var DataPortalContext = require('./shared/data-portal-context.js');
+var DataPortalEvent = require('./shared/data-portal-event.js');
+var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
+var DataPortalError = require('./shared/data-portal-error.js');
 
 /**
  * Factory method to create definitions of synchronous read-only child models.
@@ -172,10 +177,10 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext() {
+    function getDataContext () {
       if (!dataContext)
-        dataContext = new DataContext(
-            null, user, properties.toArray(), getPropertyValue, setPropertyValue
+        dataContext = new DataPortalContext(
+            null, properties.toArray(), getPropertyValue, setPropertyValue
         );
       return dataContext.setState(null, false);
     }

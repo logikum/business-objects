@@ -13,7 +13,6 @@ var PropertyManager = require('./shared/property-manager.js');
 var PropertyContext = require('./shared/property-context.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var DataStore = require('./shared/data-store.js');
-var DataContext = require('./shared/data-context.js');
 var TransferContext = require('./shared/transfer-context.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
@@ -21,6 +20,11 @@ var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 var ValidationContext = require('./rules/validation-context.js');
+
+var DataPortalAction = require('./shared/data-portal-action.js');
+var DataPortalContext = require('./shared/data-portal-context.js');
+var DataPortalEvent = require('./shared/data-portal-event.js');
+var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
@@ -408,10 +412,10 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
     //region Data portal methods
 
-    function getDataContext(connection) {
+    function getDataContext (connection) {
       if (!dataContext)
-        dataContext = new DataContext(
-            dao, user, properties.toArray(), getPropertyValue, setPropertyValue
+        dataContext = new DataPortalContext(
+            dao, properties.toArray(), getPropertyValue, setPropertyValue
         );
       return dataContext.setState(connection, isDirty);
     }

@@ -1,5 +1,6 @@
 'use strict';
 
+var config = require('./configuration-reader.js');
 var EnsureArgument = require('./ensure-argument.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
@@ -18,19 +19,17 @@ var UserInfo = require('./user-info.js');
  * @memberof bo.shared
  * @constructor
  * @param {object} dao - The data access object of the current model.
- * @param {bo.shared.UserInfo} user - The current user.
  * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
  * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
  * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
  *
  * @throws {@link bo.shared.ArgumentError Argument error}: The dao argument must be an object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The user must be an UserInfo object.
  * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be an array
  *    of PropertyInfo objects, or a single PropertyInfo object or null.
  * @throws {@link bo.shared.ArgumentError Argument error}: The getValue argument must be a function.
  * @throws {@link bo.shared.ArgumentError Argument error}: The setValue argument must be a function.
  */
-function DataContext(dao, user, properties, getValue, setValue) {
+function DataContext(dao, properties, getValue, setValue) {
   var self = this;
   var isDirty = false;
   var daConnection = null;
@@ -43,23 +42,30 @@ function DataContext(dao, user, properties, getValue, setValue) {
   this.dao = EnsureArgument.isMandatoryObject(dao || {},
       'c_manObject', 'DataContext', 'dao');
   /**
-   * The current user.
-   * @type {bo.shared.UserInfo}
-   * @readonly
-   */
-  this.user = EnsureArgument.isOptionalType(user, UserInfo,
-      'c_optType', 'DataContext', 'user');
-  /**
    * Array of property definitions that may appear on the data transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
   this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
       'c_optArray', 'DataContext', 'properties');
+
   getValue = EnsureArgument.isOptionalFunction(getValue,
       'c_optFunction', 'DataContext', 'getValue');
   setValue = EnsureArgument.isOptionalFunction(setValue,
       'c_optFunction', 'DataContext', 'setValue');
+
+  /**
+   * The current user.
+   * @type {bo.shared.UserInfo}
+   * @readonly
+   */
+  this.user = config.getUser();
+  /**
+   * The current locale.
+   * @type {string}
+   * @readonly
+   */
+  this.locale = config.getLocale();
 
   /**
    * Indicates whether the current model itself has been changed.
