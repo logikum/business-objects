@@ -19,6 +19,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Read-only root collection';
+var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 /**
  * Factory method to create definitions of asynchronous read-only root collections.
@@ -126,16 +127,20 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
       return dataContext.setState(connection, false);
     }
 
-    function wrapError (err) {
-      return new DataPortalError(MODEL_DESC, properties.name, 'fetch', err);
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(name, action, methodName, error);
     }
 
-    function runStatements (main, callback) {
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, name, action, error);
+    }
+
+    function runStatements (main, action, callback) {
       // Open connection.
       config.connectionManager.openConnection(
           extensions.dataSource, function (errOpen, connection) {
             if (errOpen)
-              callback(wrapError(errOpen));
+              callback(wrapError(action, errOpen));
             else
               main(connection, function (err, result) {
                 // Close connection.
@@ -143,9 +148,9 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
                     extensions.dataSource, connection, function (errClose, connClosed) {
                       connection = connClosed;
                       if (err)
-                        callback(wrapError(err));
+                        callback(wrapError(action, err));
                       else if (errClose)
-                        callback(wrapError(errClose));
+                        callback(wrapError(action, errClose));
                       else
                         callback(null, result);
                     });
@@ -154,6 +159,17 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
     }
 
     function data_fetch (filter, method, callback) {
+      var hasConnection = false;
+      // Helper callback for failure.
+      function succeeded (cb) {
+        // Launch finish event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postFetch),
+            getEventArgs(DataPortalAction.fetch, method),
+            self
+        );
+        cb(null, self);
+      }
       // Helper function for post-fetch actions.
       function finish (data, cb) {
         // Load children.
@@ -168,21 +184,44 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
                 items.push(item);
               // Check if all items are done.
               if (++count === data.length) {
-                cb(error, self);
+                if (error)
+                  failed(error, cb);
+                else
+                  succeeded(cb);
               }
             });
           });
         } else
-          cb(null, self);
+          succeeded(cb);
+      }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        if (hasConnection) {
+          // Launch finish event.
+          var dpError = wrapError(DataPortalAction.fetch, err);
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method, dpError),
+              self
+          );
+        }
+        cb(err);
       }
       // Main activity.
       function main (connection, cb) {
+        hasConnection = connection !== null;
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preFetch),
+            getEventArgs(DataPortalAction.fetch, method),
+            self
+        );
         // Execute fetch.
         if (extensions.dataFetch) {
           // *** Custom fetch.
           extensions.dataFetch.call(self, getDataContext(connection), filter, method, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(dto, cb);
           });
@@ -191,15 +230,15 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
           // Root element fetches data from repository.
           dao.$runMethod(method, connection, filter, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(dto, cb);
           });
         }
       }
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method))
-        runStatements(main, callback);
+      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method))
+        runStatements(main, DataPortalAction.fetch, callback);
       else
         callback(null, self);
     }
@@ -209,7 +248,7 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
     //region Actions
 
     this.fetch = function(filter, method, callback) {
-      data_fetch(filter, method || 'fetch', callback);
+      data_fetch(filter, method || M_FETCH, callback);
     };
 
     //endregion

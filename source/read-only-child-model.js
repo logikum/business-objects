@@ -26,6 +26,8 @@ var DataPortalEvent = require('./shared/data-portal-event.js');
 var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
+var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
+
 /**
  * Factory method to create definitions of asynchronous read-only child models.
  *
@@ -201,32 +203,65 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
       return dataContext.setState(null, false);
     }
 
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    }
+
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    }
+
     function data_fetch (filter, method, callback) {
       // Helper function for post-fetch actions.
-      function finish (dto) {
+      function finish (dto, cb) {
         // Fetch children as well.
         fetchChildren(dto, function (err) {
           if (err)
-            callback(err);
-          else
-            callback(null, self);
+            failed(err, cb);
+          else {
+            // Launch finish event.
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postFetch),
+                getEventArgs(DataPortalAction.fetch, method),
+                self
+            );
+            cb(null, self);
+          }
         });
       }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        // Launch finish event.
+        var dpError = wrapError(DataPortalAction.fetch, err);
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postFetch),
+            getEventArgs(DataPortalAction.fetch, method, dpError),
+            self
+        );
+        cb(err);
+      }
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
+      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method)) {
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preFetch),
+            getEventArgs(DataPortalAction.fetch, method),
+            self
+        );
+        // Execute fetch.
         if (extensions.dataFetch) {
           // Custom fetch.
           extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
             if (err)
-              callback(err);
+              failed(err, callback);
             else
-              finish(dto);
+              finish(dto, callback);
           });
         } else {
           // Standard fetch.
           // Child element gets data from parent.
           fromDto.call(self, filter);
-          finish(filter);
+          finish(filter, callback);
         }
       } else
         callback(null, self);
@@ -237,7 +272,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
     //region Actions
 
     this.fetch = function(filter, method, callback) {
-      data_fetch(filter, method || 'fetch', callback);
+      data_fetch(filter, method || M_FETCH, callback);
     };
 
     //endregion

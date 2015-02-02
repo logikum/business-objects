@@ -2,6 +2,7 @@
 
 var util = require('util');
 var EnsureArgument = require('./ensure-argument.js');
+var DataPortalAction = require('./data-portal-action.js');
 var t = require('../locales/i18n-bo.js')('DataPortalError');
 
 /**
@@ -12,11 +13,15 @@ var t = require('../locales/i18n-bo.js')('DataPortalError');
  * @constructor
  * @param {string} modeltype - The type of the model the error occurred in.
  * @param {string} modelName - The name of the model the error occurred in.
- * @param {string} action - The name of the action the error occurred in.
+ * @param {bo.shared.DataPortalAction} action - The data portal action the error occurred in.
  * @param {error} interceptedError - The error to be wrapped.
  *
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
+ *
+ * @throws {@link bo.shared.ArgumentError Argument error}: The model type must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The model name must be a non-empty string.
+ * @throws {@link bo.shared.ArgumentError Argument error}: The action must be a DataPortalAction object.
  */
 function DataPortalError(modeltype, modelName, action, interceptedError) {
   Error.call(this);
@@ -46,8 +51,10 @@ function DataPortalError(modeltype, modelName, action, interceptedError) {
    * The name of the action executing that the intercepted error occurred in.
    * @type {string}
    */
-  this.action = EnsureArgument.isMandatoryString(action,
-      'c_manString', 'DataPortalError', 'action');
+  this.action = DataPortalAction.getName(
+      EnsureArgument.isEnumMember(action, DataPortalAction, null,
+        'c_enumMember', 'DataPortalError', 'action')
+  );
 
   /**
    * The intercepted error of the data portal action.
@@ -59,7 +66,7 @@ function DataPortalError(modeltype, modelName, action, interceptedError) {
    * Human-readable description of the error.
    * @type {string}
    */
-  this.message = t.call(this, action, modelName);
+  this.message = t.call(this, this.action, modelName);
 }
 util.inherits(DataPortalError, Error);
 

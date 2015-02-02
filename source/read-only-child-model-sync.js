@@ -26,6 +26,8 @@ var DataPortalEvent = require('./shared/data-portal-event.js');
 var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
+var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
+
 /**
  * Factory method to create definitions of synchronous read-only child models.
  *
@@ -185,22 +187,55 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
       return dataContext.setState(null, false);
     }
 
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    }
+
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    }
+
     function data_fetch (filter, method) {
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
-        // Execute fetch.
-        var dto = null;
-        if (extensions.dataFetch) {
-          // *** Custom fetch.
-          dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
-        } else {
-          // *** Standard fetch.
-          // Child element gets data from parent.
-          dto = filter;
-          fromDto.call(self, dto);
+      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method)) {
+        try {
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preFetch),
+              getEventArgs(DataPortalAction.fetch, method),
+              self
+          );
+          // Execute fetch.
+          var dto = null;
+          if (extensions.dataFetch) {
+            // *** Custom fetch.
+            dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
+          } else {
+            // *** Standard fetch.
+            // Child element gets data from parent.
+            dto = filter;
+            fromDto.call(self, dto);
+          }
+          // Fetch children as well.
+          fetchChildren(dto);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method),
+              self
+          );
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.fetch, e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method, dpError),
+              self
+          );
+          // Rethrow the original error.
+          throw e;
         }
-        // Fetch children as well.
-        fetchChildren(dto);
       }
     }
 
@@ -209,7 +244,7 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
     //region Actions
 
     this.fetch = function(filter, method) {
-      data_fetch(filter, method || 'fetch');
+      data_fetch(filter, method || M_FETCH);
     };
 
     //endregion

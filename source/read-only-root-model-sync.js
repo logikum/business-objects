@@ -27,6 +27,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Read-only root model';
+var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 /**
  * Factory method to create definitions of synchronous read-only root models.
@@ -184,12 +185,26 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, false);
     }
 
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    }
+
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    }
+
     function data_fetch (filter, method) {
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
+      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method)) {
         try {
           // Open connection.
           connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preFetch),
+              getEventArgs(DataPortalAction.fetch, method),
+              self
+          );
           // Execute fetch.
           var dto = null;
           if (extensions.dataFetch) {
@@ -203,13 +218,27 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
           }
           // Fetch children as well.
           fetchChildren(dto);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method),
+              self
+          );
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.fetch, e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method, dpError),
+              self
+          );
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
-          // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_DESC, properties.name, 'fetch', e);
+          // Rethrow error.
+          throw dpError;
         }
       }
     }
@@ -219,7 +248,7 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
     //region Actions
 
     this.fetch = function(filter, method) {
-      data_fetch(filter, method || 'fetch');
+      data_fetch(filter, method || M_FETCH);
     };
 
     //endregion

@@ -29,6 +29,7 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 var MODEL_DESC = 'Editable root model';
+var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 /**
  * Factory method to create definitions of asynchronous editable root models.
@@ -424,8 +425,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, isDirty);
     }
 
-    function wrapError (action, err) {
-      return new DataPortalError(MODEL_DESC, properties.name, action, err);
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    }
+
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, properties.name, action, error);
     }
 
     function runStatements (main, action, callback) {
@@ -481,19 +486,46 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     }
 
     function data_create (callback) {
+      var hasConnection = false;
       // Helper callback for post-creation actions.
       function finish (cb) {
         markAsCreated();
+        // Launch finish event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postCreate),
+            getEventArgs(DataPortalAction.create),
+            self
+        );
         cb(null, self);
+      }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        if (hasConnection) {
+          // Launch finish event.
+          var dpError = wrapError(DataPortalAction.create, err);
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postCreate),
+              getEventArgs(DataPortalAction.create, null, dpError),
+              self
+          );
+        }
+        cb(err);
       }
       // Main activity.
       function main (connection, cb) {
+        hasConnection = connection !== null;
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preCreate),
+            getEventArgs(DataPortalAction.create),
+            self
+        );
         // Execute creation.
         if (extensions.dataCreate) {
           // *** Custom creation.
           extensions.dataCreate.call(self, getDataContext(connection), function (err) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(cb);
           });
@@ -501,7 +533,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           // *** Standard creation.
           dao.$runMethod('create', connection, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else {
               fromDto.call(self, dto);
               finish(cb);
@@ -510,31 +542,58 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         }
       }
       if (extensions.dataCreate || dao.$hasCreate()) {
-        runStatements(main, 'create', callback);
+        runStatements(main, DataPortalAction.create, callback);
       }
     }
 
     function data_fetch (filter, method, callback) {
+      var hasConnection = false;
       // Helper function for post-fetch actions.
       function finish (dto, cb) {
         // Fetch children as well.
         fetchChildren(dto, function (err) {
           if (err)
-            cb(err);
+            failed(err, cb);
           else {
             markAsPristine();
+            // Launch finish event.
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postFetch),
+                getEventArgs(DataPortalAction.fetch, method),
+                self
+            );
             cb(null, self);
           }
         });
       }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        if (hasConnection) {
+          // Launch finish event.
+          var dpError = wrapError(DataPortalAction.fetch, err);
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method, dpError),
+              self
+          );
+        }
+        cb(err);
+      }
       // Main activity.
       function main (connection, cb) {
+        hasConnection = connection !== null;
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preFetch),
+            getEventArgs(DataPortalAction.fetch, method),
+            self
+        );
         // Execute fetch.
         if (extensions.dataFetch) {
           // *** Custom fetch.
           extensions.dataFetch.call(self, getDataContext(connection), filter, method, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(dto, cb);
           });
@@ -543,7 +602,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           // Root element fetches data from repository.
           dao.$runMethod(method, connection, filter, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else {
               fromDto.call(self, dto);
               finish(dto, cb);
@@ -552,33 +611,60 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         }
       }
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method))
-        runStatements(main, 'fetch', callback);
+      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method))
+        runStatements(main, DataPortalAction.fetch, callback);
       else
         callback(null, self);
     }
 
     function data_insert (callback) {
+      var hasConnection = false;
       // Helper function for post-insert actions.
       function finish (connection, cb) {
         // Insert children as well.
         insertChildren(connection, function (err) {
           if (err)
-            cb(err);
+            failed(err, cb);
           else {
             markAsPristine();
+            // Launch finish event.
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postInsert),
+                getEventArgs(DataPortalAction.insert),
+                self
+            );
             cb(null, self);
           }
         });
       }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        if (hasConnection) {
+          // Launch finish event.
+          var dpError = wrapError(DataPortalAction.insert, err);
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postInsert),
+              getEventArgs(DataPortalAction.insert, null, dpError),
+              self
+          );
+        }
+        cb(err);
+      }
       // Main activity.
       function main (connection, cb) {
+        hasConnection = connection !== null;
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preInsert),
+            getEventArgs(DataPortalAction.insert),
+            self
+        );
         // Execute insert.
         if (extensions.dataInsert) {
           // *** Custom insert.
           extensions.dataInsert.call(self, getDataContext(connection), function (err) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(connection, cb);
           });
@@ -587,7 +673,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           var dto = toDto.call(self);
           dao.$runMethod('insert', connection, dto, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else {
               fromDto.call(self, dto);
               finish(connection, cb);
@@ -597,32 +683,59 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (canDo(Action.createObject))
-        runTransaction(main, 'insert', callback);
+        runTransaction(main, DataPortalAction.insert, callback);
       else
         callback(null, self);
     }
 
     function data_update (callback) {
+      var hasConnection = false;
       // Helper function for post-update actions.
       function finish (connection, cb) {
         // Update children as well.
         updateChildren(connection, function (err) {
           if (err)
-            cb(err);
+            failed(err, cb);
           else {
             markAsPristine();
+            // Launch finish event.
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postUpdate),
+                getEventArgs(DataPortalAction.update),
+                self
+            );
             cb(null, self);
           }
         });
       }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        if (hasConnection) {
+          // Launch finish event.
+          var dpError = wrapError(DataPortalAction.update, err);
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postUpdate),
+              getEventArgs(DataPortalAction.update, null, dpError),
+              self
+          );
+        }
+        cb(err);
+      }
       // Main activity.
       function main (connection, cb) {
+        hasConnection = connection !== null;
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preUpdate),
+            getEventArgs(DataPortalAction.update),
+            self
+        );
         // Execute update.
         if (extensions.dataUpdate) {
           // *** Custom update.
           extensions.dataUpdate.call(self, getDataContext(connection), function (err) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(connection, cb);
           });
@@ -631,7 +744,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           var dto = toDto.call(self);
           dao.$runMethod('update', connection, dto, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else {
               fromDto.call(self, dto);
               finish(connection, cb);
@@ -644,30 +757,57 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (canDo(Action.updateObject))
-        runTransaction(main, 'update', callback);
+        runTransaction(main, DataPortalAction.update, callback);
       else
         callback(null, self);
     }
 
     function data_remove (callback) {
+      var hasConnection = false;
       // Helper callback for post-removal actions.
       function finish (cb) {
         markAsRemoved();
+        // Launch finish event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postRemove),
+            getEventArgs(DataPortalAction.remove),
+            self
+        );
         cb(null, null);
+      }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        if (hasConnection) {
+          // Launch finish event.
+          var dpError = wrapError(DataPortalAction.remove, err);
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postRemove),
+              getEventArgs(DataPortalAction.remove, null, dpError),
+              self
+          );
+        }
+        cb(err);
       }
       // Main activity.
       function main (connection, cb) {
+        hasConnection = connection !== null;
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preRemove),
+            getEventArgs(DataPortalAction.remove),
+            self
+        );
         // Remove children first.
         removeChildren(connection, function (err) {
           if (err)
-            cb(err);
+            failed(err, cb);
           else {
             // Execute removal.
             if (extensions.dataRemove) {
               // *** Custom removal.
               extensions.dataRemove.call(self, getDataContext(connection), function (err) {
                 if (err)
-                  cb(err);
+                  failed(err, cb);
                 else
                   finish(cb);
               });
@@ -676,7 +816,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
               var filter = properties.getKey(getPropertyValue);
               dao.$runMethod('remove', connection, filter, function (err) {
                 if (err)
-                  cb(err);
+                  failed(err, cb);
                 else
                   finish(cb);
               });
@@ -686,7 +826,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       }
       // Check permissions.
       if (canDo(Action.removeObject))
-        runTransaction(main, 'remove', callback);
+        runTransaction(main, DataPortalAction.remove, callback);
       else
         callback(null, null);
     }
@@ -700,7 +840,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     };
 
     this.fetch = function(filter, method, callback) {
-      data_fetch(filter, method || 'fetch', callback);
+      data_fetch(filter, method || M_FETCH, callback);
     };
 
     this.save = function(callback) {

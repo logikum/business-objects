@@ -1,18 +1,19 @@
 console.log('Testing shared/data-portal-error.js...');
 
 var DataPortalError = require('../../source/shared/data-portal-error.js');
+var DataPortalAction = require('../../source/shared/data-portal-action.js');
 
 describe('Data portal error', function() {
 
   it('constructor expects three-four arguments', function() {
     function build01() { var options = new DataPortalError(); }
     function build02() { var options = new DataPortalError(1, 2, 3); }
-    function build03() { var options = new DataPortalError('first', 'second', 3); }
-    function build04() { var options = new DataPortalError('first', 2, 'third'); }
-    function build05() { var options = new DataPortalError(1, 'second', 'third'); }
-    function build06() { var options = new DataPortalError('first', 'second', 'third'); }
-    function build07() { var options = new DataPortalError('first', 'second', 'third', {}); }
-    function build08() { var options = new DataPortalError('first', 'second', 'third', {error:'description'}); }
+    function build03() { var options = new DataPortalError('type', 'model', true); }
+    function build04() { var options = new DataPortalError('type', {}, 'action'); }
+    function build05() { var options = new DataPortalError([], 'model', 'action'); }
+    function build06() { var options = new DataPortalError('type', 'model', DataPortalAction.fetch); }
+    function build07() { var options = new DataPortalError('type', 'model', DataPortalAction.create, {}); }
+    function build08() { var options = new DataPortalError('type', 'model', DataPortalAction.remove, {error:'description'}); }
 
     expect(build01).toThrow();
     expect(build02).toThrow();
@@ -26,7 +27,7 @@ describe('Data portal error', function() {
 
   it('has six properties', function() {
     var ie = new Error('Intercepted error');
-    var dpe = new DataPortalError('Model type', 'ModelName', 'execute', ie);
+    var dpe = new DataPortalError('Model type', 'ModelName', DataPortalAction.execute, ie);
 
     expect(dpe).toEqual(jasmine.any(Error));
     expect(dpe.name).toBe('DataPortalError');

@@ -27,6 +27,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Command object';
+var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
 
 /**
  * Factory method to create definitions of asynchronous command object models.
@@ -63,6 +64,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    */
   var CommandObject = function() {
+    ModelBase.call(this);
 
     var self = this;
     var store = new DataStore();
@@ -196,8 +198,12 @@ var CommandObjectFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, false);
     }
 
-    function wrapError (err) {
-      return new DataPortalError(MODEL_DESC, properties.name, 'execute', err);
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    }
+
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, properties.name, action, error);
     }
 
     function runTransaction (main, callback) {
@@ -230,24 +236,52 @@ var CommandObjectFactory = function(properties, rules, extensions) {
     }
 
     function data_execute (method, callback) {
+      var hasConnection = false;
       // Helper function for post-execute actions.
       function finish (dto, cb) {
         // Fetch children as well.
         loadChildren(dto, function (err) {
           if (err)
-            cb(err);
-          else
+            failed(err, cb);
+          else {
+            // Launch finish event.
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postExecute),
+                getEventArgs(DataPortalAction.execute, method),
+                self
+            );
             cb(null, self);
+          }
         });
+      }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        if (hasConnection) {
+          // Launch finish event.
+          var dpError = wrapError(DataPortalAction.fetch, err);
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postExecute),
+              getEventArgs(DataPortalAction.execute, method, dpError),
+              self
+          );
+        }
+        cb(err);
       }
       // Main activity.
       function main (connection, cb) {
+        hasConnection = connection !== null;
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preExecute),
+            getEventArgs(DataPortalAction.execute, method),
+            self
+        );
         // Execute command.
         if (extensions.dataExecute) {
           // *** Custom execute.
           extensions.dataExecute.call(self, getDataContext(connection), method, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(dto, cb);
           });
@@ -256,7 +290,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
           var dto = toDto.call(self);
           dao.$runMethod(method, connection, dto, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else {
               fromDto.call(self, dto);
               finish(dto, cb);
@@ -265,7 +299,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
         }
       }
       // Check permissions.
-      if (method === 'execute' ? canDo(Action.executeCommand) : canExecute(method))
+      if (method === M_EXECUTE ? canDo(Action.executeCommand) : canExecute(method))
         runTransaction(main, callback);
       else
         callback(null, self);
@@ -280,7 +314,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
         callback = method;
         method = null;
       }
-      data_execute(method || 'execute', callback);
+      data_execute(method || M_EXECUTE, callback);
     };
 
     //endregion

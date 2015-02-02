@@ -29,6 +29,7 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 var MODEL_DESC = 'Editable child model';
+var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 /**
  * Factory method to create definitions of synchronous editable child models.
@@ -420,12 +421,26 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, isDirty);
     }
 
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    }
+
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    }
+
     function data_create () {
       if (extensions.dataCreate || dao.$hasCreate()) {
         var connection = null;
         try {
           // Open connection.
           connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preCreate),
+              getEventArgs(DataPortalAction.create),
+              self
+          );
           // Execute creation.
           if (extensions.dataCreate) {
             // *** Custom creation.
@@ -436,100 +451,216 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
             fromDto.call(self, dto);
           }
           markAsCreated();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postCreate),
+              getEventArgs(DataPortalAction.create),
+              self
+          );
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.create, e);
+          // Launch finish event.
+          if (connection) {
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postCreate),
+                getEventArgs(DataPortalAction.create, null, dpError),
+                self
+            );
+          }
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
-          // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_DESC, properties.name, 'create', e);
+          // Rethrow error.
+          throw dpError;
         }
       }
     }
 
     function data_fetch (filter, method) {
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
-        // Execute fetch.
-        var dto = null;
-        if (extensions.dataFetch) {
-          // *** Custom fetch.
-          dto = extensions.dataFetch.call(self, getDataContext(null), filter, method);
-        } else {
-          // *** Standard fetch.
-          // Child element gets data from parent.
-          dto = filter;
-          fromDto.call(self, dto);
+      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method)) {
+        try {
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preFetch),
+              getEventArgs(DataPortalAction.fetch, method),
+              self
+          );
+          // Execute fetch.
+          var dto = null;
+          if (extensions.dataFetch) {
+            // *** Custom fetch.
+            dto = extensions.dataFetch.call(self, getDataContext(null), filter, method);
+          } else {
+            // *** Standard fetch.
+            // Child element gets data from parent.
+            dto = filter;
+            fromDto.call(self, dto);
+          }
+          // Fetch children as well.
+          fetchChildren(dto);
+          markAsPristine();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method),
+              self
+          );
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.fetch, e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postFetch),
+              getEventArgs(DataPortalAction.fetch, method, dpError),
+              self
+          );
+          // Rethrow the original error.
+          throw e;
         }
-        // Fetch children as well.
-        fetchChildren(dto);
-        markAsPristine();
       }
     }
 
     function data_insert (connection) {
       // Check permissions.
       if (canDo(Action.createObject)) {
-        // Copy the values of parent keys.
-        var references = properties.filter(function (property) {
-          return property.isParentKey;
-        });
-        for (var i = 0; i < references.length; i++) {
-          var referenceProperty = references[i];
-          var parentValue = parent[referenceProperty.name];
-          if (parentValue !== undefined)
-            setPropertyValue(referenceProperty, parentValue);
+        try {
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preInsert),
+              getEventArgs(DataPortalAction.insert),
+              self
+          );
+          // Copy the values of parent keys.
+          var references = properties.filter(function (property) {
+            return property.isParentKey;
+          });
+          for (var i = 0; i < references.length; i++) {
+            var referenceProperty = references[i];
+            var parentValue = parent[referenceProperty.name];
+            if (parentValue !== undefined)
+              setPropertyValue(referenceProperty, parentValue);
+          }
+          // Execute insert.
+          if (extensions.dataInsert) {
+            // *** Custom insert.
+            extensions.dataInsert.call(self, getDataContext(connection));
+          } else {
+            // *** Standard insert.
+            var dto = toDto.call(self);
+            dto = dao.$runMethod('insert', connection, dto);
+            fromDto.call(self, dto);
+          }
+          // Insert children as well.
+          insertChildren(connection);
+          markAsPristine();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postInsert),
+              getEventArgs(DataPortalAction.insert),
+              self
+          );
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.insert, e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postInsert),
+              getEventArgs(DataPortalAction.insert, null, dpError),
+              self
+          );
+          // Rethrow the original error.
+          throw e;
         }
-        // Execute insert.
-        if (extensions.dataInsert) {
-          // *** Custom insert.
-          extensions.dataInsert.call(self, getDataContext(connection));
-        } else {
-          // *** Standard insert.
-          var dto = toDto.call(self);
-          dto = dao.$runMethod('insert', connection, dto);
-          fromDto.call(self, dto);
-        }
-        // Insert children as well.
-        insertChildren(connection);
-        markAsPristine();
       }
     }
 
     function data_update (connection) {
       // Check permissions.
       if (canDo(Action.updateObject)) {
-        // Execute update.
-        if (extensions.dataUpdate) {
-          // *** Custom update.
-          extensions.dataUpdate.call(self, getDataContext(connection));
-        } else if (isDirty) {
-          // *** Standard update.
-          var dto = toDto.call(self);
-          dto = dao.$runMethod('update', connection, dto);
-          fromDto.call(self, dto);
+        try {
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preUpdate),
+              getEventArgs(DataPortalAction.update),
+              self
+          );
+          // Execute update.
+          if (extensions.dataUpdate) {
+            // *** Custom update.
+            extensions.dataUpdate.call(self, getDataContext(connection));
+          } else if (isDirty) {
+            // *** Standard update.
+            var dto = toDto.call(self);
+            dto = dao.$runMethod('update', connection, dto);
+            fromDto.call(self, dto);
+          }
+          // Update children as well.
+          updateChildren(connection);
+          markAsPristine();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postUpdate),
+              getEventArgs(DataPortalAction.update),
+              self
+          );
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.update, e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postUpdate),
+              getEventArgs(DataPortalAction.update, null, dpError),
+              self
+          );
+          // Rethrow the original error.
+          throw e;
         }
-        // Update children as well.
-        updateChildren(connection);
-        markAsPristine();
       }
     }
 
     function data_remove (connection) {
       // Check permissions.
       if (canDo(Action.removeObject)) {
-        // Remove children first.
-        removeChildren(connection);
-        // Execute delete.
-        if (extensions.dataRemove) {
-          // *** Custom removal.
-          extensions.dataRemove.call(self, getDataContext(connection));
-        } else {
-          // *** Standard removal.
-          var filter = properties.getKey(getPropertyValue);
-          dao.$runMethod('remove', connection, filter);
+        try {
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preRemove),
+              getEventArgs(DataPortalAction.remove),
+              self
+          );
+          // Remove children first.
+          removeChildren(connection);
+          // Execute delete.
+          if (extensions.dataRemove) {
+            // *** Custom removal.
+            extensions.dataRemove.call(self, getDataContext(connection));
+          } else {
+            // *** Standard removal.
+            var filter = properties.getKey(getPropertyValue);
+            dao.$runMethod('remove', connection, filter);
+          }
+          markAsRemoved();
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postRemove),
+              getEventArgs(DataPortalAction.remove),
+              self
+          );
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.remove, e);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postRemove),
+              getEventArgs(DataPortalAction.remove, null, dpError),
+              self
+          );
+          // Rethrow the original error.
+          throw e;
         }
-        markAsRemoved();
       }
     }
 
@@ -542,7 +673,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
     };
 
     this.fetch = function(filter, method) {
-      data_fetch(filter, method || 'fetch');
+      data_fetch(filter, method || M_FETCH);
     };
 
     this.save = function(connection) {

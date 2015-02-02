@@ -2,7 +2,7 @@
 
 ### a JavaScript object-oriented business layer for Node.js
 
-See documentation: http://marmarosi.github.io/business-objects/
+See documentation: http://logikum.github.io/business-objects/
 
 Asynchronous models:
 

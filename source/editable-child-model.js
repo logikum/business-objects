@@ -29,6 +29,7 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
 var MODEL_DESC = 'Editable child model';
+var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 /**
  * Factory method to create definitions of asynchronous editable child models.
@@ -446,16 +447,20 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, isDirty);
     }
 
-    function wrapError (err) {
-      return new DataPortalError(MODEL_DESC, properties.name, 'create', err);
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
     }
 
-    function runStatements (main, callback) {
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    }
+
+    function runStatements (main, action, callback) {
       // Open connection.
       config.connectionManager.openConnection(
           extensions.dataSource, function (errOpen, connection) {
             if (errOpen)
-              callback(wrapError(errOpen));
+              callback(wrapError(action, errOpen));
             else
               main(connection, function (err, result) {
                 // Close connection.
@@ -463,9 +468,9 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
                     extensions.dataSource, connection, function (errClose, connClosed) {
                       connection = connClosed;
                       if (err)
-                        callback(wrapError(err));
+                        callback(wrapError(action, err));
                       else if (errClose)
-                        callback(wrapError(errClose));
+                        callback(wrapError(action, errClose));
                       else
                         callback(null, result);
                     });
@@ -474,19 +479,46 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
     }
 
     function data_create (callback) {
+      var hasConnection = false;
       // Helper callback for post-creation actions.
       function finish (cb) {
         markAsCreated();
+        // Launch finish event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postCreate),
+            getEventArgs(DataPortalAction.create),
+            self
+        );
         cb(null, self);
+      }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        if (hasConnection) {
+          // Launch finish event.
+          var dpError = wrapError(DataPortalAction.create, err);
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postCreate),
+              getEventArgs(DataPortalAction.create, null, dpError),
+              self
+          );
+        }
+        cb(err);
       }
       // Main activity.
       function main (connection, cb) {
+        hasConnection = connection !== null;
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preCreate),
+            getEventArgs(DataPortalAction.create),
+            self
+        );
         // Execute creation.
         if (extensions.dataCreate) {
           // *** Custom creation.
           extensions.dataCreate.call(self, getDataContext(connection), function (err) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(cb);
           });
@@ -494,7 +526,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
           // *** Standard creation.
           dao.$runMethod('create', connection, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else {
               fromDto.call(self, dto);
               finish(cb);
@@ -503,39 +535,62 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         }
       }
       if (extensions.dataCreate || dao.$hasCreate()) {
-        runStatements(main, callback);
+        runStatements(main, DataPortalAction.create, callback);
       }
     }
 
     function data_fetch (filter, method, callback) {
       // Helper function for post-fetch actions.
-      function finish (dto) {
+      function finish (dto, cb) {
         // Fetch children as well.
         fetchChildren(dto, function (err) {
           if (err)
-            callback(err);
+            failed(err, cb);
           else {
             markAsPristine();
-            callback(null, self);
+            // Launch finish event.
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postFetch),
+                getEventArgs(DataPortalAction.fetch, method),
+                self
+            );
+            cb(null, self);
           }
         });
       }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        // Launch finish event.
+        var dpError = wrapError(DataPortalAction.fetch, err);
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postFetch),
+            getEventArgs(DataPortalAction.fetch, method, dpError),
+            self
+        );
+        cb(err);
+      }
       // Check permissions.
-      if (method === 'fetch' ? canDo(Action.fetchObject) : canExecute(method)) {
+      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method)) {
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preFetch),
+            getEventArgs(DataPortalAction.fetch, method),
+            self
+        );
         // Execute fetch.
         if (extensions.dataFetch) {
           // *** Custom fetch.
           extensions.dataFetch.call(self, getDataContext(null), filter, method, function (err, dto) {
             if (err)
-              callback(err);
+              failed(err, callback);
             else
-              finish(dto);
+              finish(dto, callback);
           });
         } else {
           // *** Standard fetch.
           // Child element gets data from parent.
           fromDto.call(self, filter);
-          finish(filter);
+          finish(filter, callback);
         }
       } else
         callback(null, self);
@@ -547,21 +602,44 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         // Insert children as well.
         insertChildren(conn, function (err) {
           if (err)
-            cb(err);
+            failed(err, cb);
           else {
             markAsPristine();
+            // Launch finish event.
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postInsert),
+                getEventArgs(DataPortalAction.insert),
+                self
+            );
             cb(null, self);
           }
         });
       }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        // Launch finish event.
+        var dpError = wrapError(DataPortalAction.insert, err);
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postInsert),
+            getEventArgs(DataPortalAction.insert, null, dpError),
+            self
+        );
+        cb(err);
+      }
       // Main activity.
       function main (conn, cb) {
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preInsert),
+            getEventArgs(DataPortalAction.insert),
+            self
+        );
         // Execute insert.
         if (extensions.dataInsert) {
           // *** Custom insert.
           extensions.dataInsert.call(self, getDataContext(conn), function (err) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(conn, cb);
           });
@@ -570,7 +648,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
           var dto = toDto.call(self);
           dao.$runMethod('insert', conn, dto, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else {
               fromDto.call(self, dto);
               finish(conn, cb);
@@ -602,21 +680,44 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         // Update children as well.
         updateChildren(conn, function (err) {
           if (err)
-            cb(err);
+            failed(err, cb);
           else {
             markAsPristine();
+            // Launch finish event.
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postUpdate),
+                getEventArgs(DataPortalAction.update),
+                self
+            );
             cb(null, self);
           }
         });
       }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        // Launch finish event.
+        var dpError = wrapError(DataPortalAction.update, err);
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postUpdate),
+            getEventArgs(DataPortalAction.update, null, dpError),
+            self
+        );
+        cb(err);
+      }
       // Main activity.
       function main (conn, cb) {
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preUpdate),
+            getEventArgs(DataPortalAction.update),
+            self
+        );
         // Execute update.
         if (extensions.dataUpdate) {
           // *** Custom update.
           extensions.dataUpdate.call(self, getDataContext(conn), function (err) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else
               finish(conn, cb);
           });
@@ -625,7 +726,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
           var dto = toDto.call(self);
           dao.$runMethod('update', conn, dto, function (err, dto) {
             if (err)
-              cb(err);
+              failed(err, cb);
             else {
               fromDto.call(self, dto);
               finish(conn, cb);
@@ -647,21 +748,44 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       // Helper callback for post-removal actions.
       function finish (cb) {
         markAsRemoved();
+        // Launch finish event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postRemove),
+            getEventArgs(DataPortalAction.remove),
+            self
+        );
         cb(null, null);
+      }
+      // Helper callback for failure.
+      function failed (err, cb) {
+        // Launch finish event.
+        var dpError = wrapError(DataPortalAction.remove, err);
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.postRemove),
+            getEventArgs(DataPortalAction.remove, null, dpError),
+            self
+        );
+        cb(err);
       }
       // Main activity.
       function main (conn, cb) {
+        // Launch start event.
+        self.emit(
+            DataPortalEvent.getName(DataPortalEvent.preRemove),
+            getEventArgs(DataPortalAction.remove),
+            self
+        );
         // Remove children first.
         removeChildren(conn, function (err) {
           if (err)
-            cb(err);
+            failed(err, cb);
           else {
             // Execute removal.
             if (extensions.dataRemove) {
               // *** Custom removal.
               extensions.dataRemove.call(self, getDataContext(conn), function (err) {
                 if (err)
-                  cb(err);
+                  failed(err, cb);
                 else
                   finish(cb);
               });
@@ -670,7 +794,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
               var filter = properties.getKey(getPropertyValue);
               dao.$runMethod('remove', conn, filter, function (err) {
                 if (err)
-                  cb(err);
+                  failed(err, cb);
                 else
                   finish(cb);
               });
@@ -694,7 +818,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
     };
 
     this.fetch = function(filter, method, callback) {
-      data_fetch(filter, method || 'fetch', callback);
+      data_fetch(filter, method || M_FETCH, callback);
     };
 
     this.save = function(connection, callback) {

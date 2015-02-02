@@ -27,6 +27,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Command object';
+var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
 
 /**
  * Factory method to create definitions of synchronous command object models.
@@ -63,6 +64,7 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    */
   var CommandObjectSync = function() {
+    ModelBase.call(this);
 
     var self = this;
     var store = new DataStore();
@@ -180,12 +182,26 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, false);
     }
 
+    function getEventArgs (action, methodName, error) {
+      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    }
+
+    function wrapError (action, error) {
+      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    }
+
     function data_execute (method) {
       // Check permissions.
-      if (method === 'execute' ? canDo(Action.executeCommand) : canExecute(method)) {
+      if (method === M_EXECUTE ? canDo(Action.executeCommand) : canExecute(method)) {
         try {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Launch start event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.preExecute),
+              getEventArgs(DataPortalAction.execute, method),
+              self
+          );
           // Execute command.
           var dto = {};
           if (extensions.dataExecute) {
@@ -199,13 +215,29 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
           }
           // Load children as well.
           loadChildren(dto);
+          // Launch finish event.
+          self.emit(
+              DataPortalEvent.getName(DataPortalEvent.postExecute),
+              getEventArgs(DataPortalAction.execute, method),
+              self
+          );
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.execute, e);
+          // Launch finish event.
+          if (connection) {
+            self.emit(
+                DataPortalEvent.getName(DataPortalEvent.postExecute),
+                getEventArgs(DataPortalAction.execute, method, dpError),
+                self
+            );
+          }
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
-          // Wrap the intercepted error.
-          throw new DataPortalError(MODEL_DESC, properties.name, 'execute', e);
+          // Rethrow error.
+          throw dpError;
         }
       }
     }
@@ -215,7 +247,7 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
     //region Actions
 
     this.execute = function(method) {
-      data_execute(method || 'execute');
+      data_execute(method || M_EXECUTE);
     };
 
     //endregion

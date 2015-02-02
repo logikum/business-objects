@@ -55,7 +55,7 @@ describe('Shared component index', function () {
 
     expect(new shared.ArgumentError('message')).toEqual(jasmine.any(ArgumentError));
     expect(new shared.ConfigurationError('message')).toEqual(jasmine.any(ConfigurationError));
-    expect(new shared.DataPortalError('type', 'name', 'action', {})).toEqual(jasmine.any(DataPortalError));
+    expect(new shared.DataPortalError('type', 'name', 0, {})).toEqual(jasmine.any(DataPortalError));
     expect(new shared.EnumerationError('message')).toEqual(jasmine.any(EnumerationError));
     expect(new shared.ModelError('message')).toEqual(jasmine.any(ModelError));
     expect(new shared.NotImplementedError('message')).toEqual(jasmine.any(NotImplementedError));
