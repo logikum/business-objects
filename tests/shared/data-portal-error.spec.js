@@ -6,14 +6,14 @@ var DataPortalAction = require('../../source/shared/data-portal-action.js');
 describe('Data portal error', function() {
 
   it('constructor expects three-four arguments', function() {
-    function build01() { var options = new DataPortalError(); }
-    function build02() { var options = new DataPortalError(1, 2, 3); }
-    function build03() { var options = new DataPortalError('type', 'model', true); }
-    function build04() { var options = new DataPortalError('type', {}, 'action'); }
-    function build05() { var options = new DataPortalError([], 'model', 'action'); }
-    function build06() { var options = new DataPortalError('type', 'model', DataPortalAction.fetch); }
-    function build07() { var options = new DataPortalError('type', 'model', DataPortalAction.create, {}); }
-    function build08() { var options = new DataPortalError('type', 'model', DataPortalAction.remove, {error:'description'}); }
+    function build01() { var err = new DataPortalError(); }
+    function build02() { var err = new DataPortalError(1, 2, 3); }
+    function build03() { var err = new DataPortalError('type', 'model', true); }
+    function build04() { var err = new DataPortalError('type', {}, 'action'); }
+    function build05() { var err = new DataPortalError([], 'model', 'action'); }
+    function build06() { var err = new DataPortalError('type', 'model', DataPortalAction.fetch); }
+    function build07() { var err = new DataPortalError('type', 'model', DataPortalAction.create, {}); }
+    function build08() { var err = new DataPortalError('type', 'model', DataPortalAction.remove, {error:'description'}); }
 
     expect(build01).toThrow();
     expect(build02).toThrow();

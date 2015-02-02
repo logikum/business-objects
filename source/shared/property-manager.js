@@ -76,7 +76,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    *
    * @param {string} name - The name of the property.
    * @param {*} type - The data type of the property.
-   * @param {?bo.shared.PropertyFlag} flags - Other attributes of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @returns {bo.shared.PropertyInfo} The definition of the property.
    *
    * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.

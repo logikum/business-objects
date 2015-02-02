@@ -1,4 +1,4 @@
-console.log('Testing model-state.js...');
+console.log('Testing shared/model-state.js...');
 
 var ModelState = require('../../source/shared/model-state.js');
 
