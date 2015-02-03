@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var UserInfo = require('../source/shared/user-info.js');
+var UserInfo = require('../source/system/user-info.js');
 
 function User (userCode, userName, email, roles) {
   User.super_.call(this, userCode);

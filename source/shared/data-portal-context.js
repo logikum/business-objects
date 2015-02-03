@@ -4,7 +4,7 @@ var config = require('./configuration-reader.js');
 var EnsureArgument = require('./ensure-argument.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
-var UserInfo = require('./user-info.js');
+var UserInfo = require('./../system/user-info.js');
 
 /**
  * @classdesc
@@ -29,7 +29,7 @@ var UserInfo = require('./user-info.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function.
  * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
  */
-function DataContext(dao, properties, getValue, setValue) {
+function DataPortalContext(dao, properties, getValue, setValue) {
   var self = this;
   var isDirty = false;
   var daConnection = null;
@@ -40,23 +40,23 @@ function DataContext(dao, properties, getValue, setValue) {
    * @readonly
    */
   this.dao = EnsureArgument.isMandatoryObject(dao || {},
-      'c_manObject', 'DataContext', 'dao');
+      'c_manObject', 'DataPortalContext', 'dao');
   /**
    * Array of property definitions that may appear on the data transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
   this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
-      'c_optArray', 'DataContext', 'properties');
+      'c_optArray', 'DataPortalContext', 'properties');
 
   getValue = EnsureArgument.isOptionalFunction(getValue,
-      'c_optFunction', 'DataContext', 'getValue');
+      'c_optFunction', 'DataPortalContext', 'getValue');
   setValue = EnsureArgument.isOptionalFunction(setValue,
-      'c_optFunction', 'DataContext', 'setValue');
+      'c_optFunction', 'DataPortalContext', 'setValue');
 
   /**
    * The current user.
-   * @type {bo.shared.UserInfo}
+   * @type {bo.system.UserInfo}
    * @readonly
    */
   this.user = config.getUser();
@@ -69,7 +69,7 @@ function DataContext(dao, properties, getValue, setValue) {
 
   /**
    * Indicates whether the current model itself has been changed.
-   * @name bo.shared.DataContext#connection
+   * @name bo.shared.DataPortalContext#connection
    * @type {object}
    * @readonly
    */
@@ -82,7 +82,7 @@ function DataContext(dao, properties, getValue, setValue) {
 
   /**
    * Indicates whether the current model itself has been changed.
-   * @name bo.shared.DataContext#isSelfDirty
+   * @name bo.shared.DataPortalContext#isSelfDirty
    * @type {boolean}
    * @readonly
    */
@@ -98,7 +98,7 @@ function DataContext(dao, properties, getValue, setValue) {
    *
    * @param {object} [connection] - The current connection for the data store.
    * @param {boolean} [isSelfDirty] - Indicates whether the current model itself has been changed.
-   * @returns {bo.shared.DataContext} The data context object itself.
+   * @returns {bo.shared.DataPortalContext} The data context object itself.
    */
   this.setState = function (connection, isSelfDirty) {
     daConnection = connection || null;
@@ -126,7 +126,7 @@ function DataContext(dao, properties, getValue, setValue) {
    */
   this.getValue = function (propertyName) {
     propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', 'DataContext', 'getValue', 'propertyName');
+        'm_manString', 'DataPortalContext', 'getValue', 'propertyName');
     if (getValue)
       return getValue(getByName(propertyName));
     else
@@ -146,7 +146,7 @@ function DataContext(dao, properties, getValue, setValue) {
    */
   this.setValue = function (propertyName, value) {
     propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', 'DataContext', 'setValue', 'propertyName');
+        'm_manString', 'DataPortalContext', 'setValue', 'propertyName');
     if (setValue) {
       if (value !== undefined) {
         setValue(getByName(propertyName), value);
@@ -159,4 +159,4 @@ function DataContext(dao, properties, getValue, setValue) {
   Object.freeze(this);
 }
 
-module.exports = DataContext;
+module.exports = DataPortalContext;

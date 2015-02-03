@@ -4,7 +4,7 @@ var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../shared/ensure-argument.js');
 var AuthorizationRule = require('../rules/authorization-rule.js');
-var UserInfo = require('../shared/user-info.js');
+var UserInfo = require('../system/user-info.js');
 
 /**
  * @classdesc The rule ensures that the user is not member of any role from a group.
@@ -57,7 +57,7 @@ util.inherits(IsNotInAnyRoleRule, AuthorizationRule);
  *
  * @abstract
  * @function bo.commonRules.IsNotInAnyRoleRule#execute
- * @param {bo.shared.UserInfo} userInfo - Information about the current user.
+ * @param {bo.system.UserInfo} userInfo - Information about the current user.
  * @returns {(bo.rules.AuthorizationResult|undefined)} Information about the failure.
  */
 IsNotInAnyRoleRule.prototype.execute = function (userInfo) {

@@ -16,7 +16,7 @@ var Enumeration = require('./enumeration.js');
  *      <li>execute</li>
  *    </ul>
  *
- * @memberof bo.rules
+ * @memberof bo.shared
  * @constructor
  *
  * @extends bo.shared.Enumeration

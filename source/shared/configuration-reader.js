@@ -7,7 +7,7 @@ var ConnectionManagerBase = require('../data-access/connection-manager-base.js')
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
 var ConfigurationError = require('./configuration-error.js');
-var UserInfo = require('./user-info.js');
+var UserInfo = require('./../system/user-info.js');
 
 // Define the possible configuration files.
 var options = [

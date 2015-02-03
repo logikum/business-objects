@@ -9,7 +9,6 @@ var PropertyContext = require('../../source/shared/property-context.js');
 var ExtensionManager = require('../../source/shared/extension-manager.js');
 var ExtensionManagerSync = require('../../source/shared/extension-manager-sync.js');
 
-var UserInfo = require('../../source/shared/user-info.js');
 var DataPortalAction = require('../../source/shared/data-portal-action.js');
 var DataPortalContext = require('../../source/shared/data-portal-context.js');
 var DataPortalEvent = require('../../source/shared/data-portal-event.js');
@@ -43,7 +42,6 @@ describe('Shared component index', function () {
     expect(new shared.ExtensionManager('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManager));
     expect(new shared.ExtensionManagerSync('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManagerSync));
 
-    expect(new shared.UserInfo('anonymous')).toEqual(jasmine.any(UserInfo));
     expect(shared.DataPortalAction).toBe(DataPortalAction);
     expect(new shared.DataPortalContext(dao, [], getValue, setValue)).toEqual(jasmine.any(DataPortalContext));
     expect(shared.DataPortalEvent).toBe(DataPortalEvent);

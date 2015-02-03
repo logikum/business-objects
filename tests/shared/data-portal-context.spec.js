@@ -3,7 +3,7 @@ console.log('Testing shared/data-portal-context.js...');
 var DataPortalContext = require('../../source/shared/data-portal-context.js');
 var PropertyInfo = require('../../source/shared/property-info.js');
 var Text = require('../../source/data-types/text.js');
-var UserInfo = require('../../source/shared/user-info.js');
+var UserInfo = require('../../source/system/user-info.js');
 var UserReader = require('../../sample/get-user.js');
 
 describe('Data portal context', function() {

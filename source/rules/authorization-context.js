@@ -2,7 +2,7 @@
 
 var config = require('../shared/configuration-reader.js');
 var EnsureArgument = require('../shared/ensure-argument.js');
-var UserInfo = require('../shared/user-info.js');
+var UserInfo = require('../system/user-info.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 var AuthorizationAction = require('./authorization-action.js');
 
@@ -53,7 +53,7 @@ function AuthorizationContext(action, targetName, brokenRules) {
 
   /**
    * The current user.
-   * @type {bo.shared.UserInfo}
+   * @type {bo.system.UserInfo}
    * @readonly
    */
   this.user = config.getUser();

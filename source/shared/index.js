@@ -9,7 +9,6 @@ var ExtensionManager = require('./extension-manager.js');
 var ExtensionManagerSync = require('./extension-manager-sync.js');
 
 //var ModelState = require('./model-state.js');
-var UserInfo = require('./user-info.js');
 var DataPortalAction = require('./data-portal-action.js');
 var DataPortalContext = require('./data-portal-context.js');
 var DataPortalEvent = require('./data-portal-event.js');
@@ -43,8 +42,6 @@ var ModelError = require('./model-error.js');
  * @property {function} ExtensionManagerSync - {@link bo.shared.ExtensionManagerSync Extension manager}
  *      constructor to create new a new extension manager object for a synchronous model.
  *
- * @property {function} UserInfo - {@link bo.shared.UserInfo User data}
- *      constructor to create new base object for user information.
  * @property {function} DataPortalAction - {@link bo.shared.DataPortalAction Data portal action}
  *      enumeration specifies the model operations to execute on data access objects.
  * @property {function} DataPortalContext - {@link bo.shared.DataPortalContext Data portal context}
@@ -80,7 +77,6 @@ var index = {
   ExtensionManagerSync: ExtensionManagerSync,
 
   //ModelState: ModelState,
-  UserInfo: UserInfo,
   DataPortalAction: DataPortalAction,
   DataPortalContext: DataPortalContext,
   DataPortalEvent: DataPortalEvent,

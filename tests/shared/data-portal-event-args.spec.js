@@ -3,7 +3,7 @@ console.log('Testing shared/data-portal-event-args.js...');
 var DataPortalEventArgs = require('../../source/shared/data-portal-event-args.js');
 var DataPortalAction = require('../../source/shared/data-portal-action.js');
 var DataPortalError = require('../../source/shared/data-portal-error.js');
-var UserInfo = require('../../source/shared/user-info.js');
+var UserInfo = require('../../source/system/user-info.js');
 
 describe('Data portal event arguments', function () {
   var error = new DataPortalError('type', 'model', DataPortalAction.execute);

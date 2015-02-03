@@ -3,7 +3,7 @@ console.log('Testing rules/authorization-context.js...');
 var AuthorizationContext = require('../../source/rules/authorization-context.js');
 var AuthorizationAction = require('../../source/rules/authorization-action.js');
 var BrokenRuleList = require('../../source/rules/broken-rule-list.js');
-var UserInfo = require('../../source/shared/user-info.js');
+var UserInfo = require('../../source/system/user-info.js');
 
 describe('Authorization context', function () {
   var user = new UserInfo('user-code');

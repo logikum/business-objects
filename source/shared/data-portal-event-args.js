@@ -58,7 +58,7 @@ function DataPortalEventArgs (modelName, action, methodName, error) {
 
   /**
    * The current user.
-   * @type {bo.shared.UserInfo}
+   * @type {bo.system.UserInfo}
    * @readonly
    */
   this.user = config.getUser();

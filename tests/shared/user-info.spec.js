@@ -1,6 +1,6 @@
 console.log('Testing shared/user-info.js...');
 
-var UserInfo = require('../../source/shared/user-info.js');
+var UserInfo = require('../../source/system/user-info.js');
 
 describe('User base type', function() {
   var user = new UserInfo('anonymous');
