@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var EnsureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../system/ensure-argument.js');
 var RuleBase = require('./rule-base.js');
 var RuleSeverity = require('./rule-severity.js');
 var ValidationResult = require('./validation-result.js');

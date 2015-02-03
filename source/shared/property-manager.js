@@ -1,6 +1,6 @@
 'use strict';
 
-var EnsureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./../system/ensure-argument.js');
 var ArgumentError = require('./../system/argument-error.js');
 var PropertyInfo = require('./property-info.js');
 var DataType = require('../data-types/data-type.js');

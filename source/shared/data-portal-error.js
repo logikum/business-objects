@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var EnsureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./../system/ensure-argument.js');
 var DataPortalAction = require('./data-portal-action.js');
 var t = require('../locales/i18n-bo.js')('DataPortalError');
 

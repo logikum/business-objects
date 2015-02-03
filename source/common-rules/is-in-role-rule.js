@@ -2,7 +2,7 @@
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../system/ensure-argument.js');
 var AuthorizationRule = require('../rules/authorization-rule.js');
 var UserInfo = require('../system/user-info.js');
 

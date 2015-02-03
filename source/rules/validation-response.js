@@ -1,7 +1,7 @@
 'use strict';
 
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../system/ensure-argument.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
 var RuleSeverity = require('./rule-severity.js');
 

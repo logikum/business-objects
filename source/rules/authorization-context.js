@@ -1,7 +1,7 @@
 'use strict';
 
 var config = require('../shared/configuration-reader.js');
-var EnsureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../system/ensure-argument.js');
 var UserInfo = require('../system/user-info.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 var AuthorizationAction = require('./authorization-action.js');

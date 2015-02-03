@@ -1,6 +1,6 @@
 'use strict';
 
-var EnsureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../system/ensure-argument.js');
 var PropertyInfo = require('../shared/property-info.js');
 var BrokenRule = require('./broken-rule.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');

@@ -16,7 +16,6 @@ var DataPortalEventArgs = require('../../source/shared/data-portal-event-args.js
 var TransferContext = require('../../source/shared/transfer-context.js');
 
 //var configuration = require('../../source/shared/configuration-reader.js');
-var EnsureArgument = require('../../source/shared/ensure-argument.js');
 var PropertyFlag = require('../../source/shared/property-flag.js');
 
 var ConfigurationError = require('../../source/shared/configuration-error.js');
@@ -48,7 +47,6 @@ describe('Shared component index', function () {
     expect(new shared.TransferContext([], getValue, setValue)).toEqual(jasmine.any(TransferContext));
 
     expect(shared.getConfiguration()).toEqual(jasmine.any(Object));
-    expect(shared.EnsureArgument).toEqual(EnsureArgument);
     expect(shared.PropertyFlag).toBe(PropertyFlag);
 
     expect(new shared.ConfigurationError('message')).toEqual(jasmine.any(ConfigurationError));

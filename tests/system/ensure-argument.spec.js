@@ -1,7 +1,7 @@
 console.log('Testing shared/ensure-argument.js...');
 
 var util = require('util');
-var EnsureArgument = require('../../source/shared/ensure-argument.js');
+var EnsureArgument = require('../../source/system/ensure-argument.js');
 var Enumeration = require('../../source/system/enumeration.js');
 var ModelBase = require('../../source/model-base.js');
 

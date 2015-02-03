@@ -1,6 +1,6 @@
 'use strict';
 
-var EnsureArgument = require('../shared/ensure-argument.js');
+var EnsureArgument = require('../system/ensure-argument.js');
 var ArgumentError = require('../system/argument-error.js');
 var NotImplementedError = require('../system/not-implemented-error.js');
 

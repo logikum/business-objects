@@ -16,7 +16,6 @@ var DataPortalEventArgs = require('./data-portal-event-args.js');
 var TransferContext = require('./transfer-context.js');
 
 var configuration = require('./configuration-reader.js');
-var EnsureArgument = require('./ensure-argument.js');
 var PropertyFlag = require('./property-flag.js');
 
 var ConfigurationError = require('./configuration-error.js');
@@ -52,8 +51,6 @@ var ModelError = require('./model-error.js');
  * @property {function} TransferContext - {@link bo.shared.TransferContext Transfer context}
  *      constructor to create new context object for custom client and data transfer functions.
  *
- * @property {object} EnsureArgument - {@link bo.shared.EnsureArgument Argument verification}
- *      namespace provides methods to check arguments.
  * @property {function} PropertyFlag - {@link bo.shared.PropertyFlag Property flag}
  *      constructor to create new flag set for a property definition.
  *
@@ -86,7 +83,6 @@ var index = {
    * @returns {bo.configuration} The configuration of business objects.
    */
   getConfiguration: function () { return configuration; },
-  EnsureArgument: EnsureArgument,
   PropertyFlag: PropertyFlag,
 
   ConfigurationError: ConfigurationError,

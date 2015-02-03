@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var DaoBase = require('../source/data-access/dao-base.js');
-var ensureArgument = require('../source/shared/ensure-argument.js');
+var ensureArgument = require('../source/system/ensure-argument.js');
 
 var daoBuilder = function (dataSource, modelPath) {
 

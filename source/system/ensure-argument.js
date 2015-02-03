@@ -1,6 +1,6 @@
 'use strict';
 
-var ArgumentError = require('./../system/argument-error.js');
+var ArgumentError = require('./argument-error.js');
 var t = require('../locales/i18n-bo.js')('ArgumentError');
 
 //region Helper methods
@@ -28,7 +28,7 @@ function typeNames (types) {
  * @classdesc Provides helper methods to check arguments.
  * @description Creates a new argument checking object.
  *
- * @memberof bo.shared
+ * @memberof bo.system
  * @constructor
  */
 var EnsureArgument = function () {};
@@ -38,7 +38,7 @@ var EnsureArgument = function () {};
 /**
  * Checks if value is not undefined.
  *
- * @function bo.shared.EnsureArgument.isDefined
+ * @function bo.system.EnsureArgument.isDefined
  * @param {*} value - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -55,7 +55,7 @@ EnsureArgument.isDefined = function (value, message) {
 /**
  * Checks if value is not undefined and is not null.
  *
- * @function bo.shared.EnsureArgument.hasValue
+ * @function bo.system.EnsureArgument.hasValue
  * @param {*} value - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -76,7 +76,7 @@ EnsureArgument.hasValue = function (value, message) {
 /**
  * Checks if value is a string.
  *
- * @function bo.shared.EnsureArgument.isString
+ * @function bo.system.EnsureArgument.isString
  * @param {string} [value] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -93,7 +93,7 @@ EnsureArgument.isString = function (value, message) {
 /**
  * Checks if value is a string or null.
  *
- * @function bo.shared.EnsureArgument.isOptionalString
+ * @function bo.system.EnsureArgument.isOptionalString
  * @param {(string|null)} [value=null] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -112,7 +112,7 @@ EnsureArgument.isOptionalString = function (value, message) {
 /**
  * Checks if value is a non-empty string.
  *
- * @function bo.shared.EnsureArgument.isMandatoryString
+ * @function bo.system.EnsureArgument.isMandatoryString
  * @param {string} [value] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -133,7 +133,7 @@ EnsureArgument.isMandatoryString = function (value, message) {
 /**
  * Checks if value is a number or null.
  *
- * @function bo.shared.EnsureArgument.isOptionalNumber
+ * @function bo.system.EnsureArgument.isOptionalNumber
  * @param {(number|null)} [value=null] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -152,7 +152,7 @@ EnsureArgument.isOptionalNumber = function (value, message) {
 /**
  * Checks if value is a number.
  *
- * @function bo.shared.EnsureArgument.isMandatoryNumber
+ * @function bo.system.EnsureArgument.isMandatoryNumber
  * @param {number} [value] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -173,7 +173,7 @@ EnsureArgument.isMandatoryNumber = function (value, message) {
 /**
  * Checks if value is an integer or null.
  *
- * @function bo.shared.EnsureArgument.isOptionalInteger
+ * @function bo.system.EnsureArgument.isOptionalInteger
  * @param {(number|null)} [value=null] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -192,7 +192,7 @@ EnsureArgument.isOptionalInteger = function (value, message) {
 /**
  * Checks if value is an integer.
  *
- * @function bo.shared.EnsureArgument.isMandatoryInteger
+ * @function bo.system.EnsureArgument.isMandatoryInteger
  * @param {number} [value] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -213,7 +213,7 @@ EnsureArgument.isMandatoryInteger = function (value, message) {
 /**
  * Checks if value is a Boolean or null.
  *
- * @function bo.shared.EnsureArgument.isOptionalBoolean
+ * @function bo.system.EnsureArgument.isOptionalBoolean
  * @param {(boolean|null)} [value=null] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -232,7 +232,7 @@ EnsureArgument.isOptionalBoolean = function (value, message) {
 /**
  * Checks if value is a Boolean.
  *
- * @function bo.shared.EnsureArgument.isMandatoryBoolean
+ * @function bo.system.EnsureArgument.isMandatoryBoolean
  * @param {boolean} [value] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -253,7 +253,7 @@ EnsureArgument.isMandatoryBoolean = function (value, message) {
 /**
  * Checks if value is an object or null.
  *
- * @function bo.shared.EnsureArgument.isOptionalObject
+ * @function bo.system.EnsureArgument.isOptionalObject
  * @param {(object|null)} [value=null] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -272,7 +272,7 @@ EnsureArgument.isOptionalObject = function (value, message) {
 /**
  * Checks if value is an object.
  *
- * @function bo.shared.EnsureArgument.isMandatoryObject
+ * @function bo.system.EnsureArgument.isMandatoryObject
  * @param {object} [value] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -293,7 +293,7 @@ EnsureArgument.isMandatoryObject = function (value, message) {
 /**
  * Checks if value is a function or null.
  *
- * @function bo.shared.EnsureArgument.isOptionalFunction
+ * @function bo.system.EnsureArgument.isOptionalFunction
  * @param {(function|null)} [value=null] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -312,7 +312,7 @@ EnsureArgument.isOptionalFunction = function (value, message) {
 /**
  * Checks if value is a function.
  *
- * @function bo.shared.EnsureArgument.isMandatoryFunction
+ * @function bo.system.EnsureArgument.isMandatoryFunction
  * @param {function} [value] - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -333,7 +333,7 @@ EnsureArgument.isMandatoryFunction = function (value, message) {
 /**
  * Checks if value is a given type or null.
  *
- * @function bo.shared.EnsureArgument.isOptionalType
+ * @function bo.system.EnsureArgument.isOptionalType
  * @param {(object|null)} [value=null] - The value to check.
  * @param {(constructor|Array.<constructor>)} type - The type that value must inherit.
  * @param {string} [message] - Human-readable description of the error.
@@ -356,7 +356,7 @@ EnsureArgument.isOptionalType = function (value, type, message) {
 /**
  * Checks if value is a given type.
  *
- * @function bo.shared.EnsureArgument.isMandatoryType
+ * @function bo.system.EnsureArgument.isMandatoryType
  * @param {object} [value] - The value to check.
  * @param {(constructor|Array.<constructor>)} type - The type that value must inherit.
  * @param {string} [message] - Human-readable description of the error.
@@ -381,7 +381,7 @@ EnsureArgument.isMandatoryType = function (value, type, message) {
 /**
  * Checks if value is an instance of a given model type.
  *
- * @function bo.shared.EnsureArgument.isModelType
+ * @function bo.system.EnsureArgument.isModelType
  * @param {(object|null)} [value=null] - The value to check.
  * @param {(constructor|Array.<constructor>)} model - The model type that value must be an instance of.
  * @param {string} [message] - Human-readable description of the error.
@@ -406,7 +406,7 @@ EnsureArgument.isModelType = function (value, model, message) {
 /**
  * Checks if value is member of a given enumeration.
  *
- * @function bo.shared.EnsureArgument.isEnumMember
+ * @function bo.system.EnsureArgument.isEnumMember
  * @param {number} [value] - The value to check.
  * @param {constructor} type - The type of the enumeration.
  * @param {number} [defaultValue] - The type of the enumeration.
@@ -435,7 +435,7 @@ EnsureArgument.isEnumMember = function (value, type, defaultValue, message) {
 /**
  * Checks if value is an array of a given type or null.
  *
- * @function bo.shared.EnsureArgument.isOptionalArray
+ * @function bo.system.EnsureArgument.isOptionalArray
  * @param {(Array.<type>|null)} [value=Array.<type>] - The value to check.
  * @param {*} type - The type of the array items - a primitive type or a constructor.
  * @param {string} [message] - Human-readable description of the error.
@@ -474,7 +474,7 @@ EnsureArgument.isOptionalArray = function (value, type, message) {
 /**
  * Checks if value is an array of a given type.
  *
- * @function bo.shared.EnsureArgument.isMandatoryArray
+ * @function bo.system.EnsureArgument.isMandatoryArray
  * @param {Array.<type>} [value] - The value to check.
  * @param {*} type - The type of the array items - a primitive type or a constructor.
  * @param {string} [message] - Human-readable description of the error.

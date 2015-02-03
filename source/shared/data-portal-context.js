@@ -1,7 +1,7 @@
 'use strict';
 
 var config = require('./configuration-reader.js');
-var EnsureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./../system/ensure-argument.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
 var UserInfo = require('./../system/user-info.js');

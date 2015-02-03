@@ -1,7 +1,7 @@
 'use strict';
 
 var config = require('./configuration-reader.js');
-var EnsureArgument = require('./ensure-argument.js');
+var EnsureArgument = require('./../system/ensure-argument.js');
 var DataPortalAction = require('./data-portal-action.js');
 var DataPortalError = require('./data-portal-error.js');
 
