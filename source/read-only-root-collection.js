@@ -12,7 +12,7 @@ var ExtensionManager = require('./shared/extension-manager.js');
 
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
-var Action = require('./rules/authorization-action.js');
+var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
 var DataPortalAction = require('./shared/data-portal-action.js');
@@ -114,7 +114,7 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
 
     function canExecute (methodName) {
       return rules.hasPermission(
-        getAuthorizationContext(Action.executeMethod, methodName)
+        getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
       );
     }
 
@@ -238,7 +238,7 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
         }
       }
       // Check permissions.
-      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method))
+      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method))
         runStatements(main, DataPortalAction.fetch, callback);
       else
         callback(null, self);

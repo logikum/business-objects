@@ -21,7 +21,7 @@ var TransferContext = require('./shared/transfer-context.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
-var Action = require('./rules/authorization-action.js');
+var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
 var DataPortalAction = require('./shared/data-portal-action.js');
@@ -150,7 +150,7 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
 
     function canBeRead (property) {
       return rules.hasPermission(
-          getAuthorizationContext(Action.readProperty, property.name)
+          getAuthorizationContext(AuthorizationAction.readProperty, property.name)
       );
     }
 
@@ -162,7 +162,7 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
 
     function canExecute (methodName) {
       return rules.hasPermission(
-          getAuthorizationContext(Action.executeMethod, methodName)
+          getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
       );
     }
 
@@ -199,7 +199,7 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
 
     function data_fetch (filter, method) {
       // Check permissions.
-      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method)) {
+      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
         try {
           // Launch start event.
           self.emit(

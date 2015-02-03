@@ -22,7 +22,7 @@ var TransferContext = require('./shared/transfer-context.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
-var Action = require('./rules/authorization-action.js');
+var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
 var DataPortalAction = require('./shared/data-portal-action.js');
@@ -338,11 +338,11 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       get: function () {
         var auth;
         if (self.isDeleted())
-          auth = canDo(Action.removeObject);
+          auth = canDo(AuthorizationAction.removeObject);
         else if (self.isNew())
-          auth = canDo(Action.createObject);
+          auth = canDo(AuthorizationAction.createObject);
         else
-          auth = canDo(Action.updateObject);
+          auth = canDo(AuthorizationAction.updateObject);
         return auth && self.isDirty() && self.isValid();
       }
     });
@@ -357,13 +357,13 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
     function canBeRead (property) {
       return rules.hasPermission(
-          getAuthorizationContext(Action.readProperty, property.name)
+          getAuthorizationContext(AuthorizationAction.readProperty, property.name)
       );
     }
 
     function canBeWritten (property) {
       return rules.hasPermission(
-          getAuthorizationContext(Action.writeProperty, property.name)
+          getAuthorizationContext(AuthorizationAction.writeProperty, property.name)
       );
     }
 
@@ -375,7 +375,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
     function canExecute (methodName) {
       return rules.hasPermission(
-          getAuthorizationContext(Action.executeMethod, methodName)
+          getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
       );
     }
 
@@ -572,7 +572,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         cb(err);
       }
       // Check permissions.
-      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method)) {
+      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
         // Launch start event.
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preFetch),
@@ -659,7 +659,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         }
       }
       // Check permissions.
-      if (canDo(Action.createObject)) {
+      if (canDo(AuthorizationAction.createObject)) {
         // Copy the values of parent keys.
         var references = properties.filter(function (property) {
           return property.isParentKey;
@@ -740,7 +740,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         }
       }
       // Check permissions.
-      if (canDo(Action.updateObject))
+      if (canDo(AuthorizationAction.updateObject))
         main(connection, callback);
       else
         callback(null, self);
@@ -805,7 +805,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         });
       }
       // Check permissions.
-      if (canDo(Action.removeObject))
+      if (canDo(AuthorizationAction.removeObject))
         main(connection, callback);
       else
         callback(null);

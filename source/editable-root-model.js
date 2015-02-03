@@ -22,7 +22,7 @@ var TransferContext = require('./shared/transfer-context.js');
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
-var Action = require('./rules/authorization-action.js');
+var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
 
 var DataPortalAction = require('./shared/data-portal-action.js');
@@ -316,11 +316,11 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       get: function () {
         var auth;
         if (self.isDeleted())
-          auth = canDo(Action.removeObject);
+          auth = canDo(AuthorizationAction.removeObject);
         else if (self.isNew())
-          auth = canDo(Action.createObject);
+          auth = canDo(AuthorizationAction.createObject);
         else
-          auth = canDo(Action.updateObject);
+          auth = canDo(AuthorizationAction.updateObject);
         return auth && self.isDirty() && self.isValid();
       }
     });
@@ -335,13 +335,13 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     function canBeRead (property) {
       return rules.hasPermission(
-          getAuthorizationContext(Action.readProperty, property.name)
+          getAuthorizationContext(AuthorizationAction.readProperty, property.name)
       );
     }
 
     function canBeWritten (property) {
       return rules.hasPermission(
-          getAuthorizationContext(Action.writeProperty, property.name)
+          getAuthorizationContext(AuthorizationAction.writeProperty, property.name)
       );
     }
 
@@ -353,7 +353,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     function canExecute (methodName) {
       return rules.hasPermission(
-          getAuthorizationContext(Action.executeMethod, methodName)
+          getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
       );
     }
 
@@ -613,7 +613,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         }
       }
       // Check permissions.
-      if (method === M_FETCH ? canDo(Action.fetchObject) : canExecute(method))
+      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method))
         runStatements(main, DataPortalAction.fetch, callback);
       else
         callback(null, self);
@@ -684,7 +684,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         }
       }
       // Check permissions.
-      if (canDo(Action.createObject))
+      if (canDo(AuthorizationAction.createObject))
         runTransaction(main, DataPortalAction.insert, callback);
       else
         callback(null, self);
@@ -758,7 +758,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         }
       }
       // Check permissions.
-      if (canDo(Action.updateObject))
+      if (canDo(AuthorizationAction.updateObject))
         runTransaction(main, DataPortalAction.update, callback);
       else
         callback(null, self);
@@ -827,7 +827,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         });
       }
       // Check permissions.
-      if (canDo(Action.removeObject))
+      if (canDo(AuthorizationAction.removeObject))
         runTransaction(main, DataPortalAction.remove, callback);
       else
         callback(null, null);
