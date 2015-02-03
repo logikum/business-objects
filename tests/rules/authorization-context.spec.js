@@ -9,7 +9,7 @@ describe('Authorization context', function () {
   var user = new UserInfo('user-code');
   var brokenRules = new BrokenRuleList('modelName');
 
-  it('constructor expects four arguments', function () {
+  it('constructor expects three arguments', function () {
     var build01 = function () {
       return new AuthorizationContext();
     };
@@ -20,39 +20,38 @@ describe('Authorization context', function () {
       return new AuthorizationContext(AuthorizationAction.writeProperty, 'property');
     };
     var build04 = function () {
-      return new AuthorizationContext(AuthorizationAction.writeProperty, 'property', user);
+      return new AuthorizationContext(AuthorizationAction.writeProperty, 'property', brokenRules);
     };
     var build05 = function () {
-      return new AuthorizationContext(AuthorizationAction.writeProperty, 'property', user, brokenRules);
-    };
-    var build06 = function () {
-      return new AuthorizationContext(AuthorizationAction.writeProperty, '', user, brokenRules);
+      return new AuthorizationContext(AuthorizationAction.writeProperty, '', brokenRules);
     };
 
     expect(build01).toThrow();
     expect(build02).toThrow();
     expect(build03).toThrow();
-    expect(build04).toThrow();
+    expect(build04).not.toThrow();
     expect(build05).not.toThrow();
-    expect(build06).not.toThrow();
   });
 
-  it('has three properties', function() {
-    var ctx = new AuthorizationContext(AuthorizationAction.writeProperty, 'property', user, brokenRules);
+  it('has four properties', function() {
+    var ctx = new AuthorizationContext(AuthorizationAction.writeProperty, 'property', brokenRules);
 
-    expect(ctx.user).toBe(user);
     expect(ctx.brokenRules).toBe(brokenRules);
     expect(ctx.ruleId).toBe('writeProperty.property');
+    expect(ctx.user).toEqual(jasmine.any(UserInfo));
+    expect(ctx.locale).toBe('hu-HU');
   });
 
   it('has read-only properties', function() {
-    var ctx = new AuthorizationContext(AuthorizationAction.writeProperty, 'property', user, brokenRules);
-    ctx.user = null;
+    var ctx = new AuthorizationContext(AuthorizationAction.writeProperty, 'property', brokenRules);
     ctx.brokenRules = null;
     ctx.ruleId = null;
+    ctx.user = null;
+    ctx.locale = null;
 
-    expect(ctx.user).not.toBeNull();
     expect(ctx.brokenRules).not.toBeNull();
     expect(ctx.ruleId).not.toBeNull();
+    expect(ctx.user).not.toBeNull();
+    expect(ctx.locale).not.toBeNull();
   });
 });

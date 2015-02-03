@@ -10,7 +10,10 @@ var ExtensionManagerSync = require('./extension-manager-sync.js');
 
 //var ModelState = require('./model-state.js');
 var UserInfo = require('./user-info.js');
+var DataPortalAction = require('./data-portal-action.js');
 var DataPortalContext = require('./data-portal-context.js');
+var DataPortalEvent = require('./data-portal-event.js');
+var DataPortalEventArgs = require('./data-portal-event-args.js');
 var TransferContext = require('./transfer-context.js');
 
 var configuration = require('./configuration-reader.js');
@@ -46,8 +49,14 @@ var NotImplementedError = require('./not-implemented-error.js');
  *
  * @property {function} UserInfo - {@link bo.shared.UserInfo User data}
  *      constructor to create new base object for user information.
- * @property {function} DataPortalContext - {@link bo.shared.DataPortalContext Data context}
+ * @property {function} DataPortalAction - {@link bo.shared.DataPortalAction Data portal action}
+ *      enumeration specifies the model operations to execute on data access objects.
+ * @property {function} DataPortalContext - {@link bo.shared.DataPortalContext Data portal context}
  *      constructor to create new context object for custom data portal functions.
+ * @property {function} DataPortalEvent - {@link bo.shared.DataPortalEvent Data portal event}
+ *      enumeration specifies the events of data portal operations.
+ * @property {function} DataPortalEventArgs - {@link bo.shared.DataPortalEventArgs Data portal event arguments}
+ *      constructor to create new context object for data portal events.
  * @property {function} TransferContext - {@link bo.shared.TransferContext Transfer context}
  *      constructor to create new context object for custom client and data transfer functions.
  *
@@ -82,7 +91,10 @@ var index = {
 
   //ModelState: ModelState,
   UserInfo: UserInfo,
+  DataPortalAction: DataPortalAction,
   DataPortalContext: DataPortalContext,
+  DataPortalEvent: DataPortalEvent,
+  DataPortalEventArgs: DataPortalEventArgs,
   TransferContext: TransferContext,
 
   /**

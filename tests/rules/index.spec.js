@@ -24,7 +24,6 @@ var BrokenRulesOutput = require('../../source/rules/broken-rules-output.js');
 var BrokenRuleList = require('../../source/rules/broken-rule-list.js');
 var BrokenRule = require('../../source/rules/broken-rule.js');
 
-var UserInfo = require('../../source/shared/user-info.js');
 var Enumeration = require('../../source/shared/enumeration.js');
 
 describe('Rule component index', function () {
@@ -32,7 +31,6 @@ describe('Rule component index', function () {
   var rule = new RuleBase('required');
   var brokenRules = new BrokenRuleList('modelName');
   var brs = new BrokenRulesOutput();
-  var user = new UserInfo('user-code');
 
   it('properties return correct components', function () {
 
@@ -42,7 +40,7 @@ describe('Rule component index', function () {
     expect(new rules.ValidationResponse(brs)).toEqual(jasmine.any(ValidationResponse));
 
     expect(new rules.AuthorizationRule('ruleName')).toEqual(jasmine.any(AuthorizationRule));
-    expect(new rules.AuthorizationContext(AuthorizationAction.writeProperty, 'property', user, brokenRules)).toEqual(jasmine.any(AuthorizationContext));
+    expect(new rules.AuthorizationContext(AuthorizationAction.writeProperty, 'property', brokenRules)).toEqual(jasmine.any(AuthorizationContext));
     expect(new rules.AuthorizationResult('ruleName', 'propertyName', 'message')).toEqual(jasmine.any(AuthorizationResult));
     expect(new rules.AuthorizationError()).toEqual(jasmine.any(AuthorizationError));
     expect(rules.AuthorizationAction).toEqual(jasmine.any(Enumeration));

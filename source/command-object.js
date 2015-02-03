@@ -1,24 +1,29 @@
 'use strict';
 
+//region Imports
+
 var util = require('util');
-var ModelBase = require('./model-base.js');
 var config = require('./shared/configuration-reader.js');
 var EnsureArgument = require('./shared/ensure-argument.js');
-var ModelError = require('./shared/model-error.js');
-
-var DataType = require('./data-types/data-type.js');
 var Enumeration = require('./shared/enumeration.js');
-var PropertyInfo = require('./shared/property-info.js');
-var PropertyManager = require('./shared/property-manager.js');
+
+var ModelBase = require('./model-base.js');
+var ModelError = require('./shared/model-error.js');
 var ExtensionManager = require('./shared/extension-manager.js');
 var DataStore = require('./shared/data-store.js');
+var DataType = require('./data-types/data-type.js');
+
+var PropertyInfo = require('./shared/property-info.js');
+var PropertyManager = require('./shared/property-manager.js');
+var PropertyContext = require('./shared/property-context.js');
+var ValidationContext = require('./rules/validation-context.js');
 var TransferContext = require('./shared/transfer-context.js');
+
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var Action = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
-var ValidationContext = require('./rules/validation-context.js');
 
 var DataPortalAction = require('./shared/data-portal-action.js');
 var DataPortalContext = require('./shared/data-portal-context.js');
@@ -28,6 +33,8 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Command object';
 var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
+
+//endregion
 
 /**
  * Factory method to create definitions of asynchronous command object models.
@@ -71,9 +78,8 @@ var CommandObjectFactory = function(properties, rules, extensions) {
     var brokenRules = new BrokenRuleList(properties.name);
     var isValidated = false;
     var dao = null;
-    var user = null;
+    var propertyContext = null;
     var dataContext = null;
-    var connection = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
@@ -83,9 +89,6 @@ var CommandObjectFactory = function(properties, rules, extensions) {
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
-
-    // Get principal.
-    user = config.getUser();
 
     //region Transfer object methods
 
@@ -132,7 +135,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
     //region Permissions
 
     function getAuthorizationContext(action, targetName) {
-      return new AuthorizationContext(action, targetName || '', user, brokenRules);
+      return new AuthorizationContext(action, targetName || '', brokenRules);
     }
 
     function canBeRead (property) {
@@ -369,6 +372,12 @@ var CommandObjectFactory = function(properties, rules, extensions) {
         store.setValue(property, value);
     }
 
+    function getPropertyContext(primaryProperty) {
+      if (!propertyContext)
+        propertyContext = new PropertyContext(properties.toArray(), readPropertyValue, writePropertyValue);
+      return propertyContext.with(primaryProperty);
+    }
+
     properties.map(function(property) {
 
       if (property.type instanceof DataType) {
@@ -377,12 +386,18 @@ var CommandObjectFactory = function(properties, rules, extensions) {
 
         Object.defineProperty(self, property.name, {
           get: function () {
-            return readPropertyValue(property);
+            if (property.getter)
+              return property.getter(getPropertyContext(property));
+            else
+              return readPropertyValue(property);
           },
           set: function (value) {
             if (property.isReadOnly)
               throw new ModelError('readOnly', properties.name , property.name);
-            writePropertyValue(property, value);
+            if (property.setter)
+              property.setter(getPropertyContext(property), value);
+            else
+              writePropertyValue(property, value);
           },
           enumerable: true
         });

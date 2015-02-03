@@ -1,5 +1,6 @@
 'use strict';
 
+var config = require('../shared/configuration-reader.js');
 var EnsureArgument = require('../shared/ensure-argument.js');
 var UserInfo = require('../shared/user-info.js');
 var BrokenRuleList = require('./broken-rule-list.js');
@@ -19,27 +20,18 @@ var AuthorizationAction = require('./authorization-action.js');
  * @constructor
  * @param {bo.rules.AuthorizationAction} action - The operation to authorize.
  * @param {string} [targetName] - Eventual parameter of the authorization action.
- * @param {bo.shared.UserInfo} [user] - User information object.
  * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
  *
  * @throws {@link bo.shared.ArgumentError Argument error}: The action must be an AuthorizationAction item.
  * @throws {@link bo.shared.ArgumentError Argument error}: The target name must be a string value.
- * @throws {@link bo.shared.ArgumentError Argument error}: The user must be a UserInfo object.
  * @throws {@link bo.shared.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
-function AuthorizationContext(action, targetName, user, brokenRules) {
+function AuthorizationContext(action, targetName, brokenRules) {
 
   action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
       'c_enumType', 'AuthorizationContext', 'action');
   targetName = EnsureArgument.isString(targetName,
       'c_string', 'AuthorizationContext', 'targetName');
-  /**
-   * User information.
-   * @type {bo.shared.UserInfo=}
-   * @readonly
-   */
-  this.user = EnsureArgument.isOptionalType(user, UserInfo,
-      'c_optType', 'AuthorizationContext', 'user');
   /**
    * The list of the broken rules.
    * @type {bo.rules.BrokenRuleList}
@@ -58,6 +50,19 @@ function AuthorizationContext(action, targetName, user, brokenRules) {
   this.ruleId = AuthorizationAction.getName(action);
   if (targetName)
     this.ruleId += '.' + targetName;
+
+  /**
+   * The current user.
+   * @type {bo.shared.UserInfo}
+   * @readonly
+   */
+  this.user = config.getUser();
+  /**
+   * The current locale.
+   * @type {string}
+   * @readonly
+   */
+  this.locale = config.getLocale();
 
   // Immutable object.
   Object.freeze(this);

@@ -10,7 +10,6 @@ var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
 var BrokenRuleList = require('../../source/rules/broken-rule-list.js');
 var Text = require('../../source/data-types/text.js');
 var PropertyInfo = require('../../source/shared/property-info.js');
-var UserInfo = require('../../source/shared/user-info.js');
 
 describe('Rule manager', function () {
   var vr0 = new ValidationRule('ruleName');
@@ -98,9 +97,8 @@ describe('Rule manager', function () {
     var rm = new RuleManager(ar);
     rm.initialize(NoAccessBehavior.throwError);
 
-    var user = new UserInfo('user-code');
     var brokenRules = new BrokenRuleList('modelName');
-    var context = new AuthorizationContext(AuthorizationAction.updateObject, '', user, brokenRules);
+    var context = new AuthorizationContext(AuthorizationAction.updateObject, '', brokenRules);
 
     var hasPermission01 = function () {
       rm.hasPermission(context);

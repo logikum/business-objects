@@ -1,12 +1,15 @@
 'use strict';
 
+//region Imports
+
 var util = require('util');
-var CollectionBase = require('./collection-base.js');
 var config = require('./shared/configuration-reader.js');
 var EnsureArgument = require('./shared/ensure-argument.js');
-var ModelError = require('./shared/model-error.js');
 
+var CollectionBase = require('./collection-base.js');
+var ModelError = require('./shared/model-error.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var Action = require('./rules/authorization-action.js');
@@ -20,6 +23,8 @@ var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_DESC = 'Read-only root collection';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
+
+//endregion
 
 /**
  * Factory method to create definitions of synchronous read-only root collections.
@@ -66,7 +71,6 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
     var items = [];
     var brokenRules = new BrokenRuleList(name);
     var dao = null;
-    var user = null;
     var dataContext = null;
     var connection = null;
 
@@ -77,9 +81,6 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
-
-    // Get principal.
-    user = config.getUser();
 
     Object.defineProperty(self, 'count', {
       get: function () {
@@ -103,7 +104,7 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
     //region Permissions
 
     function getAuthorizationContext(action, targetName) {
-      return new AuthorizationContext(action, targetName || '', user, brokenRules);
+      return new AuthorizationContext(action, targetName || '', brokenRules);
     }
 
     function canDo (action) {

@@ -1,9 +1,14 @@
 'use strict';
 
+//region Imports
+
 var util = require('util');
-var CollectionBase = require('./collection-base.js');
 var EnsureArgument = require('./shared/ensure-argument.js');
+
+var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
+
+//endregion
 
 /**
  * Factory method to create definitions of asynchronous read-only child collections.
