@@ -6,7 +6,7 @@ var i18n = require('./i18n.js');
  * Get a message localizer function initialized for the messages of
  * the business objects package, i.e. the namespace is '$bo'.
  *
- * @function i18nBO
+ * @function internal.i18nBO
  * @param {string} [keyRoot] - The key root of the messages.
  * @returns {Function} The message localizer function.
  */

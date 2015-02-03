@@ -96,8 +96,8 @@ if (cfg) {
 Object.freeze(config);
 
 /**
- * Configuration for business objects.
- * @namespace internal.configuration
+ * Constructor to create configuration for business objects.
+ * @function external~configuration
  * @property {bo.dataAccess.ConnectionManagerBase} connectionManager - Connection manager instance.
  * @property {function} daoBuilder - Factory method to create data access objects.
  * @property {function} getUser - Returns the current user.

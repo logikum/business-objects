@@ -49,8 +49,8 @@ var i18n = require('./locales/i18n.js');
  * @property {namespace} system - {@link bo.system System namespace}
  *      contains general components.
  *
- * @property {internal.configuration} configuration - Object containing
- *      {@link internal.configuration configuration data} of the business objects.
+ * @property {object} configuration - Object containing
+ *      {@link external~configuration configuration data} of the business objects.
  * @property {function} i18n - {@link bo.i18n Internationalization}
  *      constructor to create new a message localizer object.
  */
