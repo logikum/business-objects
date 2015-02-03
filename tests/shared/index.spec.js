@@ -2,7 +2,6 @@ console.log('Testing shared/index.js...');
 
 var shared = require('../../source/shared/index.js');
 var Text = require('../../source/data-types/text.js');
-var UserReader = require('../../sample/get-user.js');
 
 var PropertyInfo = require('../../source/shared/property-info.js');
 var PropertyManager = require('../../source/shared/property-manager.js');
@@ -25,7 +24,6 @@ var PropertyFlag = require('../../source/shared/property-flag.js');
 var ArgumentError = require('../../source/shared/argument-error.js');
 var ConfigurationError = require('../../source/shared/configuration-error.js');
 var DataPortalError = require('../../source/shared/data-portal-error.js');
-var EnumerationError = require('../../source/shared/enumeration-error.js');
 var ModelError = require('../../source/shared/model-error.js');
 
 describe('Shared component index', function () {
@@ -61,7 +59,6 @@ describe('Shared component index', function () {
     expect(new shared.ArgumentError('message')).toEqual(jasmine.any(ArgumentError));
     expect(new shared.ConfigurationError('message')).toEqual(jasmine.any(ConfigurationError));
     expect(new shared.DataPortalError('type', 'name', 0, {})).toEqual(jasmine.any(DataPortalError));
-    expect(new shared.EnumerationError('message')).toEqual(jasmine.any(EnumerationError));
     expect(new shared.ModelError('message')).toEqual(jasmine.any(ModelError));
   });
 });

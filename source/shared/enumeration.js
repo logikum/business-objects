@@ -1,7 +1,7 @@
 'use strict';
 
 var EnsureArgument = require('./ensure-argument.js');
-var EnumerationError = require('./enumeration-error.js');
+var EnumerationError = require('./../system/enumeration-error.js');
 
 /**
  * @classdesc
@@ -46,7 +46,7 @@ Enumeration.prototype.count = function () {
  * @returns {string} The name of the enumeration item.
  *
  * @throws {@link bo.shared.ArgumentError Argument error}: The value must be a number.
- * @throws {@link bo.shared.EnumerationError Enumeration error}: The passed value is not an enumeration item.
+ * @throws {@link bo.system.EnumerationError Enumeration error}: The passed value is not an enumeration item.
  */
 Enumeration.prototype.getName = function (value) {
   value = EnsureArgument.isMandatoryNumber(value,
@@ -69,7 +69,7 @@ Enumeration.prototype.getName = function (value) {
  * @returns {number} The value of the enumeration item.
  *
  * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
- * @throws {@link bo.shared.EnumerationError Enumeration error}: The passed name is not an enumeration item.
+ * @throws {@link bo.system.EnumerationError Enumeration error}: The passed name is not an enumeration item.
  */
 Enumeration.prototype.getValue = function (name) {
   name = EnsureArgument.isMandatoryString(name,
@@ -93,7 +93,7 @@ Enumeration.prototype.getValue = function (name) {
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  *
- * @throws {@link bo.shared.EnumerationError Enumeration error}: The passed value is not an enumeration item.
+ * @throws {@link bo.system.EnumerationError Enumeration error}: The passed value is not an enumeration item.
  */
 Enumeration.prototype.check = function (value, message) {
   for (var propertyName in this) {

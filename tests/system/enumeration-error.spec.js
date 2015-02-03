@@ -1,6 +1,6 @@
 console.log('Testing shared/enumeration-error.js...');
 
-var EnumerationError = require('../../source/shared/enumeration-error.js');
+var EnumerationError = require('../../source/system/enumeration-error.js');
 
 describe('Enumeration error', function() {
 
