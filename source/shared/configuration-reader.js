@@ -97,7 +97,7 @@ Object.freeze(config);
 
 /**
  * Configuration for business objects.
- * @namespace bo.configuration
+ * @namespace internal.configuration
  * @property {bo.dataAccess.ConnectionManagerBase} connectionManager - Connection manager instance.
  * @property {function} daoBuilder - Factory method to create data access objects.
  * @property {function} getUser - Returns the current user.

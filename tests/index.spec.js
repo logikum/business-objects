@@ -24,11 +24,14 @@ describe('Business object index', function() {
     expect(bo.ReadOnlyChildCollectionSync).toEqual(jasmine.any(Function));
     expect(bo.CommandObjectSync).toEqual(jasmine.any(Function));
 
-    expect(bo.dataTypes).toEqual(jasmine.any(Object));
-    expect(bo.shared).toEqual(jasmine.any(Object));
-    expect(bo.rules).toEqual(jasmine.any(Object));
     expect(bo.commonRules).toEqual(jasmine.any(Object));
     expect(bo.dataAccess).toEqual(jasmine.any(Object));
+    expect(bo.dataTypes).toEqual(jasmine.any(Object));
+    expect(bo.rules).toEqual(jasmine.any(Object));
+    expect(bo.shared).toEqual(jasmine.any(Object));
+    expect(bo.system).toEqual(jasmine.any(Object));
+
+    expect(bo.configuration).toEqual(jasmine.any(Object));
     expect(bo.i18n).toEqual(jasmine.any(Function));
   });
 });
