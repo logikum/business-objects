@@ -36,9 +36,9 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @param {bo.shared.ExtensionManager} extensions - The customization of the collection.
  * @returns {ReadOnlyRootCollection} The constructor of an asynchronous read-only root collection.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The collection name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
  * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModel.
  */
 var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) {

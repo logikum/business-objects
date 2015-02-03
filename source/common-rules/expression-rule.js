@@ -21,10 +21,10 @@ var NullResultOption = require('./null-result-option.js');
  *
  * @extends bo.rules.ValidationRule
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The regular expression must be a RegExp object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The option must be a NullResultOption item.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The regular expression must be a RegExp object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The option must be a NullResultOption item.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function ExpressionRule(primaryProperty, regex, option, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'Expression');

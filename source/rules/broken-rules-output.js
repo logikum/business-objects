@@ -24,9 +24,9 @@ function BrokenRulesOutput () {
    * @param {string} message - The description or the message key of the broken rule.
    * @param {bo.rules.RuleSeverity} severity - The severity of the broken rule.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The property name must be a non-empty string.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The severity must be a RuleSeverity item.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a RuleSeverity item.
    */
   this.add = function (propertyName, message, severity) {
 

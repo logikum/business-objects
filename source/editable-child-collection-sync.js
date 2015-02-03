@@ -20,7 +20,7 @@ var MODEL_STATE = require('./shared/model-state.js');
  * @param {EditableChildModelSync} itemType - The model type of the collection items.
  * @returns {EditableChildCollectionSync} The constructor of a synchronous editable child collection.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The collection name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
  * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModelSync.
  */
 var EditableChildCollectionSyncFactory = function(name, itemType) {

@@ -23,10 +23,10 @@ var PropertyInfo = require('../shared/property-info.js');
  *
  * @extends bo.rules.ValidationRule
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The dependencies must be
+ * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The dependencies must be
  *    an array of PropertyInfo objects or a single PropertyInfo object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function DependencyRule(primaryProperty, dependencies, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'Dependency');

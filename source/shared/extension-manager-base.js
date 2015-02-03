@@ -15,9 +15,9 @@ var ModelError = require('./model-error.js');
  * @param {string} modelPath - The full path of the model.
  * @param {number} addArgs - The count of additional arguments for data portal methods of a model group.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The data source must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The model path must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The additional argument count must be an integer.
+ * @throws {@link bo.system.ArgumentError Argument error}: The data source must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The model path must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The additional argument count must be an integer.
  */
 function ExtensionManagerBase(dataSource, modelPath, addArgs) {
 

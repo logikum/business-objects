@@ -16,9 +16,9 @@ var ResultBase = require('./result-base.js');
  *
  * @extends bo.rules.ResultBase
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The target name must be a string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The target name must be a string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function AuthorizationResult(ruleName, targetName, message) {
 

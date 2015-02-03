@@ -16,11 +16,11 @@ var RuleSeverity = require('./rule-severity.js');
  * @param {string} message - Human-readable description of the reason of the failure.
  * @param {bo.rules.RuleSeverity} severity - The severity of the rule failure.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The preservation flag must be a Boolean value.
- * @throws {@link bo.shared.ArgumentError Argument error}: The property name must be a string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The severity must be a RuleSeverity item.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The preservation flag must be a Boolean value.
+ * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a RuleSeverity item.
  */
 function BrokenRule(ruleName, isPreserved, propertyName, message, severity) {
 

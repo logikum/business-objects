@@ -46,9 +46,9 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
  * @returns {EditableChildModelSync} The constructor of a synchronous editable child model.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be a PropertyManager object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
  */
 var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 

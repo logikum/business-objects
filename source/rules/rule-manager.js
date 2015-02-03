@@ -1,7 +1,7 @@
 'use strict';
 
 var EnsureArgument = require('../shared/ensure-argument.js');
-var ArgumentError = require('../shared/argument-error.js');
+var ArgumentError = require('../system/argument-error.js');
 var RuleList = require('./rule-list.js');
 var ValidationRule = require('./validation-rule.js');
 var ValidationContext = require('./validation-context.js');
@@ -48,7 +48,7 @@ var RuleManager = function () {
    *
    * @param {bo.rules.NoAccessBehavior} defaultBehavior - The default behavior for unauthorized operations.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The severity must be a NoAccessBehavior item.
+   * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a NoAccessBehavior item.
    */
   this.initialize = function (defaultBehavior) {
     this.noAccessBehavior = defaultBehavior;
@@ -69,8 +69,8 @@ var RuleManager = function () {
    *
    * @param {(bo.rules.ValidationRule|bo.rules.AuthorizationRule)} rule - The rule to add.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The rule must be a Rule object.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The rule is not initialized.
+   * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a Rule object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The rule is not initialized.
    */
   this.add = function (rule) {
 
@@ -94,8 +94,8 @@ var RuleManager = function () {
    * @param {bo.shared.PropertyInfo} property - The model property to validate.
    * @param {bo.rules.ValidationContext} context - The context of the property validation.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The property must be a PropertyInfo object.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The context must be a ValidationContext object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The context must be a ValidationContext object.
    */
   this.validate = function (property, context) {
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
@@ -133,7 +133,7 @@ var RuleManager = function () {
    *
    * @param {bo.rules.AuthorizationContext} context - The context of the action authorization.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The context must be a AuthorizationContext object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The context must be a AuthorizationContext object.
    * @throws {@link bo.rules.AuthorizationError Authorization error}: The user has no permission to execute the action.
    */
   this.hasPermission = function (context) {

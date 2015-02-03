@@ -21,7 +21,7 @@ var PropertyInfo = require('../shared/property-info.js');
  *
  * @extends bo.rules.RuleBase
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
  */
 function ValidationRule(ruleName) {
   RuleBase.call(this, ruleName);
@@ -41,8 +41,8 @@ function ValidationRule(ruleName) {
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
   this.initialize = function (primaryProperty, message, priority, stopsProcessing) {
 
@@ -61,7 +61,7 @@ function ValidationRule(ruleName) {
    *
    * @param {bo.shared.PropertyInfo} property - An input property that value is used by the rule of.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The input property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The input property must be a PropertyInfo object.
    */
   this.addInputProperty = function (property) {
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
@@ -76,7 +76,7 @@ function ValidationRule(ruleName) {
    *
    * @param {bo.shared.PropertyInfo} property - An affected property influenced by the rule.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The affected property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The affected property must be a PropertyInfo object.
    */
   this.addAffectedProperty = function (property) {
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
@@ -92,7 +92,7 @@ function ValidationRule(ruleName) {
    * @param {internal~getValue} getValue - A function that returns the value of a property.
    * @returns {object} An object that properties hold the values of the input properties of.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The getValue argument must be a function..
+   * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function..
    */
   this.getInputValues = function (getValue) {
     getValue = EnsureArgument.isMandatoryFunction(getValue,

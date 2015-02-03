@@ -14,8 +14,8 @@ var RuleSeverity = require('./rule-severity.js');
  * @param {string} propertyName - The name of the property the rule belongs to.
  * @param {string} message - Human-readable description of the reason of the failure.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 var ResultBase = function (ruleName, propertyName, message) {
 

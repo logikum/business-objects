@@ -45,9 +45,9 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  * @param {bo.shared.ExtensionManagerSync} extensions - The customization of the model.
  * @returns {CommandObjectSync} The constructor of a synchronous command object model.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The properties must be a PropertyManager object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The rules must be a RuleManager object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
  */
 var CommandObjectSyncFactory = function(properties, rules, extensions) {
 

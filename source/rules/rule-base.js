@@ -1,7 +1,7 @@
 'use strict';
 
 var EnsureArgument = require('../shared/ensure-argument.js');
-var ArgumentError = require('../shared/argument-error.js');
+var ArgumentError = require('../system/argument-error.js');
 var NotImplementedError = require('../system/not-implemented-error.js');
 
 /**
@@ -14,7 +14,7 @@ var NotImplementedError = require('../system/not-implemented-error.js');
  * @constructor
  * @param {string} ruleName - The name of the rule.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
  */
 var RuleBase = function (ruleName) {
 
@@ -63,7 +63,7 @@ var RuleBase = function (ruleName) {
  * @param {number} [priority=10] - The priority of the rule.
  * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 RuleBase.prototype.initialize = function () {
 

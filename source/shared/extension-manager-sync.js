@@ -17,8 +17,8 @@ var ExtensionManagerBase = require('./extension-manager-base.js');
  *
  * @extends bo.shared.ExtensionManagerBase
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The data source must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The model path must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The data source must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The model path must be a non-empty string.
  */
 function ExtensionManagerSync(dataSource, modelPath) {
   ExtensionManagerBase.call(this, dataSource, modelPath, 1);

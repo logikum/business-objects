@@ -18,7 +18,7 @@ var ModelError = require('./shared/model-error.js');
  * @param {ReadOnlyChildModel} itemType - The model type of the collection items.
  * @returns {ReadOnlyChildCollection} The constructor of an asynchronous read-only child collection.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The collection name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
  * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModel.
  */
 var ReadOnlyChildCollectionFactory = function(name, itemType) {

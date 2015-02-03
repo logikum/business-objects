@@ -21,7 +21,6 @@ var EnsureArgument = require('./ensure-argument.js');
 var Enumeration = require('./enumeration.js');
 var PropertyFlag = require('./property-flag.js');
 
-var ArgumentError = require('./argument-error.js');
 var ConfigurationError = require('./configuration-error.js');
 var DataPortalError = require('./data-portal-error.js');
 var ModelError = require('./model-error.js');
@@ -64,8 +63,6 @@ var ModelError = require('./model-error.js');
  * @property {function} PropertyFlag - {@link bo.shared.PropertyFlag Property flag}
  *      constructor to create new flag set for a property definition.
  *
- * @property {function} ArgumentError - {@link bo.shared.ArgumentError Argument error}
- *      constructor to create a new error related to an argument.
  * @property {function} ConfigurationError - {@link bo.shared.ConfigurationError Configuration error}
  *      constructor to create a new error related to configuration.
  * @property {function} DataPortalError - {@link bo.shared.DataPortalError Data portal error}
@@ -100,7 +97,6 @@ var index = {
   Enumeration: Enumeration,
   PropertyFlag: PropertyFlag,
 
-  ArgumentError: ArgumentError,
   ConfigurationError: ConfigurationError,
   DataPortalError: DataPortalError,
   ModelError: ModelError

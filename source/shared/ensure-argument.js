@@ -1,6 +1,6 @@
 'use strict';
 
-var ArgumentError = require('./argument-error.js');
+var ArgumentError = require('./../system/argument-error.js');
 var t = require('../locales/i18n-bo.js')('ArgumentError');
 
 //region Helper methods
@@ -44,7 +44,7 @@ var EnsureArgument = function () {};
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {*} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: TThe argument must be supplied.
+ * @throws {@link bo.system.ArgumentError Argument error}: TThe argument must be supplied.
  */
 EnsureArgument.isDefined = function (value, message) {
   if (value === undefined)
@@ -61,7 +61,7 @@ EnsureArgument.isDefined = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {*} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument is required.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument is required.
  */
 EnsureArgument.hasValue = function (value, message) {
   if (value === null || value === undefined)
@@ -82,7 +82,7 @@ EnsureArgument.hasValue = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {string} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a string value.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a string value.
  */
 EnsureArgument.isString = function (value, message) {
   if (typeof value !== 'string' && !(value instanceof String))
@@ -99,7 +99,7 @@ EnsureArgument.isString = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(string|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a string value or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a string value or null.
  */
 EnsureArgument.isOptionalString = function (value, message) {
   if (value === undefined)
@@ -118,7 +118,7 @@ EnsureArgument.isOptionalString = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {string} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a non-empty string.
  */
 EnsureArgument.isMandatoryString = function (value, message) {
   if (typeof value !== 'string' && !(value instanceof String) || value.trim().length === 0)
@@ -139,7 +139,7 @@ EnsureArgument.isMandatoryString = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(number|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a number value or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a number value or null.
  */
 EnsureArgument.isOptionalNumber = function (value, message) {
   if (value === undefined)
@@ -158,7 +158,7 @@ EnsureArgument.isOptionalNumber = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {number} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a number value.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a number value.
  */
 EnsureArgument.isMandatoryNumber = function (value, message) {
   if (typeof value !== 'number' && !(value instanceof Number))
@@ -179,7 +179,7 @@ EnsureArgument.isMandatoryNumber = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(number|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be an integer value or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an integer value or null.
  */
 EnsureArgument.isOptionalInteger = function (value, message) {
   if (value === undefined)
@@ -198,7 +198,7 @@ EnsureArgument.isOptionalInteger = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {number} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be an integer value.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an integer value.
  */
 EnsureArgument.isMandatoryInteger = function (value, message) {
   if (typeof value !== 'number' && !(value instanceof Number) || value % 1 !== 0)
@@ -219,7 +219,7 @@ EnsureArgument.isMandatoryInteger = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(boolean|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a Boolean value or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a Boolean value or null.
  */
 EnsureArgument.isOptionalBoolean = function (value, message) {
   if (value === undefined)
@@ -238,7 +238,7 @@ EnsureArgument.isOptionalBoolean = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {boolean} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a Boolean value.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a Boolean value.
  */
 EnsureArgument.isMandatoryBoolean = function (value, message) {
   if (typeof value !== 'boolean' && !(value instanceof Boolean))
@@ -259,7 +259,7 @@ EnsureArgument.isMandatoryBoolean = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(object|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be an object or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an object or null.
  */
 EnsureArgument.isOptionalObject = function (value, message) {
   if (value === undefined)
@@ -278,7 +278,7 @@ EnsureArgument.isOptionalObject = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {object} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be an object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an object.
  */
 EnsureArgument.isMandatoryObject = function (value, message) {
   if (typeof value !== 'object' || value === null)
@@ -299,7 +299,7 @@ EnsureArgument.isMandatoryObject = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(function|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a function or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a function or null.
  */
 EnsureArgument.isOptionalFunction = function (value, message) {
   if (value === undefined)
@@ -318,7 +318,7 @@ EnsureArgument.isOptionalFunction = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {function} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a function.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a function.
  */
 EnsureArgument.isMandatoryFunction = function (value, message) {
   if (typeof value !== 'function')
@@ -340,7 +340,7 @@ EnsureArgument.isMandatoryFunction = function (value, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(object|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a TYPE object or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a TYPE object or null.
  */
 EnsureArgument.isOptionalType = function (value, type, message) {
   if (value === undefined)
@@ -363,7 +363,7 @@ EnsureArgument.isOptionalType = function (value, type, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {object} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a TYPE object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a TYPE object.
  */
 EnsureArgument.isMandatoryType = function (value, type, message) {
   var types = type instanceof Array ? type : [ type ];
@@ -388,7 +388,7 @@ EnsureArgument.isMandatoryType = function (value, type, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(object|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be a model type.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a model type.
  */
 EnsureArgument.isModelType = function (value, model, message) {
   var models = model instanceof Array ? model : [ model ];
@@ -414,8 +414,8 @@ EnsureArgument.isModelType = function (value, model, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {number} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: Type is not an enumeration type.
- * @throws {@link bo.shared.ArgumentError Argument error}: The argument must be an enumeration type item.
+ * @throws {@link bo.system.ArgumentError Argument error}: Type is not an enumeration type.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an enumeration type item.
  */
 EnsureArgument.isEnumMember = function (value, type, defaultValue, message) {
   if (!(type && type.hasMember && type.constructor &&
@@ -442,9 +442,9 @@ EnsureArgument.isEnumMember = function (value, type, defaultValue, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(Array.<type>|null)} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}:
+ * @throws {@link bo.system.ArgumentError Argument error}:
  *      The argument must be an array of TYPE values, or a single TYPE values or null.
- * @throws {@link bo.shared.ArgumentError Argument error}:
+ * @throws {@link bo.system.ArgumentError Argument error}:
  *      The argument must be an array of TYPE objects, or a single TYPE object or null.
  */
 EnsureArgument.isOptionalArray = function (value, type, message) {
@@ -481,9 +481,9 @@ EnsureArgument.isOptionalArray = function (value, type, message) {
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {Array.<type>} The checked value.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}:
+ * @throws {@link bo.system.ArgumentError Argument error}:
  *      The argument must be an array of TYPE values, or a single TYPE values or null.
- * @throws {@link bo.shared.ArgumentError Argument error}:
+ * @throws {@link bo.system.ArgumentError Argument error}:
  *      The argument must be an array of TYPE objects, or a single TYPE object or null.
  */
 EnsureArgument.isMandatoryArray = function (value, type, message) {

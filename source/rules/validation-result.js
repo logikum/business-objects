@@ -16,9 +16,9 @@ var ResultBase = require('./result-base.js');
  *
  * @extends bo.rules.ResultBase
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The property name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function ValidationResult(ruleName, propertyName, message) {
 

@@ -21,7 +21,6 @@ var EnsureArgument = require('../../source/shared/ensure-argument.js');
 var Enumeration = require('../../source/shared/enumeration.js');
 var PropertyFlag = require('../../source/shared/property-flag.js');
 
-var ArgumentError = require('../../source/shared/argument-error.js');
 var ConfigurationError = require('../../source/shared/configuration-error.js');
 var DataPortalError = require('../../source/shared/data-portal-error.js');
 var ModelError = require('../../source/shared/model-error.js');
@@ -56,7 +55,6 @@ describe('Shared component index', function () {
     expect(new shared.Enumeration('item')).toEqual(jasmine.any(Enumeration));
     expect(shared.PropertyFlag).toBe(PropertyFlag);
 
-    expect(new shared.ArgumentError('message')).toEqual(jasmine.any(ArgumentError));
     expect(new shared.ConfigurationError('message')).toEqual(jasmine.any(ConfigurationError));
     expect(new shared.DataPortalError('type', 'name', 0, {})).toEqual(jasmine.any(DataPortalError));
     expect(new shared.ModelError('message')).toEqual(jasmine.any(ModelError));

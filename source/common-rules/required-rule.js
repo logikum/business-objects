@@ -17,8 +17,8 @@ var ValidationRule = require('../rules/validation-rule.js');
  *
  * @extends bo.rules.ValidationRule
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function RequiredRule(primaryProperty, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'Required');

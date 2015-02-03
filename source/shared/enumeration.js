@@ -45,7 +45,7 @@ Enumeration.prototype.count = function () {
  * @param {number} value - The enumeration item that name to be returned of.
  * @returns {string} The name of the enumeration item.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The value must be a number.
+ * @throws {@link bo.system.ArgumentError Argument error}: The value must be a number.
  * @throws {@link bo.system.EnumerationError Enumeration error}: The passed value is not an enumeration item.
  */
 Enumeration.prototype.getName = function (value) {
@@ -68,7 +68,7 @@ Enumeration.prototype.getName = function (value) {
  * @param {string} name - The enumeration item that value to be returned of.
  * @returns {number} The value of the enumeration item.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
  * @throws {@link bo.system.EnumerationError Enumeration error}: The passed name is not an enumeration item.
  */
 Enumeration.prototype.getValue = function (name) {

@@ -19,9 +19,9 @@ var t = require('../locales/i18n-bo.js')('DataPortalError');
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The model type must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The model name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The action must be a DataPortalAction object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The model type must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The action must be a DataPortalAction object.
  */
 function DataPortalError(modeltype, modelName, action, interceptedError) {
   Error.call(this);

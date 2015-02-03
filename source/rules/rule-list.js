@@ -20,8 +20,8 @@ function RuleList() {
    * @param {string} id - The identifier of the rule list, typically the property name.
    * @param {(bo.rules.ValidationRule|bo.rules.AuthorizationRule)} rule - A validation or authorization rule.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The identifier must be a non-empty string.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The rule must be a ValidationRule or AuthorizationRule object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The identifier must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a ValidationRule or AuthorizationRule object.
    */
   this.add = function (id, rule) {
 

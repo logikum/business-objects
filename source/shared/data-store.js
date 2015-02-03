@@ -22,8 +22,8 @@ function DataStore() {
    * @param {bo.shared.PropertyInfo} property - The definition of the model property.
    * @param {*} value - The default value of the property (null or a child model).
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The property must be a PropertyInfo object.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The value must be null, a model or a collection.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The value must be null, a model or a collection.
    */
   this.initValue = function (property, value) {
 
@@ -41,7 +41,7 @@ function DataStore() {
    * @param {bo.shared.PropertyInfo} property - The definition of the model property.
    * @returns {*} The current value of the property.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
    */
   this.getValue = function (property) {
 
@@ -58,8 +58,8 @@ function DataStore() {
    * @param {*} value - The new value of the property.
    * @returns {boolean} True if the value of the property has been changed, false otherwise.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The property must be a PropertyInfo object.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The value must be defined.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The value must be defined.
    */
   this.setValue = function (property, value) {
 

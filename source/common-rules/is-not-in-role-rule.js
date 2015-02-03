@@ -21,12 +21,12 @@ var UserInfo = require('../shared/user-info.js');
  *
  * @extends bo.rules.AuthorizationRule
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The action must be a AuthorizationAction item.
- * @throws {@link bo.shared.ArgumentError Argument error}: The target must be a PropertyInfo object in case of property read or write.
- * @throws {@link bo.shared.ArgumentError Argument error}: The target must be a non-empty string in case of method execution.
- * @throws {@link bo.shared.ArgumentError Argument error}: The target must be null in case of model actions.
- * @throws {@link bo.shared.ArgumentError Argument error}: The role must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The action must be a AuthorizationAction item.
+ * @throws {@link bo.system.ArgumentError Argument error}: The target must be a PropertyInfo object in case of property read or write.
+ * @throws {@link bo.system.ArgumentError Argument error}: The target must be a non-empty string in case of method execution.
+ * @throws {@link bo.system.ArgumentError Argument error}: The target must be null in case of model actions.
+ * @throws {@link bo.system.ArgumentError Argument error}: The role must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function IsNotInRoleRule(action, target, role, message, priority, stopsProcessing) {
   AuthorizationRule.call(this, 'IsNotInRole');

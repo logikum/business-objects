@@ -7,7 +7,7 @@ var t = require('../locales/i18n-bo.js')('ArgumentError');
  * @classdesc Represents an argument error.
  * @description Creates an argument error object.
  *
- * @memberof bo.shared
+ * @memberof bo.system
  * @constructor
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.

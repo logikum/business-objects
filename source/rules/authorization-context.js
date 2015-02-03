@@ -22,9 +22,9 @@ var AuthorizationAction = require('./authorization-action.js');
  * @param {string} [targetName] - Eventual parameter of the authorization action.
  * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The action must be an AuthorizationAction item.
- * @throws {@link bo.shared.ArgumentError Argument error}: The target name must be a string value.
- * @throws {@link bo.shared.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The action must be an AuthorizationAction item.
+ * @throws {@link bo.system.ArgumentError Argument error}: The target name must be a string value.
+ * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
 function AuthorizationContext(action, targetName, brokenRules) {
 

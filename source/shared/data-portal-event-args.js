@@ -21,10 +21,10 @@ var DataPortalError = require('./data-portal-error.js');
  * @param {string} [methodName] - The name of the data access object method called.
  * @param {bo.shared.DataPortalError} error - The eventual error occurred in data portal action.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The model name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The action must be an DataPortalAction item.
- * @throws {@link bo.shared.ArgumentError Argument error}: The method name must be a string value.
- * @throws {@link bo.shared.ArgumentError Argument error}: The error must be a DataPortalError object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The action must be an DataPortalAction item.
+ * @throws {@link bo.system.ArgumentError Argument error}: The method name must be a string value.
+ * @throws {@link bo.system.ArgumentError Argument error}: The error must be a DataPortalError object.
  */
 function DataPortalEventArgs (modelName, action, methodName, error) {
 

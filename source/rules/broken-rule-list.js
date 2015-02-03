@@ -14,7 +14,7 @@ var RuleSeverity = require('./rule-severity.js');
  * @constructor
  * @param {string} modelName - The name of the model.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The model name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
  */
 var BrokenRuleList = function (modelName) {
 
@@ -29,7 +29,7 @@ var BrokenRuleList = function (modelName) {
    *
    * @param {bo.rules.BrokenRule} brokenRule - A broken rule to add.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The rule must be a BrokenRule object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a BrokenRule object.
    */
   this.add = function (brokenRule) {
     brokenRule = EnsureArgument.isMandatoryType(brokenRule, BrokenRule,
@@ -119,7 +119,7 @@ var BrokenRuleList = function (modelName) {
    * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
    * @returns {bo.rules.BrokenRulesOutput} The response object to send.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The namespace must be a string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The namespace must be a string.
    */
   this.output = function (namespace) {
 

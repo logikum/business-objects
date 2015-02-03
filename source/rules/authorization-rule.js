@@ -2,7 +2,7 @@
 
 var util = require('util');
 var EnsureArgument = require('../shared/ensure-argument.js');
-var ArgumentError = require('../shared/argument-error.js');
+var ArgumentError = require('../system/argument-error.js');
 var PropertyInfo = require('../shared/property-info.js');
 var RuleBase = require('./rule-base.js');
 var RuleSeverity = require('./rule-severity.js');
@@ -25,7 +25,7 @@ var NoAccessBehavior = require('./no-access-behavior.js');
  *
  * @extends bo.rules.RuleBase
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The rule name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
  */
 function AuthorizationRule(ruleName) {
   RuleBase.call(this, ruleName);
@@ -68,11 +68,11 @@ function AuthorizationRule(ruleName) {
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The action must be a AuthorizationAction item.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The target must be a PropertyInfo object in case of property read or write.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The target must be a non-empty string in case of method execution.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The target must be null in case of model actions.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The action must be a AuthorizationAction item.
+   * @throws {@link bo.system.ArgumentError Argument error}: The target must be a PropertyInfo object in case of property read or write.
+   * @throws {@link bo.system.ArgumentError Argument error}: The target must be a non-empty string in case of method execution.
+   * @throws {@link bo.system.ArgumentError Argument error}: The target must be null in case of model actions.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
   this.initialize = function (action, target, message, priority, stopsProcessing) {
 

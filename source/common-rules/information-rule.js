@@ -18,8 +18,8 @@ var RuleSeverity = require('../rules/rule-severity.js');
  *
  * @extends bo.rules.ValidationRule
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 function InformationRule(primaryProperty, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'Information');

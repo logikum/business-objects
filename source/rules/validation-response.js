@@ -19,7 +19,7 @@ var RuleSeverity = require('./rule-severity.js');
  * @param {string} [message] - Human-readable description of the reason of the failure.
  * @constructor
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The message must be a string value.
+ * @throws {@link bo.system.ArgumentError Argument error}: The message must be a string value.
  */
 function ValidationResponse(brokenRules, message) {
 

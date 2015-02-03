@@ -1,6 +1,6 @@
 console.log('Testing shared/argument-error.js...');
 
-var ArgumentError = require('../../source/shared/argument-error.js');
+var ArgumentError = require('../../source/system/argument-error.js');
 
 describe('Argument error', function() {
 

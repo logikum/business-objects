@@ -11,7 +11,7 @@ var NotImplementedError = require('./../system/not-implemented-error.js');
  * @constructor
  * @param {string} [userCode] - The identifier of the user.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The userCode must be a string or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The userCode must be a string or null.
  */
 function UserInfo (userCode) {
 

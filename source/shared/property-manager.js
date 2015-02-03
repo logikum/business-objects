@@ -1,7 +1,7 @@
 'use strict';
 
 var EnsureArgument = require('./ensure-argument.js');
-var ArgumentError = require('./argument-error.js');
+var ArgumentError = require('./../system/argument-error.js');
 var PropertyInfo = require('./property-info.js');
 var DataType = require('../data-types/data-type.js');
 var ModelError = require('./model-error.js');
@@ -15,8 +15,8 @@ var ModelError = require('./model-error.js');
  * @param {string} name - The name of the business object model.
  * @param {...bo.shared.PropertyInfo} [property] - Description of a model property.
  *
- * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
- * @throws {@link bo.shared.ArgumentError Argument error}: The property must be PropertyInfo object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
  */
 function PropertyManager(name /*, property1, property2 [, ...] */) {
 
@@ -49,7 +49,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    *
    * @param {bo.shared.PropertyInfo} property - Description of the model property to add.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The property must be PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
    * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.
    */
   this.add = function (property) {
@@ -79,9 +79,9 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @returns {bo.shared.PropertyInfo} The definition of the property.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The type must be a data type, a model or a collection.
-   * @throws {@link bo.shared.ArgumentError Argument error}: The flags must be PropertyFlag items.
+   * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The type must be a data type, a model or a collection.
+   * @throws {@link bo.system.ArgumentError Argument error}: The flags must be PropertyFlag items.
    * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.
    */
   this.create = function (name, type, flags) {
@@ -101,7 +101,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * @param {bo.shared.PropertyInfo} property - Property definition to be checked.
    * @returns {boolean} True if the model contains the property, otherwise false.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The property must be PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
    */
   this.contains = function (property) {
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
@@ -120,7 +120,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    * @param {...*} [messageParams] - Optional interpolation parameters of the message.
    * @returns {bo.shared.PropertyInfo} The requested property definition.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    */
   this.getByName = function (name, message) {
     name = EnsureArgument.isMandatoryString(name,
@@ -222,7 +222,7 @@ function PropertyManager(name /*, property1, property2 [, ...] */) {
    *
    * @param {Array.<string>} allowedTypes - The names of the model types of the allowed child models.
    *
-   * @throws {@link bo.shared.ArgumentError Argument error}: The allowed types must be
+   * @throws {@link bo.system.ArgumentError Argument error}: The allowed types must be
    *      an array of string values or a single string value.
    * @throws {@link bo.shared.ModelError Model error}: The type of a model property
    *      should be an allowed type.
