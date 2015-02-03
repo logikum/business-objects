@@ -2,7 +2,7 @@
 
 var EnsureArgument = require('../shared/ensure-argument.js');
 var ArgumentError = require('../shared/argument-error.js');
-var NotImplementedError = require('../shared/not-implemented-error.js');
+var NotImplementedError = require('../system/not-implemented-error.js');
 
 /**
  * @classdesc Serves as the base class for rules.
@@ -99,7 +99,7 @@ RuleBase.prototype.initialize = function () {
  * @function bo.rules.RuleBase#execute
  * @param {Array.<*>} inputs - An array of the values of the required properties.
  *
- * @throws {@link bo.shared.NotImplementedError Not implemented error}: The Rule.execute method is not implemented.
+ * @throws {@link bo.system.NotImplementedError Not implemented error}: The Rule.execute method is not implemented.
  */
 RuleBase.prototype.execute = function (inputs) {
   throw new NotImplementedError('method', 'Rule', 'execute');
@@ -114,7 +114,7 @@ RuleBase.prototype.execute = function (inputs) {
  * @param {bo.rules.RuleSeverity} [severity] - The severity of the rule failure.
  * @returns {object} An object that describes the result of the rule checking.
  *
- * @throws {@link bo.shared.NotImplementedError Not implemented error}: The Rule.result method is not implemented.
+ * @throws {@link bo.system.NotImplementedError Not implemented error}: The Rule.result method is not implemented.
  */
 RuleBase.prototype.result = function (message, severity) {
   throw new NotImplementedError('method', 'Rule', 'result');

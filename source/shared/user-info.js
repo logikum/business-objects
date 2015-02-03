@@ -1,7 +1,7 @@
 'use strict';
 
 var EnsureArgument = require('./ensure-argument.js');
-var NotImplementedError = require('./not-implemented-error.js');
+var NotImplementedError = require('./../system/not-implemented-error.js');
 
 /**
  * @classdesc Serves as the base class for user information object.
@@ -41,7 +41,7 @@ function UserInfo (userCode) {
  * @param {strng} role - The name of the role.
  * @returns {boolean} True if the user is a member of the role, otherwise false.
  *
- * @throws {@link bo.shared.NotImplementedError Not implemented error}: The UserInfo.isInRole method is not implemented.
+ * @throws {@link bo.system.NotImplementedError Not implemented error}: The UserInfo.isInRole method is not implemented.
  */
 UserInfo.prototype.isInRole = function (role) {
   throw new NotImplementedError('method', 'UserInfo', 'isInRole');

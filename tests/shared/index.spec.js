@@ -27,7 +27,6 @@ var ConfigurationError = require('../../source/shared/configuration-error.js');
 var DataPortalError = require('../../source/shared/data-portal-error.js');
 var EnumerationError = require('../../source/shared/enumeration-error.js');
 var ModelError = require('../../source/shared/model-error.js');
-var NotImplementedError = require('../../source/shared/not-implemented-error.js');
 
 describe('Shared component index', function () {
   var dao = {};
@@ -64,6 +63,5 @@ describe('Shared component index', function () {
     expect(new shared.DataPortalError('type', 'name', 0, {})).toEqual(jasmine.any(DataPortalError));
     expect(new shared.EnumerationError('message')).toEqual(jasmine.any(EnumerationError));
     expect(new shared.ModelError('message')).toEqual(jasmine.any(ModelError));
-    expect(new shared.NotImplementedError('message')).toEqual(jasmine.any(NotImplementedError));
   });
 });

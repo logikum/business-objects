@@ -1,6 +1,6 @@
 'use strict';
 
-var NotImplementedError = require('../shared/not-implemented-error.js');
+var NotImplementedError = require('../system/not-implemented-error.js');
 
 /**
  * @classdesc
@@ -32,7 +32,7 @@ function DataType (name) {
  * @function bo.dataTypes.DataType#check
  * @param {?*} value - The value to check.
  *
- * @throws {@link bo.shared.NotImplementedError Not implemented error}: The DataType.check method is not implemented.
+ * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.check method is not implemented.
  */
 DataType.prototype.check = function (value) {
   throw new NotImplementedError('method', 'DataType', 'check');
@@ -47,7 +47,7 @@ DataType.prototype.check = function (value) {
  * @param {!*} value - The value to check.
  * @returns {boolean} True if the value is the defined data type and not null, otherwise false.
  *
- * @throws {@link bo.shared.NotImplementedError Not implemented error}: The DataType.hasValue method is not implemented.
+ * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.hasValue method is not implemented.
  */
 DataType.prototype.hasValue = function (value) {
   throw new NotImplementedError('method', 'DataType', 'hasValue');

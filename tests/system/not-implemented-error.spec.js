@@ -1,6 +1,6 @@
 console.log('Testing shared/not-implemented-error.js...');
 
-var NotImplementedError = require('../../source/shared/not-implemented-error.js');
+var NotImplementedError = require('../../source/system/not-implemented-error.js');
 
 describe('Not implemented error', function() {
 

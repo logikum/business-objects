@@ -27,7 +27,6 @@ var ConfigurationError = require('./configuration-error.js');
 var DataPortalError = require('./data-portal-error.js');
 var EnumerationError = require('./enumeration-error.js');
 var ModelError = require('./model-error.js');
-var NotImplementedError = require('./not-implemented-error.js');
 
 /**
  * Contains components used by models, collections and other components.
@@ -77,8 +76,6 @@ var NotImplementedError = require('./not-implemented-error.js');
  *      constructor to create a new error related to an enumeration.
  * @property {function} ModelError - {@link bo.shared.ModelError Model error}
  *      constructor to create a new error related to a model.
- * @property {function} NotImplementedError - {@link bo.shared.NotImplementedError Not implemented error}
- *      constructor to create a new error related to a not implemented function.
  */
 var index = {
   PropertyInfo: PropertyInfo,
@@ -112,8 +109,7 @@ var index = {
   ConfigurationError: ConfigurationError,
   DataPortalError: DataPortalError,
   EnumerationError: EnumerationError,
-  ModelError: ModelError,
-  NotImplementedError: NotImplementedError
+  ModelError: ModelError
 };
 
 // Immutable object.
