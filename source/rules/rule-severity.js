@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var Enumeration = require('../shared/enumeration.js');
+var Enumeration = require('../system/enumeration.js');
 
 /**
  * @classdesc Specifies the severity of a rule failure.
@@ -10,7 +10,7 @@ var Enumeration = require('../shared/enumeration.js');
  * @memberof bo.rules
  * @constructor
  *
- * @extends bo.shared.Enumeration
+ * @extends bo.system.Enumeration
  */
 function RuleSeverity() {
   Enumeration.call(this);

@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var Enumeration = require('../shared/enumeration.js');
+var Enumeration = require('../system/enumeration.js');
 
 /**
  * @classdesc
@@ -18,7 +18,7 @@ var Enumeration = require('../shared/enumeration.js');
  * @memberof bo.rules
  * @constructor
  *
- * @extends bo.shared.Enumeration
+ * @extends bo.system.Enumeration
  */
 function NoAccessBehavior() {
   Enumeration.call(this);

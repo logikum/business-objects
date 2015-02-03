@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var Enumeration = require('./enumeration.js');
+var Enumeration = require('./../system/enumeration.js');
 
 /**
  * @classdesc Specifies the state of a model instance.
@@ -10,7 +10,7 @@ var Enumeration = require('./enumeration.js');
  * @memberof bo.shared
  * @constructor
  *
- * @extends bo.shared.Enumeration
+ * @extends bo.system.Enumeration
  */
 function ModelState() {
   Enumeration.call(this);

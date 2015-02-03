@@ -4,6 +4,7 @@ var ArgumentError = require('./../system/argument-error.js');
 var EnumerationError = require('./../system/enumeration-error.js');
 var NotImplementedError = require('./not-implemented-error.js');
 
+var Enumeration = require('./../system/enumeration.js');
 var UserInfo = require('./../system/user-info.js');
 var Utility = require('./utility.js');
 
@@ -19,6 +20,8 @@ var Utility = require('./utility.js');
  * @property {function} NotImplementedError - {@link bo.system.NotImplementedError Not implemented error}
  *      constructor to create a new error related to a not implemented function.
  *
+ * @property {function} Enumeration - {@link bo.system.Enumeration Enumeration}
+ *      constructor to create new enumeration.
  * @property {function} UserInfo - {@link bo.system.UserInfo User data}
  *      constructor to create new base object for user information.
  * @property {function} Utility - {@link bo.system.Utility Utility}
@@ -29,6 +32,7 @@ var index = {
   EnumerationError: EnumerationError,
   NotImplementedError: NotImplementedError,
 
+  Enumeration: Enumeration,
   UserInfo: UserInfo,
   Utility: Utility
 };

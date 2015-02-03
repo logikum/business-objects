@@ -5,7 +5,7 @@
 var util = require('util');
 var config = require('./shared/configuration-reader.js');
 var EnsureArgument = require('./shared/ensure-argument.js');
-var Enumeration = require('./shared/enumeration.js');
+var Enumeration = require('./system/enumeration.js');
 
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');

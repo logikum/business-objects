@@ -24,7 +24,7 @@ var BrokenRulesOutput = require('../../source/rules/broken-rules-output.js');
 var BrokenRuleList = require('../../source/rules/broken-rule-list.js');
 var BrokenRule = require('../../source/rules/broken-rule.js');
 
-var Enumeration = require('../../source/shared/enumeration.js');
+var Enumeration = require('../../source/system/enumeration.js');
 
 describe('Rule component index', function () {
   function getProperty () { }

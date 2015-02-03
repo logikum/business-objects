@@ -2,7 +2,7 @@ console.log('Testing shared/ensure-argument.js...');
 
 var util = require('util');
 var EnsureArgument = require('../../source/shared/ensure-argument.js');
-var Enumeration = require('../../source/shared/enumeration.js');
+var Enumeration = require('../../source/system/enumeration.js');
 var ModelBase = require('../../source/model-base.js');
 
 var ClearScheduleCommand = require('../../sample/sync/clear-schedule-command.js');

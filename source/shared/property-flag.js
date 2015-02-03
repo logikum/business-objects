@@ -9,7 +9,7 @@
  * @memberof bo.shared
  * @constructor
  *
- * @extends bo.shared.Enumeration
+ * @extends bo.system.Enumeration
  */
 function PropertyFlag() {
 

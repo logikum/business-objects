@@ -1,7 +1,7 @@
 console.log('Testing shared/enumeration.js...');
 
 var util = require('util');
-var Enumeration = require('../../source/shared/enumeration.js');
+var Enumeration = require('../../source/system/enumeration.js');
 
 //region Test enumerations
 

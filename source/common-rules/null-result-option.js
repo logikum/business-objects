@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var Enumeration = require('../shared/enumeration.js');
+var Enumeration = require('../system/enumeration.js');
 
 /**
  * @classdesc Represents the eligible actions when
@@ -12,7 +12,7 @@ var Enumeration = require('../shared/enumeration.js');
  * @memberof bo.commonRules
  * @constructor
  *
- * @extends bo.shared.Enumeration
+ * @extends bo.system.Enumeration
  */
 function NullResultOption() {
   Enumeration.call(this);

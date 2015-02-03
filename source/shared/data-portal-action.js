@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var Enumeration = require('./enumeration.js');
+var Enumeration = require('./../system/enumeration.js');
 
 /**
  * @classdesc
@@ -19,7 +19,7 @@ var Enumeration = require('./enumeration.js');
  * @memberof bo.shared
  * @constructor
  *
- * @extends bo.shared.Enumeration
+ * @extends bo.system.Enumeration
  */
 function DataPortalAction() {
   Enumeration.call(this);

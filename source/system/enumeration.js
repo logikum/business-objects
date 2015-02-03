@@ -1,7 +1,7 @@
 'use strict';
 
-var EnsureArgument = require('./ensure-argument.js');
-var EnumerationError = require('./../system/enumeration-error.js');
+var EnsureArgument = require('./../shared/ensure-argument.js');
+var EnumerationError = require('./enumeration-error.js');
 
 /**
  * @classdesc
@@ -10,7 +10,7 @@ var EnumerationError = require('./../system/enumeration-error.js');
  *      Creates a new enumeration.
  *      The enumeration instances should be frozen.
  *
- * @memberof bo.shared
+ * @memberof bo.system
  * @constructor
  */
 function Enumeration () {
@@ -25,7 +25,7 @@ function Enumeration () {
 /**
  * Returns the count of the items in enumeration.
  *
- * @function bo.shared.Enumeration#count
+ * @function bo.system.Enumeration#count
  * @returns {number} The count of the enumeration items.
  */
 Enumeration.prototype.count = function () {
@@ -41,7 +41,7 @@ Enumeration.prototype.count = function () {
 /**
  * Returns the name of an enumeration item.
  *
- * @function bo.shared.Enumeration#getName
+ * @function bo.system.Enumeration#getName
  * @param {number} value - The enumeration item that name to be returned of.
  * @returns {string} The name of the enumeration item.
  *
@@ -64,7 +64,7 @@ Enumeration.prototype.getName = function (value) {
 /**
  * Returns the value of an enumeration item.
  *
- * @function bo.shared.Enumeration#getValue
+ * @function bo.system.Enumeration#getValue
  * @param {string} name - The enumeration item that value to be returned of.
  * @returns {number} The value of the enumeration item.
  *
@@ -88,7 +88,7 @@ Enumeration.prototype.getValue = function (name) {
  * Checks whether the enumeration has an item with the given value.
  * If not, throws an error.
  *
- * @function bo.shared.Enumeration#check
+ * @function bo.system.Enumeration#check
  * @param {number} value - The value to check.
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
@@ -108,7 +108,7 @@ Enumeration.prototype.check = function (value, message) {
 /**
  * Determines if the enumeration has an item with the given value.
  *
- * @function bo.shared.Enumeration#hasMember
+ * @function bo.system.Enumeration#hasMember
  * @param {number} value - The value to check.
  * @returns {boolean} True if the value is an enumeration item, otherwise false.
  */
