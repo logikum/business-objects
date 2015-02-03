@@ -2,10 +2,10 @@
 
 var fs = require('fs');
 var path = require('path');
+var Utility = require('./../system/utility.js');
 var ConnectionManagerBase = require('../data-access/connection-manager-base.js');
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
-var Utility = require('./utility.js');
 var ConfigurationError = require('./configuration-error.js');
 var UserInfo = require('./user-info.js');
 

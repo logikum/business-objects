@@ -4,10 +4,10 @@ var fs = require('fs');
 var path = require('path');
 
 /**
- * @classdesc Provides utility methods for configuration and internationalization.
+ * @classdesc Provides static methods for configuration and internationalization.
  * @description Creates a new utility object.
  *
- * @memberof bo.shared
+ * @memberof bo.system
  * @constructor
  */
 var Utility = function () {};
@@ -15,7 +15,7 @@ var Utility = function () {};
 /**
  * Gets a function read from a file.
  *
- * @function bo.shared.Utility.getFunction
+ * @function bo.system.Utility.getFunction
  * @static
  * @param {string} relativePath - The relative path of the file to read.
  * @param {string} name - The name of the configuration item.
@@ -49,7 +49,7 @@ Utility.getFunction = function (relativePath, name, errorType) {
 /**
  * Gets the full path of a directory.
  *
- * @function bo.shared.Utility.getDirectory
+ * @function bo.system.Utility.getDirectory
  * @static
  * @param {string} relativePath - The relative path of the directory.
  * @param {string} name - The name of the configuration item.
@@ -77,7 +77,7 @@ Utility.getDirectory = function (relativePath, name, errorType) {
 /**
  * Checks if value is member of a given enumeration.
  *
- * @function bo.shared.Utility.isEnumMember
+ * @function bo.system.Utility.isEnumMember
  * @param {number} value - The value to check.
  * @param {constructor} enumType - The type of the enumeration.
  * @param {string} name - The name of the configuration item.
@@ -102,7 +102,7 @@ Utility.isEnumMember = function (value, enumType, name, errorType) {
 /**
  * Checks if value is a string or null.
  *
- * @function bo.shared.Utility.isOptionalString
+ * @function bo.system.Utility.isOptionalString
  * @param {(string|null)} [value=null] - The value to check.
  * @param {string} name - The name of the parameter.
  * @param {error} errorType - The type of the error to throw in case of failure.
@@ -124,7 +124,7 @@ Utility.isOptionalString = function (value, name, errorType) {
 /**
  * Checks if value is a non-empty string.
  *
- * @function bo.shared.Utility.isMandatoryString
+ * @function bo.system.Utility.isMandatoryString
  * @param {string} [value] - The value to check.
  * @param {string} name - The name of the parameter.
  * @param {error} errorType - The type of the error to throw in case of failure.

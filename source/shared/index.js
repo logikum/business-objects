@@ -20,7 +20,6 @@ var configuration = require('./configuration-reader.js');
 var EnsureArgument = require('./ensure-argument.js');
 var Enumeration = require('./enumeration.js');
 var PropertyFlag = require('./property-flag.js');
-//var Utility = require('./utility.js');
 
 var ArgumentError = require('./argument-error.js');
 var ConfigurationError = require('./configuration-error.js');
@@ -103,7 +102,6 @@ var index = {
   EnsureArgument: EnsureArgument,
   Enumeration: Enumeration,
   PropertyFlag: PropertyFlag,
-  //Utility: Utility,
 
   ArgumentError: ArgumentError,
   ConfigurationError: ConfigurationError,

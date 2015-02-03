@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var util = require('util');
-var Utility = require('../shared/utility.js');
+var Utility = require('../system/utility.js');
 
 var NEUTRAL = 'default';
 var NS_ROOT = '$default';

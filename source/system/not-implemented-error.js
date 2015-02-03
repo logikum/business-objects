@@ -7,7 +7,7 @@ var t = require('../locales/i18n-bo.js')('NotImplementedError');
  * @classdesc Represents an error of not implemented function.
  * @description Creates a not implemented error object.
  *
- * @memberof bo.shared
+ * @memberof bo.system
  * @constructor
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
