@@ -34,6 +34,8 @@ var DataPortalError = require('./shared/data-portal-error.js');
 var MODEL_STATE = require('./shared/model-state.js');
 var MODEL_DESC = 'Editable root model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
+var E_PRESAVE = DataPortalEvent.getName(DataPortalEvent.preSave);
+var E_POSTSAVE = DataPortalEvent.getName(DataPortalEvent.postSave);
 
 //endregion
 
@@ -394,6 +396,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     //region Data portal methods
 
+    //region Helper
+
     function getDataContext (connection) {
       if (!dataContext)
         dataContext = new DataPortalContext(
@@ -409,6 +413,10 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     function wrapError (action, error) {
       return new DataPortalError(MODEL_DESC, properties.name, action, error);
     }
+
+    //endregion
+
+    //region Create
 
     function data_create () {
       if (extensions.dataCreate || dao.$hasCreate()) {
@@ -457,6 +465,10 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
         }
       }
     }
+
+    //endregion
+
+    //region Fetch
 
     function data_fetch (filter, method) {
       // Check permissions.
@@ -511,6 +523,10 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
       }
     }
 
+    //endregion
+
+    //region Insert
+
     function data_insert () {
       // Check permissions.
       if (canDo(AuthorizationAction.createObject)) {
@@ -518,6 +534,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
           // Launch start event.
+          self.emit(E_PRESAVE, getEventArgs(DataPortalAction.insert), self);
           self.emit(
               DataPortalEvent.getName(DataPortalEvent.preInsert),
               getEventArgs(DataPortalAction.insert),
@@ -542,6 +559,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
               getEventArgs(DataPortalAction.insert),
               self
           );
+          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.insert), self);
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
@@ -554,6 +572,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
                 getEventArgs(DataPortalAction.insert, null, dpError),
                 self
             );
+            self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.insert, null, dpError), self);
           }
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
@@ -563,6 +582,10 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
       }
     }
 
+    //endregion
+
+    //region Update
+
     function data_update () {
       // Check permissions.
       if (canDo(AuthorizationAction.updateObject)) {
@@ -570,6 +593,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
           // Launch start event.
+          self.emit(E_PRESAVE, getEventArgs(DataPortalAction.update), self);
           self.emit(
               DataPortalEvent.getName(DataPortalEvent.preUpdate),
               getEventArgs(DataPortalAction.update),
@@ -594,6 +618,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
               getEventArgs(DataPortalAction.update),
               self
           );
+          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.update), self);
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
@@ -606,6 +631,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
                 getEventArgs(DataPortalAction.update, null, dpError),
                 self
             );
+            self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.update, null, dpError), self);
           }
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
@@ -615,6 +641,10 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
       }
     }
 
+    //endregion
+
+    //region Remove
+
     function data_remove () {
       // Check permissions.
       if (canDo(AuthorizationAction.removeObject)) {
@@ -622,6 +652,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
           // Launch start event.
+          self.emit(E_PRESAVE, getEventArgs(DataPortalAction.remove), self);
           self.emit(
               DataPortalEvent.getName(DataPortalEvent.preRemove),
               getEventArgs(DataPortalAction.remove),
@@ -645,6 +676,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
               getEventArgs(DataPortalAction.remove),
               self
           );
+          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.remove), self);
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
@@ -657,6 +689,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
                 getEventArgs(DataPortalAction.remove, null, dpError),
                 self
             );
+            self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.remove, null, dpError), self);
           }
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
@@ -665,6 +698,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
         }
       }
     }
+
+    //endregion
 
     //endregion
 

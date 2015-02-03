@@ -34,6 +34,8 @@ var DataPortalError = require('./shared/data-portal-error.js');
 var MODEL_STATE = require('./shared/model-state.js');
 var MODEL_DESC = 'Editable root model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
+var E_PRESAVE = DataPortalEvent.getName(DataPortalEvent.preSave);
+var E_POSTSAVE = DataPortalEvent.getName(DataPortalEvent.postSave);
 
 //endregion
 
@@ -419,6 +421,8 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     //region Data portal methods
 
+    //region Helper
+
     function getDataContext (connection) {
       if (!dataContext)
         dataContext = new DataPortalContext(
@@ -487,6 +491,10 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           });
     }
 
+    //endregion
+
+    //region Create
+
     function data_create (callback) {
       var hasConnection = false;
       // Helper callback for post-creation actions.
@@ -547,6 +555,10 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         runStatements(main, DataPortalAction.create, callback);
       }
     }
+
+    //endregion
+
+    //region Fetch
 
     function data_fetch (filter, method, callback) {
       var hasConnection = false;
@@ -619,6 +631,10 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         callback(null, self);
     }
 
+    //endregion
+
+    //region Insert
+
     function data_insert (callback) {
       var hasConnection = false;
       // Helper function for post-insert actions.
@@ -635,6 +651,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
                 getEventArgs(DataPortalAction.insert),
                 self
             );
+            self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.insert), self);
             cb(null, self);
           }
         });
@@ -649,6 +666,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
               getEventArgs(DataPortalAction.insert, null, dpError),
               self
           );
+          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.insert, null, dpError), self);
         }
         cb(err);
       }
@@ -656,6 +674,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       function main (connection, cb) {
         hasConnection = connection !== null;
         // Launch start event.
+        self.emit(E_PRESAVE, getEventArgs(DataPortalAction.insert), self);
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preInsert),
             getEventArgs(DataPortalAction.insert),
@@ -690,6 +709,10 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         callback(null, self);
     }
 
+    //endregion
+
+    //region Update
+
     function data_update (callback) {
       var hasConnection = false;
       // Helper function for post-update actions.
@@ -706,6 +729,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
                 getEventArgs(DataPortalAction.update),
                 self
             );
+            self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.update), self);
             cb(null, self);
           }
         });
@@ -720,6 +744,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
               getEventArgs(DataPortalAction.update, null, dpError),
               self
           );
+          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.update, null, dpError), self);
         }
         cb(err);
       }
@@ -727,6 +752,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       function main (connection, cb) {
         hasConnection = connection !== null;
         // Launch start event.
+        self.emit(E_PRESAVE, getEventArgs(DataPortalAction.update), self);
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preUpdate),
             getEventArgs(DataPortalAction.update),
@@ -764,6 +790,10 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         callback(null, self);
     }
 
+    //endregion
+
+    //region Remove
+
     function data_remove (callback) {
       var hasConnection = false;
       // Helper callback for post-removal actions.
@@ -775,6 +805,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
             getEventArgs(DataPortalAction.remove),
             self
         );
+        self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.remove), self);
         cb(null, null);
       }
       // Helper callback for failure.
@@ -787,6 +818,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
               getEventArgs(DataPortalAction.remove, null, dpError),
               self
           );
+          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.remove, null, dpError), self);
         }
         cb(err);
       }
@@ -794,6 +826,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       function main (connection, cb) {
         hasConnection = connection !== null;
         // Launch start event.
+        self.emit(E_PRESAVE, getEventArgs(DataPortalAction.remove), self);
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preRemove),
             getEventArgs(DataPortalAction.remove),
@@ -832,6 +865,8 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       else
         callback(null, null);
     }
+
+    //endregion
 
     //endregion
 

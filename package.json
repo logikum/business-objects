@@ -1,6 +1,6 @@
 {
   "name": "business-objects",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A software development framework that helps you build a reusable, maintainable object-oriented business layer for your app.",
   "keywords": [
     "business objects"
