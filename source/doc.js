@@ -12,7 +12,17 @@ var external = {
    * @param {error} err - The error that occurred in the connection manager.
    * @param {object} connection - The connection for the data source.
    */
-  cbConnectionManager: function (err, connection) {}
+  cbConnectionManager: function (err, connection) {},
+
+  /**
+   * The callback to be called when the execution of a method has finished
+   * that calls an asynchronous data portal action.
+   *
+   * @callback external~cbDataPortal
+   * @param {(bo.shared.DataPortalError|bo.rules.AuthorizationError)} err - The error that occurred in the data portal action.
+   * @param {object} result - The business object instance with the new state.
+   */
+  cbDataPortal: function (err, result) {}
 };
 
 /**

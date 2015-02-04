@@ -65,13 +65,31 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
   properties.verifyChildTypes([ 'EditableChildCollection', 'EditableChildModel' ]);
 
   /**
-   * @classdesc Represents the definition of an asynchronous editable root model.
-   * @description Creates a new asynchronous editable root model instance.
+   * @classdesc
+   *    Represents the definition of an asynchronous editable root model.
+   * @description
+   *    Creates a new asynchronous editable root model instance.
+   *
+   *    _The name of the model type available as:
+   *    __&lt;instance&gt;.constructor.modelType__, returns 'EditableRootModel'._
    *
    * @name EditableRootModel
    * @constructor
    *
    * @extends ModelBase
+   *
+   * @fires EditableRootModel#preCreate
+   * @fires EditableRootModel#postCreate
+   * @fires EditableRootModel#preFetch
+   * @fires EditableRootModel#postFetch
+   * @fires EditableRootModel#preInsert
+   * @fires EditableRootModel#postInsert
+   * @fires EditableRootModel#preUpdate
+   * @fires EditableRootModel#postUpdate
+   * @fires EditableRootModel#preRemove
+   * @fires EditableRootModel#postRemove
+   * @fires EditableRootModel#preSave
+   * @fires EditableRootModel#postSave
    */
   var EditableRootModel = function() {
     ModelBase.call(this);
@@ -147,6 +165,11 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       return cto;
     }
 
+    /**
+     * Transforms the business object to a plain object to send to the client.
+     * @function EditableRootModel#toCto
+     * @returns {{}} The client transfer object.
+     */
     this.toCto = function () {
       var cto = {};
       if (extensions.toCto)
@@ -173,6 +196,11 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       }
     }
 
+    /**
+     * Rebuilds the business object from a plain object sent by the client.
+     * @function EditableRootModel#fromCto
+     * @param {{}} cto - The client transfer object.
+     */
     this.fromCto = function (cto) {
       if (extensions.fromCto)
         extensions.fromCto.call(self, getTransferContext(true), cto);
@@ -269,6 +297,10 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         MODEL_STATE.getName(newState));
     }
 
+    /**
+     * Notes that a child object has changed. This method is called by the child objects.
+     * @function EditableRootModel~childHasChanged
+     */
     this.childHasChanged = function() {
       markAsChanged(false);
     };
@@ -284,16 +316,34 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     //region Show object state
 
+    /**
+     * Gets the state of the model. Valid states are:
+     * pristine, created, changed, markedForRemoval and removed.
+     * @function EditableRootModel#getModelState
+     * @returns {string} The state of the model.
+     */
     this.getModelState = function () {
       return MODEL_STATE.getName(state);
     };
 
+    /**
+     * Indicates whether the business object has been created newly and
+     * not has been yet saved, i.e. its state is created.
+     * @function EditableRootModel#isNew
+     * @returns {boolean} True when the business object is new, otherwise false.
+     */
     Object.defineProperty(this, 'isNew', {
       get: function () {
         return state === MODEL_STATE.created;
       }
     });
 
+    /**
+     * Indicates whether the business object itself or any of its child objects differs the one
+     * that is stored in the repository, i.e. its state is created, changed or markedForRemoval.
+     * @function EditableRootModel#isDirty
+     * @returns {boolean} True when the business object has been changed, otherwise false.
+     */
     Object.defineProperty(this, 'isDirty', {
       get: function () {
         return state === MODEL_STATE.created ||
@@ -302,18 +352,36 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       }
     });
 
+    /**
+     * Indicates whether the business object itself, ignoring its child objects, differs the one
+     * that is stored in the repository.
+     * @function EditableRootModel#isSelfDirty
+     * @returns {boolean} True when the business object itself has been changed, otherwise false.
+     */
     Object.defineProperty(this, 'isSelfDirty', {
       get: function () {
         return isDirty;
       }
     });
 
+    /**
+     * Indicates whether the business object will be deleted from the repository,
+     * i.e. its state is markedForRemoval.
+     * @function EditableRootModel#isDeleted
+     * @returns {boolean} True when the business object will be deleted, otherwise false.
+     */
     Object.defineProperty(this, 'isDeleted', {
       get: function () {
         return state === MODEL_STATE.markedForRemoval;
       }
     });
 
+    /**
+     * Indicates whether the business object can be saved to the repository,
+     * i.e. it has ben changed and is valid, and the user has permission to save it.
+     * @function EditableRootModel#isSavable
+     * @returns {boolean} True when the user can save the business object, otherwise false.
+     */
     Object.defineProperty(this, 'isSavable', {
       get: function () {
         var auth;
@@ -501,6 +569,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       function finish (cb) {
         markAsCreated();
         // Launch finish event.
+        /**
+         * The event arises after the business object instance has been initialized in the repository.
+         * @event EditableRootModel#postCreate
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} newObject - The instance of the model after the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.postCreate),
             getEventArgs(DataPortalAction.create),
@@ -525,6 +599,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       function main (connection, cb) {
         hasConnection = connection !== null;
         // Launch start event.
+        /**
+         * The event arises before the business object instance will be initialized in the repository.
+         * @event EditableRootModel#preCreate
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} oldObject - The instance of the model before the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preCreate),
             getEventArgs(DataPortalAction.create),
@@ -571,6 +651,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           else {
             markAsPristine();
             // Launch finish event.
+            /**
+             * The event arises after the business object instance has been retrieved from the repository.
+             * @event EditableRootModel#postFetch
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {EditableRootModel} newObject - The instance of the model after the data portal action.
+             */
             self.emit(
                 DataPortalEvent.getName(DataPortalEvent.postFetch),
                 getEventArgs(DataPortalAction.fetch, method),
@@ -597,6 +683,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       function main (connection, cb) {
         hasConnection = connection !== null;
         // Launch start event.
+        /**
+         * The event arises before the business object instance will be retrieved from the repository.
+         * @event EditableRootModel#preFetch
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} oldObject - The instance of the model before the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preFetch),
             getEventArgs(DataPortalAction.fetch, method),
@@ -646,6 +738,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           else {
             markAsPristine();
             // Launch finish event.
+            /**
+             * The event arises after the business object instance has been created in the repository.
+             * @event EditableRootModel#postInsert
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {EditableRootModel} newObject - The instance of the model after the data portal action.
+             */
             self.emit(
                 DataPortalEvent.getName(DataPortalEvent.postInsert),
                 getEventArgs(DataPortalAction.insert),
@@ -675,6 +773,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         hasConnection = connection !== null;
         // Launch start event.
         self.emit(E_PRESAVE, getEventArgs(DataPortalAction.insert), self);
+        /**
+         * The event arises before the business object instance will be created in the repository.
+         * @event EditableRootModel#preInsert
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} oldObject - The instance of the model before the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preInsert),
             getEventArgs(DataPortalAction.insert),
@@ -724,6 +828,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           else {
             markAsPristine();
             // Launch finish event.
+            /**
+             * The event arises after the business object instance has been updated in the repository.
+             * @event EditableRootModel#postUpdate
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {EditableRootModel} newObject - The instance of the model after the data portal action.
+             */
             self.emit(
                 DataPortalEvent.getName(DataPortalEvent.postUpdate),
                 getEventArgs(DataPortalAction.update),
@@ -753,6 +863,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         hasConnection = connection !== null;
         // Launch start event.
         self.emit(E_PRESAVE, getEventArgs(DataPortalAction.update), self);
+        /**
+         * The event arises before the business object instance will be updated in the repository.
+         * @event EditableRootModel#preUpdate
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} oldObject - The instance of the model before the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preUpdate),
             getEventArgs(DataPortalAction.update),
@@ -800,6 +916,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       function finish (cb) {
         markAsRemoved();
         // Launch finish event.
+        /**
+         * The event arises after the business object instance has been removed from the repository.
+         * @event EditableRootModel#postRemove
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} newObject - The instance of the model after the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.postRemove),
             getEventArgs(DataPortalAction.remove),
@@ -827,6 +949,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
         hasConnection = connection !== null;
         // Launch start event.
         self.emit(E_PRESAVE, getEventArgs(DataPortalAction.remove), self);
+        /**
+         * The event arises before the business object instance will be removed from the repository.
+         * @event EditableRootModel#preRemove
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} oldObject - The instance of the model before the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preRemove),
             getEventArgs(DataPortalAction.remove),
@@ -872,16 +1000,43 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     //region Actions
 
+    /**
+     * Initializes a newly created business object.
+     * It is called by a factory method with the same name.
+     * @function EditableRootModel~create
+     * @param {external~cbDataPortal} callback - Returns a new editable business object.
+     */
     this.create = function(callback) {
       data_create(callback);
     };
 
+    /**
+     * Initializes a business object to be retrieved from the repository.
+     * It is called by a factory method with the same name.
+     * @function EditableRootModel~fetch
+     * @param {*} [filter] - The filter criteria.
+     * @param {string} [method] - An alternative fetch method of the data access object.
+     * @param {external~cbDataPortal} callback - Returns the required editable business object.
+     */
     this.fetch = function(filter, method, callback) {
       data_fetch(filter, method || M_FETCH, callback);
     };
 
+    /**
+     * Saves the changes of the business object to the repository.
+     * @function EditableRootModel#save
+     * @param {external~cbDataPortal} callback - The business object with the new state after the save.
+     */
     this.save = function(callback) {
       if (this.isValid()) {
+        /**
+         * The event arises before the business object instance will be saved in the repository.
+         * The event is followed by a preInsert, preUpdate or preRemove event depending on the
+         * state of the business object instance.
+         * @event EditableRootModel#preSave
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} oldObject - The instance of the model before the data portal action.
+         */
         switch (state) {
           case MODEL_STATE.created:
             data_insert(callback);
@@ -895,6 +1050,14 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
           default:
             callback(null, this);
         }
+        /**
+         * The event arises after the business object instance has been saved in the repository.
+         * The event is preceded by a postInsert, postUpdate or postRemove event depending on the
+         * state of the business object instance.
+         * @event EditableRootModel#postSave
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootModel} newObject - The instance of the model after the data portal action.
+         */
       }
     };
 
@@ -906,6 +1069,13 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     //region Validation
 
+    /**
+     * Indicates whether all the validation rules of the business object, including
+     * the ones of its child objects, succeeds. A valid business object may have
+     * broken rules with severity of success, information and warning.
+     * @function EditableRootModel#isValid
+     * @returns {boolean} True when the business object is valid, otherwise false.
+     */
     this.isValid = function() {
       if (!isValidated)
         this.checkRules();
@@ -913,6 +1083,11 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       return brokenRules.isValid();
     };
 
+    /**
+     * Executes all the validation rules of the business object, including the ones
+     * of its child objects.
+     * @function EditableRootModel#checkRules
+     */
     this.checkRules = function() {
       brokenRules.clear();
 
@@ -926,6 +1101,12 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
     }
 
+    /**
+     * Gets the broken rules of the business object.
+     * @function EditableRootModel#getBrokenRules
+     * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+     * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
+     */
     this.getBrokenRules = function(namespace) {
       return brokenRules.output(namespace);
     };
@@ -1015,11 +1196,30 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
   };
   util.inherits(EditableRootModel, ModelBase);
 
-  EditableRootModel.modelType = 'EditableRootModel';
-  EditableRootModel.prototype.name = properties.name;
+  /**
+   * The name of the model type.
+   * @property {string} EditableRootModel.constructor.modelType
+   * @default EditableRootModel
+   * @readonly
+   */
+  Object.defineProperty(EditableRootModel, 'modelType', {
+    get: function () { return 'EditableRootModel'; }
+  });
+  /**
+   * The name of the model. However, it can be hidden by a model property with the same name.
+   * @name EditableRootModel#$modelName
+   * @type {string}
+   * @readonly
+   */
+  EditableRootModel.prototype.$modelName = properties.name;
 
   //region Factory methods
 
+  /**
+   * Creates a new editable business object instance.
+   * @function EditableRootModel.create
+   * @param {external~cbDataPortal} callback - Returns a new editable business object.
+   */
   EditableRootModel.create = function(callback) {
     var instance = new EditableRootModel();
     instance.create(function (err) {
@@ -1030,6 +1230,13 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     });
   };
 
+  /**
+   * Retrieves an editable business object from the repository.
+   * @function EditableRootModel.fetch
+   * @param {*} [filter] - The filter criteria.
+   * @param {string} [method] - An alternative fetch method of the data access object.
+   * @param {external~cbDataPortal} callback - Returns the required editable business object.
+   */
   EditableRootModel.fetch = function(filter, method, callback) {
     if (!callback) {
       callback = method;
