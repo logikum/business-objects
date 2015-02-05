@@ -51,6 +51,9 @@ var E_POSTSAVE = DataPortalEvent.getName(DataPortalEvent.postSave);
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ *
+ * @throws {@link bo.shared.ModelError Model error}:
+ *    The child objects must be EditableChildCollectionSync or EditableChildModelSync instances.
  */
 var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
@@ -846,7 +849,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Initializes a newly created business object.
-     * It is called by a factory method with the same name.
+     * <br/>_This method is called by a factory method with the same name._
      *
      * @function EditableRootModelSync#create
      * @protected
@@ -857,7 +860,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Initializes a business object to be retrieved from the repository.
-     * It is called by a factory method with the same name.
+     * <br/>_This method is called by a factory method with the same name._
      *
      * @function EditableRootModelSync#fetch
      * @protected

@@ -17,6 +17,18 @@ var options = [
   '/config/business-objects.json'
 ];
 var cwd = process.cwd();
+
+/**
+ * Constructor to create configuration for business objects.
+ *
+ * @name external#configuration
+ * @property {bo.dataAccess.ConnectionManagerBase} connectionManager - Connection manager instance.
+ * @property {function} [daoBuilder] - Factory method to create data access objects.
+ * @property {function} [getUser] - Returns the current user.
+ * @property {function} [getLocale] - Returns the current locale.
+ * @property {string} [pathOfLocales] - The full path of the directory containing project locales.
+ * @property {bo.rules.NoAccessBehavior} [noAccessBehavior] - The default behavior for unauthorized operations.
+ */
 var config = {};
 var cfg;
 
@@ -95,14 +107,4 @@ if (cfg) {
 
 Object.freeze(config);
 
-/**
- * Constructor to create configuration for business objects.
- * @function external~configuration
- * @property {bo.dataAccess.ConnectionManagerBase} connectionManager - Connection manager instance.
- * @property {function} daoBuilder - Factory method to create data access objects.
- * @property {function} getUser - Returns the current user.
- * @property {function} getLocale - Returns the current locale.
- * @property {string} pathOfLocales - The full path of the directory containing project locales.
- * @property {bo.rules.NoAccessBehavior} noAccessBehavior - The default behavior for unauthorized operations.
- */
 module.exports = config;

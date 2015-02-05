@@ -48,6 +48,9 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ *
+ * @throws {@link bo.shared.ModelError Model error}:
+ *    The child objects must be ReadOnlyChildModelSync or ReadOnlyChildCollectionSync instances.
  */
 var CommandObjectSyncFactory = function(properties, rules, extensions) {
 
@@ -62,13 +65,21 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
   properties.verifyChildTypes([ 'ReadOnlyChildModelSync', 'ReadOnlyChildCollectionSync' ]);
 
   /**
-   * @classdesc Represents the definition of a synchronous command object model.
-   * @description Creates a new synchronous command object model instance.
+   * @classdesc
+   *    Represents the definition of a synchronous command object model.
+   * @description
+   *    Creates a new synchronous command object model instance.
+   *
+   *    _The name of the model type available as:
+   *    __&lt;instance&gt;.constructor.modelType__, returns 'CommandObjectSync'._
    *
    * @name CommandObjectSync
    * @constructor
    *
    * @extends ModelBase
+   *
+   * @fires CommandObjectSync#preExecute
+   * @fires CommandObjectSync#postExecute
    */
   var CommandObjectSync = function() {
     ModelBase.call(this);
@@ -178,6 +189,8 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
 
     //region Data portal methods
 
+    //region Helper
+
     function getDataContext (connection) {
       if (!dataContext)
         dataContext = new DataPortalContext(
@@ -194,6 +207,10 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
       return new DataPortalError(MODEL_DESC, properties.name, action, error);
     }
 
+    //endregion
+
+    //region Execute
+
     function data_execute (method) {
       // Check permissions.
       if (method === M_EXECUTE ? canDo(AuthorizationAction.executeCommand) : canExecute(method)) {
@@ -201,6 +218,12 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
           // Launch start event.
+          /**
+           * The event arises before the command object will be executed in the repository.
+           * @event CommandObjectSync#preExecute
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {CommandObjectSync} oldObject - The instance of the model before the data portal action.
+           */
           self.emit(
               DataPortalEvent.getName(DataPortalEvent.preExecute),
               getEventArgs(DataPortalAction.execute, method),
@@ -220,6 +243,12 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
           // Load children as well.
           loadChildren(dto);
           // Launch finish event.
+          /**
+           * The event arises after the command object has been executed in the repository.
+           * @event CommandObjectSync#postExecute
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {CommandObjectSync} newObject - The instance of the model after the data portal action.
+           */
           self.emit(
               DataPortalEvent.getName(DataPortalEvent.postExecute),
               getEventArgs(DataPortalAction.execute, method),
@@ -248,8 +277,21 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
 
     //endregion
 
+    //endregion
+
     //region Actions
 
+    /**
+     * Executes the business object's statements in the repository.
+     * <br/>_If method is not an empty string, &lt;instance&gt;.execute(method)
+     * can be called as &lt;instance&gt;.method() as well._
+     *
+     * @function CommandObjectSync#execute
+     * @param {string} [method] - An alternative execute method of the data access object.
+     *
+     * @throws {@link bo.rules.AuthorizationError Authorization error}:
+     *      The user has no permission to execute the action.
+     */
     this.execute = function(method) {
       data_execute(method || M_EXECUTE);
     };
@@ -258,6 +300,14 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
 
     //region Validation
 
+    /**
+     * Indicates whether all the validation rules of the command object, including
+     * the ones of its child objects, succeeds. A valid command object may have
+     * broken rules with severity of success, information and warning.
+     *
+     * @function CommandObjectSync#isValid
+     * @returns {boolean} True when the command object is valid, otherwise false.
+     */
     this.isValid = function() {
       if (!isValidated)
         this.checkRules();
@@ -265,6 +315,12 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
       return brokenRules.isValid();
     };
 
+    /**
+     * Executes all the validation rules of the command object, including the ones
+     * of its child objects.
+     *
+     * @function CommandObjectSync#checkRules
+     */
     this.checkRules = function() {
       brokenRules.clear();
 
@@ -278,6 +334,13 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
       rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
     }
 
+    /**
+     * Gets the broken rules of the command object.
+     *
+     * @function CommandObjectSync#getBrokenRules
+     * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+     * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
+     */
     this.getBrokenRules = function(namespace) {
       return brokenRules.output(namespace);
     };
@@ -370,11 +433,33 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
   };
   util.inherits(CommandObjectSync, ModelBase);
 
-  CommandObjectSync.modelType = 'CommandObjectSync';
-  CommandObjectSync.prototype.name = properties.name;
+  /**
+   * The name of the model type.
+   *
+   * @property {string} CommandObjectSync.constructor.modelType
+   * @default CommandObjectSync
+   * @readonly
+   */
+  Object.defineProperty(CommandObjectSync, 'modelType', {
+    get: function () { return 'CommandObjectSync'; }
+  });
+  /**
+   * The name of the model. However, it can be hidden by a model property with the same name.
+   *
+   * @name CommandObjectSync#$modelName
+   * @type {string}
+   * @readonly
+   */
+  CommandObjectSync.prototype.$modelName = properties.name;
 
   //region Factory methods
 
+  /**
+   * Creates a new command object instance.
+   *
+   * @function CommandObjectSync.create
+   * @returns {CommandObjectSync} A new command object.
+   */
   CommandObjectSync.create = function() {
     return new CommandObjectSync();
   };

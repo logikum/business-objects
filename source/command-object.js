@@ -48,6 +48,9 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
+ *
+ * @throws {@link bo.shared.ModelError Model error}:
+ *    The child objects must be ReadOnlyChildModel or ReadOnlyChildCollection instances.
  */
 var CommandObjectFactory = function(properties, rules, extensions) {
 
@@ -62,13 +65,21 @@ var CommandObjectFactory = function(properties, rules, extensions) {
   properties.verifyChildTypes([ 'ReadOnlyChildModel', 'ReadOnlyChildCollection' ]);
 
   /**
-   * @classdesc Represents the definition of an asynchronous command object model.
-   * @description Creates a new asynchronous command object model instance.
+   * @classdesc
+   *    Represents the definition of an asynchronous command object model.
+   * @description
+   *    Creates a new asynchronous command object model instance.
+   *
+   *    _The name of the model type available as:
+   *    __&lt;instance&gt;.constructor.modelType__, returns 'CommandObject'._
    *
    * @name CommandObject
    * @constructor
    *
    * @extends ModelBase
+   *
+   * @fires CommandObject#preExecute
+   * @fires CommandObject#postExecute
    */
   var CommandObject = function() {
     ModelBase.call(this);
@@ -193,6 +204,8 @@ var CommandObjectFactory = function(properties, rules, extensions) {
 
     //region Data portal methods
 
+    //region Helper
+
     function getDataContext (connection) {
       if (!dataContext)
         dataContext = new DataPortalContext(
@@ -238,6 +251,10 @@ var CommandObjectFactory = function(properties, rules, extensions) {
           });
     }
 
+    //endregion
+
+    //region Execute
+
     function data_execute (method, callback) {
       var hasConnection = false;
       // Helper function for post-execute actions.
@@ -248,6 +265,12 @@ var CommandObjectFactory = function(properties, rules, extensions) {
             failed(err, cb);
           else {
             // Launch finish event.
+            /**
+             * The event arises after the command object has been executed in the repository.
+             * @event CommandObject#postExecute
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {CommandObject} newObject - The instance of the model after the data portal action.
+             */
             self.emit(
                 DataPortalEvent.getName(DataPortalEvent.postExecute),
                 getEventArgs(DataPortalAction.execute, method),
@@ -274,6 +297,12 @@ var CommandObjectFactory = function(properties, rules, extensions) {
       function main (connection, cb) {
         hasConnection = connection !== null;
         // Launch start event.
+        /**
+         * The event arises before the command object will be executed in the repository.
+         * @event CommandObject#preExecute
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {CommandObject} oldObject - The instance of the model before the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preExecute),
             getEventArgs(DataPortalAction.execute, method),
@@ -310,8 +339,22 @@ var CommandObjectFactory = function(properties, rules, extensions) {
 
     //endregion
 
+    //endregion
+
     //region Actions
 
+    /**
+     * Executes the business object's statements in the repository.
+     * <br/>_If method is not an empty string, &lt;instance&gt;.execute(method)
+     * can be called as &lt;instance&gt;.method() as well._
+     *
+     * @function CommandObject#execute
+     * @param {string} [method] - An alternative execute method of the data access object.
+     * @param {external~cbDataPortal} callback - Returns the command object with the result.
+     *
+     * @throws {@link bo.rules.AuthorizationError Authorization error}:
+     *      The user has no permission to execute the action.
+     */
     this.execute = function(method, callback) {
       if (!callback) {
         callback = method;
@@ -324,6 +367,14 @@ var CommandObjectFactory = function(properties, rules, extensions) {
 
     //region Validation
 
+    /**
+     * Indicates whether all the validation rules of the command object, including
+     * the ones of its child objects, succeeds. A valid command object may have
+     * broken rules with severity of success, information and warning.
+     *
+     * @function CommandObject#isValid
+     * @returns {boolean} True when the command object is valid, otherwise false.
+     */
     this.isValid = function() {
       if (!isValidated)
         this.checkRules();
@@ -331,6 +382,12 @@ var CommandObjectFactory = function(properties, rules, extensions) {
       return brokenRules.isValid();
     };
 
+    /**
+     * Executes all the validation rules of the command object, including the ones
+     * of its child objects.
+     *
+     * @function CommandObject#checkRules
+     */
     this.checkRules = function() {
       brokenRules.clear();
 
@@ -344,6 +401,13 @@ var CommandObjectFactory = function(properties, rules, extensions) {
       rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
     }
 
+    /**
+     * Gets the broken rules of the command object.
+     *
+     * @function CommandObject#getBrokenRules
+     * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+     * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
+     */
     this.getBrokenRules = function(namespace) {
       return brokenRules.output(namespace);
     };
@@ -438,11 +502,33 @@ var CommandObjectFactory = function(properties, rules, extensions) {
   };
   util.inherits(CommandObject, ModelBase);
 
-  CommandObject.modelType = 'CommandObject';
-  CommandObject.prototype.name = properties.name;
+  /**
+   * The name of the model type.
+   *
+   * @property {string} CommandObject.constructor.modelType
+   * @default CommandObject
+   * @readonly
+   */
+  Object.defineProperty(CommandObject, 'modelType', {
+    get: function () { return 'CommandObject'; }
+  });
+  /**
+   * The name of the model. However, it can be hidden by a model property with the same name.
+   *
+   * @name CommandObject#$modelName
+   * @type {string}
+   * @readonly
+   */
+  CommandObject.prototype.$modelName = properties.name;
 
   //region Factory methods
 
+  /**
+   * Creates a new command object instance.
+   *
+   * @function CommandObject.create
+   * @param {external~cbDataPortal} callback - Returns a new command object.
+   */
   CommandObject.create = function(callback) {
     var instance = new CommandObject();
     callback(null, instance);

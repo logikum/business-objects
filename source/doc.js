@@ -27,6 +27,7 @@ var external = {
   /**
    * The callback to be called in collection methods.
    *
+   * @callback external~cbCollectionItem
    * @param {{}} currentValue - The current item being processed in the collection.
    * @param {number} index - The index of the current item being processed in the collection.
    * @param {Array.<{}>} collection - The collection method was called upon.
@@ -36,6 +37,7 @@ var external = {
   /**
    * The callback to be called to define the sort order in a collection.
    *
+   * @callback external~cbCompare
    * @param {{}} a - First object to compare.
    * @param {{}} b - Second object to compare.
    * @returns {number} Returns
