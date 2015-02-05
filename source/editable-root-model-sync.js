@@ -168,6 +168,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Transforms the business object to a plain object to send to the client.
+     *
      * @function EditableRootModelSync#toCto
      * @returns {{}} The client transfer object.
      */
@@ -199,6 +200,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Rebuilds the business object from a plain object sent by the client.
+     *
      * @function EditableRootModelSync#fromCto
      * @param {{}} cto - The client transfer object.
      */
@@ -300,7 +302,9 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Notes that a child object has changed. This method is called by the child objects.
-     * @function EditableRootModelSync~childHasChanged
+     *
+     * @function EditableRootModelSync#childHasChanged
+     * @protected
      */
     this.childHasChanged = function() {
       markAsChanged(false);
@@ -320,6 +324,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Gets the state of the model. Valid states are:
      * pristine, created, changed, markedForRemoval and removed.
+     *
      * @function EditableRootModelSync#getModelState
      * @returns {string} The state of the model.
      */
@@ -330,6 +335,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object has been created newly and
      * not has been yet saved, i.e. its state is created.
+     *
      * @function EditableRootModelSync#isNew
      * @returns {boolean} True when the business object is new, otherwise false.
      */
@@ -342,6 +348,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object itself or any of its child objects differs the one
      * that is stored in the repository, i.e. its state is created, changed or markedForRemoval.
+     *
      * @function EditableRootModelSync#isDirty
      * @returns {boolean} True when the business object has been changed, otherwise false.
      */
@@ -356,6 +363,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object itself, ignoring its child objects, differs the one
      * that is stored in the repository.
+     *
      * @function EditableRootModelSync#isSelfDirty
      * @returns {boolean} True when the business object itself has been changed, otherwise false.
      */
@@ -368,6 +376,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object will be deleted from the repository,
      * i.e. its state is markedForRemoval.
+     *
      * @function EditableRootModelSync#isDeleted
      * @returns {boolean} True when the business object will be deleted, otherwise false.
      */
@@ -380,6 +389,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object can be saved to the repository,
      * i.e. it has ben changed and is valid, and the user has permission to save it.
+     *
      * @function EditableRootModelSync#isSavable
      * @returns {boolean} True when the user can save the business object, otherwise false.
      */
@@ -836,8 +846,9 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Initializes a newly created business object.
      * It is called by a factory method with the same name.
-     * @function EditableRootModelSync~create
-     * @returns {EditableRootModelSync} A new editable business object.
+     *
+     * @function EditableRootModelSync#create
+     * @protected
      */
     this.create = function() {
       data_create();
@@ -846,10 +857,11 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Initializes a business object to be retrieved from the repository.
      * It is called by a factory method with the same name.
-     * @function EditableRootModelSync~fetch
+     *
+     * @function EditableRootModelSync#fetch
+     * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {EditableRootModelSync} The required editable business object.
      */
     this.fetch = function(filter, method) {
       data_fetch(filter, method || M_FETCH);
@@ -857,6 +869,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Saves the changes of the business object to the repository.
+     *
      * @function EditableRootModelSync#save
      * @returns {EditableRootModelSync} The business object with the new state after the save.
      *
@@ -901,6 +914,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Marks the business object to be deleted from the repository on next save.
+     *
      * @function EditableRootModelSync#remove
      */
     this.remove = function() {
@@ -915,6 +929,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
      * Indicates whether all the validation rules of the business object, including
      * the ones of its child objects, succeeds. A valid business object may have
      * broken rules with severity of success, information and warning.
+     *
      * @function EditableRootModelSync#isValid
      * @returns {boolean} True when the business object is valid, otherwise false.
      */
@@ -928,6 +943,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Executes all the validation rules of the business object, including the ones
      * of its child objects.
+     *
      * @function EditableRootModelSync#checkRules
      */
     this.checkRules = function() {
@@ -945,6 +961,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Gets the broken rules of the business object.
+     *
      * @function EditableRootModelSync#getBrokenRules
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
      * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
@@ -1038,6 +1055,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
   /**
    * The name of the model type.
+   *
    * @property {string} EditableRootModelSync.constructor.modelType
    * @default EditableRootModelSync
    * @readonly
@@ -1047,6 +1065,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.
+   *
    * @name EditableRootModelSync#$modelName
    * @type {string}
    * @readonly
@@ -1057,6 +1076,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
   /**
    * Creates a new editable business object instance.
+   *
    * @function EditableRootModelSync.create
    * @returns {EditableRootModelSync} A new editable business object.
    *
@@ -1073,6 +1093,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
 
   /**
    * Retrieves an editable business object from the repository.
+   *
    * @function EditableRootModelSync.fetch
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.

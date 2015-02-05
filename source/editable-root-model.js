@@ -167,6 +167,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     /**
      * Transforms the business object to a plain object to send to the client.
+     *
      * @function EditableRootModel#toCto
      * @returns {{}} The client transfer object.
      */
@@ -198,6 +199,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     /**
      * Rebuilds the business object from a plain object sent by the client.
+     *
      * @function EditableRootModel#fromCto
      * @param {{}} cto - The client transfer object.
      */
@@ -299,7 +301,9 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     /**
      * Notes that a child object has changed. This method is called by the child objects.
-     * @function EditableRootModel~childHasChanged
+     *
+     * @function EditableRootModel#childHasChanged
+     * @protected
      */
     this.childHasChanged = function() {
       markAsChanged(false);
@@ -319,6 +323,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Gets the state of the model. Valid states are:
      * pristine, created, changed, markedForRemoval and removed.
+     *
      * @function EditableRootModel#getModelState
      * @returns {string} The state of the model.
      */
@@ -329,6 +334,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object has been created newly and
      * not has been yet saved, i.e. its state is created.
+     *
      * @function EditableRootModel#isNew
      * @returns {boolean} True when the business object is new, otherwise false.
      */
@@ -341,6 +347,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object itself or any of its child objects differs the one
      * that is stored in the repository, i.e. its state is created, changed or markedForRemoval.
+     *
      * @function EditableRootModel#isDirty
      * @returns {boolean} True when the business object has been changed, otherwise false.
      */
@@ -355,6 +362,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object itself, ignoring its child objects, differs the one
      * that is stored in the repository.
+     *
      * @function EditableRootModel#isSelfDirty
      * @returns {boolean} True when the business object itself has been changed, otherwise false.
      */
@@ -367,6 +375,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object will be deleted from the repository,
      * i.e. its state is markedForRemoval.
+     *
      * @function EditableRootModel#isDeleted
      * @returns {boolean} True when the business object will be deleted, otherwise false.
      */
@@ -379,6 +388,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Indicates whether the business object can be saved to the repository,
      * i.e. it has ben changed and is valid, and the user has permission to save it.
+     *
      * @function EditableRootModel#isSavable
      * @returns {boolean} True when the user can save the business object, otherwise false.
      */
@@ -1003,7 +1013,9 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Initializes a newly created business object.
      * It is called by a factory method with the same name.
-     * @function EditableRootModel~create
+     *
+     * @function EditableRootModel#create
+     * @protected
      * @param {external~cbDataPortal} callback - Returns a new editable business object.
      */
     this.create = function(callback) {
@@ -1013,7 +1025,9 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Initializes a business object to be retrieved from the repository.
      * It is called by a factory method with the same name.
-     * @function EditableRootModel~fetch
+     *
+     * @function EditableRootModel#fetch
+     * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
      * @param {external~cbDataPortal} callback - Returns the required editable business object.
@@ -1024,6 +1038,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     /**
      * Saves the changes of the business object to the repository.
+     *
      * @function EditableRootModel#save
      * @param {external~cbDataPortal} callback - The business object with the new state after the save.
      */
@@ -1061,6 +1076,11 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
       }
     };
 
+    /**
+     * Marks the business object to be deleted from the repository on next save.
+     *
+     * @function EditableRootModel#remove
+     */
     this.remove = function() {
       markForRemoval();
     };
@@ -1073,6 +1093,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
      * Indicates whether all the validation rules of the business object, including
      * the ones of its child objects, succeeds. A valid business object may have
      * broken rules with severity of success, information and warning.
+     *
      * @function EditableRootModel#isValid
      * @returns {boolean} True when the business object is valid, otherwise false.
      */
@@ -1086,6 +1107,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     /**
      * Executes all the validation rules of the business object, including the ones
      * of its child objects.
+     *
      * @function EditableRootModel#checkRules
      */
     this.checkRules = function() {
@@ -1103,6 +1125,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
     /**
      * Gets the broken rules of the business object.
+     *
      * @function EditableRootModel#getBrokenRules
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
      * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
@@ -1198,6 +1221,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
   /**
    * The name of the model type.
+   *
    * @property {string} EditableRootModel.constructor.modelType
    * @default EditableRootModel
    * @readonly
@@ -1207,6 +1231,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.
+   *
    * @name EditableRootModel#$modelName
    * @type {string}
    * @readonly
@@ -1217,8 +1242,14 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
   /**
    * Creates a new editable business object instance.
+   *
    * @function EditableRootModel.create
    * @param {external~cbDataPortal} callback - Returns a new editable business object.
+   *
+   * @throws {@link bo.rules.AuthorizationError Authorization error}:
+   *      The user has no permission to execute the action.
+   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   *    Creating the business object has failed.
    */
   EditableRootModel.create = function(callback) {
     var instance = new EditableRootModel();
@@ -1232,10 +1263,16 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
 
   /**
    * Retrieves an editable business object from the repository.
+   *
    * @function EditableRootModel.fetch
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {external~cbDataPortal} callback - Returns the required editable business object.
+   *
+   * @throws {@link bo.rules.AuthorizationError Authorization error}:
+   *      The user has no permission to execute the action.
+   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   *    Fetching the business object has failed.
    */
   EditableRootModel.fetch = function(filter, method, callback) {
     if (!callback) {
