@@ -34,26 +34,55 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
         itemType.prototype.name, itemType.modelType, 'EditableChildCollectionSync', 'EditableChildModelSync');
 
   /**
-   * @classdesc Represents the definition of a synchronous editable child collection.
-   * @description Creates a new synchronous editable child collection instance.
+   * @classdesc
+   *    Represents the definition of a synchronous editable child collection.
+   * @description
+   *    Creates a new synchronous editable child collection instance.
+   *
+   *    _The name of the model type available as:
+   *    __&lt;instance&gt;.constructor.modelType__, returns 'EditableChildCollectionSync'._
    *
    * @name EditableChildCollectionSync
    * @constructor
+   * @param {{}} parent - The parent business object.
    *
    * @extends CollectionBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The parent object must be an EditableRootModelSync, EditableChildModelSync
+   *    or CommandObjectSync instance.
    */
   var EditableChildCollectionSync = function (parent) {
     CollectionBase.call(this);
 
     // Verify the model type of the parent model.
-    parent = EnsureArgument.isModelType(parent, ['EditableRootModelSync', 'EditableChildModelSync'],
+    parent = EnsureArgument.isModelType(parent,
+        [
+          'EditableRootModelSync',
+          'EditableChildModelSync',
+          'CommandObjectSync'
+        ],
         'c_modelType', name, 'parent');
 
     var self = this;
     var items = [];
 
-    this.name = name;
+    /**
+     * The name of the model.
+     *
+     * @name EditableChildCollectionSync#$modelName
+     * @type {string}
+     * @readonly
+     */
+    this.$modelName = name;
 
+    /**
+     * The count of the child objects in the collection.
+     *
+     * @name EditableChildCollectionSync#count
+     * @type {number}
+     * @readonly
+     */
     Object.defineProperty(self, 'count', {
       get: function () {
         return items.length;
@@ -63,6 +92,13 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
 
     //region Transfer object methods
 
+    /**
+     * Transforms the business object collection to a plain object array to send to the client.
+     * <br/>_This method is usually called by the parent object._
+     *
+     * @function EditableChildCollectionSync#toCto
+     * @returns {Array.<{}>} The client transfer object.
+     */
     this.toCto = function () {
       var cto = [];
       items.forEach(function (item) {
@@ -71,6 +107,13 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
       return cto;
     };
 
+    /**
+     * Rebuilds the business object collection from a plain object array sent by the client.
+     * <br/>_This method is usually called by the parent object._
+     *
+     * @function EditableChildCollectionSync#fromCto
+     * @param {Array.<{}>} data - The array of client transfer objects.
+     */
     this.fromCto = function (data) {
       if (data instanceof Array) {
         var dataNew = data.filter(function () { return true; });
@@ -109,12 +152,26 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
 
     //region Actions
 
+    /**
+     * Creates a new item in the collection.
+     *
+     * @function EditableChildCollectionSync#create
+     * @returns {EditableChildModelSync} The newly created business object.
+     */
     this.create = function () {
       var item = itemType.create(parent);
       items.push(item);
       return item;
     };
 
+    /**
+     * Initializes the items in the collection with data retrieved from the repository.
+     * <br/>_This method is called by the parent object._
+     *
+     * @function EditableChildCollectionSync#fetch
+     * @protected
+     * @param {{}} [data] - The initial data.
+     */
     this.fetch = function (data) {
       if (data instanceof Array) {
         data.forEach(function (dto) {
@@ -124,12 +181,14 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
       }
     };
 
-    this.remove = function () {
-      items.forEach(function (item) {
-        item.remove();
-      });
-    };
-
+    /**
+     * Saves the changes of the business object collection to the repository.
+     * <br/>_This method is called by the parent object._
+     *
+     * @function EditableChildCollectionSync#save
+     * @protected
+     * @param {{}} connection - The connection data.
+     */
     this.save = function (connection) {
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
@@ -140,34 +199,97 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
       });
     };
 
+    /**
+     * Marks all items in the collection to be deleted from the repository on next save.
+     *
+     * @function EditableChildCollectionSync#remove
+     */
+    this.remove = function () {
+      items.forEach(function (item) {
+        item.remove();
+      });
+    };
+
     //endregion
 
     //region Public array methods
 
+    /**
+     * Gets a collection item at a specific position.
+     *
+     * @function EditableChildCollectionSync#at
+     * @param {number} index - The index of the required item in the collection.
+     * @returns {EditableChildModelSync} The required collection item.
+     */
     this.at = function (index) {
       return items[index];
     };
 
+    /**
+     * Executes a provided function once per collection item.
+     *
+     * @function EditableChildCollectionSync#forEach
+     * @param {external~cbCollectionItem} callback - Function that produces an item of the new collection.
+     */
     this.forEach = function (callback) {
       items.forEach(callback);
     };
 
+    /**
+     * Tests whether all items in the collection pass the test implemented by the provided function.
+     *
+     * @function EditableChildCollectionSync#every
+     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {boolean} True when callback returns truthy value for each item, otherwise false.
+     */
     this.every = function (callback) {
       return items.every(callback);
     };
 
+    /**
+     * Tests whether some item in the collection pass the test implemented by the provided function.
+     *
+     * @function EditableChildCollectionSync#some
+     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {boolean} True when callback returns truthy value for some item, otherwise false.
+     */
     this.some = function (callback) {
       return items.some(callback);
     };
 
+    /**
+     * Creates a new array with all collection items that pass the test
+     * implemented by the provided function.
+     *
+     * @function EditableChildCollectionSync#filter
+     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {Array.<EditableChildModelSync>} The new array of collection items.
+     */
     this.filter = function (callback) {
       return items.filter(callback);
     };
 
+    /**
+     * Creates a new array with the results of calling a provided function
+     * on every item in this collection.
+     *
+     * @function EditableChildCollectionSync#map
+     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {Array.<*>} The new array of callback results.
+     */
     this.map = function (callback) {
       return items.map(callback);
     };
 
+    /**
+     * Sorts the items of the collection in place and returns the collection.
+     *
+     * @function EditableChildCollectionSync#sort
+     * @param {external~cbCompare} [fnCompare] - Function that defines the sort order.
+     *      If omitted, the collection is sorted according to each character's Unicode
+     *      code point value, according to the string conversion of each item.
+     * @returns {Array.<EditableChildModelSync>} The sorted collection.
+     */
     this.sort = function (fnCompare) {
       return items.sort(fnCompare);
     };
@@ -179,7 +301,16 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
   };
   util.inherits(EditableChildCollectionSync, CollectionBase);
 
-  EditableChildCollectionSync.modelType = 'EditableChildCollectionSync';
+  /**
+   * The name of the model type.
+   *
+   * @property {string} EditableChildCollectionSync.constructor.modelType
+   * @default EditableChildCollectionSync
+   * @readonly
+   */
+  Object.defineProperty(EditableChildCollectionSync, 'modelType', {
+    get: function () { return 'EditableChildCollectionSync'; }
+  });
 
   return EditableChildCollectionSync;
 };

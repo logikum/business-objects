@@ -22,7 +22,29 @@ var external = {
    * @param {(bo.shared.DataPortalError|bo.rules.AuthorizationError)} err - The error that occurred in the data portal action.
    * @param {object} result - The business object instance with the new state.
    */
-  cbDataPortal: function (err, result) {}
+  cbDataPortal: function (err, result) {},
+
+  /**
+   * The callback to be called in collection methods.
+   *
+   * @param {{}} currentValue - The current item being processed in the collection.
+   * @param {number} index - The index of the current item being processed in the collection.
+   * @param {Array.<{}>} collection - The collection method was called upon.
+   */
+  cbCollectionItem: function (currentValue, index, collection) {},
+
+  /**
+   * The callback to be called to define the sort order in a collection.
+   *
+   * @param {{}} a - First object to compare.
+   * @param {{}} b - Second object to compare.
+   * @returns {number} Returns
+   *
+   *    * < 0, when a comes first
+   *    * = 0, when a and b are left unchanged
+   *    * > 0, when b comes first
+   */
+  cbCompare: function (a, b) {}
 };
 
 /**

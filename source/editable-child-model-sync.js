@@ -73,8 +73,13 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
    *
    * @name EditableChildModelSync
    * @constructor
+   * @param {{}} parent - The parent business object.
    *
    * @extends ModelBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The parent object must be an EditableChildCollectionSync, EditableRootModelSync,
+   *    EditableChildModelSync or CommandObjectSync instance.
    *
    * @fires EditableChildModelSync#preCreate
    * @fires EditableChildModelSync#postCreate
@@ -174,7 +179,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Transforms the business object to a plain object to send to the client.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModelSync#toCto
      * @returns {{}} The client transfer object.
@@ -207,7 +212,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Rebuilds the business object from a plain object sent by the client.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModelSync#fromCto
      * @param {{}} cto - The client transfer object.
@@ -330,7 +335,8 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
     }
 
     /**
-     * Notes that a child object has changed. This method is called by the child objects.
+     * Notes that a child object has changed.
+     * <br/>_This method is called by child objects._
      *
      * @function EditableChildModelSync#childHasChanged
      * @protected
@@ -844,7 +850,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Initializes a newly created business object.
-     * This method is called by the parent object.
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildModelSync#create
      * @protected
@@ -855,7 +861,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Initializes a business object retrieved from the repository.
-     * This method is called by the parent object.
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildModelSync#fetch
      * @protected
@@ -868,7 +874,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Saves the changes of the business object to the repository.
-     * This method is called by the parent object.
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildModelSync#save
      * @protected
@@ -910,7 +916,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
      * Indicates whether all the validation rules of the business object, including
      * the ones of its child objects, succeeds. A valid business object may have
      * broken rules with severity of success, information and warning.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModelSync#isValid
      * @returns {boolean} True when the business object is valid, otherwise false.
@@ -925,7 +931,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
     /**
      * Executes all the validation rules of the business object, including the ones
      * of its child objects.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModelSync#checkRules
      */
@@ -944,7 +950,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
     /**
      * Gets the broken rules of the business object.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModelSync#getBrokenRules
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
@@ -1054,13 +1060,13 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
    * @type {string}
    * @readonly
    */
-  EditableChildModelSync.prototype.name = properties.name;
+  EditableChildModelSync.prototype.$modelName = properties.name;
 
   //region Factory methods
 
   /**
    * Creates a new editable business object instance.
-   * This method is called by the parent object.
+   * <br/>_This method is called by the parent object._
    *
    * @function EditableChildModelSync.create
    * @protected
@@ -1080,7 +1086,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
   /**
    * Initializes an editable business object width data retrieved from the repository.
-   * This method is called by the parent object.
+   * <br/>_This method is called by the parent object._
    *
    * @function EditableChildModelSync.load
    * @protected

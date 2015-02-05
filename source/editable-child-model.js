@@ -73,8 +73,13 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    *
    * @name EditableChildModel
    * @constructor
+   * @param {{}} parent - The parent business object.
    *
    * @extends ModelBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The parent object must be an EditableChildCollection, EditableRootModel,
+   *    EditableChildModel or CommandObject instance.
    *
    * @fires EditableChildModel#preCreate
    * @fires EditableChildModel#postCreate
@@ -174,7 +179,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
     /**
      * Transforms the business object to a plain object to send to the client.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModel#toCto
      * @returns {{}} The client transfer object.
@@ -207,7 +212,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
     /**
      * Rebuilds the business object from a plain object sent by the client.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModel#fromCto
      * @param {{}} cto - The client transfer object.
@@ -330,7 +335,8 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
     }
 
     /**
-     * Notes that a child object has changed. This method is called by the child objects.
+     * Notes that a child object has changed.
+     * <br/>_This method is called by child objects._
      *
      * @function EditableChildModel#childHasChanged
      * @protected
@@ -989,7 +995,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
     /**
      * Initializes a newly created business object.
-     * This method is called by the parent object.
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildModel#create
      * @protected
@@ -1001,7 +1007,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
     /**
      * Initializes a business object retrieved from the repository.
-     * This method is called by the parent object.
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildModel#fetch
      * @protected
@@ -1015,7 +1021,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
     /**
      * Saves the changes of the business object to the repository.
-     * This method is called by the parent object.
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildModel#save
      * @protected
@@ -1057,7 +1063,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
      * Indicates whether all the validation rules of the business object, including
      * the ones of its child objects, succeeds. A valid business object may have
      * broken rules with severity of success, information and warning.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModel#isValid
      * @returns {boolean} True when the business object is valid, otherwise false.
@@ -1072,7 +1078,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
     /**
      * Executes all the validation rules of the business object, including the ones
      * of its child objects.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModel#checkRules
      */
@@ -1091,7 +1097,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
     /**
      * Gets the broken rules of the business object.
-     * _This method is usually called by the parent object._
+     * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModel#getBrokenRules
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
@@ -1203,13 +1209,13 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @type {string}
    * @readonly
    */
-  EditableChildModel.prototype.name = properties.name;
+  EditableChildModel.prototype.$modelName = properties.name;
 
   //region Factory methods
 
   /**
    * Creates a new editable business object instance.
-   * This method is called by the parent object.
+   * <br/>_This method is called by the parent object._
    *
    * @function EditableChildModel.create
    * @protected
@@ -1233,7 +1239,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
 
   /**
    * Initializes an editable business object width data retrieved from the repository.
-   * This method is called by the parent object.
+   * <br/>_This method is called by the parent object._
    *
    * @function EditableChildModel.load
    * @protected

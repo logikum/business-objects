@@ -300,7 +300,8 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
     }
 
     /**
-     * Notes that a child object has changed. This method is called by the child objects.
+     * Notes that a child object has changed.
+     * <br/>_This method is called by child objects._
      *
      * @function EditableRootModel#childHasChanged
      * @protected
