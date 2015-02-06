@@ -13,6 +13,13 @@ describe('Synchronous data portal method', function () {
 
     var cmd = ClearScheduleCommandSync.create();
 
+    cmd.on('preExecute', function (eventArgs, oldObject) {
+      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
+    });
+    cmd.on('postExecute', function (eventArgs, newObject) {
+      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
+    });
+
     cmd.orderKey = 1;
     cmd.orderItemKey = 2;
     cmd.orderScheduleKey = 3;
@@ -26,6 +33,13 @@ describe('Synchronous data portal method', function () {
     console.log('\n*** Synchronous RESCHEDULE');
 
     var cmd = RescheduleShippingCommand.create();
+
+    cmd.on('preExecute', function (eventArgs, oldObject) {
+      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
+    });
+    cmd.on('postExecute', function (eventArgs, newObject) {
+      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
+    });
 
     cmd.orderKey = 1;
     cmd.orderItemKey = 2;

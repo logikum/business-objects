@@ -13,6 +13,13 @@ describe('Asynchronous data portal method', function () {
 
     ClearScheduleCommand.create(function (err, cmd) {
 
+      cmd.on('preExecute', function (eventArgs, oldObject) {
+        console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
+      });
+      cmd.on('postExecute', function (eventArgs, newObject) {
+        console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
+      });
+
       cmd.orderKey = 1;
       cmd.orderItemKey = 2;
       cmd.orderScheduleKey = 3;
@@ -27,7 +34,14 @@ describe('Asynchronous data portal method', function () {
   it('execute of custom command', function () {
     console.log('\n*** Asynchronous RESCHEDULE');
 
-    var cmd = RescheduleShippingCommand.create(function (err, cmd) {
+    RescheduleShippingCommand.create(function (err, cmd) {
+
+      cmd.on('preExecute', function (eventArgs, oldObject) {
+        console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
+      });
+      cmd.on('postExecute', function (eventArgs, newObject) {
+        console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
+      });
 
       cmd.orderKey = 1;
       cmd.orderItemKey = 2;
