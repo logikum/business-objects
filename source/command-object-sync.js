@@ -325,14 +325,10 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
       brokenRules.clear();
 
       properties.forEach(function(property) {
-        validate(property);
+        rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
       });
       isValidated = true;
     };
-
-    function validate(property) {
-      rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
-    }
 
     /**
      * Gets the broken rules of the command object.

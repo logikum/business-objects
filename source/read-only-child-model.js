@@ -101,6 +101,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
     var self = this;
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
+    var isValidated = false;
     var propertyContext = null;
     var dataContext = null;
 
@@ -335,8 +336,46 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
     //region Validation
 
     /**
+     * Indicates whether all the validation rules of the business object, including
+     * the ones of its child objects, succeeds. A valid business object may have
+     * broken rules with severity of success, information and warning.
+     * <br/>_This method is usually called by the parent object._
+     *
+     * _By default read-only business objects are supposed to be valid._
+     *
+     * @function ReadOnlyChildModel#isValid
+     * @returns {boolean} True when the business object is valid, otherwise false.
+     */
+    this.isValid = function() {
+      if (!isValidated)
+        this.checkRules();
+
+      return brokenRules.isValid();
+    };
+
+    /**
+     * Executes all the validation rules of the business object, including the ones
+     * of its child objects.
+     * <br/>_This method is usually called by the parent object._
+     *
+     * _By default read-only business objects are supposed to be valid._
+     *
+     * @function ReadOnlyChildModel#checkRules
+     */
+    this.checkRules = function() {
+      brokenRules.clear();
+
+      properties.forEach(function(property) {
+        rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
+      });
+      isValidated = true;
+    };
+
+    /**
      * Gets the broken rules of the business object.
      * <br/>_This method is usually called by the parent object._
+     *
+     * _By default read-only business objects are supposed to be valid._
      *
      * @function ReadOnlyChildModel#getBrokenRules
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.

@@ -78,6 +78,7 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
     var self = this;
     var items = [];
     var brokenRules = new BrokenRuleList(name);
+    var isValidated = false;
     var dao = null;
     var dataContext = null;
     var connection = null;
@@ -261,7 +262,43 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
     //region Validation
 
     /**
+     * Indicates whether all the validation rules of the business objects in the
+     * collection, including the ones of their child objects, succeeds. A valid collection
+     * may have broken rules with severity of success, information and warning.
+     *
+     * _By default read-only business object collections are supposed to be valid._
+     *
+     * @function ReadOnlyRootCollectionSync#isValid
+     * @returns {boolean} True when the business object is valid, otherwise false.
+     */
+    this.isValid = function() {
+      if (!isValidated)
+        this.checkRules();
+
+      return brokenRules.isValid();
+    };
+
+    /**
+     * Executes all the validation rules of all business objects in the collection,
+     * including the ones of their child objects.
+     *
+     * _By default read-only business object collections are supposed to be valid._
+     *
+     * @function ReadOnlyRootCollectionSync#checkRules
+     */
+    this.checkRules = function() {
+      brokenRules.clear();
+
+      properties.forEach(function(property) {
+        rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
+      });
+      isValidated = true;
+    };
+
+    /**
      * Gets the broken rules of the business object collection.
+     *
+     * _By default read-only business object collections are supposed to be valid._
      *
      * @function ReadOnlyRootCollectionSync#getBrokenRules
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
