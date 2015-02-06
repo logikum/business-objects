@@ -56,13 +56,21 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
         'ReadOnlyRootCollection', 'ReadOnlyChildModel');
 
   /**
-   * @classdesc Represents the definition of an asynchronous read-only root collection.
-   * @description Creates a new asynchronous read-only root collection instance.
+   * @classdesc
+   *    Represents the definition of an asynchronous read-only root collection.
+   * @description
+   *    Creates a new asynchronous read-only root collection instance.
+   *
+   *    _The name of the model type available as:
+   *    __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyRootCollection'._
    *
    * @name ReadOnlyRootCollection
    * @constructor
    *
    * @extends ModelBase
+   *
+   * @fires ReadOnlyRootCollection#preFetch
+   * @fires ReadOnlyRootCollection#postFetch
    */
   var ReadOnlyRootCollection = function () {
     CollectionBase.call(this);
@@ -73,14 +81,28 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
     var dao = null;
     var dataContext = null;
 
-    this.name = name;
-
     // Get data access object.
     if (extensions.daoBuilder)
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
+    /**
+     * The name of the model.
+     *
+     * @name ReadOnlyRootCollection#$modelName
+     * @type {string}
+     * @readonly
+     */
+    this.$modelName = name;
+
+    /**
+     * The count of the child objects in the collection.
+     *
+     * @name ReadOnlyRootCollection#count
+     * @type {number}
+     * @readonly
+     */
     Object.defineProperty(self, 'count', {
       get: function () {
         return items.length;
@@ -90,6 +112,12 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
 
     //region Transfer object methods
 
+    /**
+     * Transforms the business object collection to a plain object array to send to the client.
+     *
+     * @function ReadOnlyRootCollection#toCto
+     * @returns {Array.<{}>} The client transfer object.
+     */
     this.toCto = function () {
       var cto = [];
       items.forEach(function (item) {
@@ -121,6 +149,8 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
     //endregion
 
     //region Data portal methods
+
+    //region Helper
 
     function getDataContext (connection) {
       if (!dataContext)
@@ -159,11 +189,21 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
           });
     }
 
+    //endregion
+
+    //region Fetch
+
     function data_fetch (filter, method, callback) {
       var hasConnection = false;
       // Helper callback for failure.
       function succeeded (cb) {
         // Launch finish event.
+        /**
+         * The event arises after the collection instance has been retrieved from the repository.
+         * @event ReadOnlyRootCollection#postFetch
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {ReadOnlyRootCollection} newObject - The collection instance after the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.postFetch),
             getEventArgs(DataPortalAction.fetch, method),
@@ -212,6 +252,12 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
       function main (connection, cb) {
         hasConnection = connection !== null;
         // Launch start event.
+        /**
+         * The event arises before the collection instance will be retrieved from the repository.
+         * @event ReadOnlyRootCollection#preFetch
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {ReadOnlyRootCollection} oldObject - The collection instance before the data portal action.
+         */
         self.emit(
             DataPortalEvent.getName(DataPortalEvent.preFetch),
             getEventArgs(DataPortalAction.fetch, method),
@@ -246,8 +292,20 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
 
     //endregion
 
+    //endregion
+
     //region Actions
 
+    /**
+     * Initializes a business object collection to be retrieved from the repository.
+     * <br/>_This method is called by a factory method with the same name._
+     *
+     * @function ReadOnlyRootCollection#fetch
+     * @protected
+     * @param {*} [filter] - The filter criteria.
+     * @param {string} [method] - An alternative fetch method of the data access object.
+     * @param {external~cbDataPortal} callback - Returns the required read-only collection.
+     */
     this.fetch = function(filter, method, callback) {
       data_fetch(filter, method || M_FETCH, callback);
     };
@@ -256,6 +314,13 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
 
     //region Validation
 
+    /**
+     * Gets the broken rules of the business object collection.
+     *
+     * @function ReadOnlyRootCollection#getBrokenRules
+     * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+     * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object collection.
+     */
     this.getBrokenRules = function(namespace) {
       return brokenRules.output(namespace);
     };
@@ -264,30 +329,82 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
 
     //region Public array methods
 
+    /**
+     * Gets a collection item at a specific position.
+     *
+     * @function ReadOnlyRootCollection#at
+     * @param {number} index - The index of the required item in the collection.
+     * @returns {ReadOnlyChildModel} The required collection item.
+     */
     this.at = function (index) {
       return items[index];
     };
 
+    /**
+     * Executes a provided function once per collection item.
+     *
+     * @function ReadOnlyRootCollection#forEach
+     * @param {external~cbCollectionItem} callback - Function that produces an item of the new collection.
+     */
     this.forEach = function (callback) {
       items.forEach(callback);
     };
 
+    /**
+     * Tests whether all items in the collection pass the test implemented by the provided function.
+     *
+     * @function ReadOnlyRootCollection#every
+     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {boolean} True when callback returns truthy value for each item, otherwise false.
+     */
     this.every = function (callback) {
       return items.every(callback);
     };
 
+    /**
+     * Tests whether some item in the collection pass the test implemented by the provided function.
+     *
+     * @function ReadOnlyRootCollection#some
+     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {boolean} True when callback returns truthy value for some item, otherwise false.
+     */
     this.some = function (callback) {
       return items.some(callback);
     };
 
+    /**
+     * Creates a new array with all collection items that pass the test
+     * implemented by the provided function.
+     *
+     * @function ReadOnlyRootCollection#filter
+     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {Array.<ReadOnlyChildModel>} The new array of collection items.
+     */
     this.filter = function (callback) {
       return items.filter(callback);
     };
 
+    /**
+     * Creates a new array with the results of calling a provided function
+     * on every item in this collection.
+     *
+     * @function ReadOnlyRootCollection#map
+     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {Array.<*>} The new array of callback results.
+     */
     this.map = function (callback) {
       return items.map(callback);
     };
 
+    /**
+     * Sorts the items of the collection in place and returns the collection.
+     *
+     * @function ReadOnlyRootCollection#sort
+     * @param {external~cbCompare} [fnCompare] - Function that defines the sort order.
+     *      If omitted, the collection is sorted according to each character's Unicode
+     *      code point value, according to the string conversion of each item.
+     * @returns {ReadOnlyRootCollection} The sorted collection.
+     */
     this.sort = function (fnCompare) {
       return items.sort(fnCompare);
     };
@@ -299,8 +416,32 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
   };
   util.inherits(ReadOnlyRootCollection, CollectionBase);
 
+  /**
+   * The name of the model type.
+   *
+   * @property {string} ReadOnlyRootCollection.constructor.modelType
+   * @default ReadOnlyRootCollection
+   * @readonly
+   */
+  Object.defineProperty(ReadOnlyRootCollection, 'modelType', {
+    get: function () { return 'ReadOnlyRootCollection'; }
+  });
+
   //region Factory methods
 
+  /**
+   * Retrieves a read-only business object collection from the repository.
+   *
+   * @function ReadOnlyRootCollection.fetch
+   * @param {*} [filter] - The filter criteria.
+   * @param {string} [method] - An alternative fetch method of the data access object.
+   * @param {external~cbDataPortal} callback - Returns the required read-only collection.
+   *
+   * @throws {@link bo.rules.AuthorizationError Authorization error}:
+   *      The user has no permission to execute the action.
+   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   *    Fetching the business object collection has failed.
+   */
   ReadOnlyRootCollection.fetch = function(filter, method, callback) {
     if (!callback) {
       callback = method;
@@ -316,8 +457,6 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
   };
 
   //endregion
-
-  ReadOnlyRootCollection.modelType = 'ReadOnlyRootCollection';
 
   return ReadOnlyRootCollection;
 };

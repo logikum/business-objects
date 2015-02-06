@@ -1,3 +1,5 @@
+### 1. Imports
+
 Before you create a model definition, first define the namespaces and helper objects:
 
 ```
@@ -12,6 +14,8 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 ```
+
+### 2. Model definition
 
 Next define the properties of the model:
 
@@ -78,8 +82,12 @@ var BlanketOrderFactory = {
 };
 ```
 
-Save the model definition as blanket-order.js. It will search a data access object
-named blanket-order.dao.js, create it with the required methods:
+Save the model definition as blanket-order.js.
+
+### 3. Data access object
+
+The model will search a data access object named blanket-order.dao.js,
+create it with the required methods:
 
 ```
 var util = require('util');
@@ -121,6 +129,8 @@ BlanketOrderDao.prototype.remove = function(filter, callback) {
   callback(null);
 };
 ```
+
+### 4. Model usage
 
 The model can be used now. Create an instance of the model and store it:
 
