@@ -49,6 +49,9 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
+ *
+ * @throws {@link bo.shared.ModelError Model error}:
+ *    The child objects must be EditableChildCollection or EditableChildModel instances.
  */
 var EditableChildModelFactory = function(properties, rules, extensions) {
 
@@ -78,8 +81,8 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
-   *    The parent object must be an EditableChildCollection, EditableRootModel,
-   *    EditableChildModel or CommandObject instance.
+   *    The parent object must be an EditableChildCollection, EditableRootModel or
+   *    EditableChildModel instance.
    *
    * @fires EditableChildModel#preCreate
    * @fires EditableChildModel#postCreate
@@ -101,8 +104,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
           //'EditableRootCollection',
           'EditableChildCollection',
           'EditableRootModel',
-          'EditableChildModel',
-          'CommandObject'
+          'EditableChildModel'
         ],
         'c_modelType', properties.name, 'parent');
 
@@ -1006,12 +1008,12 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
     };
 
     /**
-     * Initializes a business object retrieved from the repository.
+     * Initializes a business object with data retrieved from the repository.
      * <br/>_This method is called by the parent object._
      *
      * @function EditableChildModel#fetch
      * @protected
-     * @param {{}} [data] - The initial data.
+     * @param {{}} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
      * @param {external~cbDataPortal} callback - Returns the required editable business object.
      */
@@ -1244,7 +1246,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @function EditableChildModel.load
    * @protected
    * @param {{}} parent - The parent business object.
-   * @param {{}} data - An alternative fetch method of the data access object.
+   * @param {{}} data - The data to load into the business object.
    * @param {external~cbDataPortal} callback - Returns the required editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:

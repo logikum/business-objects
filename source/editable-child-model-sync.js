@@ -49,6 +49,9 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ *
+ * @throws {@link bo.shared.ModelError Model error}:
+ *    The child objects must be EditableChildCollectionSync or EditableChildModelSync instances.
  */
 var EditableChildModelSyncFactory = function(properties, rules, extensions) {
 
@@ -78,8 +81,8 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
    * @extends ModelBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
-   *    The parent object must be an EditableChildCollectionSync, EditableRootModelSync,
-   *    EditableChildModelSync or CommandObjectSync instance.
+   *    The parent object must be an EditableChildCollectionSync, EditableRootModelSync or
+   *    EditableChildModelSync instance.
    *
    * @fires EditableChildModelSync#preCreate
    * @fires EditableChildModelSync#postCreate
@@ -101,8 +104,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
           //'EditableRootCollectionSync',
           'EditableChildCollectionSync',
           'EditableRootModelSync',
-          'EditableChildModelSync',
-          'CommandObjectSync'
+          'EditableChildModelSync'
         ],
         'c_modelType', properties.name, 'parent');
 
@@ -860,12 +862,12 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
     };
 
     /**
-     * Initializes a business object retrieved from the repository.
+     * Initializes a business object with data retrieved from the repository.
      * <br/>_This method is called by the parent object._
      *
      * @function EditableChildModelSync#fetch
      * @protected
-     * @param {{}} [data] - The initial data.
+     * @param {{}} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
      */
     this.fetch = function(data, method) {
@@ -1091,7 +1093,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
    * @function EditableChildModelSync.load
    * @protected
    * @param {{}} parent - The parent business object.
-   * @param {{}} data - An alternative fetch method of the data access object.
+   * @param {{}} data - The data to load into the business object.
    * @returns {EditableChildModelSync} The required editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:

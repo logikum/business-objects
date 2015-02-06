@@ -49,8 +49,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
    * @extends CollectionBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
-   *    The parent object must be an EditableRootModelSync, EditableChildModelSync
-   *    or CommandObjectSync instance.
+   *    The parent object must be an EditableRootModelSync or EditableChildModelSync instance.
    */
   var EditableChildCollectionSync = function (parent) {
     CollectionBase.call(this);
@@ -59,8 +58,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
     parent = EnsureArgument.isModelType(parent,
         [
           'EditableRootModelSync',
-          'EditableChildModelSync',
-          'CommandObjectSync'
+          'EditableChildModelSync'
         ],
         'c_modelType', name, 'parent');
 
@@ -170,7 +168,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
      *
      * @function EditableChildCollectionSync#fetch
      * @protected
-     * @param {{}} [data] - The initial data.
+     * @param {Array.<{}>} [data] - The data to load into the business object collection.
      */
     this.fetch = function (data) {
       if (data instanceof Array) {
@@ -288,7 +286,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
      * @param {external~cbCompare} [fnCompare] - Function that defines the sort order.
      *      If omitted, the collection is sorted according to each character's Unicode
      *      code point value, according to the string conversion of each item.
-     * @returns {Array.<EditableChildModelSync>} The sorted collection.
+     * @returns {EditableChildCollectionSync} The sorted collection.
      */
     this.sort = function (fnCompare) {
       return items.sort(fnCompare);
