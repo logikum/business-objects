@@ -45,13 +45,14 @@ var EditableChildCollectionFactory = function(name, itemType) {
    * @name EditableChildCollection
    * @constructor
    * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends CollectionBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be an EditableRootModel or EditableChildModel instance.
    */
-  var EditableChildCollection = function (parent) {
+  var EditableChildCollection = function (parent, eventHandlers) {
     CollectionBase.call(this);
 
     // Verify the model type of the parent model.
@@ -162,7 +163,7 @@ var EditableChildCollectionFactory = function(name, itemType) {
      * @param {external~cbDataPortal} callback - Returns the newly created editable business object.
      */
     this.create = function (callback) {
-      itemType.create(parent, function (err, item) {
+      itemType.create(parent, eventHandlers, function (err, item) {
         if (err)
           callback(err);
         items.push(item);
@@ -184,7 +185,7 @@ var EditableChildCollectionFactory = function(name, itemType) {
         var count = 0;
         var error = null;
         data.forEach(function (dto) {
-          itemType.load(parent, dto, function (err, item) {
+          itemType.load(parent, dto, eventHandlers, function (err, item) {
             if (err)
               error = error || err;
             else

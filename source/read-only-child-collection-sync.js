@@ -43,6 +43,7 @@ var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
    * @name ReadOnlyChildCollectionSync
    * @constructor
    * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends CollectionBase
    *
@@ -50,7 +51,7 @@ var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
    *    The parent object must be an ReadOnlyRootModelSync, ReadOnlyChildModelSync or
    *    CommandObjectSync instance.
    */
-  var ReadOnlyChildCollectionSync = function (parent) {
+  var ReadOnlyChildCollectionSync = function (parent, eventHandlers) {
     CollectionBase.call(this);
 
     // Verify the model type of the parent model.
@@ -120,7 +121,7 @@ var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
     this.fetch = function (data) {
       if (data instanceof Array) {
         data.forEach(function (dto) {
-          var item = itemType.load(parent, dto);
+          var item = itemType.load(parent, dto, eventHandlers);
           items.push(item);
         });
       }

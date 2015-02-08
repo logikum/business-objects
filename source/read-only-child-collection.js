@@ -40,6 +40,7 @@ var ReadOnlyChildCollectionFactory = function(name, itemType) {
    * @name ReadOnlyChildCollection
    * @constructor
    * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends CollectionBase
    *
@@ -47,7 +48,7 @@ var ReadOnlyChildCollectionFactory = function(name, itemType) {
    *    The parent object must be an ReadOnlyRootModel, ReadOnlyChildModel
    *    or CommandObject instance.
    */
-  var ReadOnlyChildCollection = function (parent) {
+  var ReadOnlyChildCollection = function (parent, eventHandlers) {
     CollectionBase.call(this);
 
     // Verify the model type of the parent model.
@@ -120,7 +121,7 @@ var ReadOnlyChildCollectionFactory = function(name, itemType) {
         var count = 0;
         var error = null;
         data.forEach(function (dto) {
-          itemType.load(parent, dto, function (err, item) {
+          itemType.load(parent, dto, eventHandlers, function (err, item) {
             if (err)
               error = error || err;
             else

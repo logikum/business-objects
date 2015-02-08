@@ -10,6 +10,7 @@ var Enumeration = require('./system/enumeration.js');
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
 
@@ -74,14 +75,21 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
    *
    * @name ReadOnlyRootModelSync
    * @constructor
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires ReadOnlyRootModelSync#preFetch
    * @fires ReadOnlyRootModelSync#postFetch
    */
-  var ReadOnlyRootModelSync = function() {
+  var ReadOnlyRootModelSync = function(eventHandlers) {
     ModelBase.call(this);
+
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', 'ReadOnlyRootModelSync', 'eventHandlers');
 
     var self = this;
     var store = new DataStore();
@@ -100,6 +108,10 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -207,8 +219,12 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, false);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -232,11 +248,7 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyRootModelSync} oldObject - The instance of the model before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preFetch),
-              getEventArgs(DataPortalAction.fetch, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.preFetch, method);
           // Execute fetch.
           var dto = null;
           if (extensions.dataFetch) {
@@ -257,22 +269,14 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyRootModelSync} newObject - The instance of the model after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postFetch),
-              getEventArgs(DataPortalAction.fetch, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.postFetch, method);
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
           // Wrap the intercepted error.
           var dpError = wrapError(DataPortalAction.fetch, e);
           // Launch finish event.
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postFetch),
-              getEventArgs(DataPortalAction.fetch, method, dpError),
-              self
-          );
+          raiseEvent(DataPortalEvent.postFetch, method, dpError);
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Rethrow error.
@@ -400,9 +404,9 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          store.initValue(property, property.type.create(self));
+          store.initValue(property, property.type.create(self, eventHandlers));
         else                      // Collection
-          store.initValue(property, new property.type(self));
+          store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -450,6 +454,7 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
    * @function ReadOnlyRootModelSync.fetch
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {ReadOnlyRootModelSync} The required read-only business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
@@ -457,8 +462,8 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *    Fetching the business object has failed.
    */
-  ReadOnlyRootModelSync.fetch = function(filter, method) {
-    var instance = new ReadOnlyRootModelSync();
+  ReadOnlyRootModelSync.fetch = function(filter, method, eventHandlers) {
+    var instance = new ReadOnlyRootModelSync(eventHandlers);
     instance.fetch(filter, method);
     return instance;
   };

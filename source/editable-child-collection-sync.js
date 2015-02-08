@@ -45,13 +45,14 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
    * @name EditableChildCollectionSync
    * @constructor
    * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends CollectionBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be an EditableRootModelSync or EditableChildModelSync instance.
    */
-  var EditableChildCollectionSync = function (parent) {
+  var EditableChildCollectionSync = function (parent, eventHandlers) {
     CollectionBase.call(this);
 
     // Verify the model type of the parent model.
@@ -157,7 +158,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
      * @returns {EditableChildModelSync} The newly created business object.
      */
     this.create = function () {
-      var item = itemType.create(parent);
+      var item = itemType.create(parent, eventHandlers);
       items.push(item);
       return item;
     };
@@ -173,7 +174,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
     this.fetch = function (data) {
       if (data instanceof Array) {
         data.forEach(function (dto) {
-          var item = itemType.load(parent, dto);
+          var item = itemType.load(parent, dto, eventHandlers);
           items.push(item);
         });
       }

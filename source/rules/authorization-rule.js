@@ -54,7 +54,7 @@ function AuthorizationRule(ruleName) {
     },
     set: function (value) {
       noAccessBehavior = EnsureArgument.isEnumMember(value, NoAccessBehavior, null,
-          'p_enumType', 'AuthorizationRule', 'noAccessBehavior');
+          'p_enumMember', 'AuthorizationRule', 'noAccessBehavior');
     },
     enumeration: true
   });
@@ -77,7 +77,7 @@ function AuthorizationRule(ruleName) {
   this.initialize = function (action, target, message, priority, stopsProcessing) {
 
     action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
-        'm_enumType', 'AuthorizationRule', 'initialize', 'action');
+        'm_enumMember', 'AuthorizationRule', 'initialize', 'action');
     this.ruleId = AuthorizationAction.getName(action);
 
     if (action === AuthorizationAction.readProperty || action === AuthorizationAction.writeProperty) {

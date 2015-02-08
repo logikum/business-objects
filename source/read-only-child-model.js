@@ -10,6 +10,7 @@ var Enumeration = require('./system/enumeration.js');
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManager = require('./shared/extension-manager.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
 
@@ -74,17 +75,20 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
    * @name ReadOnlyChildModel
    * @constructor
    * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be a ReadOnlyRootCollection, ReadOnlyChildCollection,
    *    ReadOnlyRootModel, ReadOnlyChildModel or CommandObject instance.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires ReadOnlyChildModel#preFetch
    * @fires ReadOnlyChildModel#postFetch
    */
-  var ReadOnlyChildModel = function(parent) {
+  var ReadOnlyChildModel = function(parent, eventHandlers) {
     ModelBase.call(this);
 
     // Verify the model type of the parent model.
@@ -98,6 +102,9 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
         ],
         'c_modelType', properties.name, 'parent');
 
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', properties.name, 'eventHandlers');
+
     var self = this;
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
@@ -107,6 +114,10 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -231,8 +242,12 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
       return dataContext.setState(null, false);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -258,11 +273,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
              * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
              * @param {ReadOnlyChildModel} newObject - The instance of the model after the data portal action.
              */
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postFetch),
-                getEventArgs(DataPortalAction.fetch, method),
-                self
-            );
+            raiseEvent(DataPortalEvent.postFetch, method);
             cb(null, self);
           }
         });
@@ -271,11 +282,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
       function failed (err, cb) {
         // Launch finish event.
         var dpError = wrapError(DataPortalAction.fetch, err);
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.postFetch),
-            getEventArgs(DataPortalAction.fetch, method, dpError),
-            self
-        );
+        raiseEvent(DataPortalEvent.postFetch, method, dpError);
         cb(err);
       }
       // Check permissions.
@@ -287,11 +294,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {ReadOnlyChildModel} oldObject - The instance of the model before the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.preFetch),
-            getEventArgs(DataPortalAction.fetch, method),
-            self
-        );
+        raiseEvent(DataPortalEvent.preFetch, method);
         // Execute fetch.
         if (extensions.dataFetch) {
           // Custom fetch.
@@ -432,11 +435,11 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, function (err, item) {
+          property.type.create(self, eventHandlers, function (err, item) {
             store.initValue(property, item);
           });
         else                      // Collection
-          store.initValue(property, new property.type(self));
+          store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -486,13 +489,14 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
    * @protected
    * @param {{}} parent - The parent business object.
    * @param {{}} data - The data to load into the business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external~cbDataPortal} callback - Returns the required read-only business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    */
-  ReadOnlyChildModel.load = function(parent, data, callback) {
-    var instance = new ReadOnlyChildModel(parent);
+  ReadOnlyChildModel.load = function(parent, data, eventHandlers, callback) {
+    var instance = new ReadOnlyChildModel(parent, eventHandlers);
     instance.fetch(data, undefined, function (err) {
       if (err)
         callback(err);

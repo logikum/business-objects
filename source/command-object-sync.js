@@ -10,6 +10,7 @@ var Enumeration = require('./system/enumeration.js');
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
 
@@ -75,14 +76,21 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
    *
    * @name CommandObjectSync
    * @constructor
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires CommandObjectSync#preExecute
    * @fires CommandObjectSync#postExecute
    */
-  var CommandObjectSync = function() {
+  var CommandObjectSync = function(eventHandlers) {
     ModelBase.call(this);
+
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', 'CommandObjectSync', 'eventHandlers');
 
     var self = this;
     var store = new DataStore();
@@ -101,6 +109,10 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -199,8 +211,12 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, false);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -224,11 +240,7 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {CommandObjectSync} oldObject - The instance of the model before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preExecute),
-              getEventArgs(DataPortalAction.execute, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.preExecute, method);
           // Execute command.
           var dto = {};
           if (extensions.dataExecute) {
@@ -249,24 +261,15 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {CommandObjectSync} newObject - The instance of the model after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postExecute),
-              getEventArgs(DataPortalAction.execute, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.postExecute, method);
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
           // Wrap the intercepted error.
           var dpError = wrapError(DataPortalAction.execute, e);
           // Launch finish event.
-          if (connection) {
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postExecute),
-                getEventArgs(DataPortalAction.execute, method, dpError),
-                self
-            );
-          }
+          if (connection)
+            raiseEvent(DataPortalEvent.postExecute, method, dpError);
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
           // Rethrow error.
@@ -398,9 +401,9 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          store.initValue(property, property.type.create(self));
+          store.initValue(property, property.type.create(self, eventHandlers));
         else                      // Collection
-          store.initValue(property, new property.type(self));
+          store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -454,10 +457,11 @@ var CommandObjectSyncFactory = function(properties, rules, extensions) {
    * Creates a new command object instance.
    *
    * @function CommandObjectSync.create
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {CommandObjectSync} A new command object.
    */
-  CommandObjectSync.create = function() {
-    return new CommandObjectSync();
+  CommandObjectSync.create = function(eventHandlers) {
+    return new CommandObjectSync(eventHandlers);
   };
 
   //endregion

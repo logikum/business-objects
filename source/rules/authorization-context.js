@@ -29,7 +29,7 @@ var AuthorizationAction = require('./authorization-action.js');
 function AuthorizationContext(action, targetName, brokenRules) {
 
   action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
-      'c_enumType', 'AuthorizationContext', 'action');
+      'c_enumMember', 'AuthorizationContext', 'action');
   targetName = EnsureArgument.isString(targetName,
       'c_string', 'AuthorizationContext', 'targetName');
   /**

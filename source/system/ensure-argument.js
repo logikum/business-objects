@@ -421,7 +421,7 @@ EnsureArgument.isEnumMember = function (value, type, defaultValue, message) {
   if (!(type && type.hasMember && type.constructor &&
       type.constructor.super_ && type.constructor.super_.name === 'Enumeration'))
     failed(arguments, 4, 'enumType', type);
-  if (defaultValue && (value === null || value === undefined))
+  if ((value === null || value === undefined) && typeof defaultValue === 'number')
     value = defaultValue;
   if (!type.hasMember(value))
     failed(arguments, 4, message || 'enumMember', type);

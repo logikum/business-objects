@@ -9,6 +9,7 @@ var EnsureArgument = require('./system/ensure-argument.js');
 var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
@@ -66,14 +67,21 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
    *
    * @name ReadOnlyRootCollectionSync
    * @constructor
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires ReadOnlyRootCollectionSync#preFetch
    * @fires ReadOnlyRootCollectionSync#postFetch
    */
-  var ReadOnlyRootCollectionSync = function () {
+  var ReadOnlyRootCollectionSync = function (eventHandlers) {
     CollectionBase.call(this);
+
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', 'ReadOnlyRootCollectionSync', 'eventHandlers');
 
     var self = this;
     var items = [];
@@ -111,6 +119,10 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
       },
       enumerable: false
     });
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -160,8 +172,12 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
       return dataContext.setState(connection, false);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -185,11 +201,7 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyRootCollectionSync} oldObject - The collection instance before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preFetch),
-              getEventArgs(DataPortalAction.fetch, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.preFetch, method);
           // Execute fetch.
           var dto = null;
           if (extensions.dataFetch) {
@@ -203,7 +215,7 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
           // Load children.
           if (dto instanceof Array) {
             dto.forEach(function (data) {
-              var item = itemType.load(self, data);
+              var item = itemType.load(self, data, eventHandlers);
               items.push(item);
             });
           }
@@ -214,22 +226,14 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyRootCollectionSync} newObject - The collection instance after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postFetch),
-              getEventArgs(DataPortalAction.fetch, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.postFetch, method);
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
           // Wrap the intercepted error.
           var dpError = wrapError(DataPortalAction.fetch, e);
           // Launch finish event.
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postFetch),
-              getEventArgs(DataPortalAction.fetch, method, dpError),
-              self
-          );
+          raiseEvent(DataPortalEvent.postFetch, method, dpError);
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Rethrow error.
@@ -418,6 +422,7 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
    * @function ReadOnlyRootCollectionSync.fetch
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {ReadOnlyRootCollectionSync} The required read-only business object collection.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
@@ -425,8 +430,8 @@ var ReadOnlyRootCollectionSyncFactory = function(name, itemType, rules, extensio
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *    Fetching the business object collection has failed.
    */
-  ReadOnlyRootCollectionSync.fetch = function(filter, method) {
-    var instance = new ReadOnlyRootCollectionSync();
+  ReadOnlyRootCollectionSync.fetch = function(filter, method, eventHandlers) {
+    var instance = new ReadOnlyRootCollectionSync(eventHandlers);
     instance.fetch(filter, method);
     return instance;
   };

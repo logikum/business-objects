@@ -7,6 +7,7 @@ var ModelError = require('../../source/shared/model-error.js');
 var ConfigurationError = require('../../source/shared/configuration-error.js');
 var ExtensionManager = require('../../source/shared/extension-manager.js');
 var ExtensionManagerSync = require('../../source/shared/extension-manager-sync.js');
+var EventHandlerList = require('../../source/shared/event-handler-list.js');
 var DataStore = require('../../source/shared/data-store.js');
 
 var PropertyInfo = require('../../source/shared/property-info.js');
@@ -38,6 +39,7 @@ describe('Shared component index', function () {
     expect(new shared.ConfigurationError('message')).toEqual(jasmine.any(ConfigurationError));
     expect(new shared.ExtensionManager('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManager));
     expect(new shared.ExtensionManagerSync('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManagerSync));
+    expect(new shared.EventHandlerList()).toEqual(jasmine.any(EventHandlerList));
     expect(new shared.DataStore()).toEqual(jasmine.any(DataStore));
 
     expect(new shared.PropertyInfo('property', text)).toEqual(jasmine.any(PropertyInfo));
@@ -49,7 +51,7 @@ describe('Shared component index', function () {
     expect(shared.DataPortalAction).toBe(DataPortalAction);
     expect(new shared.DataPortalContext(dao, [], getValue, setValue)).toEqual(jasmine.any(DataPortalContext));
     expect(shared.DataPortalEvent).toBe(DataPortalEvent);
-    expect(new shared.DataPortalEventArgs('model', DataPortalAction.fetch)).toEqual(jasmine.any(DataPortalEventArgs));
+    expect(new shared.DataPortalEventArgs(DataPortalEvent.preCreate, 'model')).toEqual(jasmine.any(DataPortalEventArgs));
     expect(new shared.DataPortalError('type', 'name', 0, {})).toEqual(jasmine.any(DataPortalError));
   });
 });

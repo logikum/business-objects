@@ -6,6 +6,9 @@ var BlanketOrder = require('../sample/sync/blanket-order.js');
 var BlanketOrderView = require('../sample/sync/blanket-order-view.js');
 var BlanketOrderList = require('../sample/sync/blanket-order-list.js');
 
+var DataPortalEvent = require('../source/shared/data-portal-event.js');
+var EventHandlerList = require('../source/shared/event-handler-list.js');
+
 var contractDate = new Date(2014, 12, 15, 15, 26);
 var contractDate_u = new Date(2014, 12, 20, 8, 40);
 var expiry1 = new Date(2015, 1, 1, 0, 0);
@@ -14,6 +17,16 @@ var shipDate1 = new Date(2015, 1, 8, 12, 0);
 var shipDate2 = new Date(2015, 2, 28, 16, 30);
 
 describe('Synchronous data portal method', function () {
+
+  function ehPreFetch (eventArgs, oldObject) {
+    console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preFetch event.');
+  }
+  function ehPostFetch (eventArgs, newObject) {
+    console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postFetch event.');
+  }
+  var eventHandlers = new EventHandlerList();
+  eventHandlers.add('BlanketOrderView', DataPortalEvent.preFetch, ehPreFetch);
+  eventHandlers.add('BlanketOrderView', DataPortalEvent.postFetch, ehPostFetch);
 
   it('create of sample editable model', function () {
     console.log('\n*** Synchronous CREATE');
@@ -279,7 +292,7 @@ describe('Synchronous data portal method', function () {
   it('fetch of sample read-only model', function () {
     console.log('\n*** Synchronous GET');
 
-    var orderView = BlanketOrderView.get(1);
+    var orderView = BlanketOrderView.get(1, eventHandlers);
 
     //region Check data
 

@@ -10,6 +10,7 @@ var Enumeration = require('./system/enumeration.js');
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
 
@@ -74,17 +75,20 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
    * @name ReadOnlyChildModelSync
    * @constructor
    * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be a ReadOnlyRootCollectionSync, ReadOnlyChildCollectionSync,
    *    ReadOnlyRootModelSync, ReadOnlyChildModelSync or CommandObjectSync instance.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires ReadOnlyChildModelSync#preFetch
    * @fires ReadOnlyChildModelSync#postFetch
    */
-  var ReadOnlyChildModelSync = function(parent) {
+  var ReadOnlyChildModelSync = function(parent, eventHandlers) {
     ModelBase.call(this);
 
     // Verify the model type of the parent model.
@@ -98,6 +102,9 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
         ],
         'c_modelType', properties.name, 'parent');
 
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', 'ReadOnlyChildModelSync', 'eventHandlers');
+
     var self = this;
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
@@ -107,6 +114,10 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -215,8 +226,12 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
       return dataContext.setState(null, false);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -238,11 +253,7 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyChildModelSync} oldObject - The instance of the model before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preFetch),
-              getEventArgs(DataPortalAction.fetch, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.preFetch, method);
           // Execute fetch.
           var dto = null;
           if (extensions.dataFetch) {
@@ -263,20 +274,12 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyChildModelSync} newObject - The instance of the model after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postFetch),
-              getEventArgs(DataPortalAction.fetch, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.postFetch, method);
         } catch (e) {
           // Wrap the intercepted error.
           var dpError = wrapError(DataPortalAction.fetch, e);
           // Launch finish event.
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postFetch),
-              getEventArgs(DataPortalAction.fetch, method, dpError),
-              self
-          );
+          raiseEvent(DataPortalEvent.postFetch, method, dpError);
           // Rethrow the original error.
           throw e;
         }
@@ -403,9 +406,9 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          store.initValue(property, property.type.create(self));
+          store.initValue(property, property.type.create(self, eventHandlers));
         else                      // Collection
-          store.initValue(property, new property.type(self));
+          store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -455,13 +458,14 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
    * @protected
    * @param {{}} parent - The parent business object.
    * @param {{}} data - The data to load into the business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {ReadOnlyChildModelSync} The required read-only business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    */
-  ReadOnlyChildModelSync.load = function(parent, data) {
-    var instance = new ReadOnlyChildModelSync(parent);
+  ReadOnlyChildModelSync.load = function(parent, data, eventHandlers) {
+    var instance = new ReadOnlyChildModelSync(parent, eventHandlers);
     instance.fetch(data);
     return instance;
   };

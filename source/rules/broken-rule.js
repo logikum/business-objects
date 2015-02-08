@@ -53,7 +53,7 @@ function BrokenRule(ruleName, isPreserved, propertyName, message, severity) {
    * @type {bo.rules.RuleSeverity}
    */
   this.severity = EnsureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
-      'c_enumType', 'BrokenRule', 'severity');
+      'c_enumMember', 'BrokenRule', 'severity');
 }
 
 module.exports = BrokenRule;

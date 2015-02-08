@@ -37,7 +37,7 @@ var RuleManager = function () {
     },
     set: function (value) {
       noAccessBehavior = EnsureArgument.isEnumMember(value, NoAccessBehavior, NoAccessBehavior.throwError,
-          'p_enumType', 'RuleManager', 'noAccessBehavior');
+          'p_enumMember', 'RuleManager', 'noAccessBehavior');
     },
     enumeration: true
   });

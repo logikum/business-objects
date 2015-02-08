@@ -10,6 +10,7 @@ var Enumeration = require('./system/enumeration.js');
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManager = require('./shared/extension-manager.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
 
@@ -75,14 +76,21 @@ var CommandObjectFactory = function(properties, rules, extensions) {
    *
    * @name CommandObject
    * @constructor
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires CommandObject#preExecute
    * @fires CommandObject#postExecute
    */
-  var CommandObject = function() {
+  var CommandObject = function(eventHandlers) {
     ModelBase.call(this);
+
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', 'CommandObject', 'eventHandlers');
 
     var self = this;
     var store = new DataStore();
@@ -100,6 +108,10 @@ var CommandObjectFactory = function(properties, rules, extensions) {
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -214,8 +226,12 @@ var CommandObjectFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, false);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -271,11 +287,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
              * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
              * @param {CommandObject} newObject - The instance of the model after the data portal action.
              */
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postExecute),
-                getEventArgs(DataPortalAction.execute, method),
-                self
-            );
+            raiseEvent(DataPortalEvent.postExecute, method);
             cb(null, self);
           }
         });
@@ -285,11 +297,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
         if (hasConnection) {
           // Launch finish event.
           var dpError = wrapError(DataPortalAction.fetch, err);
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postExecute),
-              getEventArgs(DataPortalAction.execute, method, dpError),
-              self
-          );
+          raiseEvent(DataPortalEvent.postExecute, method, dpError);
         }
         cb(err);
       }
@@ -303,11 +311,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {CommandObject} oldObject - The instance of the model before the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.preExecute),
-            getEventArgs(DataPortalAction.execute, method),
-            self
-        );
+        raiseEvent(DataPortalEvent.preExecute, method);
         // Execute command.
         if (extensions.dataExecute) {
           // *** Custom execute.
@@ -465,11 +469,11 @@ var CommandObjectFactory = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, function (err, item) {
+          property.type.create(self, eventHandlers, function (err, item) {
             store.initValue(property, item);
           });
         else                      // Collection
-          store.initValue(property, new property.type(self));
+          store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -523,10 +527,11 @@ var CommandObjectFactory = function(properties, rules, extensions) {
    * Creates a new command object instance.
    *
    * @function CommandObject.create
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external~cbDataPortal} callback - Returns a new command object.
    */
-  CommandObject.create = function(callback) {
-    var instance = new CommandObject();
+  CommandObject.create = function(eventHandlers, callback) {
+    var instance = new CommandObject(eventHandlers);
     callback(null, instance);
   };
 

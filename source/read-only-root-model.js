@@ -10,6 +10,7 @@ var Enumeration = require('./system/enumeration.js');
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManager = require('./shared/extension-manager.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
 
@@ -74,14 +75,21 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
    *
    * @name ReadOnlyRootModel
    * @constructor
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires ReadOnlyRootModel#preFetch
    * @fires ReadOnlyRootModel#postFetch
    */
-  var ReadOnlyRootModel = function() {
+  var ReadOnlyRootModel = function(eventHandlers) {
     ModelBase.call(this);
+
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', 'ReadOnlyRootModel', 'eventHandlers');
 
     var self = this;
     var store = new DataStore();
@@ -99,6 +107,10 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -222,8 +234,12 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, false);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -273,11 +289,7 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
              * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
              * @param {ReadOnlyRootModel} newObject - The instance of the model after the data portal action.
              */
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postFetch),
-                getEventArgs(DataPortalAction.fetch, method),
-                self
-            );
+            raiseEvent(DataPortalEvent.postFetch, method);
             cb(null, self);
           }
         });
@@ -287,11 +299,7 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
         if (hasConnection) {
           // Launch finish event.
           var dpError = wrapError(DataPortalAction.fetch, err);
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postFetch),
-              getEventArgs(DataPortalAction.fetch, method, dpError),
-              self
-          );
+          raiseEvent(DataPortalEvent.postFetch, method, dpError);
         }
         cb(err);
       }
@@ -305,11 +313,7 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {ReadOnlyRootModel} oldObject - The instance of the model before the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.preFetch),
-            getEventArgs(DataPortalAction.fetch, method),
-            self
-        );
+        raiseEvent(DataPortalEvent.preFetch, method);
         // Execute fetch.
         if (extensions.dataFetch) {
           // *** Custom fetch.
@@ -459,11 +463,11 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, function (err, item) {
+          property.type.create(self, eventHandlers, function (err, item) {
             store.initValue(property, item);
           });
         else                      // Collection
-          store.initValue(property, new property.type(self));
+          store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -511,6 +515,7 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
    * @function ReadOnlyRootModel.fetch
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external~cbDataPortal} callback - Returns the required read-only business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
@@ -518,12 +523,8 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *    Fetching the business object has failed.
    */
-  ReadOnlyRootModel.fetch = function(filter, method, callback) {
-    if (!callback) {
-      callback = method;
-      method = undefined;
-    }
-    var instance = new ReadOnlyRootModel();
+  ReadOnlyRootModel.fetch = function(filter, method, eventHandlers, callback) {
+    var instance = new ReadOnlyRootModel(eventHandlers);
     instance.fetch(filter, method, function (err) {
       if (err)
         callback(err);

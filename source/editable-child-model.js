@@ -10,6 +10,7 @@ var Enumeration = require('./system/enumeration.js');
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManager = require('./shared/extension-manager.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
 
@@ -77,12 +78,15 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @name EditableChildModel
    * @constructor
    * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be an EditableChildCollection, EditableRootModel or
    *    EditableChildModel instance.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires EditableChildModel#preCreate
    * @fires EditableChildModel#postCreate
@@ -95,7 +99,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @fires EditableChildModel#preRemove
    * @fires EditableChildModel#postRemove
    */
-  var EditableChildModel = function(parent) {
+  var EditableChildModel = function(parent, eventHandlers) {
     ModelBase.call(this);
 
     // Verify the model type of the parent model.
@@ -107,6 +111,9 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
           'EditableChildModel'
         ],
         'c_modelType', properties.name, 'parent');
+
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', 'EditableChildModel', 'eventHandlers');
 
     var self = this;
     var state = null;
@@ -126,6 +133,10 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -547,8 +558,12 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, isDirty);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -594,11 +609,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableChildModel} newObject - The instance of the model after the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.postCreate),
-            getEventArgs(DataPortalAction.create),
-            self
-        );
+        raiseEvent(DataPortalEvent.postCreate);
         cb(null, self);
       }
       // Helper callback for failure.
@@ -606,11 +617,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         if (hasConnection) {
           // Launch finish event.
           var dpError = wrapError(DataPortalAction.create, err);
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postCreate),
-              getEventArgs(DataPortalAction.create, null, dpError),
-              self
-          );
+          raiseEvent(DataPortalEvent.postCreate, null, dpError);
         }
         cb(err);
       }
@@ -624,11 +631,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableChildModel} oldObject - The instance of the model before the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.preCreate),
-            getEventArgs(DataPortalAction.create),
-            self
-        );
+        raiseEvent(DataPortalEvent.preCreate);
         // Execute creation.
         if (extensions.dataCreate) {
           // *** Custom creation.
@@ -675,11 +678,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
              * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
              * @param {EditableChildModel} newObject - The instance of the model after the data portal action.
              */
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postFetch),
-                getEventArgs(DataPortalAction.fetch, method),
-                self
-            );
+            raiseEvent(DataPortalEvent.postFetch, method);
             cb(null, self);
           }
         });
@@ -688,11 +687,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       function failed (err, cb) {
         // Launch finish event.
         var dpError = wrapError(DataPortalAction.fetch, err);
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.postFetch),
-            getEventArgs(DataPortalAction.fetch, method, dpError),
-            self
-        );
+        raiseEvent(DataPortalEvent.postFetch, method, dpError);
         cb(err);
       }
       // Check permissions.
@@ -704,11 +699,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableChildModel} oldObject - The instance of the model before the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.preFetch),
-            getEventArgs(DataPortalAction.fetch, method),
-            self
-        );
+        raiseEvent(DataPortalEvent.preFetch, method);
         // Execute fetch.
         if (extensions.dataFetch) {
           // *** Custom fetch.
@@ -748,11 +739,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
              * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
              * @param {EditableChildModel} newObject - The instance of the model after the data portal action.
              */
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postInsert),
-                getEventArgs(DataPortalAction.insert),
-                self
-            );
+            raiseEvent(DataPortalEvent.postInsert);
             cb(null, self);
           }
         });
@@ -761,11 +748,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       function failed (err, cb) {
         // Launch finish event.
         var dpError = wrapError(DataPortalAction.insert, err);
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.postInsert),
-            getEventArgs(DataPortalAction.insert, null, dpError),
-            self
-        );
+        raiseEvent(DataPortalEvent.postInsert, null, dpError);
         cb(err);
       }
       // Main activity.
@@ -777,11 +760,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableChildModel} oldObject - The instance of the model before the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.preInsert),
-            getEventArgs(DataPortalAction.insert),
-            self
-        );
+        raiseEvent(DataPortalEvent.preInsert);
         // Execute insert.
         if (extensions.dataInsert) {
           // *** Custom insert.
@@ -842,11 +821,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
              * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
              * @param {EditableChildModel} newObject - The instance of the model after the data portal action.
              */
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postUpdate),
-                getEventArgs(DataPortalAction.update),
-                self
-            );
+            raiseEvent(DataPortalEvent.postUpdate);
             cb(null, self);
           }
         });
@@ -855,11 +830,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       function failed (err, cb) {
         // Launch finish event.
         var dpError = wrapError(DataPortalAction.update, err);
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.postUpdate),
-            getEventArgs(DataPortalAction.update, null, dpError),
-            self
-        );
+        raiseEvent(DataPortalEvent.postUpdate, null, dpError);
         cb(err);
       }
       // Main activity.
@@ -871,11 +842,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableChildModel} oldObject - The instance of the model before the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.preUpdate),
-            getEventArgs(DataPortalAction.update),
-            self
-        );
+        raiseEvent(DataPortalEvent.preUpdate);
         // Execute update.
         if (extensions.dataUpdate) {
           // *** Custom update.
@@ -923,22 +890,14 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableChildModel} newObject - The instance of the model after the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.postRemove),
-            getEventArgs(DataPortalAction.remove),
-            self
-        );
+        raiseEvent(DataPortalEvent.postRemove);
         cb(null, null);
       }
       // Helper callback for failure.
       function failed (err, cb) {
         // Launch finish event.
         var dpError = wrapError(DataPortalAction.remove, err);
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.postRemove),
-            getEventArgs(DataPortalAction.remove, null, dpError),
-            self
-        );
+        raiseEvent(DataPortalEvent.postRemove, null, dpError);
         cb(err);
       }
       // Main activity.
@@ -950,11 +909,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
          * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableChildModel} oldObject - The instance of the model before the data portal action.
          */
-        self.emit(
-            DataPortalEvent.getName(DataPortalEvent.preRemove),
-            getEventArgs(DataPortalAction.remove),
-            self
-        );
+        raiseEvent(DataPortalEvent.preRemove);
         // Remove children first.
         removeChildren(conn, function (err) {
           if (err)
@@ -1165,11 +1120,11 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, function (err, item) {
+          property.type.create(self, eventHandlers, function (err, item) {
             store.initValue(property, item);
           });
         else                      // Collection
-          store.initValue(property, new property.type(self));
+          store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -1218,6 +1173,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @function EditableChildModel.create
    * @protected
    * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external~cbDataPortal} callback - Returns a new editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
@@ -1225,8 +1181,8 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *    Creating the business object has failed.
    */
-  EditableChildModel.create = function(parent, callback) {
-    var instance = new EditableChildModel(parent);
+  EditableChildModel.create = function(parent, eventHandlers, callback) {
+    var instance = new EditableChildModel(parent, eventHandlers);
     instance.create(function (err) {
       if (err)
         callback(err);
@@ -1243,13 +1199,14 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @protected
    * @param {{}} parent - The parent business object.
    * @param {{}} data - The data to load into the business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external~cbDataPortal} callback - Returns the required editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    */
-  EditableChildModel.load = function(parent, data, callback) {
-    var instance = new EditableChildModel(parent);
+  EditableChildModel.load = function(parent, data, eventHandlers, callback) {
+    var instance = new EditableChildModel(parent, eventHandlers);
     instance.fetch(data, undefined, function (err) {
       if (err)
         callback(err);

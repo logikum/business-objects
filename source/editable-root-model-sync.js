@@ -10,6 +10,7 @@ var Enumeration = require('./system/enumeration.js');
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
 
@@ -34,8 +35,6 @@ var DataPortalError = require('./shared/data-portal-error.js');
 var MODEL_STATE = require('./shared/model-state.js');
 var MODEL_DESC = 'Editable root model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
-var E_PRESAVE = DataPortalEvent.getName(DataPortalEvent.preSave);
-var E_POSTSAVE = DataPortalEvent.getName(DataPortalEvent.postSave);
 
 //endregion
 
@@ -78,8 +77,12 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    *
    * @name EditableRootModelSync
    * @constructor
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
    *
    * @fires EditableRootModelSync#preCreate
    * @fires EditableRootModelSync#postCreate
@@ -94,8 +97,11 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    * @fires EditableRootModelSync#preSave
    * @fires EditableRootModelSync#postSave
    */
-  var EditableRootModelSync = function() {
+  var EditableRootModelSync = function(eventHandlers) {
     ModelBase.call(this);
+
+    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
+        'c_optType', 'EditableRootModelSync', 'eventHandlers');
 
     var self = this;
     var state = null;
@@ -116,6 +122,10 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
       dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
     else
       dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
+
+    // Set up event handlers.
+    if (eventHandlers)
+      eventHandlers.setup(self);
 
     //region Transfer object methods
 
@@ -488,8 +498,20 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
       return dataContext.setState(connection, isDirty);
     }
 
-    function getEventArgs (action, methodName, error) {
-      return new DataPortalEventArgs(properties.name, action, methodName, error);
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          self
+      );
+    }
+
+    function raiseSave (event, action, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, properties.name, action, null, error),
+          self
+      );
     }
 
     function wrapError (action, error) {
@@ -512,11 +534,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} oldObject - The instance of the model before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preCreate),
-              getEventArgs(DataPortalAction.create),
-              self
-          );
+          raiseEvent(DataPortalEvent.preCreate);
           // Execute creation.
           if (extensions.dataCreate) {
             // *** Custom creation.
@@ -534,24 +552,15 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} newObject - The instance of the model after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postCreate),
-              getEventArgs(DataPortalAction.create),
-              self
-          );
+          raiseEvent(DataPortalEvent.postCreate);
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
           // Wrap the intercepted error.
           var dpError = wrapError(DataPortalAction.create, e);
           // Launch finish event.
-          if (connection) {
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postCreate),
-                getEventArgs(DataPortalAction.create, null, dpError),
-                self
-            );
-          }
+          if (connection)
+            raiseEvent(DataPortalEvent.postCreate, null, dpError);
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Rethrow error.
@@ -577,11 +586,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} oldObject - The instance of the model before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preFetch),
-              getEventArgs(DataPortalAction.fetch, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.preFetch, method);
           // Execute fetch.
           var dto = null;
           if (extensions.dataFetch) {
@@ -603,24 +608,15 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} newObject - The instance of the model after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postFetch),
-              getEventArgs(DataPortalAction.fetch, method),
-              self
-          );
+          raiseEvent(DataPortalEvent.postFetch, method);
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
           // Wrap the intercepted error.
           var dpError = wrapError(DataPortalAction.fetch, e);
           // Launch finish event.
-          if (connection) {
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postFetch),
-                getEventArgs(DataPortalAction.fetch, method, dpError),
-                self
-            );
-          }
+          if (connection)
+            raiseEvent(DataPortalEvent.postFetch, method, dpError);
           // Close connection.
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Rethrow error.
@@ -640,18 +636,14 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
           // Launch start event.
-          self.emit(E_PRESAVE, getEventArgs(DataPortalAction.insert), self);
+          raiseSave(DataPortalEvent.preSave, DataPortalAction.insert);
           /**
            * The event arises before the business object instance will be created in the repository.
            * @event EditableRootModelSync#preInsert
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} oldObject - The instance of the model before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preInsert),
-              getEventArgs(DataPortalAction.insert),
-              self
-          );
+          raiseEvent(DataPortalEvent.preInsert);
           // Execute insert.
           if (extensions.dataInsert) {
             // *** Custom insert.
@@ -672,12 +664,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} newObject - The instance of the model after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postInsert),
-              getEventArgs(DataPortalAction.insert),
-              self
-          );
-          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.insert), self);
+          raiseEvent(DataPortalEvent.postInsert);
+          raiseSave(DataPortalEvent.postSave, DataPortalAction.insert);
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
@@ -685,12 +673,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           var dpError = wrapError(DataPortalAction.insert, e);
           // Launch finish event.
           if (connection) {
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postInsert),
-                getEventArgs(DataPortalAction.insert, null, dpError),
-                self
-            );
-            self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.insert, null, dpError), self);
+            raiseEvent(DataPortalEvent.postInsert, null, dpError);
+            raiseSave(DataPortalEvent.postSave, DataPortalAction.insert, dpError);
           }
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
@@ -711,18 +695,14 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
           // Launch start event.
-          self.emit(E_PRESAVE, getEventArgs(DataPortalAction.update), self);
+          raiseSave(DataPortalEvent.preSave, DataPortalAction.update);
           /**
            * The event arises before the business object instance will be updated in the repository.
            * @event EditableRootModelSync#preUpdate
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} oldObject - The instance of the model before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preUpdate),
-              getEventArgs(DataPortalAction.update),
-              self
-          );
+          raiseEvent(DataPortalEvent.preUpdate);
           // Execute update.
           if (extensions.dataUpdate) {
             // *** Custom update.
@@ -743,12 +723,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} newObject - The instance of the model after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postUpdate),
-              getEventArgs(DataPortalAction.update),
-              self
-          );
-          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.update), self);
+          raiseEvent(DataPortalEvent.postUpdate);
+          raiseSave(DataPortalEvent.postSave, DataPortalAction.update);
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
@@ -756,12 +732,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           var dpError = wrapError(DataPortalAction.update, e);
           // Launch finish event.
           if (connection) {
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postUpdate),
-                getEventArgs(DataPortalAction.update, null, dpError),
-                self
-            );
-            self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.update, null, dpError), self);
+            raiseEvent(DataPortalEvent.postUpdate, null, dpError);
+            raiseSave(DataPortalEvent.postSave, DataPortalAction.update, dpError);
           }
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
@@ -782,18 +754,14 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           // Start transaction.
           connection = config.connectionManager.beginTransaction(extensions.dataSource);
           // Launch start event.
-          self.emit(E_PRESAVE, getEventArgs(DataPortalAction.remove), self);
+          raiseSave(DataPortalEvent.preSave, DataPortalAction.remove);
           /**
            * The event arises before the business object instance will be removed from the repository.
            * @event EditableRootModelSync#preRemove
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} oldObject - The instance of the model before the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.preRemove),
-              getEventArgs(DataPortalAction.remove),
-              self
-          );
+          raiseEvent(DataPortalEvent.preRemove);
           // Remove children first.
           removeChildren(connection);
           // Execute removal.
@@ -813,12 +781,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
            * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootModelSync} newObject - The instance of the model after the data portal action.
            */
-          self.emit(
-              DataPortalEvent.getName(DataPortalEvent.postRemove),
-              getEventArgs(DataPortalAction.remove),
-              self
-          );
-          self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.remove), self);
+          raiseEvent(DataPortalEvent.postRemove);
+          raiseSave(DataPortalEvent.postSave, DataPortalAction.remove);
           // Finish transaction.
           connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
         } catch (e) {
@@ -826,12 +790,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
           var dpError = wrapError(DataPortalAction.remove, e);
           // Launch finish event.
           if (connection) {
-            self.emit(
-                DataPortalEvent.getName(DataPortalEvent.postRemove),
-                getEventArgs(DataPortalAction.remove, null, dpError),
-                self
-            );
-            self.emit(E_POSTSAVE, getEventArgs(DataPortalAction.remove, null, dpError), self);
+            raiseEvent(DataPortalEvent.postRemove, null, dpError);
+            raiseSave(DataPortalEvent.postSave, DataPortalAction.remove, dpError);
           }
           // Undo transaction.
           connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
@@ -1030,9 +990,9 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          store.initValue(property, property.type.create(self));
+          store.initValue(property, property.type.create(self, eventHandlers));
         else                      // Collection
-          store.initValue(property, new property.type(self));
+          store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
           get: function () {
@@ -1078,6 +1038,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    * Creates a new editable business object instance.
    *
    * @function EditableRootModelSync.create
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {EditableRootModelSync} A new editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
@@ -1085,8 +1046,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *    Creating the business object has failed.
    */
-  EditableRootModelSync.create = function() {
-    var instance = new EditableRootModelSync();
+  EditableRootModelSync.create = function(eventHandlers) {
+    var instance = new EditableRootModelSync(eventHandlers);
     instance.create();
     return instance;
   };
@@ -1097,6 +1058,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    * @function EditableRootModelSync.fetch
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {EditableRootModelSync} The required editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
@@ -1104,8 +1066,8 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *    Fetching the business object has failed.
    */
-  EditableRootModelSync.fetch = function(filter, method) {
-    var instance = new EditableRootModelSync();
+  EditableRootModelSync.fetch = function(filter, method, eventHandlers) {
+    var instance = new EditableRootModelSync(eventHandlers);
     instance.fetch(filter, method);
     return instance;
   };

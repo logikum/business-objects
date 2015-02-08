@@ -37,7 +37,7 @@ function BrokenRulesOutput () {
       message: EnsureArgument.isMandatoryString(message,
           'm_manString', 'BrokenRulesOutput', 'add', 'message'),
       severity: EnsureArgument.isEnumMember(severity, RuleSeverity, null,
-          'm_enumType', 'BrokenRulesOutput', 'add', 'severity')
+          'm_enumMember', 'BrokenRulesOutput', 'add', 'severity')
     };
 
     if (this[propertyName])
