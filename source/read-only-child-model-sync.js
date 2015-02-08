@@ -451,6 +451,21 @@ var ReadOnlyChildModelSyncFactory = function(properties, rules, extensions) {
   //region Factory methods
 
   /**
+   * Creates a new read-only business object instance.
+   * <br/>_This method is called by the parent object._
+   *
+   * @function ReadOnlyChildModelSync.create
+   * @protected
+   * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @returns {ReadOnlyChildModelSync} A new read-only business object.
+   */
+  ReadOnlyChildModelSync.create = function(parent, eventHandlers) {
+    var instance = new ReadOnlyChildModelSync(parent, eventHandlers);
+    return instance;
+  };
+
+  /**
    * Initializes a read-only business object width data retrieved from the repository.
    * <br/>_This method is called by the parent object._
    *

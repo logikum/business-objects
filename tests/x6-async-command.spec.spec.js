@@ -6,12 +6,30 @@ var ClearScheduleCommand = require('../sample/async/clear-schedule-command.js');
 var RescheduleShippingCommand = require('../custom/async-models/reschedule-shipping-command.js');
 var RescheduleShippingResult = require('../custom/async-models/reschedule-shipping-result.js');
 
+var DataPortalEvent = require('../source/shared/data-portal-event.js');
+var EventHandlerList = require('../source/shared/event-handler-list.js');
+
 describe('Asynchronous data portal method', function () {
+
+  function logEvent (eventArgs, oldObject) {
+    var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
+    console.log('  : ' + text);
+  }
+
+  var ehClearScheduleCommand = new EventHandlerList();
+  ehClearScheduleCommand.add('ClearScheduleCommand', DataPortalEvent.preExecute, logEvent);
+  ehClearScheduleCommand.add('ClearScheduleCommand', DataPortalEvent.postExecute, logEvent);
+
+  var ehRescheduleShippingCommand = new EventHandlerList();
+  ehRescheduleShippingCommand.add('RescheduleShippingCommand', DataPortalEvent.preExecute, logEvent);
+  ehRescheduleShippingCommand.add('RescheduleShippingCommand', DataPortalEvent.postExecute, logEvent);
+  ehRescheduleShippingCommand.add('RescheduleShippingResult', DataPortalEvent.preFetch, logEvent);
+  ehRescheduleShippingCommand.add('RescheduleShippingResult', DataPortalEvent.postFetch, logEvent);
 
   it('execute of sample command', function () {
     console.log('\n*** Asynchronous EXECUTE');
 
-    ClearScheduleCommand.create(function (err, cmd) {
+    ClearScheduleCommand.create(ehClearScheduleCommand, function (err, cmd) {
 
       cmd.on('preExecute', function (eventArgs, oldObject) {
         console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
@@ -34,7 +52,7 @@ describe('Asynchronous data portal method', function () {
   it('execute of custom command', function () {
     console.log('\n*** Asynchronous RESCHEDULE');
 
-    RescheduleShippingCommand.create(function (err, cmd) {
+    RescheduleShippingCommand.create(ehRescheduleShippingCommand, function (err, cmd) {
 
       cmd.on('preExecute', function (eventArgs, oldObject) {
         console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');

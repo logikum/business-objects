@@ -67,7 +67,7 @@ describe('Asynchronous fromCto method', function () {
   it('for creating sample editable model', function () {
     console.log('\n*** Asynchronous rebuild for sample CREATE');
 
-    BlanketOrder_S.create(function (err, order) {
+    BlanketOrder_S.create(null, function (err, order) {
       if (err) throw err;
 
       order.fromCto(data1);
@@ -215,7 +215,7 @@ describe('Asynchronous fromCto method', function () {
 
     //endregion
 
-    BlanketOrder_S.get(5, function (err, order) {
+    BlanketOrder_S.get(5, null, function (err, order) {
       if (err) throw err;
 
       order.fromCto(data2);
@@ -297,7 +297,7 @@ describe('Asynchronous fromCto method', function () {
   it('for creating custom editable model', function () {
     console.log('\n*** Asynchronous rebuild for custom CREATE');
 
-    BlanketOrder_C.create(function (err, order) {
+    BlanketOrder_C.create(null, function (err, order) {
       if (err) throw err;
 
       order.fromCto(data1);
@@ -445,7 +445,7 @@ describe('Asynchronous fromCto method', function () {
 
     //endregion
 
-    BlanketOrder_C.get(8, function (err, order) {
+    BlanketOrder_C.get(8, null, function (err, order) {
       if (err) throw err;
 
       order.fromCto(data3);

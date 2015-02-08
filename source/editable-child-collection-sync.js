@@ -140,7 +140,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
         });
         // Insert non existing data.
         dataNew.forEach(function (cto) {
-          var item = itemType.create(parent);
+          var item = itemType.create(parent, eventHandlers);
           item.fromCto(cto);
           items.push(item);
         });

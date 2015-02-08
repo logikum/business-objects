@@ -6,19 +6,30 @@ var ClearScheduleCommandSync = require('../sample/sync/clear-schedule-command.js
 var RescheduleShippingCommand = require('../custom/sync-models/reschedule-shipping-command.js');
 var RescheduleShippingResult = require('../custom/sync-models/reschedule-shipping-result.js');
 
+var DataPortalEvent = require('../source/shared/data-portal-event.js');
+var EventHandlerList = require('../source/shared/event-handler-list.js');
+
 describe('Synchronous data portal method', function () {
+
+  function logEvent (eventArgs, oldObject) {
+    var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
+    console.log('  : ' + text);
+  }
+
+  var ehClearScheduleCommand = new EventHandlerList();
+  ehClearScheduleCommand.add('ClearScheduleCommand', DataPortalEvent.preExecute, logEvent);
+  ehClearScheduleCommand.add('ClearScheduleCommand', DataPortalEvent.postExecute, logEvent);
+
+  var ehRescheduleShippingCommand = new EventHandlerList();
+  ehRescheduleShippingCommand.add('RescheduleShippingCommand', DataPortalEvent.preExecute, logEvent);
+  ehRescheduleShippingCommand.add('RescheduleShippingCommand', DataPortalEvent.postExecute, logEvent);
+  ehRescheduleShippingCommand.add('RescheduleShippingResult', DataPortalEvent.preFetch, logEvent);
+  ehRescheduleShippingCommand.add('RescheduleShippingResult', DataPortalEvent.postFetch, logEvent);
 
   it('execute of sample command', function () {
     console.log('\n*** Synchronous EXECUTE');
 
-    var cmd = ClearScheduleCommandSync.create();
-
-    cmd.on('preExecute', function (eventArgs, oldObject) {
-      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
-    });
-    cmd.on('postExecute', function (eventArgs, newObject) {
-      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
-    });
+    var cmd = ClearScheduleCommandSync.create(ehClearScheduleCommand);
 
     cmd.orderKey = 1;
     cmd.orderItemKey = 2;
@@ -32,7 +43,7 @@ describe('Synchronous data portal method', function () {
   it('execute of custom command', function () {
     console.log('\n*** Synchronous RESCHEDULE');
 
-    var cmd = RescheduleShippingCommand.create();
+    var cmd = RescheduleShippingCommand.create(ehRescheduleShippingCommand);
 
     cmd.on('preExecute', function (eventArgs, oldObject) {
       console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');

@@ -67,4 +67,10 @@ extensions.methods.push('reschedule');
 
 var RescheduleShippingCommand = bo.CommandObject(properties, rules, extensions);
 
-module.exports = RescheduleShippingCommand;
+var RescheduleShippingCommandFactory = {
+  create: function (eventHandlers, callback) {
+    RescheduleShippingCommand.create(eventHandlers, callback);
+  }
+};
+
+module.exports = RescheduleShippingCommandFactory;

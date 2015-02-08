@@ -21,11 +21,11 @@ var BlanketOrderList = bo.ReadOnlyRootCollection(
 );
 
 var BlanketOrderListFactory = {
-  getAll: function (callback) {
-    return BlanketOrderList.fetch(null, callback);
+  getAll: function (eventHandlers, callback) {
+    return BlanketOrderList.fetch(null, null, eventHandlers, callback);
   },
-  getByName: function (name, callback) {
-    return BlanketOrderList.fetch(name, 'fetchByName', callback);
+  getByName: function (name, eventHandlers, callback) {
+    return BlanketOrderList.fetch(name, 'fetchByName', eventHandlers, callback);
   }
 };
 

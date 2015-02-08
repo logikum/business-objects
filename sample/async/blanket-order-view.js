@@ -50,11 +50,11 @@ var extensions = new Extensions('dao', __filename);
 var BlanketOrderView = bo.ReadOnlyRootModel(properties, rules, extensions);
 
 var BlanketOrderViewFactory = {
-  get: function (key, callback) {
-    BlanketOrderView.fetch(key, null, callback);
+  get: function (key, eventHandlers, callback) {
+    BlanketOrderView.fetch(key, null, eventHandlers, callback);
   },
-  getByName: function (name, callback) {
-    BlanketOrderView.fetch(name, 'fetchByName', callback);
+  getByName: function (name, eventHandlers, callback) {
+    BlanketOrderView.fetch(name, 'fetchByName', eventHandlers, callback);
   }
 };
 

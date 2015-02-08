@@ -33,4 +33,10 @@ var extensions = new Extensions('dao', __filename);
 
 var ClearScheduleCommand = bo.CommandObjectSync(properties, rules, extensions);
 
-module.exports = ClearScheduleCommand;
+var ClearScheduleCommandFactory = {
+  create: function (eventHandlers) {
+    return ClearScheduleCommand.create(eventHandlers);
+  }
+};
+
+module.exports = ClearScheduleCommandFactory;

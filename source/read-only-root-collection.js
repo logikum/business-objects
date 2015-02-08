@@ -174,7 +174,7 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
     function raiseEvent (event, methodName, error) {
       self.emit(
           DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, properties.name, null, methodName, error),
+          new DataPortalEventArgs(event, name, null, methodName, error),
           self
       );
     }
@@ -231,7 +231,7 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
           data.forEach(function (dto) {
             var count = 0;
             var error = null;
-            itemType.load(self, dto, function (err, item) {
+            itemType.load(self, dto, eventHandlers, function (err, item) {
               if (err)
                 error = error || err;
               else

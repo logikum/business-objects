@@ -6,6 +6,9 @@ var BlanketOrder = require('../custom/async-models/blanket-order.js');
 var BlanketOrderView = require('../custom/async-models/blanket-order-view.js');
 var BlanketOrderList = require('../custom/async-models/blanket-order-list.js');
 
+var DataPortalEvent = require('../source/shared/data-portal-event.js');
+var EventHandlerList = require('../source/shared/event-handler-list.js');
+
 var contractDate = new Date(2014, 12, 15, 15, 26);
 var contractDate_u = new Date(2014, 12, 20, 8, 40);
 var expiry1 = new Date(2015, 1, 1, 0, 0);
@@ -15,10 +18,82 @@ var shipDate2 = new Date(2015, 2, 28, 16, 30);
 
 describe('Asynchronous data portal method', function () {
 
+  //region Event handlers
+
+  function logEvent (eventArgs, oldObject) {
+    var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
+    if (eventArgs.eventName.substr(-4) === 'Save')
+      console.log(' :: ' + text);
+    else
+      console.log('  : ' + text);
+  }
+
+  var ehBlanketOrder = new EventHandlerList();
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preSave, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postSave, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preCreate, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postCreate, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preInsert, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postInsert, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preUpdate, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postUpdate, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preRemove, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postRemove, logEvent);
+
+  var ehBlanketOrderView = new EventHandlerList();
+  ehBlanketOrderView.add('BlanketOrderView', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderView', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrderView.add('AddressView', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderView.add('AddressView', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderItemView', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderItemView', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderScheduleView', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderScheduleView', DataPortalEvent.postFetch, logEvent);
+
+  var ehBlanketOrderList = new EventHandlerList();
+  ehBlanketOrderList.add('BlanketOrderList', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderList.add('BlanketOrderList', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrderList.add('BlanketOrderListItem', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderList.add('BlanketOrderListItem', DataPortalEvent.postFetch, logEvent);
+
+  //endregion
+
   it('create of custom editable model', function (done) {
     console.log('\n*** Asynchronous CREATE');
 
-    BlanketOrder.create(function (err, order) {
+    BlanketOrder.create(ehBlanketOrder, function (err, order) {
       if (err) throw err;
 
       //region Load data
@@ -166,7 +241,7 @@ describe('Asynchronous data portal method', function () {
   it('special fetch of custom editable model', function (done) {
     console.log('\n*** Asynchronous GET_BY_NAME');
 
-    BlanketOrder.getByName('Acme Corp.', function (err, order) {
+    BlanketOrder.getByName('Acme Corp.', ehBlanketOrder, function (err, order) {
       if (err) throw err;
 
       //region Check data
@@ -302,7 +377,7 @@ describe('Asynchronous data portal method', function () {
   it('fetch of custom read-only model', function (done) {
     console.log('\n*** Asynchronous GET');
 
-    BlanketOrderView.get(4, function (err, orderView) {
+    BlanketOrderView.get(4, ehBlanketOrderView, function (err, orderView) {
       if (err) throw err;
 
       //region Check data
@@ -510,7 +585,7 @@ describe('Asynchronous data portal method', function () {
   it('fetch of custom read-only collection', function () {
     console.log('\n*** Asynchronous GET_ALL');
 
-    BlanketOrderList.getAll(function (err, orderList) {
+    BlanketOrderList.getAll(ehBlanketOrderList, function (err, orderList) {
       if (err) throw err;
 
       //region Check data
@@ -557,7 +632,7 @@ describe('Asynchronous data portal method', function () {
   it('update of custom editable model', function () {
     console.log('\n*** Asynchronous SAVE');
 
-    BlanketOrder.get(4, function (err, order) {
+    BlanketOrder.get(4, ehBlanketOrder, function (err, order) {
       if (err) throw err;
 
       //region Update data
@@ -699,7 +774,7 @@ describe('Asynchronous data portal method', function () {
   it('delete of custom editable model', function () {
     console.log('\n*** Asynchronous REMOVE');
 
-    BlanketOrder.get(4, function (err, order) {
+    BlanketOrder.get(4, ehBlanketOrder, function (err, order) {
       if (err) throw err;
 
       order.remove();

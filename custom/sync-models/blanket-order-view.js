@@ -114,11 +114,11 @@ extensions.dataFetch = dataFetch;
 var BlanketOrderView = bo.ReadOnlyRootModelSync(properties, rules, extensions);
 
 var BlanketOrderViewFactory = {
-  get: function (key) {
-    return BlanketOrderView.fetch(key);
+  get: function (key, eventHandlers) {
+    return BlanketOrderView.fetch(key, null, eventHandlers);
   },
-  getByName: function (name) {
-    return BlanketOrderView.fetch(name, 'fetchByName');
+  getByName: function (name, eventHandlers) {
+    return BlanketOrderView.fetch(name, 'fetchByName', eventHandlers);
   }
 };
 

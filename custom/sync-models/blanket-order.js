@@ -193,14 +193,14 @@ extensions.dataRemove = dataRemove;
 var BlanketOrder = bo.EditableRootModelSync(properties, rules, extensions);
 
 var BlanketOrderFactory = {
-  create: function () {
-    return BlanketOrder.create();
+  create: function (eventHandlers) {
+    return BlanketOrder.create(eventHandlers);
   },
-  get: function (code) {
-    return BlanketOrder.fetch(code);
+  get: function (code, eventHandlers) {
+    return BlanketOrder.fetch(code, null, eventHandlers);
   },
-  getByName: function (name) {
-    return BlanketOrder.fetch(name, 'fetchByName');
+  getByName: function (name, eventHandlers) {
+    return BlanketOrder.fetch(name, 'fetchByName', eventHandlers);
   }
 };
 

@@ -140,7 +140,7 @@ var EditableChildCollectionFactory = function(name, itemType) {
         });
         // Insert non existing data.
         dataNew.forEach(function (cto) {
-          itemType.create(parent, function (err, item) {
+          itemType.create(parent, eventHandlers, function (err, item) {
             if (err)
               throw err;
             else {

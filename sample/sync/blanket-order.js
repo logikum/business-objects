@@ -56,14 +56,14 @@ var extensions = new Extensions('dao', __filename);
 var BlanketOrder = bo.EditableRootModelSync(properties, rules, extensions);
 
 var BlanketOrderFactory = {
-  create: function () {
-    return BlanketOrder.create();
+  create: function (eventHandlers) {
+    return BlanketOrder.create(eventHandlers);
   },
-  get: function (key) {
-    return BlanketOrder.fetch(key);
+  get: function (key, eventHandlers) {
+    return BlanketOrder.fetch(key, null, eventHandlers);
   },
-  getByName: function (name) {
-    return BlanketOrder.fetch(name, 'fetchByName');
+  getByName: function (name, eventHandlers) {
+    return BlanketOrder.fetch(name, 'fetchByName', eventHandlers);
   }
 };
 

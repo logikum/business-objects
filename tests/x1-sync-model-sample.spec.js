@@ -18,20 +18,82 @@ var shipDate2 = new Date(2015, 2, 28, 16, 30);
 
 describe('Synchronous data portal method', function () {
 
-  function ehPreFetch (eventArgs, oldObject) {
-    console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preFetch event.');
+  //region Event handlers
+
+  function logEvent (eventArgs, oldObject) {
+    var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
+    if (eventArgs.eventName.substr(-4) === 'Save')
+      console.log(' :: ' + text);
+    else
+      console.log('  : ' + text);
   }
-  function ehPostFetch (eventArgs, newObject) {
-    console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postFetch event.');
-  }
-  var eventHandlers = new EventHandlerList();
-  eventHandlers.add('BlanketOrderView', DataPortalEvent.preFetch, ehPreFetch);
-  eventHandlers.add('BlanketOrderView', DataPortalEvent.postFetch, ehPostFetch);
+
+  var ehBlanketOrder = new EventHandlerList();
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.preSave, logEvent);
+  ehBlanketOrder.add('BlanketOrder', DataPortalEvent.postSave, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preCreate, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postCreate, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preInsert, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postInsert, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preUpdate, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postUpdate, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.preRemove, logEvent);
+  ehBlanketOrder.add('Address', DataPortalEvent.postRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.preRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrderItem', DataPortalEvent.postRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postCreate, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postInsert, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postUpdate, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.preRemove, logEvent);
+  ehBlanketOrder.add('BlanketOrderSchedule', DataPortalEvent.postRemove, logEvent);
+
+  var ehBlanketOrderView = new EventHandlerList();
+  ehBlanketOrderView.add('BlanketOrderView', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderView', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrderView.add('AddressView', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderView.add('AddressView', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderItemView', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderItemView', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderScheduleView', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderView.add('BlanketOrderScheduleView', DataPortalEvent.postFetch, logEvent);
+
+  var ehBlanketOrderList = new EventHandlerList();
+  ehBlanketOrderList.add('BlanketOrderList', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderList.add('BlanketOrderList', DataPortalEvent.postFetch, logEvent);
+  ehBlanketOrderList.add('BlanketOrderListItem', DataPortalEvent.preFetch, logEvent);
+  ehBlanketOrderList.add('BlanketOrderListItem', DataPortalEvent.postFetch, logEvent);
+
+  //endregion
 
   it('create of sample editable model', function () {
     console.log('\n*** Synchronous CREATE');
 
-    var order = BlanketOrder.create();
+    var order = BlanketOrder.create(ehBlanketOrder);
 
     //region Load data
 
@@ -160,7 +222,7 @@ describe('Synchronous data portal method', function () {
   it('special fetch of sample editable model', function () {
     console.log('\n*** Synchronous GET_BY_NAME');
 
-    var order = BlanketOrder.getByName('Acme Corp.');
+    var order = BlanketOrder.getByName('Acme Corp.', ehBlanketOrder);
 
     //region Check data
 
@@ -292,7 +354,7 @@ describe('Synchronous data portal method', function () {
   it('fetch of sample read-only model', function () {
     console.log('\n*** Synchronous GET');
 
-    var orderView = BlanketOrderView.get(1, eventHandlers);
+    var orderView = BlanketOrderView.get(1, ehBlanketOrderView);
 
     //region Check data
 
@@ -496,7 +558,7 @@ describe('Synchronous data portal method', function () {
   it('fetch of sample read-only collection', function () {
     console.log('\n*** Synchronous GET_ALL');
 
-    var orderList = BlanketOrderList.getAll();
+    var orderList = BlanketOrderList.getAll(ehBlanketOrderList);
 
     //region Check data
 
@@ -541,7 +603,7 @@ describe('Synchronous data portal method', function () {
   it('update of sample editable model', function () {
     console.log('\n*** Synchronous SAVE');
 
-    var order = BlanketOrder.get(1);
+    var order = BlanketOrder.get(1, ehBlanketOrder);
 
     //region Update data
 
@@ -674,7 +736,7 @@ describe('Synchronous data portal method', function () {
   it('delete of sample editable model', function () {
     console.log('\n*** Synchronous REMOVE');
 
-    var order = BlanketOrder.get(1);
+    var order = BlanketOrder.get(1, ehBlanketOrder);
     order.remove();
     var result = order.save();
 

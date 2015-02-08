@@ -482,6 +482,21 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
   //region Factory methods
 
   /**
+   * Creates a new read-only business object instance.
+   * <br/>_This method is called by the parent object._
+   *
+   * @function ReadOnlyChildModel.create
+   * @protected
+   * @param {{}} parent - The parent business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {external~cbDataPortal} callback - Returns a new read-only business object.
+   */
+  ReadOnlyChildModel.create = function(parent, eventHandlers, callback) {
+    var instance = new ReadOnlyChildModel(parent, eventHandlers);
+    callback(null, instance);
+  };
+
+  /**
    * Initializes a read-only business object width data retrieved from the repository.
    * <br/>_This method is called by the parent object._
    *
