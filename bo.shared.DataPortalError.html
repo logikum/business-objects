@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects Index</title>
+	<title>business-objects Class: DataPortalError</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -706,59 +706,653 @@
 					
 
 
+	<h1 class="page-title">Class: DataPortalError</h1>
+<section>
+
+<header>
+    <h2>
+        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.shared.html">.shared</a>.</span>
+    
+    DataPortalError
+    </h2>
+    
+        <div class="class-description"><p>Represents a data portal error error.</p></div>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="DataPortalError"><span class="type-signature"></span>new DataPortalError<span class="signature">(modeltype, modelName, action, interceptedError)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a data portal error object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
 	
-	<span class="page-title">Index</span>
+
+        <tr>
+            
+                <td class="name"><code>modeltype</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The type of the model the error occurred in.</p></td>
+        </tr>
+
 	
+
+        <tr>
+            
+                <td class="name"><code>modelName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the model the error occurred in.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>action</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.shared.DataPortalAction.html">bo.shared.DataPortalAction</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The data portal action the error occurred in.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>interceptedError</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">error</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The error to be wrapped.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+	<dt class="tag-see">See:</dt>
+	<dd class="tag-see">
+		<ul>
+			<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error">Error</a> for further information.</li>
+			</ul>
+	</dd>
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The model type must be a non-empty string.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The model name must be a non-empty string.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The action must be a DataPortalAction object.
+    
+    </div>
+
+</li>
+        </ul>
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        <ul>
+            <li>Error</li>
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt class="name" id="action">
+    <h4><span class="type-signature"></span>action<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The name of the action executing that the intercepted error occurred in.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
 
 
+            </li>
+        </ul>
+    
 
+    
+<dl class="details">
+	
 
+	
 
+	
 
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
 	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="innerError">
+    <h4><span class="type-signature"></span>innerError<span class="type-signature"> :error</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The intercepted error of the data portal action.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">error</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
 
 
-    <section class="readme-section">
-        <article><h1>Business objects</h1>
-<h3>a JavaScript object-oriented business layer for Node.js</h3>
-<p>See documentation: <a href="http://logikum.github.io/business-objects/">http://logikum.github.io/business-objects/</a></p>
-<p>Asynchronous models:</p>
-<ul>
-<li><a href="./EditableRootModel.html">Editable root model</a></li>
-<li><a href="./EditableChildModel.html">Editable child model</a></li>
-<li><a href="./EditableChildCollection.html">Editable child collection</a></li>
-<li><a href="./ReadOnlyRootModel.html">Read-only root model</a></li>
-<li><a href="./ReadOnlyChildModel.html">Read-only child model</a></li>
-<li><a href="./ReadOnlyRootCollection.html">Read-only root collection</a></li>
-<li><a href="./ReadOnlyChildCollection.html">Read-only child collection</a></li>
-<li><a href="./CommandObject.html">Command object</a></li>
-</ul>
-<p>Synchronous models:</p>
-<ul>
-<li><a href="./EditableRootModelSync.html">Editable root model</a></li>
-<li><a href="./EditableChildModelSync.html">Editable child model</a></li>
-<li><a href="./EditableChildCollectionSync.html">Editable child collection</a></li>
-<li><a href="./ReadOnlyRootModelSync.html">Read-only root model</a></li>
-<li><a href="./ReadOnlyChildModelSync.html">Read-only child model</a></li>
-<li><a href="./ReadOnlyRootCollectionSync.html">Read-only root collection</a></li>
-<li><a href="./ReadOnlyChildCollectionSync.html">Read-only child collection</a></li>
-<li><a href="./CommandObjectSync.html">Command object</a></li>
-</ul></article>
-    </section>
+    
+</dd>
+
+        
+            
+<dt class="name" id="message">
+    <h4><span class="type-signature"></span>message<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Human-readable description of the error.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="modelName">
+    <h4><span class="type-signature"></span>modelName<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The name of the model the intercepted error occurred in.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="modelType">
+    <h4><span class="type-signature"></span>modelType<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The type of the model the intercepted error occurred in.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="name">
+    <h4><span class="type-signature"></span>name<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The name of the error type.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>DataPortalError</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

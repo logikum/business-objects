@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects Index</title>
+	<title>business-objects Class: ReadOnlyRootModelSync</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -706,59 +706,1347 @@
 					
 
 
+	<h1 class="page-title">Class: ReadOnlyRootModelSync</h1>
+<section>
+
+<header>
+    <h2>
+    ReadOnlyRootModelSync
+    </h2>
+    
+        <div class="class-description"><p>Represents the definition of a synchronous read-only root model.</p></div>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="ReadOnlyRootModelSync"><span class="type-signature"></span>new ReadOnlyRootModelSync<span class="signature">(<span class="optional">eventHandlers</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a new synchronous read-only root model instance.</p>
+<p>   <em>The name of the model type available as:
+   <strong>&lt;instance&gt;.constructor.modelType</strong>, returns 'ReadOnlyRootModelSync'.</em></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
 	
-	<span class="page-title">Index</span>
+
+        <tr>
+            
+                <td class="name"><code>eventHandlers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bo.shared.EventHandlerList</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The event handlers of the instance.</p></td>
+        </tr>
+
 	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+    <h5>Fires:</h5>
+    <ul>
+        <li><a href="ReadOnlyRootModelSync.html#event:preFetch">ReadOnlyRootModelSync#event:preFetch</a></li>
+    
+        <li><a href="ReadOnlyRootModelSync.html#event:postFetch">ReadOnlyRootModelSync#event:postFetch</a></li>
+    </ul>
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>:   The event handlers must be an EventHandlerList object or null.
+    
+    </div>
 
 
+        
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        <ul>
+            <li><a href="ModelBase.html">ModelBase</a></li>
+        </ul>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt class="name" id="$modelName">
+    <h4><span class="type-signature">&lt;readonly> </span>$modelName<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The name of the model. However, it can be hidden by a model property with the same name.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
 
 
+            </li>
+        </ul>
+    
 
+    
+<dl class="details">
+	
 
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
 	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="fetch"><span class="type-signature">&lt;static> </span>fetch<span class="signature">(<span class="optional">filter</span>, <span class="optional">method</span>, <span class="optional">eventHandlers</span>)</span><span class="type-signature"> &rarr; {<a href="ReadOnlyRootModelSync.html">ReadOnlyRootModelSync</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Retrieves a read-only business object from the repository.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The filter criteria.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An alternative fetch method of the data access object.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>eventHandlers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bo.shared.EventHandlerList</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The event handlers of the instance.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.rules.AuthorizationError.html">Authorization error</a>:     The user has no permission to execute the action.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.shared.DataPortalError.html">Data portal error</a>:   Fetching the business object has failed.
+    
+    </div>
+
+</li>
+        </ul>
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The required read-only business object.</p>
+</div>
 
 
-    <section class="readme-section">
-        <article><h1>Business objects</h1>
-<h3>a JavaScript object-oriented business layer for Node.js</h3>
-<p>See documentation: <a href="http://logikum.github.io/business-objects/">http://logikum.github.io/business-objects/</a></p>
-<p>Asynchronous models:</p>
-<ul>
-<li><a href="./EditableRootModel.html">Editable root model</a></li>
-<li><a href="./EditableChildModel.html">Editable child model</a></li>
-<li><a href="./EditableChildCollection.html">Editable child collection</a></li>
-<li><a href="./ReadOnlyRootModel.html">Read-only root model</a></li>
-<li><a href="./ReadOnlyChildModel.html">Read-only child model</a></li>
-<li><a href="./ReadOnlyRootCollection.html">Read-only root collection</a></li>
-<li><a href="./ReadOnlyChildCollection.html">Read-only child collection</a></li>
-<li><a href="./CommandObject.html">Command object</a></li>
-</ul>
-<p>Synchronous models:</p>
-<ul>
-<li><a href="./EditableRootModelSync.html">Editable root model</a></li>
-<li><a href="./EditableChildModelSync.html">Editable child model</a></li>
-<li><a href="./EditableChildCollectionSync.html">Editable child collection</a></li>
-<li><a href="./ReadOnlyRootModelSync.html">Read-only root model</a></li>
-<li><a href="./ReadOnlyChildModelSync.html">Read-only child model</a></li>
-<li><a href="./ReadOnlyRootCollectionSync.html">Read-only root collection</a></li>
-<li><a href="./ReadOnlyChildCollectionSync.html">Read-only child collection</a></li>
-<li><a href="./CommandObjectSync.html">Command object</a></li>
-</ul></article>
-    </section>
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="ReadOnlyRootModelSync.html">ReadOnlyRootModelSync</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="checkRules"><span class="type-signature"></span>checkRules<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Executes all the validation rules of the business object, including the ones
+of its child objects.</p>
+<p><em>By default read-only business objects are supposed to be valid.</em></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="fetch"><span class="type-signature">&lt;protected> </span>fetch<span class="signature">(<span class="optional">filter</span>, <span class="optional">method</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Initializes a business object to be retrieved from the repository.
+<br/><em>This method is called by a factory method with the same name.</em></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>filter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The filter criteria.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>method</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>An alternative fetch method of the data access object.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getBrokenRules"><span class="type-signature"></span>getBrokenRules<span class="signature">(<span class="optional">namespace</span>)</span><span class="type-signature"> &rarr; {<a href="bo.rules.BrokenRulesOutput.html">bo.rules.BrokenRulesOutput</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets the broken rules of the business object.</p>
+<p><em>By default read-only business objects are supposed to be valid.</em></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>namespace</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The namespace of the message keys when messages are localizable.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The broken rules of the business object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="bo.rules.BrokenRulesOutput.html">bo.rules.BrokenRulesOutput</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="isValid"><span class="type-signature"></span>isValid<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Indicates whether all the validation rules of the business object, including
+the ones of its child objects, succeeds. A valid business object may have
+broken rules with severity of success, information and warning.</p>
+<p><em>By default read-only business objects are supposed to be valid.</em></p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True when the business object is valid, otherwise false.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="toCto"><span class="type-signature"></span>toCto<span class="signature">()</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Transforms the business object to a plain object to send to the client.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The client transfer object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">Object</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+        <h3 class="subsection-title">Events</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="event:postFetch">postFetch</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>The event arises after the business object instance has been retrieved from the repository.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>eventArgs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.shared.DataPortalEventArgs.html">bo.shared.DataPortalEventArgs</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Data portal event arguments.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>newObject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ReadOnlyRootModelSync.html">ReadOnlyRootModelSync</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The instance of the model after the data portal action.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="event:preFetch">preFetch</h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>The event arises before the business object instance will be retrieved from the repository.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>eventArgs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.shared.DataPortalEventArgs.html">bo.shared.DataPortalEventArgs</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Data portal event arguments.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>oldObject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ReadOnlyRootModelSync.html">ReadOnlyRootModelSync</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The instance of the model before the data portal action.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+</article>
+
+</section>
 
 
 

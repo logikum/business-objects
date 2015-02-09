@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects Index</title>
+	<title>business-objects Class: UserInfo</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -706,59 +706,405 @@
 					
 
 
+	<h1 class="page-title">Class: UserInfo</h1>
+<section>
+
+<header>
+    <h2>
+        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.system.html">.system</a>.</span>
+    
+    UserInfo
+    </h2>
+    
+        <div class="class-description"><p>Serves as the base class for user information object.</p></div>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="UserInfo"><span class="type-signature"></span>new UserInfo<span class="signature">(<span class="optional">userCode</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a new user information object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
 	
-	<span class="page-title">Index</span>
+
+        <tr>
+            
+                <td class="name"><code>userCode</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The identifier of the user.</p></td>
+        </tr>
+
 	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The userCode must be a string or null.
+    
+    </div>
 
 
+        
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt class="name" id="userCode">
+    <h4><span class="type-signature"></span>userCode<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The identifier of the user.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
 
 
+            </li>
+        </ul>
+    
 
+    
+<dl class="details">
+	
 
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
 	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="isInRole"><span class="type-signature">&lt;virtual> </span>isInRole<span class="signature">(role)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Abstract method to determine if the user is member of the given role.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>role</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">strng</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the role.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        <a href="bo.system.NotImplementedError.html">Not implemented error</a>: The UserInfo.isInRole method is not implemented.
+    
+    </div>
 
 
-    <section class="readme-section">
-        <article><h1>Business objects</h1>
-<h3>a JavaScript object-oriented business layer for Node.js</h3>
-<p>See documentation: <a href="http://logikum.github.io/business-objects/">http://logikum.github.io/business-objects/</a></p>
-<p>Asynchronous models:</p>
-<ul>
-<li><a href="./EditableRootModel.html">Editable root model</a></li>
-<li><a href="./EditableChildModel.html">Editable child model</a></li>
-<li><a href="./EditableChildCollection.html">Editable child collection</a></li>
-<li><a href="./ReadOnlyRootModel.html">Read-only root model</a></li>
-<li><a href="./ReadOnlyChildModel.html">Read-only child model</a></li>
-<li><a href="./ReadOnlyRootCollection.html">Read-only root collection</a></li>
-<li><a href="./ReadOnlyChildCollection.html">Read-only child collection</a></li>
-<li><a href="./CommandObject.html">Command object</a></li>
-</ul>
-<p>Synchronous models:</p>
-<ul>
-<li><a href="./EditableRootModelSync.html">Editable root model</a></li>
-<li><a href="./EditableChildModelSync.html">Editable child model</a></li>
-<li><a href="./EditableChildCollectionSync.html">Editable child collection</a></li>
-<li><a href="./ReadOnlyRootModelSync.html">Read-only root model</a></li>
-<li><a href="./ReadOnlyChildModelSync.html">Read-only child model</a></li>
-<li><a href="./ReadOnlyRootCollectionSync.html">Read-only root collection</a></li>
-<li><a href="./ReadOnlyChildCollectionSync.html">Read-only child collection</a></li>
-<li><a href="./CommandObjectSync.html">Command object</a></li>
-</ul></article>
-    </section>
+        
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the user is a member of the role, otherwise false.</p>
+</div>
 
 
 
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects Index</title>
+	<title>business-objects Class: i18n</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -706,59 +706,676 @@
 					
 
 
+	<h1 class="page-title">Class: i18n</h1>
+<section>
+
+<header>
+    <h2>
+        <span class="ancestors"><a href="bo.html">bo</a>.</span>
+    
+    i18n
+    </h2>
+    
+        <div class="class-description"><p>Provide methods to get localized messages.</p></div>
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="i18n"><span class="type-signature"></span>new i18n<span class="signature">(<span class="optional">namespace</span>, <span class="optional">keyRoot</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a new message localizer object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+		<th>Default</th>
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
 	
-	<span class="page-title">Index</span>
+
+        <tr>
+            
+                <td class="name"><code>namespace</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    $default
+                
+                </td>
+            
+
+            <td class="description last"><p>The namespace of the messages.</p></td>
+        </tr>
+
 	
+
+        <tr>
+            
+                <td class="name"><code>keyRoot</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The key root of the messages.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.I18nError.html">i18n error</a>: The namespace must be a string value or null.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.I18nError.html">i18n error</a>: The key root must be a string value or null.
+    
+    </div>
+
+</li>
+        </ul>
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="initialize"><span class="type-signature">&lt;static> </span>initialize<span class="signature">(pathOfLocales, <span class="optional">getLocale</span>)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Reads the localized messages of the project.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>pathOfLocales</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
 
 
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The relative path of the directory that contains the project messages.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>getLocale</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
 
 
+            
+            </td>
 
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
 
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>A function that returns the current locale.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
 	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.I18nError.html">i18n error</a>: The path of locales must be a non-empty string.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.I18nError.html">i18n error</a>: The path of locales is not a valid directory path.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.I18nError.html">i18n error</a>: The locale getter must be a function.
+    
+    </div>
+
+</li>
+        </ul>
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="get"><span class="type-signature"></span>get<span class="signature">(messageId, <span class="optional">messageParams</span>)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Gets a localized message of a given identifier.
+The message identifier has the pattern: [locale*][namespace:]key1[[.key2]...]
+Examples:</p>
+<dl>
+  <dt>australia</dt>
+  <dd>Simple key with default namespace and current locale.</dd>
+  <dt>europe.spain.andalusia</dt>
+  <dd>Extended key with default namespace and current locale.</dd>
+  <dt>geography:australia</dt>
+  <dd>Simple key with specified namespace and current locale.</dd>
+  <dt>geography:europe.spain.andalusia</dt>
+  <dd>Extended key with specified namespace and current locale.</dd>
+  <dt>hu*australia</dt>
+  <dd>Simple key with default namespace and specified language.</dd>
+  <dt>hu-HU*europe.spain.andalusia</dt>
+  <dd>Extended key with default namespace and specified language with region.</dd>
+  <dt>hu*geography:australia</dt>
+  <dd>Simple key with specified namespace and specified language.</dd>
+  <dt>hu-HU*geography:europe.spain.andalusia</dt>
+  <dd>Extended key with specified namespace and specified language with region.</dd>
+</dl>
+If localizer is created with a namespace and the message identifier omits the namespace,
+then the localizer namespace will applied. Examples for initial namespace <i>economy</i>:
+<dl>
+  <dt>australia</dt>
+  <dd>It is interpreted as <i>economy:australia</i></dd>
+  <dt>hu-HU*europe.spain.andalusia</dt>
+  <dd>It is interpreted as <i>hu-HU*economy:europe.spain.andalusia</i></dd>
+  <dt>geography:australia</dt>
+  <dd>It remains <i>geography:australia</i></dd>
+  <dt>hu-HU*geography:europe.spain.andalusia</dt>
+  <dd>It remains <i>hu-HU*geography:europe.spain.andalusia</i></dd>
+</dl>
+If localizer is created with a key root and the message identifier omits the namespace,
+then the key root is inserted before the key part of the specified identifier.
+Examples for initial key root <i>earth</i>:
+<dl>
+  <dt>australia</dt>
+  <dd>It is interpreted as <i>earth.australia</i></dd>
+  <dt>hu-HU*europe.spain.andalusia</dt>
+  <dd>It is interpreted as <i>hu-HU*earth.europe.spain.andalusia</i></dd>
+  <dt>geography:australia</dt>
+  <dd>It remains <i>geography:australia</i></dd>
+  <dt>hu-HU*geography:europe.spain.andalusia</dt>
+  <dd>It remains <i>hu-HU*geography:europe.spain.andalusia</i></dd>
+</dl>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>messageId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The identifier of the required message.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>messageParams</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Optional interpolation parameters of the message.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        <a href="bo.I18nError.html">i18n error</a>: The message key must be a non-empty string.
+    
+    </div>
 
 
-    <section class="readme-section">
-        <article><h1>Business objects</h1>
-<h3>a JavaScript object-oriented business layer for Node.js</h3>
-<p>See documentation: <a href="http://logikum.github.io/business-objects/">http://logikum.github.io/business-objects/</a></p>
-<p>Asynchronous models:</p>
-<ul>
-<li><a href="./EditableRootModel.html">Editable root model</a></li>
-<li><a href="./EditableChildModel.html">Editable child model</a></li>
-<li><a href="./EditableChildCollection.html">Editable child collection</a></li>
-<li><a href="./ReadOnlyRootModel.html">Read-only root model</a></li>
-<li><a href="./ReadOnlyChildModel.html">Read-only child model</a></li>
-<li><a href="./ReadOnlyRootCollection.html">Read-only root collection</a></li>
-<li><a href="./ReadOnlyChildCollection.html">Read-only child collection</a></li>
-<li><a href="./CommandObject.html">Command object</a></li>
-</ul>
-<p>Synchronous models:</p>
-<ul>
-<li><a href="./EditableRootModelSync.html">Editable root model</a></li>
-<li><a href="./EditableChildModelSync.html">Editable child model</a></li>
-<li><a href="./EditableChildCollectionSync.html">Editable child collection</a></li>
-<li><a href="./ReadOnlyRootModelSync.html">Read-only root model</a></li>
-<li><a href="./ReadOnlyChildModelSync.html">Read-only child model</a></li>
-<li><a href="./ReadOnlyRootCollectionSync.html">Read-only root collection</a></li>
-<li><a href="./ReadOnlyChildCollectionSync.html">Read-only child collection</a></li>
-<li><a href="./CommandObjectSync.html">Command object</a></li>
-</ul></article>
-    </section>
+        
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The localized message for the current locale, if not found
+     then the message for the default locale, otherwise the message key.</p>
+</div>
 
 
 
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">string</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
