@@ -1,7 +1,7 @@
 {
   "name": "business-objects",
-  "version": "0.0.1",
-  "description": "A software development framework that helps you build a reusable, maintainable object-oriented business layer for your app.",
+  "version": "1.0.0",
+  "description": "a JavaScript object-oriented business layer for Node.js",
   "keywords": [
     "business objects"
   ],
@@ -9,7 +9,8 @@
   "author": "Mármarosi József <marmarosi@logikum.hu>",
   "main": "source/index.js",
   "scripts": {
-    "test": "jasmine-node ./tests"
+    "test": "jasmine-node ./tests",
+    "documentation": "grunt default"
   },
   "dependencies": {},
   "devDependencies": {
@@ -19,6 +20,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/marmarosi/business-objects.git"
+    "url": "https://github.com/logikum/business-objects.git"
+  },
+  "engines": {
+    "node" : ">=0.10.0"
   }
 }
