@@ -33,6 +33,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
+var CLASS_NAME = 'EditableChildModel';
 var MODEL_DESC = 'Editable child model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
@@ -54,14 +55,14 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be EditableChildCollection or EditableChildModel instances.
  */
-var EditableChildModelFactory = function(properties, rules, extensions) {
+var EditableChildModelFactory = function (properties, rules, extensions) {
 
   properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'EditableChildModel', 'properties');
+      'c_manType', CLASS_NAME, 'properties');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'EditableChildModel', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'EditableChildModel', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'EditableChildCollection', 'EditableChildModel' ]);
@@ -99,7 +100,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @fires EditableChildModel#preRemove
    * @fires EditableChildModel#postRemove
    */
-  var EditableChildModel = function(parent, eventHandlers) {
+  var EditableChildModel = function (parent, eventHandlers) {
     ModelBase.call(this);
 
     // Verify the model type of the parent model.
@@ -113,7 +114,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
         'c_modelType', properties.name, 'parent');
 
     eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', 'EditableChildModel', 'eventHandlers');
+        'c_optType', properties.name, 'eventHandlers');
 
     var self = this;
     var state = null;
@@ -1153,7 +1154,7 @@ var EditableChildModelFactory = function(properties, rules, extensions) {
    * @readonly
    */
   Object.defineProperty(EditableChildModel, 'modelType', {
-    get: function () { return 'EditableChildModel'; }
+    get: function () { return CLASS_NAME; }
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.

@@ -33,6 +33,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
+var CLASS_NAME = 'EditableRootModelSync';
 var MODEL_DESC = 'Editable root model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
@@ -54,14 +55,14 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be EditableChildCollectionSync or EditableChildModelSync instances.
  */
-var EditableRootModelSyncFactory = function(properties, rules, extensions) {
+var EditableRootModelSyncFactory = function (properties, rules, extensions) {
 
   properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'EditableRootModelSync', 'properties');
+      'c_manType', CLASS_NAME, 'properties');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'EditableRootModelSync', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', 'EditableRootModelSync', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'EditableChildCollectionSync', 'EditableChildModelSync' ]);
@@ -97,11 +98,11 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    * @fires EditableRootModelSync#preSave
    * @fires EditableRootModelSync#postSave
    */
-  var EditableRootModelSync = function(eventHandlers) {
+  var EditableRootModelSync = function (eventHandlers) {
     ModelBase.call(this);
 
     eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', 'EditableRootModelSync', 'eventHandlers');
+        'c_optType', properties.name, 'eventHandlers');
 
     var self = this;
     var state = null;
@@ -1021,7 +1022,7 @@ var EditableRootModelSyncFactory = function(properties, rules, extensions) {
    * @readonly
    */
   Object.defineProperty(EditableRootModelSync, 'modelType', {
-    get: function () { return 'EditableRootModelSync'; }
+    get: function () { return CLASS_NAME; }
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.

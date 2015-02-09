@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'PropertyContext';
+
 var EnsureArgument = require('./../system/ensure-argument.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
@@ -48,11 +50,11 @@ function PropertyContext (properties, getValue, setValue) {
    * @readonly
    */
   this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
-      'c_optArray', 'PropertyContext', 'properties');
+      'c_optArray', CLASS_NAME, 'properties');
   getValue = EnsureArgument.isOptionalFunction(getValue,
-      'c_optFunction', 'PropertyContext', 'getValue');
+      'c_optFunction', CLASS_NAME, 'getValue');
   setValue = EnsureArgument.isOptionalFunction(setValue,
-      'c_optFunction', 'PropertyContext', 'setValue');
+      'c_optFunction', CLASS_NAME, 'setValue');
 
   /**
    * Sets the primary property of the custom function.
@@ -62,7 +64,7 @@ function PropertyContext (properties, getValue, setValue) {
    */
   this.with = function (property) {
     primaryProperty = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', 'PropertyContext', 'with', 'property');
+        'm_manType', CLASS_NAME, 'with', 'property');
     return this;
   };
 
@@ -86,7 +88,7 @@ function PropertyContext (properties, getValue, setValue) {
    */
   this.getValue = function (propertyName) {
     propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', 'PropertyContext', 'getValue', 'propertyName');
+        'm_manString', CLASS_NAME, 'getValue', 'propertyName');
     if (getValue)
       return getValue(getByName(propertyName));
     else
@@ -106,7 +108,7 @@ function PropertyContext (properties, getValue, setValue) {
    */
   this.setValue = function (propertyName, value) {
     propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', 'PropertyContext', 'setValue', 'propertyName');
+        'm_manString', CLASS_NAME, 'setValue', 'propertyName');
     if (setValue) {
       if (value !== undefined) {
         setValue(getByName(propertyName), value);

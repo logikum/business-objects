@@ -32,6 +32,7 @@ var DataPortalEvent = require('./shared/data-portal-event.js');
 var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
+var CLASS_NAME = 'CommandObject';
 var MODEL_DESC = 'Command object';
 var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
 
@@ -53,14 +54,14 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be ReadOnlyChildModel or ReadOnlyChildCollection instances.
  */
-var CommandObjectFactory = function(properties, rules, extensions) {
+var CommandObjectFactory = function (properties, rules, extensions) {
 
   properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'CommandObject', 'properties');
+      'c_manType', CLASS_NAME, 'properties');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'CommandObject', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'CommandObject', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildModel', 'ReadOnlyChildCollection' ]);
@@ -86,11 +87,11 @@ var CommandObjectFactory = function(properties, rules, extensions) {
    * @fires CommandObject#preExecute
    * @fires CommandObject#postExecute
    */
-  var CommandObject = function(eventHandlers) {
+  var CommandObject = function (eventHandlers) {
     ModelBase.call(this);
 
     eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', 'CommandObject', 'eventHandlers');
+        'c_optType', properties.name, 'eventHandlers');
 
     var self = this;
     var store = new DataStore();
@@ -510,7 +511,7 @@ var CommandObjectFactory = function(properties, rules, extensions) {
    * @readonly
    */
   Object.defineProperty(CommandObject, 'modelType', {
-    get: function () { return 'CommandObject'; }
+    get: function () { return CLASS_NAME; }
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.

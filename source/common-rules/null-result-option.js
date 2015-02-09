@@ -14,7 +14,7 @@ var Enumeration = require('../system/enumeration.js');
  *
  * @extends bo.system.Enumeration
  */
-function NullResultOption() {
+function NullResultOption () {
   Enumeration.call(this);
 
   /**

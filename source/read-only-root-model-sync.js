@@ -31,6 +31,7 @@ var DataPortalEvent = require('./shared/data-portal-event.js');
 var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
+var CLASS_NAME = 'ReadOnlyRootModelSync';
 var MODEL_DESC = 'Read-only root model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
@@ -52,14 +53,14 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be ReadOnlyChildCollectionSync or ReadOnlyChildModelSync instances.
  */
-var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
+var ReadOnlyRootModelSyncFactory = function (properties, rules, extensions) {
 
   properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'ReadOnlyRootModelSync', 'properties');
+      'c_manType', CLASS_NAME, 'properties');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyRootModelSync', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', 'ReadOnlyRootModelSync', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync' ]);
@@ -85,11 +86,11 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
    * @fires ReadOnlyRootModelSync#preFetch
    * @fires ReadOnlyRootModelSync#postFetch
    */
-  var ReadOnlyRootModelSync = function(eventHandlers) {
+  var ReadOnlyRootModelSync = function (eventHandlers) {
     ModelBase.call(this);
 
     eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', 'ReadOnlyRootModelSync', 'eventHandlers');
+        'c_optType', properties.name, 'eventHandlers');
 
     var self = this;
     var store = new DataStore();
@@ -435,7 +436,7 @@ var ReadOnlyRootModelSyncFactory = function(properties, rules, extensions) {
    * @readonly
    */
   Object.defineProperty(ReadOnlyRootModelSync, 'modelType', {
-    get: function () { return 'ReadOnlyRootModelSync'; }
+    get: function () { return CLASS_NAME; }
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.

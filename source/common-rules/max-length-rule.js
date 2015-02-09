@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'MaxLengthRule';
+
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
@@ -23,7 +25,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The maximum length must be an integer value.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function MaxLengthRule(primaryProperty, maxLength, message, priority, stopsProcessing) {
+function MaxLengthRule (primaryProperty, maxLength, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'MaxLength');
 
   /**
@@ -31,7 +33,7 @@ function MaxLengthRule(primaryProperty, maxLength, message, priority, stopsProce
    * @type {number}
    * @readonly
    */
-  this.maxLength = EnsureArgument.isMandatoryInteger(maxLength, 'c_manInteger', 'MaxLengthRule', 'maxLength');
+  this.maxLength = EnsureArgument.isMandatoryInteger(maxLength, 'c_manInteger', CLASS_NAME, 'maxLength');
 
   // Initialize base properties.
   this.initialize(

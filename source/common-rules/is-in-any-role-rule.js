@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'IsInAnyRoleRule';
+
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
@@ -28,7 +30,7 @@ var UserInfo = require('../system/user-info.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The roles must be an array of string values.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function IsInAnyRoleRule(action, target, roles, message, priority, stopsProcessing) {
+function IsInAnyRoleRule (action, target, roles, message, priority, stopsProcessing) {
   AuthorizationRule.call(this, 'IsInAnyRole');
 
   /**
@@ -36,7 +38,7 @@ function IsInAnyRoleRule(action, target, roles, message, priority, stopsProcessi
    * @type {Array.<string>}
    * @readonly
    */
-  this.roles = EnsureArgument.isMandatoryArray(roles, String, 'c_manArrayPrim', 'IsInAnyRoleRule', 'roles');
+  this.roles = EnsureArgument.isMandatoryArray(roles, String, 'c_manArrayPrim', CLASS_NAME, 'roles');
 
   // Initialize base properties.
   this.initialize(
@@ -62,7 +64,7 @@ util.inherits(IsInAnyRoleRule, AuthorizationRule);
  */
 IsInAnyRoleRule.prototype.execute = function (userInfo) {
   userInfo = EnsureArgument.isOptionalType(userInfo, UserInfo,
-    'm_optType', 'IsInAnyRoleRule', 'execute', 'userInfo', 'UserInfo');
+    'm_optType', CLASS_NAME, 'execute', 'userInfo', 'UserInfo');
 
   var hasPermission = false;
 

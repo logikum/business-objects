@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'ValidationRule';
+
 var util = require('util');
 var EnsureArgument = require('../system/ensure-argument.js');
 var RuleBase = require('./rule-base.js');
@@ -23,7 +25,7 @@ var PropertyInfo = require('../shared/property-info.js');
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
  */
-function ValidationRule(ruleName) {
+function ValidationRule (ruleName) {
   RuleBase.call(this, ruleName);
 
   /**
@@ -47,7 +49,7 @@ function ValidationRule(ruleName) {
   this.initialize = function (primaryProperty, message, priority, stopsProcessing) {
 
     this.primaryProperty = EnsureArgument.isMandatoryType(primaryProperty, PropertyInfo,
-        'm_manType', 'ValidationRule', 'initialize', 'primaryProperty');
+        'm_manType', CLASS_NAME, 'initialize', 'primaryProperty');
 
     // Initialize base properties.
     RuleBase.prototype.initialize.call(this, message, priority, stopsProcessing);
@@ -65,7 +67,7 @@ function ValidationRule(ruleName) {
    */
   this.addInputProperty = function (property) {
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', 'ValidationRule', 'addInputProperty', 'property');
+        'm_manType', CLASS_NAME, 'addInputProperty', 'property');
 
     if (inputProperties.indexOf(property) < 0)
       inputProperties.push(property);
@@ -80,7 +82,7 @@ function ValidationRule(ruleName) {
    */
   this.addAffectedProperty = function (property) {
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', 'ValidationRule', 'addAffectedProperty', 'property');
+        'm_manType', CLASS_NAME, 'addAffectedProperty', 'property');
 
     if (affectedProperties.indexOf(property) < 0)
       affectedProperties.push(property);
@@ -96,7 +98,7 @@ function ValidationRule(ruleName) {
    */
   this.getInputValues = function (getValue) {
     getValue = EnsureArgument.isMandatoryFunction(getValue,
-        'm_manFunction', 'ValidationRule', 'getInputValues', 'getValue');
+        'm_manFunction', CLASS_NAME, 'getInputValues', 'getValue');
 
     var inputValues = {};
     var combined = new Array(this.primaryProperty).concat(inputProperties);
@@ -118,7 +120,7 @@ function ValidationRule(ruleName) {
 
     var result = new ValidationResult(this.ruleName, this.primaryProperty.name, message || this.message);
     result.severity = EnsureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
-        'm_manFunction', 'ValidationRule', 'result', 'severity');
+        'm_manFunction', CLASS_NAME, 'result', 'severity');
     result.stopsProcessing = this.stopsProcessing;
     result.isPreserved = false;
     result.affectedProperties = affectedProperties;

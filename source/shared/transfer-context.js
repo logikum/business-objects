@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'TransferContext';
+
 var EnsureArgument = require('./../system/ensure-argument.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
@@ -25,7 +27,7 @@ var PropertyInfo = require('./property-info.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function.
  * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
  */
-function TransferContext(properties, getValue, setValue) {
+function TransferContext (properties, getValue, setValue) {
   var self = this;
 
   /**
@@ -34,11 +36,11 @@ function TransferContext(properties, getValue, setValue) {
    * @readonly
    */
   this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
-      'c_optArray', 'TransferContext', 'properties');
+      'c_optArray', CLASS_NAME, 'properties');
   getValue = EnsureArgument.isOptionalFunction(getValue,
-      'c_optFunction', 'TransferContext', 'getValue');
+      'c_optFunction', CLASS_NAME, 'getValue');
   setValue = EnsureArgument.isOptionalFunction(setValue,
-      'c_optFunction', 'TransferContext', 'setValue');
+      'c_optFunction', CLASS_NAME, 'setValue');
 
   function getByName (name) {
     for (var i = 0; i < self.properties.length; i++) {
@@ -60,7 +62,7 @@ function TransferContext(properties, getValue, setValue) {
   this.getValue = function (propertyName) {
     if (getValue) {
       propertyName = EnsureArgument.isMandatoryString(propertyName,
-          'm_manString', 'TransferContext', 'getValue', 'propertyName');
+          'm_manString', CLASS_NAME, 'getValue', 'propertyName');
       return getValue(getByName(propertyName));
     } else
       throw new ModelError('getValue');
@@ -79,7 +81,7 @@ function TransferContext(properties, getValue, setValue) {
   this.setValue = function (propertyName, value) {
     if (setValue) {
       propertyName = EnsureArgument.isMandatoryString(propertyName,
-          'm_manString', 'TransferContext', 'setValue', 'propertyName');
+          'm_manString', CLASS_NAME, 'setValue', 'propertyName');
       if (value !== undefined) {
         setValue(getByName(propertyName), value);
       }

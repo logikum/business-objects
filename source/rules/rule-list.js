@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'RuleList';
+
 var EnsureArgument = require('../system/ensure-argument.js');
 var AuthorizationRule = require('./authorization-rule.js');
 var ValidationRule = require('./validation-rule.js');
@@ -11,7 +13,7 @@ var ValidationRule = require('./validation-rule.js');
  * @memberof bo.rules
  * @constructor
  */
-function RuleList() {
+function RuleList () {
 
   /**
    * Adds a new rule to the list of rules of its owner property.
@@ -26,9 +28,9 @@ function RuleList() {
   this.add = function (id, rule) {
 
     id = EnsureArgument.isMandatoryString(id,
-        'm_manString', 'RuleList', 'add', 'id');
+        'm_manString', CLASS_NAME, 'add', 'id');
     rule = EnsureArgument.isMandatoryType(rule, [ValidationRule, AuthorizationRule],
-        'm_manType', 'RuleList', 'add', 'rule');
+        'm_manType', CLASS_NAME, 'add', 'rule');
 
     if (this[id])
       this[id].push(rule);

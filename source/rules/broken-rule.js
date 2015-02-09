@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'BrokenRule';
+
 var EnsureArgument = require('../system/ensure-argument.js');
 var RuleSeverity = require('./rule-severity.js');
 
@@ -22,38 +24,38 @@ var RuleSeverity = require('./rule-severity.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a RuleSeverity item.
  */
-function BrokenRule(ruleName, isPreserved, propertyName, message, severity) {
+function BrokenRule (ruleName, isPreserved, propertyName, message, severity) {
 
   /**
    * The name of the failed rule.
    * @type {string}
    */
   this.ruleName = EnsureArgument.isMandatoryString(ruleName,
-      'c_manString', 'BrokenRule', 'ruleName');
+      'c_manString', CLASS_NAME, 'ruleName');
   /**
    * Indicates whether the broken rule is preserved when a new verification starts.
    * @type {boolean}
    */
   this.isPreserved = EnsureArgument.isMandatoryBoolean(isPreserved || false,
-      'c_manBoolean', 'BrokenRule' , 'isPreserved');
+      'c_manBoolean', CLASS_NAME , 'isPreserved');
   /**
    * The name of the property the failed rule belongs to.
    * @type {string}
    */
   this.propertyName = EnsureArgument.isString(propertyName || '',
-      'c_string', 'BrokenRule', 'propertyName');
+      'c_string', CLASS_NAME, 'propertyName');
   /**
    * Human-readable description of the reason of the failure.
    * @type {string}
    */
   this.message = EnsureArgument.isMandatoryString(message,
-      'c_manString', 'BrokenRule', 'message');
+      'c_manString', CLASS_NAME, 'message');
   /**
    * The severity of the rule failure.
    * @type {bo.rules.RuleSeverity}
    */
   this.severity = EnsureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
-      'c_enumMember', 'BrokenRule', 'severity');
+      'c_enumMember', CLASS_NAME, 'severity');
 }
 
 module.exports = BrokenRule;

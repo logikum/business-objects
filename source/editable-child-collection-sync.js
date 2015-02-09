@@ -9,6 +9,7 @@ var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
+var CLASS_NAME = 'EditableChildCollectionSync';
 
 //endregion
 
@@ -23,15 +24,16 @@ var MODEL_STATE = require('./shared/model-state.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
  * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModelSync.
  */
-var EditableChildCollectionSyncFactory = function(name, itemType) {
+var EditableChildCollectionSyncFactory = function (name, itemType) {
 
   name = EnsureArgument.isMandatoryString(name,
-      'c_manString', 'EditableChildCollectionSync', 'name');
+      'c_manString', CLASS_NAME, 'name');
 
   // Verify the model type of the item type.
   if (itemType.modelType !== 'EditableChildModelSync')
     throw new ModelError('invalidItem',
-        itemType.prototype.name, itemType.modelType, 'EditableChildCollectionSync', 'EditableChildModelSync');
+        itemType.prototype.name, itemType.modelType,
+        CLASS_NAME, 'EditableChildModelSync');
 
   /**
    * @classdesc
@@ -308,7 +310,7 @@ var EditableChildCollectionSyncFactory = function(name, itemType) {
    * @readonly
    */
   Object.defineProperty(EditableChildCollectionSync, 'modelType', {
-    get: function () { return 'EditableChildCollectionSync'; }
+    get: function () { return CLASS_NAME; }
   });
 
   return EditableChildCollectionSync;

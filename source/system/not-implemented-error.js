@@ -1,7 +1,9 @@
 'use strict';
 
+var CLASS_NAME = 'NotImplementedError';
+
 var util = require('util');
-var t = require('../locales/i18n-bo.js')('NotImplementedError');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 /**
  * @classdesc Represents an error of not implemented function.
@@ -15,7 +17,7 @@ var t = require('../locales/i18n-bo.js')('NotImplementedError');
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function NotImplementedError() {
+function NotImplementedError () {
   Error.call(this);
 
   /**

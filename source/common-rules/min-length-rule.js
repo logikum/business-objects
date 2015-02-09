@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'MinLengthRule';
+
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
@@ -23,7 +25,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The minimum length must be an integer value.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function MinLengthRule(primaryProperty, minLength, message, priority, stopsProcessing) {
+function MinLengthRule (primaryProperty, minLength, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'MinLength');
 
   /**
@@ -31,7 +33,7 @@ function MinLengthRule(primaryProperty, minLength, message, priority, stopsProce
    * @type {number}
    * @readonly
    */
-  this.minLength = EnsureArgument.isMandatoryInteger(minLength, 'c_manInteger', 'MinLengthRule', 'minLength');
+  this.minLength = EnsureArgument.isMandatoryInteger(minLength, 'c_manInteger', CLASS_NAME, 'minLength');
 
   // Initialize base properties.
   this.initialize(

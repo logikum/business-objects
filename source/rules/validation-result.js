@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'ValidationResult';
+
 var util = require('util');
 var EnsureArgument = require('../system/ensure-argument.js');
 var ResultBase = require('./result-base.js');
@@ -20,10 +22,10 @@ var ResultBase = require('./result-base.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function ValidationResult(ruleName, propertyName, message) {
+function ValidationResult (ruleName, propertyName, message) {
 
   propertyName = EnsureArgument.isMandatoryString(propertyName,
-      'c_manString', 'ValidationResult', 'propertyName');
+      'c_manString', CLASS_NAME, 'propertyName');
 
   ResultBase.call(this, ruleName, propertyName, message);
 

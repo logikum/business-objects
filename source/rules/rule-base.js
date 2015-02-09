@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'Rule';
+
 var EnsureArgument = require('../system/ensure-argument.js');
 var ArgumentError = require('../system/argument-error.js');
 var NotImplementedError = require('../system/not-implemented-error.js');
@@ -18,7 +20,7 @@ var NotImplementedError = require('../system/not-implemented-error.js');
  */
 var RuleBase = function (ruleName) {
 
-  ruleName = EnsureArgument.isMandatoryString(ruleName, 'c_manString', 'Rule', 'ruleName');
+  ruleName = EnsureArgument.isMandatoryString(ruleName, 'c_manString', CLASS_NAME, 'ruleName');
   /**
    * The name of the rule object.
    * The default value usually the name of the constructor, without the Rule suffix.
@@ -89,7 +91,7 @@ RuleBase.prototype.initialize = function () {
       }
     }
   }
-  EnsureArgument.isMandatoryString(this.message, 'm_manString', 'Rule', 'method', 'message');
+  EnsureArgument.isMandatoryString(this.message, 'm_manString', CLASS_NAME, 'method', 'message');
 };
 
 /**
@@ -102,7 +104,7 @@ RuleBase.prototype.initialize = function () {
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The Rule.execute method is not implemented.
  */
 RuleBase.prototype.execute = function (inputs) {
-  throw new NotImplementedError('method', 'Rule', 'execute');
+  throw new NotImplementedError('method', CLASS_NAME, 'execute');
 };
 
 /**
@@ -117,7 +119,7 @@ RuleBase.prototype.execute = function (inputs) {
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The Rule.result method is not implemented.
  */
 RuleBase.prototype.result = function (message, severity) {
-  throw new NotImplementedError('method', 'Rule', 'result');
+  throw new NotImplementedError('method', CLASS_NAME, 'result');
 };
 
 module.exports = RuleBase;

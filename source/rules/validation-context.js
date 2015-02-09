@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'ValidationContext';
+
 var EnsureArgument = require('../system/ensure-argument.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 
@@ -21,7 +23,7 @@ var BrokenRuleList = require('./broken-rule-list.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The getProperty argument must be a function.
  * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
-function ValidationContext(getValue, brokenRules) {
+function ValidationContext (getValue, brokenRules) {
 
   /**
    * Returns the value of a model property.
@@ -29,14 +31,14 @@ function ValidationContext(getValue, brokenRules) {
    * @readonly
    */
   this.getValue = EnsureArgument.isMandatoryFunction(getValue,
-      'c_manFunction', 'ValidationContext', 'getValue');
+      'c_manFunction', CLASS_NAME, 'getValue');
   /**
    * The list of the broken rules.
    * @type {bo.rules.BrokenRuleList}
    * @readonly
    */
   this.brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRuleList,
-      'c_manType', 'ValidationContext', 'brokenRules');
+      'c_manType', CLASS_NAME, 'brokenRules');
 
   // Immutable object.
   Object.freeze(this);

@@ -22,6 +22,7 @@ var DataPortalEvent = require('./shared/data-portal-event.js');
 var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
+var CLASS_NAME = 'ReadOnlyRootCollection';
 var MODEL_DESC = 'Read-only root collection';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
@@ -42,19 +43,20 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
  * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModel.
  */
-var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) {
+var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions) {
 
   name = EnsureArgument.isMandatoryString(name,
-      'c_manString', 'ReadOnlyRootCollection', 'name');
+      'c_manString', CLASS_NAME, 'name');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyRootCollection', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'ReadOnlyRootCollection', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model type of the item type.
   if (itemType.modelType !== 'ReadOnlyChildModel')
-    throw new ModelError('invalidItem', itemType.prototype.name, itemType.modelType,
-        'ReadOnlyRootCollection', 'ReadOnlyChildModel');
+    throw new ModelError('invalidItem',
+        itemType.prototype.name, itemType.modelType,
+        CLASS_NAME, 'ReadOnlyChildModel');
 
   /**
    * @classdesc
@@ -81,7 +83,7 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
     CollectionBase.call(this);
 
     eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', 'ReadOnlyRootCollection', 'eventHandlers');
+        'c_optType', name, 'eventHandlers');
 
     var self = this;
     var items = [];
@@ -465,7 +467,7 @@ var ReadOnlyRootCollectionFactory = function(name, itemType, rules, extensions) 
    * @readonly
    */
   Object.defineProperty(ReadOnlyRootCollection, 'modelType', {
-    get: function () { return 'ReadOnlyRootCollection'; }
+    get: function () { return CLASS_NAME; }
   });
 
   //region Factory methods

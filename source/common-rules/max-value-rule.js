@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'MaxValueRule';
+
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
@@ -23,7 +25,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The maximum value is required.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function MaxValueRule(primaryProperty, maxValue, message, priority, stopsProcessing) {
+function MaxValueRule (primaryProperty, maxValue, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'MaxValue');
 
   /**
@@ -31,7 +33,7 @@ function MaxValueRule(primaryProperty, maxValue, message, priority, stopsProcess
    * @type {number}
    * @readonly
    */
-  this.maxValue = EnsureArgument.hasValue(maxValue, 'c_required', 'MaxValueRule', 'maxValue');
+  this.maxValue = EnsureArgument.hasValue(maxValue, 'c_required', CLASS_NAME, 'maxValue');
 
   // Initialize base properties.
   this.initialize(

@@ -13,7 +13,7 @@ var DataTypeError = require('./data-type-error.js');
  *
  * @extends bo.dataTypes.DataType
  */
-function DateTime() {
+function DateTime () {
   DataType.call(this);
 
   // Immutable object.

@@ -13,7 +13,7 @@ var DataTypeError = require('./data-type-error.js');
  *
  * @extends bo.dataTypes.DataType
  */
-function Decimal() {
+function Decimal () {
   DataType.call(this);
 
   // Immutable object.

@@ -24,7 +24,7 @@ var Enumeration = require('../system/enumeration.js');
  *
  * @extends bo.system.Enumeration
  */
-function AuthorizationAction() {
+function AuthorizationAction () {
   Enumeration.call(this);
 
   /**

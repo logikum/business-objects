@@ -12,7 +12,7 @@ var Enumeration = require('./../system/enumeration.js');
  *
  * @extends bo.system.Enumeration
  */
-function ModelState() {
+function ModelState () {
   Enumeration.call(this);
 
   /**

@@ -8,6 +8,8 @@ var EnsureArgument = require('./system/ensure-argument.js');
 var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
 
+var CLASS_NAME = 'ReadOnlyChildCollectionSync';
+
 //endregion
 
 /**
@@ -21,15 +23,16 @@ var ModelError = require('./shared/model-error.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
  * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModelSync.
  */
-var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
+var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
 
   name = EnsureArgument.isMandatoryString(name,
-      'c_manString', 'ReadOnlyChildCollectionSync', 'name');
+      'c_manString', CLASS_NAME, 'name');
 
   // Verify the model type of the item type.
   if (itemType.modelType !== 'ReadOnlyChildModelSync')
-    throw new ModelError('invalidItem', itemType.prototype.name, itemType.modelType,
-        'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync');
+    throw new ModelError('invalidItem',
+        itemType.prototype.name, itemType.modelType,
+        CLASS_NAME, 'ReadOnlyChildModelSync');
 
   /**
    * @classdesc
@@ -61,7 +64,7 @@ var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
           'ReadOnlyChildModelSync',
           'CommandObjectSync'
         ],
-        'c_modelType', name);
+        'c_modelType', name, 'parent');
 
     var self = this;
     var items = [];
@@ -226,7 +229,7 @@ var ReadOnlyChildCollectionSyncFactory = function(name, itemType) {
    * @readonly
    */
   Object.defineProperty(ReadOnlyChildCollectionSync, 'modelType', {
-    get: function () { return 'ReadOnlyChildCollectionSync'; }
+    get: function () { return CLASS_NAME; }
   });
 
   return ReadOnlyChildCollectionSync;

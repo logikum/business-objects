@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'Enumeration';
+
 var EnsureArgument = require('./ensure-argument.js');
 var EnumerationError = require('./enumeration-error.js');
 
@@ -50,7 +52,7 @@ Enumeration.prototype.count = function () {
  */
 Enumeration.prototype.getName = function (value) {
   value = EnsureArgument.isMandatoryNumber(value,
-      'm_manNumber', 'Enumeration', 'getName', 'value');
+      'm_manNumber', CLASS_NAME, 'getName', 'value');
 
   for (var propertyName in this) {
     if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
@@ -73,7 +75,7 @@ Enumeration.prototype.getName = function (value) {
  */
 Enumeration.prototype.getValue = function (name) {
   name = EnsureArgument.isMandatoryString(name,
-      'm_manString', 'Enumeration', 'getValue', 'name');
+      'm_manString', CLASS_NAME, 'getValue', 'name');
 
   for (var propertyName in this) {
     if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {

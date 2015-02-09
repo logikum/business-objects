@@ -33,6 +33,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
+var CLASS_NAME = 'EditableChildModelSync';
 var MODEL_DESC = 'Editable child model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
@@ -54,14 +55,14 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be EditableChildCollectionSync or EditableChildModelSync instances.
  */
-var EditableChildModelSyncFactory = function(properties, rules, extensions) {
+var EditableChildModelSyncFactory = function (properties, rules, extensions) {
 
   properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'EditableChildModelSync', 'properties');
+      'c_manType', CLASS_NAME, 'properties');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'EditableChildModelSync', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', 'EditableChildModelSync', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'EditableChildCollectionSync', 'EditableChildModelSync' ]);
@@ -99,7 +100,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
    * @fires EditableChildModelSync#preRemove
    * @fires EditableChildModelSync#postRemove
    */
-  var EditableChildModelSync = function(parent, eventHandlers) {
+  var EditableChildModelSync = function (parent, eventHandlers) {
     ModelBase.call(this);
 
     // Verify the model type of the parent model.
@@ -113,7 +114,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
         'c_modelType', properties.name, 'parent');
 
     eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', 'EditableChildModelSync', 'eventHandlers');
+        'c_optType', properties.name, 'eventHandlers');
 
     var self = this;
     var state = null;
@@ -1003,7 +1004,7 @@ var EditableChildModelSyncFactory = function(properties, rules, extensions) {
    * @readonly
    */
   Object.defineProperty(EditableChildModelSync, 'modelType', {
-    get: function () { return 'EditableChildModelSync'; }
+    get: function () { return CLASS_NAME; }
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.

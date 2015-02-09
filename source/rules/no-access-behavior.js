@@ -20,7 +20,7 @@ var Enumeration = require('../system/enumeration.js');
  *
  * @extends bo.system.Enumeration
  */
-function NoAccessBehavior() {
+function NoAccessBehavior () {
   Enumeration.call(this);
 
   /**

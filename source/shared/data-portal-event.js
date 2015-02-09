@@ -23,7 +23,7 @@ var Enumeration = require('./../system/enumeration.js');
  *
  * @extends bo.system.Enumeration
  */
-function DataPortalEvent() {
+function DataPortalEvent () {
   Enumeration.call(this);
 
   /**

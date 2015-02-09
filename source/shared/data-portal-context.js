@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'DataPortalContext';
+
 var config = require('./configuration-reader.js');
 var EnsureArgument = require('./../system/ensure-argument.js');
 var ModelError = require('./model-error.js');
@@ -29,7 +31,7 @@ var UserInfo = require('./../system/user-info.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function.
  * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
  */
-function DataPortalContext(dao, properties, getValue, setValue) {
+function DataPortalContext (dao, properties, getValue, setValue) {
   var self = this;
   var isDirty = false;
   var daConnection = null;
@@ -40,19 +42,19 @@ function DataPortalContext(dao, properties, getValue, setValue) {
    * @readonly
    */
   this.dao = EnsureArgument.isMandatoryObject(dao || {},
-      'c_manObject', 'DataPortalContext', 'dao');
+      'c_manObject', CLASS_NAME, 'dao');
   /**
    * Array of property definitions that may appear on the data transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
   this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
-      'c_optArray', 'DataPortalContext', 'properties');
+      'c_optArray', CLASS_NAME, 'properties');
 
   getValue = EnsureArgument.isOptionalFunction(getValue,
-      'c_optFunction', 'DataPortalContext', 'getValue');
+      'c_optFunction', CLASS_NAME, 'getValue');
   setValue = EnsureArgument.isOptionalFunction(setValue,
-      'c_optFunction', 'DataPortalContext', 'setValue');
+      'c_optFunction', CLASS_NAME, 'setValue');
 
   /**
    * The current user.
@@ -126,7 +128,7 @@ function DataPortalContext(dao, properties, getValue, setValue) {
    */
   this.getValue = function (propertyName) {
     propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', 'DataPortalContext', 'getValue', 'propertyName');
+        'm_manString', CLASS_NAME, 'getValue', 'propertyName');
     if (getValue)
       return getValue(getByName(propertyName));
     else
@@ -146,7 +148,7 @@ function DataPortalContext(dao, properties, getValue, setValue) {
    */
   this.setValue = function (propertyName, value) {
     propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', 'DataPortalContext', 'setValue', 'propertyName');
+        'm_manString', CLASS_NAME, 'setValue', 'propertyName');
     if (setValue) {
       if (value !== undefined) {
         setValue(getByName(propertyName), value);

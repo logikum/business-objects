@@ -15,9 +15,6 @@ var isInitialized = false;
 
 //region Read locales
 
-// Read business-objects locales.
-readLocales(NS_BO, path.join(process.cwd(), 'source/locales'));
-
 function readProjectLocales (pathOfLocales) {
   // Read default namespace.
   readLocales(NS_ROOT, pathOfLocales);
@@ -42,6 +39,9 @@ function readLocales (namespace, localePath) {
       locales[namespace][path.basename(fileName, '.json')] = require(filePath);
   });
 }
+
+// Read business-objects locales.
+readLocales(NS_BO, path.join(process.cwd(), 'source/locales'));
 
 //endregion
 

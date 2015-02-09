@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'UserInfo';
+
 var EnsureArgument = require('./ensure-argument.js');
 var NotImplementedError = require('./not-implemented-error.js');
 
@@ -15,7 +17,7 @@ var NotImplementedError = require('./not-implemented-error.js');
  */
 function UserInfo (userCode) {
 
-  userCode = EnsureArgument.isOptionalString(userCode, 'c_optString', 'UserInfo', 'userCode');
+  userCode = EnsureArgument.isOptionalString(userCode, 'c_optString', CLASS_NAME, 'userCode');
 
   /**
    * The identifier of the user.
@@ -27,7 +29,7 @@ function UserInfo (userCode) {
       return userCode;
     },
     set: function (value) {
-      userCode = EnsureArgument.isMandatoryString(userCode, 'p_optString', 'UserInfo', 'userCode');
+      userCode = EnsureArgument.isMandatoryString(userCode, 'p_optString', CLASS_NAME, 'userCode');
     },
     enumeration: true
   });
@@ -44,7 +46,7 @@ function UserInfo (userCode) {
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The UserInfo.isInRole method is not implemented.
  */
 UserInfo.prototype.isInRole = function (role) {
-  throw new NotImplementedError('method', 'UserInfo', 'isInRole');
+  throw new NotImplementedError('method', CLASS_NAME, 'isInRole');
 };
 
 Object.seal(UserInfo.prototype);

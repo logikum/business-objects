@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'BrokenRulesOutput';
+
 var EnsureArgument = require('../system/ensure-argument.js');
 var RuleSeverity = require('./rule-severity.js');
 
@@ -31,13 +33,13 @@ function BrokenRulesOutput () {
   this.add = function (propertyName, message, severity) {
 
     propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', 'BrokenRulesOutput', 'add', 'propertyName');
+        'm_manString', CLASS_NAME, 'add', 'propertyName');
 
     var brokenRule = {
       message: EnsureArgument.isMandatoryString(message,
-          'm_manString', 'BrokenRulesOutput', 'add', 'message'),
+          'm_manString', CLASS_NAME, 'add', 'message'),
       severity: EnsureArgument.isEnumMember(severity, RuleSeverity, null,
-          'm_enumMember', 'BrokenRulesOutput', 'add', 'severity')
+          'm_enumMember', CLASS_NAME, 'add', 'severity')
     };
 
     if (this[propertyName])

@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'PropertyInfo';
+
 var EnsureArgument = require('./../system/ensure-argument.js');
 var DataType = require('../data-types/data-type.js');
 var PropertyFlag = require('../shared/property-flag.js');
@@ -31,7 +33,7 @@ var CollectionBase = require('../collection-base.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The type must be a data type, a model or a collection.
  * @throws {@link bo.system.ArgumentError Argument error}: The flags must be PropertyFlag items.
  */
-function PropertyInfo(name, type, flags, getter, setter) {
+function PropertyInfo (name, type, flags, getter, setter) {
 
   /**
    * The name of the property.
@@ -39,7 +41,7 @@ function PropertyInfo(name, type, flags, getter, setter) {
    * @readonly
    */
   this.name = EnsureArgument.isMandatoryString(name,
-      'c_manString', 'PropertyInfo', 'name');
+      'c_manString', CLASS_NAME, 'name');
 
   /**
    * The data type of the property.
@@ -55,7 +57,7 @@ function PropertyInfo(name, type, flags, getter, setter) {
    * @readonly
    */
   this.type = EnsureArgument.isMandatoryType(type, [ DataType, ModelBase, CollectionBase ],
-      'c_manType', 'PropertyInfo', 'type');
+      'c_manType', CLASS_NAME, 'type');
 
   /**
    * The custom getter function of the property.
@@ -63,7 +65,7 @@ function PropertyInfo(name, type, flags, getter, setter) {
    * @readonly
    */
   this.getter = EnsureArgument.isOptionalFunction(getter,
-      'c_optFunction', 'PropertyInfo', 'getter');
+      'c_optFunction', CLASS_NAME, 'getter');
 
   /**
    * The custom setter function of the property.
@@ -71,11 +73,11 @@ function PropertyInfo(name, type, flags, getter, setter) {
    * @readonly
    */
   this.setter = EnsureArgument.isOptionalFunction(setter,
-      'c_optFunction', 'PropertyInfo', 'setter');
+      'c_optFunction', CLASS_NAME, 'setter');
 
   flags = type instanceof DataType ?
     EnsureArgument.isMandatoryInteger(flags || PropertyFlag.none,
-        'c_optInteger', 'PropertyInfo', 'flags') :
+        'c_optInteger', CLASS_NAME, 'flags') :
     PropertyFlag.readOnly | PropertyFlag.notOnDto | PropertyFlag.notOnCto;
 
   /**

@@ -1,7 +1,6 @@
 'use strict';
 
 var ArgumentError = require('./argument-error.js');
-var t = require('../locales/i18n-bo.js')('ArgumentError');
 
 //region Helper methods
 

@@ -1,9 +1,11 @@
 'use strict';
 
+var CLASS_NAME = 'DataPortalError';
+
 var util = require('util');
 var EnsureArgument = require('./../system/ensure-argument.js');
 var DataPortalAction = require('./data-portal-action.js');
-var t = require('../locales/i18n-bo.js')('DataPortalError');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 /**
  * @classdesc Represents a data portal error error.
@@ -23,7 +25,7 @@ var t = require('../locales/i18n-bo.js')('DataPortalError');
  * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The action must be a DataPortalAction object.
  */
-function DataPortalError(modeltype, modelName, action, interceptedError) {
+function DataPortalError (modeltype, modelName, action, interceptedError) {
   Error.call(this);
 
   /**
@@ -38,14 +40,14 @@ function DataPortalError(modeltype, modelName, action, interceptedError) {
    * @type {string}
    */
   this.modelType = EnsureArgument.isMandatoryString(modeltype,
-      'c_manString', 'DataPortalError', 'modeltype');
+      'c_manString', CLASS_NAME, 'modeltype');
 
   /**
    * The name of the model the intercepted error occurred in.
    * @type {string}
    */
   this.modelName = EnsureArgument.isMandatoryString(modelName,
-      'c_manString', 'DataPortalError', 'modelName');
+      'c_manString', CLASS_NAME, 'modelName');
 
   /**
    * The name of the action executing that the intercepted error occurred in.
@@ -53,7 +55,7 @@ function DataPortalError(modeltype, modelName, action, interceptedError) {
    */
   this.action = DataPortalAction.getName(
       EnsureArgument.isEnumMember(action, DataPortalAction, null,
-        'c_enumMember', 'DataPortalError', 'action')
+        'c_enumMember', CLASS_NAME, 'action')
   );
 
   /**

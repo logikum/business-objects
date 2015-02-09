@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'AuthorizationContext';
+
 var config = require('../shared/configuration-reader.js');
 var EnsureArgument = require('../system/ensure-argument.js');
 var UserInfo = require('../system/user-info.js');
@@ -26,19 +28,19 @@ var AuthorizationAction = require('./authorization-action.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The target name must be a string value.
  * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
-function AuthorizationContext(action, targetName, brokenRules) {
+function AuthorizationContext (action, targetName, brokenRules) {
 
   action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
-      'c_enumMember', 'AuthorizationContext', 'action');
+      'c_enumMember', CLASS_NAME, 'action');
   targetName = EnsureArgument.isString(targetName,
-      'c_string', 'AuthorizationContext', 'targetName');
+      'c_string', CLASS_NAME, 'targetName');
   /**
    * The list of the broken rules.
    * @type {bo.rules.BrokenRuleList}
    * @readonly
    */
   this.brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRuleList,
-      'c_manType', 'AuthorizationContext', 'brokenRules');
+      'c_manType', CLASS_NAME, 'brokenRules');
 
   /**
    * The identifier of the authorization action. Generally it is the action value,

@@ -1,7 +1,9 @@
 'use strict';
 
+var CLASS_NAME = 'DataTypeError';
+
 var util = require('util');
-var t = require('../locales/i18n-bo.js')('DataTypeError');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 /**
  * @classdesc Represents a data type error.
@@ -15,7 +17,7 @@ var t = require('../locales/i18n-bo.js')('DataTypeError');
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function DataTypeError() {
+function DataTypeError () {
   Error.call(this);
 
   /**

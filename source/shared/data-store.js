@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'DataStore';
+
 var EnsureArgument = require('./../system/ensure-argument.js');
 var PropertyInfo = require('./property-info.js');
 var CollectionBase = require('../collection-base.js');
@@ -12,7 +14,7 @@ var ModelBase = require('../model-base.js');
  * @memberof bo.shared
  * @constructor
  */
-function DataStore() {
+function DataStore () {
 
   var data = {};
 
@@ -28,9 +30,9 @@ function DataStore() {
   this.initValue = function (property, value) {
 
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', 'DataStore', 'initValue', 'property');
+        'm_manType', CLASS_NAME, 'initValue', 'property');
     value = EnsureArgument.isOptionalType(value, [ CollectionBase, ModelBase ],
-        'm_optType', 'DataStore', 'initValue', 'value');
+        'm_optType', CLASS_NAME, 'initValue', 'value');
 
     data[property.name] = value;
   };
@@ -46,7 +48,7 @@ function DataStore() {
   this.getValue = function (property) {
 
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', 'DataStore', 'getValue', 'property');
+        'm_manType', CLASS_NAME, 'getValue', 'property');
 
     return data[property.name];
   };
@@ -64,9 +66,9 @@ function DataStore() {
   this.setValue = function (property, value) {
 
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', 'DataStore', 'setValue', 'property');
+        'm_manType', CLASS_NAME, 'setValue', 'property');
     value = EnsureArgument.isDefined(value,
-        'm_defined', 'DataStore', 'setValue', 'value');
+        'm_defined', CLASS_NAME, 'setValue', 'value');
 
     property.type.check(value);
     if (value !== data[property.name]) {

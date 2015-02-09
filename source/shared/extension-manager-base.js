@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'ExtensionManager';
+
 var EnsureArgument = require('./../system/ensure-argument.js');
 var ModelError = require('./model-error.js');
 
@@ -27,16 +29,16 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
    * @readonly
    */
   this.dataSource = EnsureArgument.isMandatoryString(dataSource,
-      'c_manString', 'ExtensionManager', 'dataSource');
+      'c_manString', CLASS_NAME, 'dataSource');
   /**
    * The path of the model definition.
    * @type {string}
    * @readonly
    */
   this.modelPath = EnsureArgument.isMandatoryString(modelPath,
-      'c_manString', 'ExtensionManager', 'modelPath');
+      'c_manString', CLASS_NAME, 'modelPath');
   addArgs = EnsureArgument.isMandatoryInteger(addArgs,
-      'c_manInteger', 'ExtensionManager', 'addArgs');
+      'c_manInteger', CLASS_NAME, 'addArgs');
 
   var self = this;
   var methods = {};
@@ -133,11 +135,11 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
         else
           switch (definition.length) {
             case 0:
-              throw new ModelError('propertyArg0', 'ExtensionManager', definition.name);
+              throw new ModelError('propertyArg0', CLASS_NAME, definition.name);
             case 1:
-              throw new ModelError('propertyArg1', 'ExtensionManager', definition.name);
+              throw new ModelError('propertyArg1', CLASS_NAME, definition.name);
             default:
-              throw new ModelError('propertyArgN', 'ExtensionManager', definition.name, definition.length);
+              throw new ModelError('propertyArgN', CLASS_NAME, definition.name, definition.length);
           }
       },
       enumerable: true

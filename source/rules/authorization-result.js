@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'AuthorizationResult';
+
 var util = require('util');
 var EnsureArgument = require('../system/ensure-argument.js');
 var ResultBase = require('./result-base.js');
@@ -20,10 +22,10 @@ var ResultBase = require('./result-base.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The target name must be a string.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function AuthorizationResult(ruleName, targetName, message) {
+function AuthorizationResult (ruleName, targetName, message) {
 
   targetName = EnsureArgument.isString(targetName || '',
-      'c_string', 'AuthorizationResult', 'targetName');
+      'c_string', CLASS_NAME, 'targetName');
 
   ResultBase.call(this, ruleName, targetName, message);
 }

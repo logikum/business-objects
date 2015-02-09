@@ -33,6 +33,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var MODEL_STATE = require('./shared/model-state.js');
+var CLASS_NAME = 'EditableRootModel';
 var MODEL_DESC = 'Editable root model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
@@ -54,14 +55,14 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be EditableChildCollection or EditableChildModel instances.
  */
-var EditableRootModelFactory = function(properties, rules, extensions) {
+var EditableRootModelFactory = function (properties, rules, extensions) {
 
   properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'EditableRootModel', 'properties');
+      'c_manType', CLASS_NAME, 'properties');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'EditableRootModel', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'EditableRootModel', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'EditableChildCollection', 'EditableChildModel' ]);
@@ -97,11 +98,11 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
    * @fires EditableRootModel#preSave
    * @fires EditableRootModel#postSave
    */
-  var EditableRootModel = function(eventHandlers) {
+  var EditableRootModel = function (eventHandlers) {
     ModelBase.call(this);
 
     eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', 'EditableRootModel', 'eventHandlers');
+        'c_optType', properties.name, 'eventHandlers');
 
     var self = this;
     var state = null;
@@ -1189,7 +1190,7 @@ var EditableRootModelFactory = function(properties, rules, extensions) {
    * @readonly
    */
   Object.defineProperty(EditableRootModel, 'modelType', {
-    get: function () { return 'EditableRootModel'; }
+    get: function () { return CLASS_NAME; }
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.

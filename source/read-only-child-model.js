@@ -31,6 +31,7 @@ var DataPortalEvent = require('./shared/data-portal-event.js');
 var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
+var CLASS_NAME = 'ReadOnlyChildModel';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 //endregion
@@ -51,14 +52,14 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be ReadOnlyChildCollection or ReadOnlyChildModel instances.
  */
-var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
+var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
 
   properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'ReadOnlyChildModel', 'properties');
+      'c_manType', CLASS_NAME, 'properties');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyChildModel', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'ReadOnlyChildModel', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollection', 'ReadOnlyChildModel' ]);
@@ -88,7 +89,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
    * @fires ReadOnlyChildModel#preFetch
    * @fires ReadOnlyChildModel#postFetch
    */
-  var ReadOnlyChildModel = function(parent, eventHandlers) {
+  var ReadOnlyChildModel = function (parent, eventHandlers) {
     ModelBase.call(this);
 
     // Verify the model type of the parent model.
@@ -468,7 +469,7 @@ var ReadOnlyChildModelFactory = function(properties, rules, extensions) {
    * @readonly
    */
   Object.defineProperty(ReadOnlyChildModel, 'modelType', {
-    get: function () { return 'ReadOnlyChildModel'; }
+    get: function () { return CLASS_NAME; }
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.

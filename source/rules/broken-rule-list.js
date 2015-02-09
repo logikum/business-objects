@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'BrokenRuleList';
+
 var EnsureArgument = require('../system/ensure-argument.js');
 var PropertyInfo = require('../shared/property-info.js');
 var BrokenRule = require('./broken-rule.js');
@@ -19,7 +21,7 @@ var RuleSeverity = require('./rule-severity.js');
 var BrokenRuleList = function (modelName) {
 
   modelName = EnsureArgument.isMandatoryString(modelName,
-      'c_manString', 'BrokenRuleList', 'modelName');
+      'c_manString', CLASS_NAME, 'modelName');
 
   var items = {};
   var length = 0;
@@ -33,7 +35,7 @@ var BrokenRuleList = function (modelName) {
    */
   this.add = function (brokenRule) {
     brokenRule = EnsureArgument.isMandatoryType(brokenRule, BrokenRule,
-        'm_manType', 'BrokenRuleList', 'add', 'brokenRule');
+        'm_manType', CLASS_NAME, 'add', 'brokenRule');
 
     if (items[brokenRule.propertyName])
       items[brokenRule.propertyName].push(brokenRule);
@@ -124,7 +126,7 @@ var BrokenRuleList = function (modelName) {
   this.output = function (namespace) {
 
     namespace = EnsureArgument.isOptionalString(namespace,
-        'm_optString', 'BrokenRuleList', 'output', 'namespace');
+        'm_optString', CLASS_NAME, 'output', 'namespace');
 
     var data = null;
 

@@ -31,6 +31,7 @@ var DataPortalEvent = require('./shared/data-portal-event.js');
 var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
+var CLASS_NAME = 'ReadOnlyRootModel';
 var MODEL_DESC = 'Read-only root model';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
@@ -52,14 +53,14 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be ReadOnlyChildCollection or ReadOnlyChildModel instances.
  */
-var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
+var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
 
   properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', 'ReadOnlyRootModel', 'properties');
+      'c_manType', CLASS_NAME, 'properties');
   rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', 'ReadOnlyRootModel', 'rules');
+      'c_manType', CLASS_NAME, 'rules');
   extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', 'ReadOnlyRootModel', 'extensions');
+      'c_manType', CLASS_NAME, 'extensions');
 
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollection', 'ReadOnlyChildModel' ]);
@@ -85,11 +86,11 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
    * @fires ReadOnlyRootModel#preFetch
    * @fires ReadOnlyRootModel#postFetch
    */
-  var ReadOnlyRootModel = function(eventHandlers) {
+  var ReadOnlyRootModel = function (eventHandlers) {
     ModelBase.call(this);
 
     eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', 'ReadOnlyRootModel', 'eventHandlers');
+        'c_optType', properties.name, 'eventHandlers');
 
     var self = this;
     var store = new DataStore();
@@ -496,7 +497,7 @@ var ReadOnlyRootModelFactory = function(properties, rules, extensions) {
    * @readonly
    */
   Object.defineProperty(ReadOnlyRootModel, 'modelType', {
-    get: function () { return 'ReadOnlyRootModel'; }
+    get: function () { return CLASS_NAME; }
   });
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.

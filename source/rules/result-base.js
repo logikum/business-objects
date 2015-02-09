@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'RuleResult';
+
 var EnsureArgument = require('../system/ensure-argument.js');
 var BrokenRule = require('./broken-rule.js');
 var RuleSeverity = require('./rule-severity.js');
@@ -25,7 +27,7 @@ var ResultBase = function (ruleName, propertyName, message) {
    * @readonly
    */
   this.ruleName = EnsureArgument.isMandatoryString(ruleName,
-      'c_manString', 'RuleResult', 'ruleName');
+      'c_manString', CLASS_NAME, 'ruleName');
   /**
    * The name of the property the rule belongs to.
    * @type {string}
@@ -38,7 +40,7 @@ var ResultBase = function (ruleName, propertyName, message) {
    * @readonly
    */
   this.message = EnsureArgument.isMandatoryString(message,
-      'c_manString', 'RuleResult', 'message');
+      'c_manString', CLASS_NAME, 'message');
   /**
    * The severity of the rule failure.
    * @type {bo.rules.RuleSeverity}

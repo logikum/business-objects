@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'DependencyRule';
+
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
@@ -28,13 +30,13 @@ var PropertyInfo = require('../shared/property-info.js');
  *    an array of PropertyInfo objects or a single PropertyInfo object.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function DependencyRule(primaryProperty, dependencies, message, priority, stopsProcessing) {
+function DependencyRule (primaryProperty, dependencies, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'Dependency');
 
   var self = this;
 
   dependencies = EnsureArgument.isMandatoryArray(dependencies, PropertyInfo,
-    'c_manArray', 'DependencyRule', 'dependencies');
+    'c_manArray', CLASS_NAME, 'dependencies');
 
   // Initialize base properties.
   this.initialize(

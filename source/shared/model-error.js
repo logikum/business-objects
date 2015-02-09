@@ -1,7 +1,9 @@
 'use strict';
 
+var CLASS_NAME = 'ModelError';
+
 var util = require('util');
-var t = require('../locales/i18n-bo.js')('ModelError');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 /**
  * @classdesc Represents a model error.
@@ -15,7 +17,7 @@ var t = require('../locales/i18n-bo.js')('ModelError');
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function ModelError(message) {
+function ModelError (message) {
   Error.call(this);
 
   /**

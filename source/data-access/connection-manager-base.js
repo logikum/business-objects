@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'ConnectionManager';
+
 var NotImplementedError = require('../system/not-implemented-error.js');
 
 /**
@@ -24,7 +26,7 @@ var ConnectionManagerBase = function () {
 ConnectionManagerBase.prototype.openConnection = function (dataSource, callback) {
   //var connection = ...
   //return connection;
-  throw new NotImplementedError('method', 'ConnectionManager', 'openConnection');
+  throw new NotImplementedError('method', CLASS_NAME, 'openConnection');
 };
 
 /**
@@ -40,7 +42,7 @@ ConnectionManagerBase.prototype.openConnection = function (dataSource, callback)
 ConnectionManagerBase.prototype.closeConnection = function (dataSource, connection, callback) {
   //connection.close();
   //return null;
-  throw new NotImplementedError('method', 'ConnectionManager', 'closeConnection');
+  throw new NotImplementedError('method', CLASS_NAME, 'closeConnection');
 };
 
 /**

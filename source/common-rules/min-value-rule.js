@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'MinValueRule';
+
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
@@ -23,7 +25,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The minimum value is required.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function MinValueRule(primaryProperty, minValue, message, priority, stopsProcessing) {
+function MinValueRule (primaryProperty, minValue, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'MinValue');
 
   /**
@@ -31,7 +33,7 @@ function MinValueRule(primaryProperty, minValue, message, priority, stopsProcess
    * @type {number}
    * @readonly
    */
-  this.minValue = EnsureArgument.hasValue(minValue, 'c_required', 'MinValueRule', 'minValue');
+  this.minValue = EnsureArgument.hasValue(minValue, 'c_required', CLASS_NAME, 'minValue');
 
   // Initialize base properties.
   this.initialize(

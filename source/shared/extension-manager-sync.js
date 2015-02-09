@@ -20,7 +20,7 @@ var ExtensionManagerBase = require('./extension-manager-base.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The data source must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The model path must be a non-empty string.
  */
-function ExtensionManagerSync(dataSource, modelPath) {
+function ExtensionManagerSync (dataSource, modelPath) {
   ExtensionManagerBase.call(this, dataSource, modelPath, 1);
 
   Object.freeze(this);

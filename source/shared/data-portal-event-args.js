@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'DataPortalEventArgs';
+
 var config = require('./configuration-reader.js');
 var EnsureArgument = require('./../system/ensure-argument.js');
 var DataPortalAction = require('./data-portal-action.js');
@@ -32,7 +34,7 @@ var DataPortalError = require('./data-portal-error.js');
 function DataPortalEventArgs (event, modelName, action, methodName, error) {
 
   event = EnsureArgument.isEnumMember(event, DataPortalEvent, null,
-      'c_enumMember', 'DataPortalEventArgs', 'event');
+      'c_enumMember', CLASS_NAME, 'event');
 
   /**
    * The name of the data portal event.
@@ -46,14 +48,14 @@ function DataPortalEventArgs (event, modelName, action, methodName, error) {
    * @readonly
    */
   this.modelName = EnsureArgument.isMandatoryString(modelName,
-      'c_manString', 'DataPortalEventArgs', 'modelName');
+      'c_manString', CLASS_NAME, 'modelName');
   /**
    * The type of the data portal operation.
    * @type {bo.shared.DataPortalAction}
    * @readonly
    */
   this.action = EnsureArgument.isEnumMember(action, DataPortalAction, eventToAction(event),
-      'c_enumMember', 'DataPortalEventArgs', 'action');
+      'c_enumMember', CLASS_NAME, 'action');
   /**
    * The name of the data access object method called.
    * @type {string}
@@ -66,7 +68,7 @@ function DataPortalEventArgs (event, modelName, action, methodName, error) {
    * @readonly
    */
   this.error = EnsureArgument.isOptionalType(error, DataPortalError,
-      'c_optType', 'DataPortalEventArgs', 'error');
+      'c_optType', CLASS_NAME, 'error');
 
   /**
    * The current user.

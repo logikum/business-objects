@@ -1,7 +1,9 @@
 'use strict';
 
+var CLASS_NAME = 'AuthorizationError';
+
 var util = require('util');
-var t = require('../locales/i18n-bo.js')('AuthorizationError');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 /**
  * @classdesc Represents an authorization error.
@@ -15,7 +17,7 @@ var t = require('../locales/i18n-bo.js')('AuthorizationError');
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function AuthorizationError() {
+function AuthorizationError () {
   Error.call(this);
 
   /**

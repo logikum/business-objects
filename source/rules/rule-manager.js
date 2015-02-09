@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'RuleManager';
+
 var EnsureArgument = require('../system/ensure-argument.js');
 var ArgumentError = require('../system/argument-error.js');
 var RuleList = require('./rule-list.js');
@@ -37,7 +39,7 @@ var RuleManager = function () {
     },
     set: function (value) {
       noAccessBehavior = EnsureArgument.isEnumMember(value, NoAccessBehavior, NoAccessBehavior.throwError,
-          'p_enumMember', 'RuleManager', 'noAccessBehavior');
+          'p_enumMember', CLASS_NAME, 'noAccessBehavior');
     },
     enumeration: true
   });
@@ -76,16 +78,16 @@ var RuleManager = function () {
 
     if (rule instanceof ValidationRule) {
       if (!rule.primaryProperty)
-        throw new ArgumentError('m_notInit', 'RuleManager', 'add', 'rule');
+        throw new ArgumentError('m_notInit', CLASS_NAME, 'add', 'rule');
       validationRules.add(rule.primaryProperty.name, rule);
 
     } else if (rule instanceof AuthorizationRule) {
       if (!rule.ruleId)
-        throw new ArgumentError('m_notInit', 'RuleManager', 'add', 'rule');
+        throw new ArgumentError('m_notInit', CLASS_NAME, 'add', 'rule');
       authorizationRules.add(rule.ruleId, rule);
 
     } else
-      throw new ArgumentError('m_manType', 'RuleManager', 'add', 'rule', 'Rule');
+      throw new ArgumentError('m_manType', CLASS_NAME, 'add', 'rule', 'Rule');
   };
 
   /**
@@ -99,9 +101,9 @@ var RuleManager = function () {
    */
   this.validate = function (property, context) {
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', 'RuleManager', 'validate', 'property');
+        'm_manType', CLASS_NAME, 'validate', 'property');
     context = EnsureArgument.isMandatoryType(context, ValidationContext,
-        'm_manType', 'RuleManager', 'validate', 'context');
+        'm_manType', CLASS_NAME, 'validate', 'context');
 
     context.brokenRules.clear(property);
 
@@ -138,7 +140,7 @@ var RuleManager = function () {
    */
   this.hasPermission = function (context) {
     context = EnsureArgument.isMandatoryType(context, AuthorizationContext,
-        'm_manType', 'RuleManager', 'hasPermission', 'context');
+        'm_manType', CLASS_NAME, 'hasPermission', 'context');
     var isAllowed = true;
 
     var rules = authorizationRules[context.ruleId];

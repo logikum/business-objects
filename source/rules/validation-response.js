@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'ValidationResponse';
+
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
@@ -21,10 +23,10 @@ var RuleSeverity = require('./rule-severity.js');
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a string value.
  */
-function ValidationResponse(brokenRules, message) {
+function ValidationResponse (brokenRules, message) {
 
   brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRulesOutput,
-      'c_manType', 'ValidationResponse', 'brokenRules');
+      'c_manType', CLASS_NAME, 'brokenRules');
 
   /**
    * The name of the response object.
@@ -43,7 +45,7 @@ function ValidationResponse(brokenRules, message) {
    * @type {string}
    */
   this.message = EnsureArgument.isString(message || t('invalid'),
-      'c_string', 'ValidationResponse', 'message');
+      'c_string', CLASS_NAME, 'message');
   /**
    * The object of the broken rules.
    * @type {object}

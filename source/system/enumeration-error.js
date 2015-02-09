@@ -1,7 +1,9 @@
 'use strict';
 
+var CLASS_NAME = 'EnumerationError';
+
 var util = require('util');
-var t = require('../locales/i18n-bo.js')('EnumerationError');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 /**
  * @classdesc Represents an enumeration error.
@@ -15,7 +17,7 @@ var t = require('../locales/i18n-bo.js')('EnumerationError');
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function EnumerationError() {
+function EnumerationError () {
   Error.call(this);
 
   /**

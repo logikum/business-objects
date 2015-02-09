@@ -11,7 +11,7 @@
  *
  * @extends bo.system.Enumeration
  */
-function PropertyFlag() {
+function PropertyFlag () {
 
   /**
    * None of the property flags.

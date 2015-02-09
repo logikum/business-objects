@@ -1,7 +1,9 @@
 'use strict';
 
+var CLASS_NAME = 'ConfigurationError';
+
 var util = require('util');
-var t = require('../locales/i18n-bo.js')('ConfigurationError');
+var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 /**
  * @classdesc Represents a configuration error.
@@ -15,7 +17,7 @@ var t = require('../locales/i18n-bo.js')('ConfigurationError');
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function ConfigurationError() {
+function ConfigurationError () {
   Error.call(this);
 
   /**

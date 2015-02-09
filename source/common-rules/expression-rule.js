@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'ExpressionRule';
+
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
@@ -26,7 +28,7 @@ var NullResultOption = require('./null-result-option.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The option must be a NullResultOption item.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function ExpressionRule(primaryProperty, regex, option, message, priority, stopsProcessing) {
+function ExpressionRule (primaryProperty, regex, option, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'Expression');
 
   /**
@@ -35,14 +37,14 @@ function ExpressionRule(primaryProperty, regex, option, message, priority, stops
    * @readonly
    */
   this.regex = EnsureArgument.isMandatoryType(regex, RegExp,
-      'c_manType', 'ExpressionRule', 'regex');
+      'c_manType', CLASS_NAME, 'regex');
   /**
    * The action to execute when the value of the property is null.
    * @type {number}
    * @readonly
    */
   this.option = EnsureArgument.isEnumMember(option, NullResultOption, null,
-      'c_enumMember', 'ExpressionRule', 'option', 'NullResultOption');
+      'c_enumMember', CLASS_NAME, 'option', 'NullResultOption');
 
   // Initialize base properties.
   this.initialize(

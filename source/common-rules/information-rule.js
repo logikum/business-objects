@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'InformationRule';
+
 var util = require('util');
 var EnsureArgument = require('../system/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
@@ -21,10 +23,10 @@ var RuleSeverity = require('../rules/rule-severity.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function InformationRule(primaryProperty, message, priority, stopsProcessing) {
+function InformationRule (primaryProperty, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'Information');
 
-  EnsureArgument.isMandatoryString(message, 'c_manString', 'InformationRule', 'message');
+  EnsureArgument.isMandatoryString(message, 'c_manString', CLASS_NAME, 'message');
 
   // Initialize base properties.
   this.initialize(

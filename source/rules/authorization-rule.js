@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'AuthorizationRule';
+
 var util = require('util');
 var EnsureArgument = require('../system/ensure-argument.js');
 var ArgumentError = require('../system/argument-error.js');
@@ -27,7 +29,7 @@ var NoAccessBehavior = require('./no-access-behavior.js');
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
  */
-function AuthorizationRule(ruleName) {
+function AuthorizationRule (ruleName) {
   RuleBase.call(this, ruleName);
 
   var self = this;
@@ -54,7 +56,7 @@ function AuthorizationRule(ruleName) {
     },
     set: function (value) {
       noAccessBehavior = EnsureArgument.isEnumMember(value, NoAccessBehavior, null,
-          'p_enumMember', 'AuthorizationRule', 'noAccessBehavior');
+          'p_enumMember', CLASS_NAME, 'noAccessBehavior');
     },
     enumeration: true
   });
@@ -77,23 +79,23 @@ function AuthorizationRule(ruleName) {
   this.initialize = function (action, target, message, priority, stopsProcessing) {
 
     action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
-        'm_enumMember', 'AuthorizationRule', 'initialize', 'action');
+        'm_enumMember', CLASS_NAME, 'initialize', 'action');
     this.ruleId = AuthorizationAction.getName(action);
 
     if (action === AuthorizationAction.readProperty || action === AuthorizationAction.writeProperty) {
       target = EnsureArgument.isMandatoryType(target, PropertyInfo,
-          'm_manType', 'AuthorizationRule', 'initialize', 'target');
+          'm_manType', CLASS_NAME, 'initialize', 'target');
       propertyName = target.name;
       this.ruleId += '.' + target.name;
 
     } else if (action === AuthorizationAction.executeMethod) {
       target = EnsureArgument.isMandatoryString(target,
-          'm_manString', 'AuthorizationRule', 'initialize', 'target');
+          'm_manString', CLASS_NAME, 'initialize', 'target');
       this.ruleId += '.' + target;
 
     } else {
       if (target !== null)
-        throw new ArgumentError('m_null', 'AuthorizationRule', 'initialize', 'target');
+        throw new ArgumentError('m_null', CLASS_NAME, 'initialize', 'target');
     }
 
     // Initialize base properties.
