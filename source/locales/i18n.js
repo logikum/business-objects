@@ -41,7 +41,10 @@ function readLocales (namespace, localePath) {
 }
 
 // Read business-objects locales.
-readLocales(NS_BO, path.join(process.cwd(), 'source/locales'));
+if (fs.existsSync(path.join(process.cwd(), 'source/locales')))
+  readLocales(NS_BO, path.join(process.cwd(), 'source/locales'));
+else
+  readLocales(NS_BO, path.join(process.cwd(), 'node_modules/business-objects/source/locales'));
 
 //endregion
 

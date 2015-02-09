@@ -11,7 +11,7 @@
 		"outputSourceFiles"     : false,
 		"outputSourcePath"      : false,
 		"systemName"            : "business-objects",
-		"footer"                : "",
+		"footer"                : "<center>This site is a work in progress. If you find bugs or have feature requests, please <a href=https://github.com/logikum/business-objects/issues>let us know</a>.</center>",
 		"copyright"             : "JavaScript business objects ♦ Copyright © 2014-2015 Logikum, Ltd.",
 		"navType"               : "vertical",
 		"theme"                 : "united",
@@ -19,7 +19,7 @@
 		"collapseSymbols"       : false,
 		"inverseNav"            : true,
 		"highlightTutorialCode" : true,
-		"protocol"							: "fred://"
+		"protocol"				: "fred://"
 	},
 	"markdown"  : {
 		"parser"   : "gfm",
