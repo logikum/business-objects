@@ -6,4 +6,5 @@ node_modules
 .idea
 
 # JSDoc output directory
+doc-baseline
 documentation
