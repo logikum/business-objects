@@ -78,7 +78,7 @@ Utility.getDirectory = function (relativePath, name, errorType) {
  * Checks if value is member of a given enumeration.
  *
  * @function bo.system.Utility.isEnumMember
- * @param {number} value - The value to check.
+ * @param {(number|string)} value - The value to check.
  * @param {constructor} enumType - The type of the enumeration.
  * @param {string} name - The name of the configuration item.
  * @param {error} errorType - The type of the error to throw in case of failure.
@@ -93,8 +93,10 @@ Utility.isEnumMember = function (value, enumType, name, errorType) {
       enumType.constructor.super_ && enumType.constructor.super_.name === 'Enumeration'))
     throw new errorType('enumType', enumType);
 
-  if (!enumType.hasMember(value))
-    throw new errorType('enumMember', name, enumType);
+  if (typeof value === 'string' && enumType.isMemberName(value))
+    value = enumType.getValue(value);
+  else if (!enumType.hasMember(value))
+    throw new errorType('enumMember', name, enumType.$name);
 
   return value;
 };

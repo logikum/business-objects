@@ -64,7 +64,7 @@ Enumeration.prototype.getName = function (value) {
 };
 
 /**
- * Returns the value of an enumeration item.
+ * Returns the value of an enumeration item based on its name.
  *
  * @function bo.system.Enumeration#getValue
  * @param {string} name - The enumeration item that value to be returned of.
@@ -84,6 +84,23 @@ Enumeration.prototype.getValue = function (name) {
     }
   }
   throw new EnumerationError('enumName', this.$name, name);
+};
+
+/**
+ * Determines if the enumeration has an item with the given name.
+ *
+ * @function bo.system.Enumeration#hasValue
+ * @param {string} name - The name of the enumeration item.
+ * @returns {boolean} True if the name is an enumeration item, otherwise false.
+ */
+Enumeration.prototype.isMemberName = function (name) {
+  for (var propertyName in this) {
+    if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
+      if (propertyName === name)
+        return true;
+    }
+  }
+  return false;
 };
 
 /**
