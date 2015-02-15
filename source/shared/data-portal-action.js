@@ -8,13 +8,12 @@ var Enumeration = require('./../system/enumeration.js');
  *    Specifies the operations of models to execute on data access objects.
  * @description
  *    Creates a new enumeration to define the data portal actions. Members:
- *    <ul>
- *      <li>fetch</li>
- *      <li>create</li>
- *      <li>update</li>
- *      <li>remove</li>
- *      <li>execute</li>
- *    </ul>
+ *
+ *    * fetch
+ *    * create
+ *    * update
+ *    * remove
+ *    * execute
  *
  * @memberof bo.shared
  * @constructor

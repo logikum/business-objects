@@ -8,15 +8,14 @@ var Enumeration = require('./../system/enumeration.js');
  *    Specifies the events of models' data portal operations.
  * @description
  *    Creates a new enumeration to define the data portal events. Members:
- *    <ul>
- *      <li>preFetch, postFetch</li>
- *      <li>preCreate, postCreate</li>
- *      <li>preInsert, postInsert</li>
- *      <li>preUpdate, postUpdate</li>
- *      <li>preRemove, postRemove</li>
- *      <li>preExecute, postExecute</li>
- *      <li>preSave, postSave</li>
- *    </ul>
+ *
+ *    * preFetch, postFetch
+ *    * preCreate, postCreate
+ *    * preInsert, postInsert
+ *    * preUpdate, postUpdate
+ *    * preRemove, postRemove
+ *    * preExecute, postExecute
+ *    * preSave, postSave
  *
  * @memberof bo.shared
  * @constructor

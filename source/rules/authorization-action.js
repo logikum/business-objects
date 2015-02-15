@@ -8,16 +8,15 @@ var Enumeration = require('../system/enumeration.js');
  *    Specifies the operations of models to authorize.
  * @description
  *    Creates a new enumeration to define the authorization actions. Members:
- *    <ul>
- *      <li>fetchObject</li>
- *      <li>createObject</li>
- *      <li>updateObject</li>
- *      <li>removeObject</li>
- *      <li>executeCommand</li>
- *      <li>executeMethod</li>
- *      <li>readProperty</li>
- *      <li>writeProperty</li>
- *    </ul>
+ *
+ *    * fetchObject
+ *    * createObject
+ *    * updateObject
+ *    * removeObject
+ *    * executeCommand
+ *    * executeMethod
+ *    * readProperty
+ *    * writeProperty
  *
  * @memberof bo.rules
  * @constructor

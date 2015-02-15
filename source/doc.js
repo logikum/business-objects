@@ -89,7 +89,18 @@ var external = {
    * @function external.getLocale
    * @returns {string} The current locale or an empty string.
    */
-  getLocale: function () {}
+  getLocale: function () {},
+
+  /**
+   * Factory method to create the data access object for a model instance.
+   *
+   * @function external.daoBuilder
+   * @param {string} dataSource - The name of the data source.
+   * @param {string} modelPath - The model definition path of the model instance
+   *      that the data access object belongs to.
+   * @returns {bo.dataAccess.DaoBase} The data access object.
+   */
+  daoBuilder: function (dataSource, modelPath) {}
 };
 
 /**

@@ -7,6 +7,8 @@ var DaoError = require('./dao-error.js');
 
 /**
  * Factory method to create the data access object for a model instance.
+ * The path of the data access object is created using the model path and
+ * inserted the data source string before the extension.
  *
  * @function bo.dataAccess.daoBuilder
  * @param {string} dataSource - The name of the data source.
@@ -19,6 +21,10 @@ var DaoError = require('./dao-error.js');
  * @throws {@link bo.dataAccess.DaoError Dao error}: The required data access file does not exist.
  * @throws {@link bo.dataAccess.DaoError Dao error}: The data access file must return a constructor.
  * @throws {@link bo.dataAccess.DaoError Dao error}: The data access object must inherit DaoBase type.
+ *
+ * @example
+ * daoBuilder('oracle', '/path/to/model.js')
+ * // returns require('/path/to/model.oracle.js')
  */
 var daoBuilder = function (dataSource, modelPath) {
 

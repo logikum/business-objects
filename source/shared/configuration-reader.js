@@ -91,12 +91,12 @@ function initialize (cfgPath) {
  * @property {bo.dataAccess.ConnectionManagerBase} connectionManager -
  *    The connection manager instance. It must be set via {@link bo.initialize} or
  *    {@link bo.configuration.initialize}.
- * @property {function} daoBuilder -
+ * @property {external.daoBuilder} daoBuilder -
  *    Factory method to create data access objects. The default method is
  *    {@link bo.dataAccess.daoBuilder}.
- * @property {function} getUser -
+ * @property {external.getUser} getUser -
  *    Returns the current user. The default method returns null, i.e. anonymous user is assumed.
- * @property {function} getLocale -
+ * @property {external.getLocale} getLocale -
  *    Returns the current locale. The default method returns an empty string,
  *    i.e. the business objects will use the default messages.
  * @property {string} [pathOfLocales] -

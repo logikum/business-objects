@@ -8,12 +8,11 @@ var Enumeration = require('../system/enumeration.js');
  *    Specifies the behavior when an authorization rule fails.
  * @description
  *    Creates a new enumeration to define the behavior of unauthorized actions. Members:
- *    <ul>
- *      <li>throwError</li>
- *      <li>showError</li>
- *      <li>showWarning</li>
- *      <li>showInformation</li>
- *    </ul>
+ *
+ *    * throwError
+ *    * showError
+ *    * showWarning
+ *    * showInformation
  *
  * @memberof bo.rules
  * @constructor
