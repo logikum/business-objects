@@ -50,7 +50,7 @@ var i18n = require('./locales/i18n.js');
  *      contains general components.
  *
  * @property {object} configuration - Object containing
- *      {@link external~configuration configuration data} of the business objects.
+ *      {@link bo.shared~configuration configuration} data of the business objects.
  * @property {function} i18n - {@link bo.i18n Internationalization}
  *      constructor to create new a message localizer object.
  */
@@ -84,7 +84,20 @@ var index = {
   system: system,
 
   configuration: configuration,
-  i18n: i18n
+  i18n: i18n,
+
+  /**
+   * Initializes the business objects.
+   *
+   * @function bo.initialize
+   * @param {string} cfgPath -
+   *    The relative path of the {@link external.configurationFile configuration file} (.js or .json).
+   *    E.g. /config/business-objects.json
+   */
+  initialize: function (cfgPath) {
+    this.configuration.initialize(cfgPath);
+    this.i18n.initialize(this.configuration.pathOfLocales, this.configuration.getLocale);
+  }
 };
 
 // Immutable object.

@@ -92,7 +92,8 @@
     "userReader": "The function defined by the userReader property of business objects' configuration must return a UserInfo object.",
     "localeReader": "The function defined by the localeReader property of business objects' configuration must return a string value.",
     "noConMan": "The connection manager is required.",
-    "wrongConMan": "The connection manager must inherit ConnectionManagerBase type."
+    "wrongConMan": "The connection manager must inherit ConnectionManagerBase type.",
+    "ready": "Configuration is already initialized."
   },
   "I18nError": {
     "default": "An error occurred in the business objects' localization.",

@@ -1,12 +1,15 @@
 console.log('Testing shared/configuration-reader.js...');
 
 var path = require('path');
-var ConnectionManager = require('../../sample/connection-manager.js');
 var configuration = require('../../source/shared/configuration-reader.js');
+var ConnectionManager = require('../../sample/connection-manager.js');
 var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
 var daoBuilder = require('../../source/data-access/dao-builder.js');
 
 describe('Business objects configuration reader object', function() {
+
+  // Initialize the test environment.
+  configuration.initialize('/config/business-objects.js');
 
   it('has a connection manager object', function() {
 
