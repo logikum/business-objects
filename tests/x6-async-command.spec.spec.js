@@ -1,5 +1,3 @@
-'use strict';
-
 console.log('Testing data portal methods of asynchronous commands...');
 
 var ClearScheduleCommand = require('../sample/async/clear-schedule-command.js');

@@ -1,5 +1,3 @@
-'use strict';
-
 console.log('Testing data portal methods of synchronous commands...');
 
 var ClearScheduleCommandSync = require('../sample/sync/clear-schedule-command.js');

@@ -1,5 +1,3 @@
-'use strict';
-
 console.log('Testing fromCto methods of asynchronous models...');
 
 var BlanketOrder_S = require('../sample/async/blanket-order.js');

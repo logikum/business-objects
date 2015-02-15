@@ -1,5 +1,3 @@
-'use strict';
-
 console.log('Initializing test repository for model tests...');
 
 describe('Test repository', function () {

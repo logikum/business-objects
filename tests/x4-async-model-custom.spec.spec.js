@@ -1,5 +1,3 @@
-'use strict';
-
 console.log('Testing data portal methods of custom asynchronous models...');
 
 var BlanketOrder = require('../custom/async-models/blanket-order.js');

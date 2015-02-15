@@ -1,5 +1,3 @@
-'use strict';
-
 console.log('Testing data portal methods of sample synchronous models...');
 
 var BlanketOrder = require('../sample/sync/blanket-order.js');
