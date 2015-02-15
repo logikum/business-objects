@@ -61,6 +61,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.2</dt>
+  <dd>
+    2015.02.15.<br/>
+    Adding configuration setup.
+  </dd>
+
   <dt>v1.0.1</dt>
   <dd>
     2015.02.10.<br/>
