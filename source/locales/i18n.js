@@ -65,7 +65,7 @@ else
 function I18nError() {
   Error.call(this);
 
-  var i18nLocales = new i18n('$bo', 'i18n');
+  var i18nLocales = new i18n('$bo', 'I18nError');
 
   /**
    * The name of the error type.

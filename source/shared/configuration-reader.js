@@ -72,7 +72,8 @@ function initialize (cfgPath) {
 
     // Evaluate the path of locale.
     if (cfg.pathOfLocales) {
-      this.pathOfLocales = Utility.getDirectory(cfg.pathOfLocales, 'pathOfLocales', ConfigurationError);
+      Utility.getDirectory(cfg.pathOfLocales, 'pathOfLocales', ConfigurationError);
+      this.pathOfLocales = cfg.pathOfLocales;
     }
 
     // Evaluate the unauthorized behavior.

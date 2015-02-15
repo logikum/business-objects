@@ -1,6 +1,5 @@
 console.log('Testing shared/configuration-reader.js...');
 
-var path = require('path');
 var configuration = require('../../source/shared/configuration-reader.js');
 var ConnectionManager = require('../../sample/connection-manager.js');
 var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
@@ -58,7 +57,7 @@ describe('Business objects configuration reader object', function() {
 
   it('has a property for the path of locales', function() {
 
-    expect(configuration.pathOfLocales.substr(-8)).toBe(path.sep + 'locales');
+    expect(configuration.pathOfLocales.substr(-8)).toBe('/locales');
   });
 
   it('has a locale reader method', function() {
