@@ -31,7 +31,7 @@ $ jasmine-node tests
 Generate the documentation:
 
 ```
-$ grunt default
+$ grunt docstrap
 ```
 
 ### Features

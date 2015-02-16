@@ -2,8 +2,16 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
+    clean: {
+      united: {
+        src: 'documentation/*.html'
+      },
+      baseline: {
+        src: 'doc-baseline/*.html'
+      }
+    },
     jsdoc : {
-      dist : {
+      united: {
         src: ['README.md', 'source/**/*.js'],
         options: {
           destination: 'documentation',
@@ -12,12 +20,24 @@ module.exports = function(grunt) {
           tutorials : 'tutorials'
         }
       }
+    },
+    exec: {
+      baseline: {
+        command: 'node_modules\\.bin\\jsdoc -d doc-baseline -t node_modules/jsdoc-baseline -r source'
+      }
     }
   });
+
+  // Load the plugin that cleans directories.
+  grunt.loadNpmTasks('grunt-remove-plus-remove-empty');
 
   // Load the plugin that provides the jsdoc task.
   grunt.loadNpmTasks('grunt-jsdoc');
 
+  // Load the plugin that runs commands.
+  grunt.loadNpmTasks('grunt-exec');
+
   // Default task(s).
-  grunt.registerTask('default', ['jsdoc']);
+  grunt.registerTask('docstrap', ['clean:united', 'jsdoc:united']);
+  grunt.registerTask('baseline', ['clean:baseline', 'exec:baseline']);
 };
