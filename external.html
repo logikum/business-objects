@@ -777,15 +777,16 @@ in external objects that use business objects.</p></div>
 
         <dl>
             
-<dt class="name" id="configuration">
-    <h4><span class="type-signature"></span>configuration<span class="type-signature"></span></h4>
+<dt class="name" id="configurationFile">
+    <h4><span class="type-signature">&lt;static> </span>configurationFile<span class="type-signature"></span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>Constructor to create configuration for business objects.</p>
+        <p>The configuration file of business objects. It can be a JSON file (.json) or
+a JavaScript file (.js) that returns an object with the following properties:</p>
     </div>
     
 
@@ -829,7 +830,7 @@ in external objects that use business objects.</p></div>
             <td class="type">
             
                 
-<span class="param-type"><a href="bo.dataAccess.ConnectionManagerBase.html">bo.dataAccess.ConnectionManagerBase</a></span>
+<span class="param-type">string</span>
 
 
             
@@ -845,7 +846,8 @@ in external objects that use business objects.</p></div>
 
             
 
-            <td class="description last"><p>Connection manager instance.</p></td>
+            <td class="description last"><p>The relative path of the connection manager constructor.
+   The created object must inherit <a href="bo.dataAccess.ConnectionManagerBase.html">bo.dataAccess.ConnectionManagerBase</a>.</p></td>
         </tr>
 
 	
@@ -858,7 +860,7 @@ in external objects that use business objects.</p></div>
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">string</span>
 
 
             
@@ -876,7 +878,8 @@ in external objects that use business objects.</p></div>
 
             
 
-            <td class="description last"><p>Factory method to create data access objects.</p></td>
+            <td class="description last"><p>The relative path of the factory method to create data access objects.
+   The default builder method is <a href="bo.dataAccess.html#daoBuilder">bo.dataAccess.daoBuilder</a>.</p></td>
         </tr>
 
 	
@@ -889,7 +892,7 @@ in external objects that use business objects.</p></div>
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">string</span>
 
 
             
@@ -907,7 +910,7 @@ in external objects that use business objects.</p></div>
 
             
 
-            <td class="description last"><p>Returns the current user.</p></td>
+            <td class="description last"><p>The relative path of the <a href="external.html#getUser">method</a> that returns the current user.</p></td>
         </tr>
 
 	
@@ -920,7 +923,7 @@ in external objects that use business objects.</p></div>
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">string</span>
 
 
             
@@ -938,7 +941,7 @@ in external objects that use business objects.</p></div>
 
             
 
-            <td class="description last"><p>Returns the current locale.</p></td>
+            <td class="description last"><p>The relative path of the <a href="external.html#getLocale">method</a> that returns the current locale.</p></td>
         </tr>
 
 	
@@ -969,7 +972,7 @@ in external objects that use business objects.</p></div>
 
             
 
-            <td class="description last"><p>The full path of the directory containing project locales.</p></td>
+            <td class="description last"><p>The relative path of the directory containing project locales.</p></td>
         </tr>
 
 	
@@ -982,7 +985,10 @@ in external objects that use business objects.</p></div>
             <td class="type">
             
                 
-<span class="param-type"><a href="bo.rules.NoAccessBehavior.html">bo.rules.NoAccessBehavior</a></span>
+<span class="param-type">number</span>
+|
+
+<span class="param-type">string</span>
 
 
             
@@ -1000,7 +1006,13 @@ in external objects that use business objects.</p></div>
 
             
 
-            <td class="description last"><p>The default behavior for unauthorized operations.</p></td>
+            <td class="description last"><p>The default behavior for unauthorized operations. Valid values are:</p>
+<ul>
+<li>0 or 'throwError', the default value</li>
+<li>1 or 'showError'</li>
+<li>2 or 'showWarning'</li>
+<li>3 or 'showInformation'</li>
+</ul></td>
         </tr>
 
 	
@@ -1044,6 +1056,350 @@ in external objects that use business objects.</p></div>
         </dl>
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="daoBuilder"><span class="type-signature">&lt;static> </span>daoBuilder<span class="signature">(dataSource, modelPath)</span><span class="type-signature"> &rarr; {<a href="bo.dataAccess.DaoBase.html">bo.dataAccess.DaoBase</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Factory method to create the data access object for a model instance.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>dataSource</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the data source.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>modelPath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The model definition path of the model instance
+     that the data access object belongs to.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The data access object.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="bo.dataAccess.DaoBase.html">bo.dataAccess.DaoBase</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getLocale"><span class="type-signature">&lt;static> </span>getLocale<span class="signature">()</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Returns the current locale.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The current locale or an empty string.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">string</span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="getUser"><span class="type-signature">&lt;static> </span>getUser<span class="signature">()</span><span class="type-signature"> &rarr; {<a href="bo.system.UserInfo.html">bo.system.UserInfo</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Returns the current user.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The current user or null.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="bo.system.UserInfo.html">bo.system.UserInfo</a></span>
+
+
+	</dd>
+</dl>
+
+
+        
+    
+    
+</dd>
+
+        </dl>
     
 
     
@@ -1686,7 +2042,7 @@ that calls an asynchronous data portal action.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on Tue Feb 10th 2015 using the <a
+		on Mon Feb 16th 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>

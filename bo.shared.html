@@ -1242,6 +1242,303 @@
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt class="name" id="configuration">
+    <h4><span class="type-signature">&lt;inner> </span>configuration<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The configuration object for business objects.</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+	
+
+	<h5 class="subsection-title">Properties:</h5>
+
+	<dl>
+
+<table class="props table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>connectionManager</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.dataAccess.ConnectionManagerBase.html">bo.dataAccess.ConnectionManagerBase</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The connection manager instance. It must be set via <a href="bo.html#initialize">bo.initialize</a> or
+   bo.configuration.initialize.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>daoBuilder</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="external.html#daoBuilder">external.daoBuilder</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Factory method to create data access objects. The default method is
+   <a href="bo.dataAccess.html#daoBuilder">bo.dataAccess.daoBuilder</a>.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>getUser</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="external.html#getUser">external.getUser</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Returns the current user. The default method returns null, i.e. anonymous user is assumed.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>getLocale</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="external.html#getLocale">external.getLocale</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Returns the current locale. The default method returns an empty string,
+   i.e. the business objects will use the default messages.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>pathOfLocales</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The relative path of the directory containing project locales. If not supplied,
+   the business objects cannot interpret the first message argument as the message key,
+   i.e. the first message argument must be the message text.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>noAccessBehavior</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.rules.NoAccessBehavior.html">bo.rules.NoAccessBehavior</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The default behavior for unauthorized operations.
+   The default value is <a href="bo.rules.NoAccessBehavior.html#throwError">bo.rules.NoAccessBehavior#throwError</a>.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>initialize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="internal.html#initializeCfg">internal~initializeCfg</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Reads the configuration of business objects.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+</dl>
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
 
     
 
@@ -1271,7 +1568,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on Tue Feb 10th 2015 using the <a
+		on Mon Feb 16th 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
