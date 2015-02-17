@@ -14,10 +14,8 @@ var DataTypeError = require('./data-type-error.js');
  * @extends bo.dataTypes.DataType
  */
 function Decimal () {
-  DataType.call(this);
-
   // Immutable object.
-  Object.freeze(this);
+  DataType.call(this);
 }
 util.inherits(Decimal, DataType);
 

@@ -14,10 +14,8 @@ var DataTypeError = require('./data-type-error.js');
  * @extends bo.dataTypes.DataType
  */
 function Text () {
-  DataType.call(this);
-
   // Immutable object.
-  Object.freeze(this);
+  DataType.call(this);
 }
 util.inherits(Text, DataType);
 
@@ -30,7 +28,7 @@ util.inherits(Text, DataType);
  * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Text.
  */
 Text.prototype.check = function (value) {
-  if (value !== null && typeof value !== 'string'  && !(value instanceof String))
+  if (value !== null && typeof value !== 'string' && !(value instanceof String))
     throw new DataTypeError('text');
 };
 

@@ -1,5 +1,7 @@
 'use strict';
 
+var CLASS_NAME = 'DataType';
+
 var NotImplementedError = require('../system/not-implemented-error.js');
 
 /**
@@ -19,7 +21,7 @@ function DataType (name) {
    * @type {string}
    * @readonly
    */
-  this.name = this.constructor.name;
+  this.name = name || this.constructor.name;
 
   // Immutable object.
   Object.freeze(this);
@@ -35,7 +37,7 @@ function DataType (name) {
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.check method is not implemented.
  */
 DataType.prototype.check = function (value) {
-  throw new NotImplementedError('method', 'DataType', 'check');
+  throw new NotImplementedError('method', CLASS_NAME, 'check');
 };
 
 /**
@@ -50,7 +52,7 @@ DataType.prototype.check = function (value) {
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.hasValue method is not implemented.
  */
 DataType.prototype.hasValue = function (value) {
-  throw new NotImplementedError('method', 'DataType', 'hasValue');
+  throw new NotImplementedError('method', CLASS_NAME, 'hasValue');
 };
 
 module.exports = DataType;

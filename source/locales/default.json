@@ -111,7 +111,9 @@
     "date": "The passed value is not DateTime.",
     "decimal": "The passed value is not Decimal.",
     "integer": "The passed value is not Integer.",
-    "text": "The passed value is not Text."
+    "enum": "The passed value is not {0}.",
+    "text": "The passed value is not Text.",
+    "email": "The passed value is not Email."
   },
   "EnumerationError": {
     "default": "An enumeration error occurred.",
