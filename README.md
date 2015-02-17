@@ -28,10 +28,11 @@ Run the tests:
 $ jasmine-node tests
 ```
 
-Generate the documentation:
+Generate the documentation with DocStrap or baseline template:
 
 ```
 $ grunt docstrap
+$ grunt baseline
 ```
 
 ### Features
@@ -61,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.4</dt>
+  <dd>
+    2015.02.17.<br/>
+    Adding email and enum data types.
+  </dd>
+
   <dt>v1.0.3</dt>
   <dd>
     2015.02.16.<br/>

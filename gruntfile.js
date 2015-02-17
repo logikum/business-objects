@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     clean: {
       united: {
-        src: 'documentation/*.html'
+        src: 'doc-docstrap/*.html'
       },
       baseline: {
         src: 'doc-baseline/*.html'
@@ -14,7 +14,7 @@ module.exports = function(grunt) {
       united: {
         src: ['README.md', 'source/**/*.js'],
         options: {
-          destination: 'documentation',
+          destination: 'doc-docstrap',
           template : 'node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
           configure : 'jsdoc.conf.json',
           tutorials : 'tutorials'
