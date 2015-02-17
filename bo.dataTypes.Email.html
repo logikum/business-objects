@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects Namespace: dataAccess</title>
+	<title>business-objects Class: Email</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -714,15 +714,17 @@
 					
 
 
-	<h1 class="page-title">Namespace: dataAccess</h1>
+	<h1 class="page-title">Class: Email</h1>
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="bo.html">bo</a>.</span>
+        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.dataTypes.html">.dataTypes</a>.</span>
     
-    dataAccess
+    Email
     </h2>
+    
+        <div class="class-description"><p>Provide methods to work with Email data.</p></div>
     
 </header>
 
@@ -732,138 +734,29 @@
 
     
         
-            <div class="description"><p>Contains data access components.</p></div>
-        
+<dt>
+    <h4 class="name" id="Email"><span class="type-signature"></span>new Email<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates Email data type definition.</p>
+    </div>
+    
 
-        
+    
+    
+    
+    
+    
+    
+    
 <dl class="details">
 	
 
-	<h5 class="subsection-title">Properties:</h5>
-
-	<dl>
-
-<table class="props table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>ConnectionManagerBase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p><a href="bo.dataAccess.ConnectionManagerBase.html">Base connection manager</a>
-   constructor to create new connection manager objects.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>daoBuilder</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p><a href="bo.dataAccess.html#daoBuilder">Data access object builder</a>
-   function to get data access objects.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>DaoBase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p><a href="bo.dataAccess.DaoBase.html">Data access object</a>
-   constructor to create new data access objects.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>DaoError</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p><a href="bo.dataAccess.DaoError.html">Data access error</a>
-   constructor to create new errors occurred in data access objects.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-</dl>
-
-	
-
 	
 
 	
@@ -891,34 +784,113 @@
 	
 </dl>
 
+    
+    
 
-        
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
     
     </div>
 
     
+        <h3 class="subsection-title">Extends</h3>
+
+        <ul>
+            <li><a href="bo.dataTypes.DataType.html">bo.dataTypes.DataType</a></li>
+        </ul>
+    
+
+    
+
+    
 
     
 
     
 
     
-        <h3 class="subsection-title">Classes</h3>
+        <h3 class="subsection-title">Members</h3>
 
         <dl>
-            <dt><a href="bo.dataAccess.ConnectionManagerBase.html">ConnectionManagerBase</a></dt>
-            <dd></dd>
-        
-            <dt><a href="bo.dataAccess.DaoBase.html">DaoBase</a></dt>
-            <dd></dd>
-        
-            <dt><a href="bo.dataAccess.DaoError.html">DaoError</a></dt>
-            <dd></dd>
+            
+<dt class="name" id="name">
+    <h4><span class="type-signature">&lt;readonly> </span>name<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The name of the data type. The default value is the name of the constructor.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.dataTypes.DataType.html#name">bo.dataTypes.DataType#name</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
         </dl>
-    
-
-    
-
     
 
     
@@ -927,7 +899,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="daoBuilder"><span class="type-signature">&lt;static> </span>daoBuilder<span class="signature">(dataSource, modelPath)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="check"><span class="type-signature"></span>check<span class="signature">(value)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -935,9 +907,7 @@
     
     
     <div class="description">
-        <p>Factory method to create the data access object for a model instance.
-The path of the data access object is created using the model path and
-inserted the data source string before the extension.</p>
+        <p>Checks if value is an Email data.</p>
     </div>
     
 
@@ -959,6 +929,8 @@ inserted the data source string before the extension.</p>
 		<th>Type</th>
 
 		
+		<th>Argument</th>
+		
 
 		
 
@@ -971,47 +943,33 @@ inserted the data source string before the extension.</p>
 
         <tr>
             
-                <td class="name"><code>dataSource</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">data</span>
 
 
             
             </td>
 
             
-
-            
-
-            <td class="description last"><p>The name of the data source.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>modelPath</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">string</span>
 
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
 
             
-            </td>
 
-            
-
-            
-
-            <td class="description last"><p>The model definition path of the model instance
-     that the data access object belongs to.</p></td>
+            <td class="description last"><p>The value to check.</p></td>
         </tr>
 
 	
@@ -1060,76 +1018,170 @@ inserted the data source string before the extension.</p>
     
     
     <h5>Throws:</h5>
-    <ul>
-            <li>
+    
+            
 
     <div class="param-desc">
     
-        <a href="bo.dataAccess.DaoError.html">Dao error</a>: The name of the data source must be a non-empty string.
+        <a href="bo.dataTypes.DataTypeError.html">Data type error</a>: The passed value is not Email.
     
     </div>
 
-</li>
+
         
-            <li>
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="hasValue"><span class="type-signature"></span>hasValue<span class="signature">(value)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Checks if value is an Email data and is not null.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">data</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The value to check.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
 
     <div class="param-desc">
     
-        <a href="bo.dataAccess.DaoError.html">Dao error</a>: The model path must be a non-empty string.
+        <a href="bo.dataTypes.DataTypeError.html">Data type error</a>: The passed value is not Email.
     
     </div>
 
-</li>
+
         
-            <li>
-
-    <div class="param-desc">
     
-        <a href="bo.dataAccess.DaoError.html">Dao error</a>: The model path is not a valid file path.
     
-    </div>
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>True if the value is Email and not null, otherwise false.</p>
+</div>
 
-</li>
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type">boolean</span>
+
+
+	</dd>
+</dl>
+
+
         
-            <li>
-
-    <div class="param-desc">
     
-        <a href="bo.dataAccess.DaoError.html">Dao error</a>: The required data access file does not exist.
-    
-    </div>
-
-</li>
-        
-            <li>
-
-    <div class="param-desc">
-    
-        <a href="bo.dataAccess.DaoError.html">Dao error</a>: The data access file must return a constructor.
-    
-    </div>
-
-</li>
-        
-            <li>
-
-    <div class="param-desc">
-    
-        <a href="bo.dataAccess.DaoError.html">Dao error</a>: The data access object must inherit DaoBase type.
-    
-    </div>
-
-</li>
-        </ul>
-    
-    
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">daoBuilder(&#x27;oracle&#x27;, &#x27;&#x2F;path&#x2F;to&#x2F;model.js&#x27;)&#x2F;&#x2F; returns require(&#x27;&#x2F;path&#x2F;to&#x2F;model.oracle.js&#x27;)</pre>
-
-
     
 </dd>
 
