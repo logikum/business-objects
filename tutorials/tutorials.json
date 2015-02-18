@@ -1,16 +1,29 @@
 {
+  "toc": {
+    "title": "Table of Contents"
+  },
   "introduction": {
-    "title": "Introduction to Business Objects",
-    "children": {
-      "editable-models": {
-        "title": "Editable Models"
-      },
-      "read-only-models": {
-        "title": "Read-Only Models"
-      }
-    }
+    "title": "Introduction to Business Objects"
   },
   "quick-start": {
     "title": "Quick Start"
+  },
+  "models": {
+    "title": "Models"
+  },
+  "definitions": {
+    "title": "Model Definitions"
+  },
+  "data-types": {
+    "title": "Data Types"
+  },
+  "validation": {
+    "title": "Validation"
+  },
+  "authorization": {
+    "title": "Authorization"
+  },
+  "dao": {
+    "title": "Data Access Objects"
   }
 }
