@@ -1,28 +1,26 @@
 {
-	"tags"      : {
-		"allowUnknownTags" : true
-	},
-	"plugins"   : ["plugins/markdown"],
+  "tags": {
+    "allowUnknownTags" : true
+  },
+  "plugins": ["plugins/markdown"],
 
-	"templates" : {
-		"cleverLinks"           : false,
-		"monospaceLinks"        : false,
-		"dateFormat"            : "ddd MMM Do YYYY",
-		"outputSourceFiles"     : false,
-		"outputSourcePath"      : false,
-		"systemName"            : "business-objects",
-		"footer"                : "<center>This site is a work in progress. If you find bugs or have feature requests, please <a href=https://github.com/logikum/business-objects/issues>let us know</a>.</center>",
-		"copyright"             : "JavaScript business objects ♦ Copyright © 2014-2015 Logikum, Ltd.",
-		"navType"               : "vertical",
-		"theme"                 : "united",
-		"linenums"              : true,
-		"collapseSymbols"       : false,
-		"inverseNav"            : true,
-		"highlightTutorialCode" : true,
-		"protocol"				: "fred://"
-	},
-	"markdown"  : {
-		"parser"   : "gfm",
-		"hardwrap" : true
-	}
+  "templates": {
+    "systemName"            : "business-objects",
+    "footer"                : "<center>This site is a work in progress. If you find bugs or have feature requests, please <a href=https://github.com/logikum/business-objects/issues>let us know</a>.</center>",
+    "copyright"             : "JavaScript business objects ♦ Copyright © 2014-2015 Logikum, Ltd.",
+    "navType"               : "vertical",
+    "theme"                 : "united",
+    "linenums"              : true,
+    "collapseSymbols"       : false,
+    "inverseNav"            : true,
+    "outputSourceFiles"     : false,
+    "outputSourcePath"      : false,
+    "dateFormat"            : "MMMM D, YYYY",
+    "highlightTutorialCode" : true,
+    "syntaxTheme"   		: "default"
+  },
+  "markdown": {
+    "parser"   : "gfm",
+    "hardwrap" : true
+  }
 }

@@ -22,6 +22,9 @@ module.exports = function(grunt) {
       }
     },
     exec: {
+      united: {
+        command: 'node_modules\\.bin\\jsdoc -d doc-docstrap -c jsdoc.conf.json -t node_modules/ink-docstrap/template -u tutorials -r source README.md'
+      },
       baseline: {
         command: 'node_modules\\.bin\\jsdoc -d doc-baseline -t node_modules/jsdoc-baseline -r source'
       }
@@ -38,6 +41,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-exec');
 
   // Default task(s).
-  grunt.registerTask('docstrap', ['clean:united', 'jsdoc:united']);
+  grunt.registerTask('docstrap', ['clean:united',   'jsdoc:united']);
+  grunt.registerTask('united',   ['clean:united',   'exec:united']);
   grunt.registerTask('baseline', ['clean:baseline', 'exec:baseline']);
 };
