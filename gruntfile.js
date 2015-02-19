@@ -13,8 +13,8 @@ module.exports = function(grunt) {
     jsdoc : {
       united: {
         src: ['README.md', 'source/**/*.js'],
+        dest: 'doc-docstrap',
         options: {
-          destination: 'doc-docstrap',
           template: 'node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
           configure: 'jsdoc.conf.json',
           tutorials: 'tutorials'
