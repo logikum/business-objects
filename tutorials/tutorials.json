@@ -3,27 +3,83 @@
     "title": "Table of Contents"
   },
   "introduction": {
-    "title": "Introduction to Business Objects"
+    "title": "Introduction"
   },
   "quick-start": {
     "title": "Quick Start"
   },
   "models": {
-    "title": "Models"
+    "title": "Models",
+    "children": {
+      "models-architecture": { "title": "Model Architecture" },
+      "models-editable": { "title": "Editable Models" },
+      "models-read-only": { "title": "Read-Only Models" },
+      "models-command": { "title": "Command Objects" }
+    }
   },
   "definitions": {
-    "title": "Model Definitions"
+    "title": "Model Definitions",
+    "children": {
+      "definitions-property": { "title": "Property Definitions" },
+      "definitions-rule": { "title": "Rule Definitions" },
+      "definitions-extension": { "title": "Extensions" },
+      "definitions-factory": { "title": "Factory Objects" }
+    }
   },
   "data-types": {
-    "title": "Data Types"
+    "title": "Data Types",
+    "children": {
+      "data-types-defined": { "title": "Predefined Data Types" },
+      "data-types-custom": { "title": "Custom Data Types" }
+    }
   },
   "validation": {
-    "title": "Validation"
+    "title": "Validation",
+    "children": {
+      "validation-defined": { "title": "Predefined Validation Rules" },
+      "validation-custom": { "title": "Custom Validation Rules" }
+    }
   },
   "authorization": {
-    "title": "Authorization"
+    "title": "Authorization",
+    "children": {
+      "authorization-defined": { "title": "Predefined Authorization Rules" },
+      "authorization-custom": { "title": "Custom Authorization Rules" }
+    }
   },
   "dao": {
-    "title": "Data Access Objects"
+    "title": "Data Access Objects",
+    "children": {
+      "dao-editable": { "title": "Editable Data Access Objects" },
+      "dao-read-only": { "title": "Read-Only Data Access Objects" },
+      "dao-command": { "title": "Command Data Access Objects" }
+    }
+  },
+  "i18n": {
+    "title": "Internationalization",
+    "children": {
+      "i18n-bo": { "title": "Business Object Localization" },
+      "i18n-project": { "title": "Project Localization" },
+      "i18n-module": { "title": "Localization of Business Objects Module" }
+    }
+  },
+  "configuration": {
+    "title": "Configuration"
+  },
+  "usage": {
+    "title": "Usage of Business Objects",
+    "children": {
+      "usage-structure": { "title": "A Typical Project Structure" },
+      "usage-addition": { "title": "Usual Additions" },
+      "usage-action": { "title": "Business Objects in Action" },
+      "usage-error": { "title": "Error Handling" }
+    }
+  },
+  "misc": {
+    "title": "Miscellaneous",
+    "children": {
+      "misc-argument": { "title": "Argument Checking" },
+      "misc-enumeration": { "title": "Enumerations" }
+    }
   }
 }
