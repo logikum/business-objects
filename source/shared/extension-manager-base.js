@@ -59,67 +59,67 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
   /**
    * Factory method to create the data access object for a model instance.
    * @name bo.shared.ExtensionManagerBase#daoBuilder
-   * @type {function}
+   * @type {external.daoBuilder}
    * @readonly
    */
   /**
    * Converts the model instance to data transfer object.
    * @name bo.shared.ExtensionManagerBase#toDto
-   * @type {function}
+   * @type {external.toDto}
    * @readonly
    */
   /**
    * Converts the data transfer object to model instance.
    * @name bo.shared.ExtensionManagerBase#fromDto
-   * @type {function}
+   * @type {external.fromDto}
    * @readonly
    */
   /**
    * Converts the model instance to client transfer object.
    * @name bo.shared.ExtensionManagerBase#toCto
-   * @type {function}
+   * @type {external.toCto}
    * @readonly
    */
   /**
    * Converts the client transfer object to model instance.
    * @name bo.shared.ExtensionManagerBase#fromCto
-   * @type {function}
+   * @type {external.fromCto}
    * @readonly
    */
   /**
    * Returns the property values of a new instance from the data source.
    * @name bo.shared.ExtensionManagerBase#dataCreate
-   * @type {function}
+   * @type {external.dataCreate}
    * @readonly
    */
   /**
    * Returns the property values of an existing instance from the data source.
    * @name bo.shared.ExtensionManagerBase#dataFetch
-   * @type {function}
+   * @type {external.dataFetch}
    * @readonly
    */
   /**
    * Saves a new instance into the data source.
    * @name bo.shared.ExtensionManagerBase#dataInsert
-   * @type {function}
+   * @type {external.dataInsert}
    * @readonly
    */
   /**
    * Saves an existing instance into the data source.
    * @name bo.shared.ExtensionManagerBase#dataUpdate
-   * @type {function}
+   * @type {external.dataUpdate}
    * @readonly
    */
   /**
    * Deletes an existing instance from the data source.
    * @name bo.shared.ExtensionManagerBase#dataRemove
-   * @type {function}
+   * @type {external.dataRemove}
    * @readonly
    */
   /**
    * Executes a command on the data source.
    * @name bo.shared.ExtensionManagerBase#dataExecute
-   * @type {function}
+   * @type {external.dataExecute}
    * @readonly
    */
   definitions.map(function(definition) {

@@ -8,13 +8,13 @@ var PropertyInfo = require('./property-info.js');
 
 /**
  * @classdesc
- *    Provides the context for custom client transfer objects.
+ *    Provides the context for custom transfer objects.
  * @description
  *    Creates a new transfer context object.
  *      </br></br>
  *    <i><b>Warning:</b> Transfer context objects are created in models internally.
  *    They are intended only to make publicly available the values of model properties
- *    for custom client transfer objects.</i>
+ *    for custom transfer objects.</i>
  *
  * @memberof bo.shared
  * @constructor
@@ -31,7 +31,7 @@ function TransferContext (properties, getValue, setValue) {
   var self = this;
 
   /**
-   * Array of property definitions that may appear on the client transfer object.
+   * Array of property definitions that may appear on the transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
