@@ -983,7 +983,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      *
      * @function EditableRootModel#create
      * @protected
-     * @param {external~cbDataPortal} callback - Returns a new editable business object.
+     * @param {external.cbDataPortal} callback - Returns a new editable business object.
      */
     this.create = function(callback) {
       data_create(callback);
@@ -997,7 +997,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {external~cbDataPortal} callback - Returns the required editable business object.
+     * @param {external.cbDataPortal} callback - Returns the required editable business object.
      */
     this.fetch = function(filter, method, callback) {
       data_fetch(filter, method || M_FETCH, callback);
@@ -1007,7 +1007,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      * Saves the changes of the business object to the repository.
      *
      * @function EditableRootModel#save
-     * @param {external~cbDataPortal} callback - The business object with the new state after the save.
+     * @param {external.cbDataPortal} callback - The business object with the new state after the save.
      */
     this.save = function(callback) {
       if (this.isValid()) {
@@ -1208,7 +1208,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
    *
    * @function EditableRootModel.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns a new editable business object.
+   * @param {external.cbDataPortal} callback - Returns a new editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
@@ -1232,7 +1232,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns the required editable business object.
+   * @param {external.cbDataPortal} callback - Returns the required editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.

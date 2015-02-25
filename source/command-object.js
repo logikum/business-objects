@@ -355,7 +355,7 @@ var CommandObjectFactory = function (properties, rules, extensions) {
      *
      * @function CommandObject#execute
      * @param {string} [method] - An alternative execute method of the data access object.
-     * @param {external~cbDataPortal} callback - Returns the command object with the result.
+     * @param {external.cbDataPortal} callback - Returns the command object with the result.
      *
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
@@ -529,7 +529,7 @@ var CommandObjectFactory = function (properties, rules, extensions) {
    *
    * @function CommandObject.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns a new command object.
+   * @param {external.cbDataPortal} callback - Returns a new command object.
    */
   CommandObject.create = function(eventHandlers, callback) {
     var instance = new CommandObject(eventHandlers);

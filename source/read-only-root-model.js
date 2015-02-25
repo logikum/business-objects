@@ -358,7 +358,7 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {external~cbDataPortal} callback - Returns the required read-only business object.
+     * @param {external.cbDataPortal} callback - Returns the required read-only business object.
      */
     this.fetch = function(filter, method, callback) {
       data_fetch(filter, method || M_FETCH, callback);
@@ -517,7 +517,7 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns the required read-only business object.
+   * @param {external.cbDataPortal} callback - Returns the required read-only business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.

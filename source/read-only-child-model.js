@@ -329,7 +329,7 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
      * @protected
      * @param {{}} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
-     * @param {external~cbDataPortal} callback - Returns the required read-only business object.
+     * @param {external.cbDataPortal} callback - Returns the required read-only business object.
      */
     this.fetch = function(filter, method, callback) {
       data_fetch(filter, method || M_FETCH, callback);
@@ -490,7 +490,7 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
    * @protected
    * @param {{}} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns a new read-only business object.
+   * @param {external.cbDataPortal} callback - Returns a new read-only business object.
    */
   ReadOnlyChildModel.create = function(parent, eventHandlers, callback) {
     var instance = new ReadOnlyChildModel(parent, eventHandlers);
@@ -506,7 +506,7 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
    * @param {{}} parent - The parent business object.
    * @param {{}} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns the required read-only business object.
+   * @param {external.cbDataPortal} callback - Returns the required read-only business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.

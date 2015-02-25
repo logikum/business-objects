@@ -1,6 +1,6 @@
 /**
- * External is a virtual namespace to describe callbacks to implement
- * in external objects that use business objects.
+ * External is a virtual namespace to describe types to implement
+ * in external objects to be used by business objects.
  *
  * @namespace external
  */
@@ -11,36 +11,33 @@ var external = {
   /**
    * The callback to be called when the execution of a connection manager method has finished.
    *
-   * @callback external~cbConnectionManager
+   * @callback external.cbConnectionManager
    * @param {error} err - The error that occurred in the connection manager.
    * @param {object} connection - The connection for the data source.
    */
-  cbConnectionManager: function (err, connection) {},
 
   /**
    * The callback to be called when the execution of a method has finished
    * that calls an asynchronous data portal action.
    *
-   * @callback external~cbDataPortal
+   * @callback external.cbDataPortal
    * @param {(bo.shared.DataPortalError|bo.rules.AuthorizationError)} err - The error that occurred in the data portal action.
    * @param {object} result - The business object instance with the new state.
    */
-  cbDataPortal: function (err, result) {},
 
   /**
    * The callback to be called in collection methods.
    *
-   * @callback external~cbCollectionItem
+   * @callback external.cbCollectionItem
    * @param {{}} currentValue - The current item being processed in the collection.
    * @param {number} index - The index of the current item being processed in the collection.
    * @param {Array.<{}>} collection - The collection method was called upon.
    */
-  cbCollectionItem: function (currentValue, index, collection) {},
 
   /**
    * The callback to be called to define the sort order in a collection.
    *
-   * @callback external~cbCompare
+   * @callback external.cbCompare
    * @param {{}} a - First object to compare.
    * @param {{}} b - Second object to compare.
    * @returns {number} Returns
@@ -58,12 +55,13 @@ var external = {
    * The configuration file of business objects. It can be a JSON file (.json) or
    * a JavaScript file (.js) that returns an object with the following properties:
    *
-   * @name external.configurationFile
+   * @typedef external.configurationFile
+   * @type {object}
    * @property {string} connectionManager -
    *    The relative path of the connection manager constructor.
    *    The created object must inherit {@link bo.dataAccess.ConnectionManagerBase}.
    * @property {string} [daoBuilder] -
-   *    The relative path of the factory method to create data access objects.
+   *    The relative path of the factory {@link external.daoBuilder method} to create data access objects.
    *    The default builder method is {@link bo.dataAccess.daoBuilder}.
    * @property {string} [getUser] -
    *    The relative path of the {@link external.getUser method} that returns the current user.
@@ -79,34 +77,33 @@ var external = {
    *    * 2 or 'showWarning'
    *    * 3 or 'showInformation'
    */
-  configuration: {},
 
   /**
    * Returns the current user.
    *
-   * @function external.getUser
+   * @typedef external.getUser
+   * @type {function}
    * @returns {bo.system.UserInfo} The current user or null.
    */
-  getUser: function () {},
 
   /**
    * Returns the current locale.
    *
-   * @function external.getLocale
+   * @typedef external.getLocale
+   * @type {function}
    * @returns {string} The current locale or an empty string.
    */
-  getLocale: function () {},
 
   /**
    * Factory method to create the data access object for a model instance.
    *
-   * @function external.daoBuilder
+   * @typedef external.daoBuilder
+   * @type {function}
    * @param {string} dataSource - The name of the data source.
    * @param {string} modelPath - The model definition path of the model instance
    *      that the data access object belongs to.
    * @returns {bo.dataAccess.DaoBase} The data access object.
    */
-  daoBuilder: function (dataSource, modelPath) {}
 
   //endregion
 

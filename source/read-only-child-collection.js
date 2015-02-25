@@ -117,7 +117,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * @function ReadOnlyChildCollection#fetch
      * @protected
      * @param {Array.<{}>} [data] - The data to load into the business object collection.
-     * @param {external~cbDataPortal} callback - Returns the eventual error.
+     * @param {external.cbDataPortal} callback - Returns the eventual error.
      */
     this.fetch = function (data, callback) {
       if (data instanceof Array && data.length) {
@@ -158,7 +158,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * Executes a provided function once per collection item.
      *
      * @function ReadOnlyChildCollection#forEach
-     * @param {external~cbCollectionItem} callback - Function that produces an item of the new collection.
+     * @param {external.cbCollectionItem} callback - Function that produces an item of the new collection.
      */
     this.forEach = function (callback) {
       items.forEach(callback);
@@ -168,7 +168,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * Tests whether all items in the collection pass the test implemented by the provided function.
      *
      * @function ReadOnlyChildCollection#every
-     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
      * @returns {boolean} True when callback returns truthy value for each item, otherwise false.
      */
     this.every = function (callback) {
@@ -179,7 +179,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * Tests whether some item in the collection pass the test implemented by the provided function.
      *
      * @function ReadOnlyChildCollection#some
-     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
      * @returns {boolean} True when callback returns truthy value for some item, otherwise false.
      */
     this.some = function (callback) {
@@ -191,7 +191,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * implemented by the provided function.
      *
      * @function ReadOnlyChildCollection#filter
-     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
      * @returns {Array.<ReadOnlyChildModel>} The new array of collection items.
      */
     this.filter = function (callback) {
@@ -203,7 +203,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * on every item in this collection.
      *
      * @function ReadOnlyChildCollection#map
-     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
      * @returns {Array.<*>} The new array of callback results.
      */
     this.map = function (callback) {
@@ -214,7 +214,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * Sorts the items of the collection in place and returns the collection.
      *
      * @function ReadOnlyChildCollection#sort
-     * @param {external~cbCompare} [fnCompare] - Function that defines the sort order.
+     * @param {external.cbCompare} [fnCompare] - Function that defines the sort order.
      *      If omitted, the collection is sorted according to each character's Unicode
      *      code point value, according to the string conversion of each item.
      * @returns {ReadOnlyChildCollection} The sorted collection.

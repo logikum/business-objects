@@ -311,7 +311,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {external~cbDataPortal} callback - Returns the required read-only collection.
+     * @param {external.cbDataPortal} callback - Returns the required read-only collection.
      */
     this.fetch = function(filter, method, callback) {
       data_fetch(filter, method || M_FETCH, callback);
@@ -387,7 +387,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * Executes a provided function once per collection item.
      *
      * @function ReadOnlyRootCollection#forEach
-     * @param {external~cbCollectionItem} callback - Function that produces an item of the new collection.
+     * @param {external.cbCollectionItem} callback - Function that produces an item of the new collection.
      */
     this.forEach = function (callback) {
       items.forEach(callback);
@@ -397,7 +397,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * Tests whether all items in the collection pass the test implemented by the provided function.
      *
      * @function ReadOnlyRootCollection#every
-     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
      * @returns {boolean} True when callback returns truthy value for each item, otherwise false.
      */
     this.every = function (callback) {
@@ -408,7 +408,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * Tests whether some item in the collection pass the test implemented by the provided function.
      *
      * @function ReadOnlyRootCollection#some
-     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
      * @returns {boolean} True when callback returns truthy value for some item, otherwise false.
      */
     this.some = function (callback) {
@@ -420,7 +420,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * implemented by the provided function.
      *
      * @function ReadOnlyRootCollection#filter
-     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
      * @returns {Array.<ReadOnlyChildModel>} The new array of collection items.
      */
     this.filter = function (callback) {
@@ -432,7 +432,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * on every item in this collection.
      *
      * @function ReadOnlyRootCollection#map
-     * @param {external~cbCollectionItem} callback - Function to test for each collection item.
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
      * @returns {Array.<*>} The new array of callback results.
      */
     this.map = function (callback) {
@@ -443,7 +443,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * Sorts the items of the collection in place and returns the collection.
      *
      * @function ReadOnlyRootCollection#sort
-     * @param {external~cbCompare} [fnCompare] - Function that defines the sort order.
+     * @param {external.cbCompare} [fnCompare] - Function that defines the sort order.
      *      If omitted, the collection is sorted according to each character's Unicode
      *      code point value, according to the string conversion of each item.
      * @returns {ReadOnlyRootCollection} The sorted collection.
@@ -479,7 +479,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns the required read-only collection.
+   * @param {external.cbDataPortal} callback - Returns the required read-only collection.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.

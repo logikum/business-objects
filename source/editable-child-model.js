@@ -957,7 +957,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
      *
      * @function EditableChildModel#create
      * @protected
-     * @param {external~cbDataPortal} callback - Returns a new editable business object.
+     * @param {external.cbDataPortal} callback - Returns a new editable business object.
      */
     this.create = function(callback) {
       data_create(callback);
@@ -971,7 +971,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
      * @protected
      * @param {{}} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
-     * @param {external~cbDataPortal} callback - Returns the required editable business object.
+     * @param {external.cbDataPortal} callback - Returns the required editable business object.
      */
     this.fetch = function(data, method, callback) {
       data_fetch(data, method || M_FETCH, callback);
@@ -984,7 +984,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
      * @function EditableChildModel#save
      * @protected
      * @param {{}} connection - The connection data.
-     * @param {external~cbDataPortal} callback - The business object with the new state after the save.
+     * @param {external.cbDataPortal} callback - The business object with the new state after the save.
      */
     this.save = function(connection, callback) {
       if (this.isValid()) {
@@ -1175,7 +1175,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
    * @protected
    * @param {{}} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns a new editable business object.
+   * @param {external.cbDataPortal} callback - Returns a new editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
@@ -1201,7 +1201,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
    * @param {{}} parent - The parent business object.
    * @param {{}} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external~cbDataPortal} callback - Returns the required editable business object.
+   * @param {external.cbDataPortal} callback - Returns the required editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
