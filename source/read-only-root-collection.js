@@ -230,9 +230,9 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
       function finish (data, cb) {
         // Load children.
         if (data instanceof Array && data.length) {
+          var count = 0;
+          var error = null;
           data.forEach(function (dto) {
-            var count = 0;
-            var error = null;
             itemType.load(self, dto, eventHandlers, function (err, item) {
               if (err)
                 error = error || err;
