@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.5</dt>
+  <dd>
+    2015.02.25.<br/>
+    Fixing a bug in root collection.
+  </dd>
+
   <dt>v1.0.4</dt>
   <dd>
     2015.02.17.<br/>
