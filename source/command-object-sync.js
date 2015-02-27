@@ -220,20 +220,22 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
       );
     }
 
-    function wrapError (action, error) {
-      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    function wrapError (error) {
+      return new DataPortalError(MODEL_DESC, properties.name, DataPortalAction.execute, error);
     }
 
     //endregion
 
     //region Execute
 
-    function data_execute (method) {
+    function data_execute (method, isTransaction) {
       // Check permissions.
       if (method === M_EXECUTE ? canDo(AuthorizationAction.executeCommand) : canExecute(method)) {
         try {
-          // Start transaction.
-          connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Open connection/Start transaction.
+          connection = isTransaction ?
+              config.connectionManager.beginTransaction(extensions.dataSource) :
+              config.connectionManager.openConnection(extensions.dataSource);
           // Launch start event.
           /**
            * The event arises before the command object will be executed in the repository.
@@ -263,16 +265,20 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
            * @param {CommandObjectSync} newObject - The instance of the model after the data portal action.
            */
           raiseEvent(DataPortalEvent.postExecute, method);
-          // Finish transaction.
-          connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
+          // Close connection/Finish transaction.
+          connection = isTransaction ?
+              config.connectionManager.commitTransaction(extensions.dataSource, connection) :
+              config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
           // Wrap the intercepted error.
-          var dpError = wrapError(DataPortalAction.execute, e);
+          var dpError = wrapError(e);
           // Launch finish event.
           if (connection)
             raiseEvent(DataPortalEvent.postExecute, method, dpError);
-          // Undo transaction.
-          connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
+          // Close connection/Undo transaction.
+          connection = isTransaction ?
+              config.connectionManager.rollbackTransaction(extensions.dataSource, connection) :
+              config.connectionManager.closeConnection(extensions.dataSource, connection);
           // Rethrow error.
           throw dpError;
         }
@@ -292,12 +298,21 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
      *
      * @function CommandObjectSync#execute
      * @param {string} [method] - An alternative execute method of the data access object.
+     * @param {boolean} [isTransaction] - Indicates whether transaction is required.
      *
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
      */
-    this.execute = function(method) {
-      data_execute(method || M_EXECUTE);
+    this.execute = function(method, isTransaction) {
+      if (typeof method === 'boolean' || method instanceof Boolean) {
+        isTransaction = method;
+        method = M_EXECUTE;
+      }
+      method = EnsureArgument.isOptionalString(method,
+          'm_optString', CLASS_NAME, 'execute', 'method');
+      isTransaction = EnsureArgument.isOptionalBoolean(isTransaction,
+          'm_optBoolean', CLASS_NAME, 'execute', 'isTransaction');
+      data_execute(method || M_EXECUTE, isTransaction);
     };
 
     //endregion

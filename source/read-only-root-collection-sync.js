@@ -182,8 +182,8 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
       );
     }
 
-    function wrapError (action, error) {
-      return new DataPortalError(MODEL_DESC, name, action, error);
+    function wrapError (error) {
+      return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
     }
 
     //endregion
@@ -233,7 +233,7 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
           connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
         } catch (e) {
           // Wrap the intercepted error.
-          var dpError = wrapError(DataPortalAction.fetch, e);
+          var dpError = wrapError(e);
           // Launch finish event.
           raiseEvent(DataPortalEvent.postFetch, method, dpError);
           // Close connection.

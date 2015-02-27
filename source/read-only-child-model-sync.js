@@ -235,8 +235,8 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
       );
     }
 
-    function wrapError (action, error) {
-      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    function wrapError (error) {
+      return new DataPortalError(MODEL_DESC, properties.name, DataPortalAction.fetch, error);
     }
 
     //endregion
@@ -278,7 +278,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
           raiseEvent(DataPortalEvent.postFetch, method);
         } catch (e) {
           // Wrap the intercepted error.
-          var dpError = wrapError(DataPortalAction.fetch, e);
+          var dpError = wrapError(e);
           // Launch finish event.
           raiseEvent(DataPortalEvent.postFetch, method, dpError);
           // Rethrow the original error.

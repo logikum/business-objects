@@ -9,8 +9,9 @@ var Enumeration = require('./../system/enumeration.js');
  * @description
  *    Creates a new enumeration to define the data portal actions. Members:
  *
- *    * fetch
  *    * create
+ *    * fetch
+ *    * insert
  *    * update
  *    * remove
  *    * execute

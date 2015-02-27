@@ -235,8 +235,31 @@ var CommandObjectFactory = function (properties, rules, extensions) {
       );
     }
 
-    function wrapError (action, error) {
-      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    function wrapError (error) {
+      return new DataPortalError(MODEL_DESC, properties.name, DataPortalAction.execute, error);
+    }
+
+    function runStatements (main, callback) {
+      // Open connection.
+      config.connectionManager.openConnection(
+          extensions.dataSource, function (errOpen, connection) {
+            if (errOpen)
+              callback(wrapError(errOpen));
+            else
+              main(connection, function (err, result) {
+                // Close connection.
+                config.connectionManager.closeConnection(
+                    extensions.dataSource, connection, function (errClose, connClosed) {
+                      connection = connClosed;
+                      if (err)
+                        callback(wrapError(err));
+                      else if (errClose)
+                        callback(wrapError(errClose));
+                      else
+                        callback(null, result);
+                    });
+              });
+          });
     }
 
     function runTransaction (main, callback) {
@@ -272,7 +295,7 @@ var CommandObjectFactory = function (properties, rules, extensions) {
 
     //region Execute
 
-    function data_execute (method, callback) {
+    function data_execute (method, isTransaction, callback) {
       var hasConnection = false;
       // Helper function for post-execute actions.
       function finish (dto, cb) {
@@ -297,7 +320,7 @@ var CommandObjectFactory = function (properties, rules, extensions) {
       function failed (err, cb) {
         if (hasConnection) {
           // Launch finish event.
-          var dpError = wrapError(DataPortalAction.fetch, err);
+          var dpError = wrapError(err);
           raiseEvent(DataPortalEvent.postExecute, method, dpError);
         }
         cb(err);
@@ -336,8 +359,12 @@ var CommandObjectFactory = function (properties, rules, extensions) {
         }
       }
       // Check permissions.
-      if (method === M_EXECUTE ? canDo(AuthorizationAction.executeCommand) : canExecute(method))
-        runTransaction(main, callback);
+      if (method === M_EXECUTE ? canDo(AuthorizationAction.executeCommand) : canExecute(method)) {
+        if (isTransaction)
+          runTransaction(main, callback);
+        else
+          runStatements(main, callback);
+      }
       else
         callback(null, self);
     }
@@ -355,17 +382,33 @@ var CommandObjectFactory = function (properties, rules, extensions) {
      *
      * @function CommandObject#execute
      * @param {string} [method] - An alternative execute method of the data access object.
+     * @param {boolean} [isTransaction] - Indicates whether transaction is required.
      * @param {external.cbDataPortal} callback - Returns the command object with the result.
      *
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
      */
-    this.execute = function(method, callback) {
+    this.execute = function(method, isTransaction, callback) {
       if (!callback) {
-        callback = method;
-        method = null;
+        if (isTransaction) {
+          callback = isTransaction;
+          isTransaction = null;
+        } else {
+          callback = method;
+          method = null;
+        }
       }
-      data_execute(method || M_EXECUTE, callback);
+      if (typeof method === 'boolean' || method instanceof Boolean) {
+        isTransaction = method;
+        method = M_EXECUTE;
+      }
+      method = EnsureArgument.isOptionalString(method,
+          'm_optString', CLASS_NAME, 'execute', 'method');
+      isTransaction = EnsureArgument.isOptionalBoolean(isTransaction,
+          'm_optBoolean', CLASS_NAME, 'execute', 'isTransaction');
+      callback = EnsureArgument.isOptionalFunction(callback,
+          'm_manFunction', CLASS_NAME, 'execute', 'callback');
+      data_execute(method || M_EXECUTE, isTransaction, callback);
     };
 
     //endregion

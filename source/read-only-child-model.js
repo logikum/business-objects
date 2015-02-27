@@ -251,8 +251,8 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
       );
     }
 
-    function wrapError (action, error) {
-      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    function wrapError (error) {
+      return new DataPortalError(MODEL_DESC, properties.name, DataPortalAction.fetch, error);
     }
 
     //endregion
@@ -282,7 +282,7 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
       // Helper callback for failure.
       function failed (err, cb) {
         // Launch finish event.
-        var dpError = wrapError(DataPortalAction.fetch, err);
+        var dpError = wrapError(err);
         raiseEvent(DataPortalEvent.postFetch, method, dpError);
         cb(err);
       }

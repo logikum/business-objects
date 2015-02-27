@@ -65,6 +65,7 @@ Synchronous models:
   <dt>v1.0.6</dt>
   <dd>
     2015.02.27.<br/>
+    Making transaction optional in command execution.
     Fixing bugs in custom property functions.
   </dd>
 

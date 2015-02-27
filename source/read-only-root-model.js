@@ -243,16 +243,16 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
       );
     }
 
-    function wrapError (action, error) {
-      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+    function wrapError (error) {
+      return new DataPortalError(MODEL_DESC, properties.name, DataPortalAction.fetch, error);
     }
 
-    function runStatements (main, action, callback) {
+    function runStatements (main, callback) {
       // Open connection.
       config.connectionManager.openConnection(
           extensions.dataSource, function (errOpen, connection) {
             if (errOpen)
-              callback(wrapError(action, errOpen));
+              callback(wrapError(errOpen));
             else
               main(connection, function (err, result) {
                 // Close connection.
@@ -260,9 +260,9 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
                     extensions.dataSource, connection, function (errClose, connClosed) {
                       connection = connClosed;
                       if (err)
-                        callback(wrapError(action, err));
+                        callback(wrapError(err));
                       else if (errClose)
-                        callback(wrapError(action, errClose));
+                        callback(wrapError(errClose));
                       else
                         callback(null, result);
                     });
@@ -299,7 +299,7 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
       function failed (err, cb) {
         if (hasConnection) {
           // Launch finish event.
-          var dpError = wrapError(DataPortalAction.fetch, err);
+          var dpError = wrapError(err);
           raiseEvent(DataPortalEvent.postFetch, method, dpError);
         }
         cb(err);
@@ -339,7 +339,7 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
       }
       // Check permissions.
       if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method))
-        runStatements(main, DataPortalAction.fetch, callback);
+        runStatements(main, callback);
       else
         callback(null, self);
     }
