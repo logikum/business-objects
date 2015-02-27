@@ -426,15 +426,22 @@ var CommandObjectFactory = function (properties, rules, extensions) {
     }
 
     function readPropertyValue(property) {
-      if (canBeRead(property))
-        return store.getValue(property);
-      else
+      if (canBeRead(property)) {
+        if (property.getter)
+          return property.getter(getPropertyContext(property));
+        else
+          return store.getValue(property);
+      } else
         return null;
     }
 
     function writePropertyValue(property, value) {
-      if (canBeWritten(property))
-        store.setValue(property, value);
+      if (canBeWritten(property)) {
+        if (property.setter)
+          property.setter(getPropertyContext(property), value);
+        else
+          store.setValue(property, value);
+      }
     }
 
     function getPropertyContext(primaryProperty) {
@@ -451,18 +458,12 @@ var CommandObjectFactory = function (properties, rules, extensions) {
 
         Object.defineProperty(self, property.name, {
           get: function () {
-            if (property.getter)
-              return property.getter(getPropertyContext(property));
-            else
-              return readPropertyValue(property);
+            return readPropertyValue(property);
           },
           set: function (value) {
             if (property.isReadOnly)
               throw new ModelError('readOnly', properties.name , property.name);
-            if (property.setter)
-              property.setter(getPropertyContext(property), value);
-            else
-              writePropertyValue(property, value);
+            writePropertyValue(property, value);
           },
           enumerable: true
         });

@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.6</dt>
+  <dd>
+    2015.02.27.<br/>
+    Fixing bugs in custom property functions.
+  </dd>
+
   <dt>v1.0.5</dt>
   <dd>
     2015.02.25.<br/>

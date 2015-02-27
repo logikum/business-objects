@@ -371,9 +371,12 @@ var ReadOnlyRootModelSyncFactory = function (properties, rules, extensions) {
     }
 
     function readPropertyValue(property) {
-      if (canBeRead(property))
-        return store.getValue(property);
-      else
+      if (canBeRead(property)) {
+        if (property.getter)
+          return property.getter(getPropertyContext(property));
+        else
+          return store.getValue(property);
+      } else
         return null;
     }
 
@@ -391,10 +394,7 @@ var ReadOnlyRootModelSyncFactory = function (properties, rules, extensions) {
 
         Object.defineProperty(self, property.name, {
           get: function () {
-            if (property.getter)
-              return property.getter(getPropertyContext(property));
-            else
-              return readPropertyValue(property);
+            return readPropertyValue(property);
           },
           set: function (value) {
             throw new ModelError('readOnly', properties.name , property.name);
