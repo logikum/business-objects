@@ -91,6 +91,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
     var isValidated = false;
     var dao = null;
     var dataContext = null;
+    var totalItems = null;
 
     // Get data access object.
     if (extensions.daoBuilder)
@@ -121,6 +122,20 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
       enumerable: false
     });
 
+    /**
+     * The count of all available items if provided by the data access object.
+     *
+     * @name ReadOnlyRootCollection#totalItems
+     * @type {number}
+     * @readonly
+     */
+    Object.defineProperty(self, 'totalItems', {
+      get: function () {
+        return totalItems;
+      },
+      enumerable: false
+    });
+
     // Set up event handlers.
     if (eventHandlers)
       eventHandlers.setup(self);
@@ -138,6 +153,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
       items.forEach(function (item) {
         cto.push(item.toCto());
       });
+      if (totalItems)
+        cto.totalItems = totalItems;
       return cto;
     };
 
@@ -228,6 +245,13 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
       }
       // Helper function for post-fetch actions.
       function finish (data, cb) {
+        // Get the count of all available items.
+        if (data.totalItems &&
+            (typeof data.totalItems === 'number' || data.totalItems instanceof Number) &&
+            data.totalItems % 1 === 0)
+          totalItems = data.totalItems;
+        else
+          totalItems = null;
         // Load children.
         if (data instanceof Array && data.length) {
           var count = 0;

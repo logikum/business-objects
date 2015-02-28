@@ -561,6 +561,7 @@ describe('Synchronous data portal method', function () {
     //region Check data
 
     expect(orderList.count).toBe(1);
+    expect(orderList.totalItems).toBe(182);
 
     var orderListItem = orderList.at(0);
 

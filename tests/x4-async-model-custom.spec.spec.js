@@ -589,10 +589,12 @@ describe('Asynchronous data portal method', function () {
       //region Check data
 
       expect(orderList.count).toBe(1);
+      expect(orderList.totalItems).toBe(2015);
 
       var orderListItem = orderList.at(0);
 
       expect(orderListItem.orderKey).toBe(4);
+      expect(orderListItem.orderCode).toBe('100');
       expect(orderListItem.vendorName).toBe('Acme Corp.');
       expect(orderListItem.contractDate).toBe(contractDate);
       expect(orderListItem.totalPrice).toBe(497.5);
@@ -606,22 +608,43 @@ describe('Asynchronous data portal method', function () {
       //region Check write protection
 
       function write1 () { orderListItem.orderKey = 111; }
-      function write2 () { orderListItem.vendorName = 'Purple Cactus, Ltd.'; }
-      function write3 () { orderListItem.contractDate = expiry1; }
-      function write4 () { orderListItem.totalPrice = 6508.2; }
-      function write5 () { orderListItem.schedules = 7; }
-      function write6 () { orderListItem.enabled = false; }
-      function write7 () { orderListItem.createdDate = shipDate1; }
-      function write8 () { orderListItem.modifiedDate = shipDate2; }
+      function write2 () { orderListItem.orderCode = '10001'; }
+      function write3 () { orderListItem.vendorName = 'Purple Cactus, Ltd.'; }
+      function write4 () { orderListItem.contractDate = expiry1; }
+      function write5 () { orderListItem.totalPrice = 6508.2; }
+      function write6 () { orderListItem.schedules = 7; }
+      function write7 () { orderListItem.enabled = false; }
+      function write8 () { orderListItem.createdDate = shipDate1; }
+      function write9 () { orderListItem.modifiedDate = shipDate2; }
 
       expect(write1).toThrow('BlanketOrderListItem.orderKey property is read-only.');
-      expect(write2).toThrow('BlanketOrderListItem.vendorName property is read-only.');
-      expect(write3).toThrow('BlanketOrderListItem.contractDate property is read-only.');
-      expect(write4).toThrow('BlanketOrderListItem.totalPrice property is read-only.');
-      expect(write5).toThrow('BlanketOrderListItem.schedules property is read-only.');
-      expect(write6).toThrow('BlanketOrderListItem.enabled property is read-only.');
-      expect(write7).toThrow('BlanketOrderListItem.createdDate property is read-only.');
-      expect(write8).toThrow('BlanketOrderListItem.modifiedDate property is read-only.');
+      expect(write2).toThrow('BlanketOrderListItem.orderCode property is read-only.');
+      expect(write3).toThrow('BlanketOrderListItem.vendorName property is read-only.');
+      expect(write4).toThrow('BlanketOrderListItem.contractDate property is read-only.');
+      expect(write5).toThrow('BlanketOrderListItem.totalPrice property is read-only.');
+      expect(write6).toThrow('BlanketOrderListItem.schedules property is read-only.');
+      expect(write7).toThrow('BlanketOrderListItem.enabled property is read-only.');
+      expect(write8).toThrow('BlanketOrderListItem.createdDate property is read-only.');
+      expect(write9).toThrow('BlanketOrderListItem.modifiedDate property is read-only.');
+
+      //endregion
+
+      //region Check client transfer object
+
+      var cto = orderList.toCto();
+      expect(cto.totalItems).toBe(2015);
+
+      var ctoItem = cto[0];
+
+      expect(ctoItem.orderKey).toBeUndefined();
+      expect(ctoItem.orderCode).toBe('100');
+      expect(ctoItem.vendorName).toBe('Acme Corp.');
+      expect(ctoItem.contractDate).toBe(contractDate);
+      expect(ctoItem.totalPrice).toBe(497.5);
+      expect(ctoItem.schedules).toBe(2);
+      expect(ctoItem.enabled).toBe(true);
+      expect(ctoItem.createdDate.getDate()).toBe(new Date().getDate());
+      expect(ctoItem.modifiedDate).toBeNull();
 
       //endregion
     });

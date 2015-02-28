@@ -599,6 +599,7 @@ describe('Synchronous data portal method', function () {
     //region Check data
 
     expect(orderList.count).toBe(1);
+    expect(orderList.totalItems).toBe(101);
 
     var orderListItem = orderList.at(0);
 
@@ -641,6 +642,8 @@ describe('Synchronous data portal method', function () {
     //region Check client transfer object
 
     var cto = orderList.toCto();
+    expect(cto.totalItems).toBe(101);
+
     var ctoItem = cto[0];
 
     expect(ctoItem.orderKey).toBeUndefined();

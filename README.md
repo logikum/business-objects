@@ -64,8 +64,9 @@ Synchronous models:
 <dl>
   <dt>v1.0.6</dt>
   <dd>
-    2015.02.27.<br/>
-    Making transaction optional in command execution.
+    2015.02.28.<br/>
+    Adding totalItems property to root collection.<br/>
+    Making transaction optional in command execution.<br/>
     Fixing bugs in custom property functions.
   </dd>
 

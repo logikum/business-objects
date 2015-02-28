@@ -17,6 +17,7 @@ BlanketOrderListDao.prototype.fetch = function(connection, filter, callback) {
       orderList.push(global.orders[key]);
     }
   }
+  orderList.totalItems = 2015;
   callback(null, orderList);
 };
 

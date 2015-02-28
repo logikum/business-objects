@@ -589,6 +589,7 @@ describe('Asynchronous data portal method', function () {
       //region Check data
 
       expect(orderList.count).toBe(1);
+      expect(orderList.totalItems).toBe(73);
 
       var orderListItem = orderList.at(0);
 

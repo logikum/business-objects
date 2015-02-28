@@ -92,6 +92,7 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
     var dao = null;
     var dataContext = null;
     var connection = null;
+    var totalItems = null;
 
     // Get data access object.
     if (extensions.daoBuilder)
@@ -122,6 +123,20 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
       enumerable: false
     });
 
+    /**
+     * The count of all available items if provided by the data access object.
+     *
+     * @name ReadOnlyRootCollectionSync#totalItems
+     * @type {number}
+     * @readonly
+     */
+    Object.defineProperty(self, 'totalItems', {
+      get: function () {
+        return totalItems;
+      },
+      enumerable: false
+    });
+
     // Set up event handlers.
     if (eventHandlers)
       eventHandlers.setup(self);
@@ -139,6 +154,8 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
       items.forEach(function (item) {
         cto.push(item.toCto());
       });
+      if (totalItems)
+        cto.totalItems = totalItems;
       return cto;
     };
 
@@ -214,6 +231,13 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
             // Root element fetches data from repository.
             dto = dao.$runMethod(method, connection, filter);
           }
+          // Get the count of all available items.
+          if (dto.totalItems &&
+             (typeof dto.totalItems === 'number' || dto.totalItems instanceof Number) &&
+              dto.totalItems % 1 === 0)
+            totalItems = dto.totalItems;
+          else
+            totalItems = null;
           // Load children.
           if (dto instanceof Array) {
             dto.forEach(function (data) {
