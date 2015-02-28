@@ -15,6 +15,10 @@ var CLASS_NAME = 'ReadOnlyChildCollection';
 /**
  * Factory method to create definitions of asynchronous read-only child collections.
  *
+ *    Valid collection item types are:
+ *
+ *      * ReadOnlyChildModel
+ *
  * @function bo.ReadOnlyChildCollection
  * @param {string} name - The name of the collection.
  * @param {ReadOnlyChildModel} itemType - The model type of the collection items.
@@ -40,9 +44,18 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
    * @description
    *    Creates a new asynchronous read-only child collection instance.
    *
+   *    _The name of the model type available as:
+   *    __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyChildCollection'._
+   *
+   *    Valid parent model types are:
+   *
+   *      * ReadOnlyRootModel
+   *      * ReadOnlyChildModel
+   *      * CommandObject
+   *
    * @name ReadOnlyChildCollection
    * @constructor
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends CollectionBase

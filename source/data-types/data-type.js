@@ -32,7 +32,7 @@ function DataType (name) {
  *
  * @abstract
  * @function bo.dataTypes.DataType#check
- * @param {?*} value - The value to check.
+ * @param {*} [value] - The value to check.
  *
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.check method is not implemented.
  */
@@ -46,7 +46,7 @@ DataType.prototype.check = function (value) {
  *
  * @abstract
  * @function bo.dataTypes.DataType#hasValue
- * @param {!*} value - The value to check.
+ * @param {*} value - The value to check.
  * @returns {boolean} True if the value is the defined data type and not null, otherwise false.
  *
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.hasValue method is not implemented.

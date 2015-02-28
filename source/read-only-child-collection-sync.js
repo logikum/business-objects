@@ -15,6 +15,10 @@ var CLASS_NAME = 'ReadOnlyChildCollectionSync';
 /**
  * Factory method to create definitions of synchronous read-only child collections.
  *
+ *    Valid collection item types are:
+ *
+ *      * ReadOnlyChildModelSync
+ *
  * @function bo.ReadOnlyChildCollectionSync
  * @param {string} name - The name of the collection.
  * @param {ReadOnlyChildModelSync} itemType - The model type of the collection items.
@@ -43,9 +47,15 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
    *    _The name of the model type available as:
    *    __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyChildCollectionSync'._
    *
+   *    Valid parent model types are:
+   *
+   *      * ReadOnlyRootModelSync
+   *      * ReadOnlyChildModelSync
+   *      * CommandObjectSync
+   *
    * @name ReadOnlyChildCollectionSync
    * @constructor
-   * @param {{}} parent - The parent business object.
+   * @param {objects} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends CollectionBase

@@ -42,6 +42,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 /**
  * Factory method to create definitions of synchronous editable child models.
  *
+ *    Valid child model types are:
+ *
+ *      * EditableChildCollectionSync
+ *      * EditableChildModelSync
+ *
  * @function bo.EditableChildModelSync
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
@@ -76,9 +81,15 @@ var EditableChildModelSyncFactory = function (properties, rules, extensions) {
    *    _The name of the model type available as:
    *    __&lt;instance&gt;.constructor.modelType__, returns 'EditableChildModelSync'._
    *
+   *    Valid parent model types are:
+   *
+   *      * EditableChildCollectionSync
+   *      * EditableRootModelSync
+   *      * EditableChildModelSync
+   *
    * @name EditableChildModelSync
    * @constructor
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
@@ -196,7 +207,7 @@ var EditableChildModelSyncFactory = function (properties, rules, extensions) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModelSync#toCto
-     * @returns {{}} The client transfer object.
+     * @returns {object} The client transfer object.
      */
     this.toCto = function () {
       var cto = {};
@@ -229,7 +240,7 @@ var EditableChildModelSyncFactory = function (properties, rules, extensions) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModelSync#fromCto
-     * @param {{}} cto - The client transfer object.
+     * @param {object} cto - The client transfer object.
      */
     this.fromCto = function (cto) {
       if (extensions.fromCto)
@@ -822,7 +833,7 @@ var EditableChildModelSyncFactory = function (properties, rules, extensions) {
      *
      * @function EditableChildModelSync#fetch
      * @protected
-     * @param {{}} [data] - The data to load into the business object.
+     * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
      */
     this.fetch = function(data, method) {
@@ -835,7 +846,7 @@ var EditableChildModelSyncFactory = function (properties, rules, extensions) {
      *
      * @function EditableChildModelSync#save
      * @protected
-     * @param {{}} connection - The connection data.
+     * @param {object} connection - The connection data.
      * @returns {EditableChildModelSync} The business object with the new state after the save.
      */
     this.save = function(connection) {
@@ -1023,7 +1034,7 @@ var EditableChildModelSyncFactory = function (properties, rules, extensions) {
    *
    * @function EditableChildModelSync.create
    * @protected
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {EditableChildModelSync} A new editable business object.
    *
@@ -1044,8 +1055,8 @@ var EditableChildModelSyncFactory = function (properties, rules, extensions) {
    *
    * @function EditableChildModelSync.load
    * @protected
-   * @param {{}} parent - The parent business object.
-   * @param {{}} data - The data to load into the business object.
+   * @param {object} parent - The parent business object.
+   * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {EditableChildModelSync} The required editable business object.
    *

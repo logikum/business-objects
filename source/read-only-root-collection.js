@@ -31,6 +31,10 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 /**
  * Factory method to create definitions of asynchronous read-only root collections.
  *
+ *    Valid collection item types are:
+ *
+ *      * ReadOnlyChildModel
+ *
  * @function bo.ReadOnlyRootCollection
  * @param {string} name - The name of the collection.
  * @param {ReadOnlyChildModel} itemType - The model type of the collection items.
@@ -336,8 +340,23 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
      * @param {external.cbDataPortal} callback - Returns the required read-only collection.
+     *
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The method must be a string or null.
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The callback must be a function.
+     * @throws {@link bo.rules.AuthorizationError Authorization error}:
+     *      The user has no permission to execute the action.
+     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     *      Fetching the business object has failed.
      */
     this.fetch = function(filter, method, callback) {
+
+      method = EnsureArgument.isOptionalString(method,
+          'm_optString', CLASS_NAME, 'fetch', 'method');
+      callback = EnsureArgument.isOptionalFunction(callback,
+          'm_manFunction', CLASS_NAME, 'fetch', 'callback');
+
       data_fetch(filter, method || M_FETCH, callback);
     };
 
@@ -505,10 +524,16 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external.cbDataPortal} callback - Returns the required read-only collection.
    *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The method must be a string or null.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The event handlers must be an EventHandlerList object or null.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    * @throws {@link bo.shared.DataPortalError Data portal error}:
-   *    Fetching the business object collection has failed.
+   *      Fetching the business object collection has failed.
    */
   ReadOnlyRootCollection.fetch = function(filter, method, eventHandlers, callback) {
     var instance = new ReadOnlyRootCollection(eventHandlers);

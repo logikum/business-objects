@@ -39,6 +39,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 /**
  * Factory method to create definitions of asynchronous read-only child models.
  *
+ *    Valid child model types are:
+ *
+ *      * ReadOnlyChildCollection
+ *      * ReadOnlyChildModel
+ *
  * @function bo.ReadOnlyChildModel
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
@@ -73,9 +78,17 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
    *    _The name of the model type available as:
    *    __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyChildModel'._
    *
+   *    Valid parent model types are:
+   *
+   *      * ReadOnlyRootCollection
+   *      * ReadOnlyChildCollection
+   *      * ReadOnlyRootModel
+   *      * ReadOnlyChildModel
+   *      * CommandObject
+   *
    * @name ReadOnlyChildModel
    * @constructor
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
@@ -160,7 +173,7 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function ReadOnlyChildModel#toCto
-     * @returns {{}} The client transfer object.
+     * @returns {object} The client transfer object.
      */
     this.toCto = function () {
       var cto = {};
@@ -259,7 +272,7 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
 
     //region Fetch
 
-    function data_fetch (filter, method, callback) {
+    function data_fetch (data, method, callback) {
       // Helper function for post-fetch actions.
       function finish (dto, cb) {
         // Fetch children as well.
@@ -299,7 +312,7 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
         // Execute fetch.
         if (extensions.dataFetch) {
           // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), filter, method, function (err, dto) {
+          extensions.dataFetch.call(self, getDataContext(), data, method, function (err, dto) {
             if (err)
               failed(err, callback);
             else
@@ -308,8 +321,8 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
         } else {
           // Standard fetch.
           // Child element gets data from parent.
-          fromDto.call(self, filter);
-          finish(filter, callback);
+          fromDto.call(self, data);
+          finish(data, callback);
         }
       } else
         callback(null, self);
@@ -327,12 +340,12 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
      *
      * @function ReadOnlyChildModel#fetch
      * @protected
-     * @param {{}} [data] - The data to load into the business object.
+     * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
      * @param {external.cbDataPortal} callback - Returns the required read-only business object.
      */
-    this.fetch = function(filter, method, callback) {
-      data_fetch(filter, method || M_FETCH, callback);
+    this.fetch = function(data, method, callback) {
+      data_fetch(data, method || M_FETCH, callback);
     };
 
     //endregion
@@ -488,7 +501,7 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
    *
    * @function ReadOnlyChildModel.create
    * @protected
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external.cbDataPortal} callback - Returns a new read-only business object.
    */
@@ -503,8 +516,8 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
    *
    * @function ReadOnlyChildModel.load
    * @protected
-   * @param {{}} parent - The parent business object.
-   * @param {{}} data - The data to load into the business object.
+   * @param {object} parent - The parent business object.
+   * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external.cbDataPortal} callback - Returns the required read-only business object.
    *

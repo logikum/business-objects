@@ -155,8 +155,8 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
   /**
    * Executes the provided function once per property definition.
    *
-   * @param {function} callback - Function that produces an element of the model properties,
-   *    taking three arguments: property, index, array.
+   * @param {external.cbCollectionItem} callback - Function that produces an element
+   *    of the model properties, taking three arguments: property, index, array.
    */
   this.forEach = function (callback) {
     items.forEach(callback);
@@ -165,7 +165,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
   /**
    * Creates a new array with all properties that pass the test implemented by the provided function.
    *
-   * @param {function} callback - Function to test each element of the properties,
+   * @param {external.cbCollectionItem} callback - Function to test each element of the properties,
    *    taking three arguments: property, index, array.
    *    Return true to keep the property definition, false otherwise.
    * @returns {Array.<bo.shared.PropertyInfo>} A new array with all properties that passed the test.
@@ -178,7 +178,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    * Creates a new array with the results of calling a provided function
    * on every element of the model properties.
    *
-   * @param {function} callback - Function that produces an element of the new array,
+   * @param {external.cbCollectionItem} callback - Function that produces an element of the new array,
    *    taking three arguments: property, index, array.
    * @returns {Array} A new array with items produced by the function.
    */

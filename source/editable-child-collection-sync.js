@@ -16,6 +16,10 @@ var CLASS_NAME = 'EditableChildCollectionSync';
 /**
  * Factory method to create definitions of synchronous editable child collections.
  *
+ *    Valid collection item types are:
+ *
+ *      * EditableChildModelSync
+ *
  * @function bo.EditableChildCollectionSync
  * @param {string} name - The name of the collection.
  * @param {EditableChildModelSync} itemType - The model type of the collection items.
@@ -44,9 +48,14 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
    *    _The name of the model type available as:
    *    __&lt;instance&gt;.constructor.modelType__, returns 'EditableChildCollectionSync'._
    *
+   *    Valid parent model types are:
+   *
+   *      * EditableRootModelSync
+   *      * EditableChildModelSync
+   *
    * @name EditableChildCollectionSync
    * @constructor
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends CollectionBase
@@ -188,7 +197,7 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
      *
      * @function EditableChildCollectionSync#save
      * @protected
-     * @param {{}} connection - The connection data.
+     * @param {object} connection - The connection data.
      */
     this.save = function (connection) {
       for (var i = 0; i < items.length; i++) {

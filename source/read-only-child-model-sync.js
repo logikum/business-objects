@@ -39,6 +39,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 /**
  * Factory method to create definitions of synchronous read-only child models.
  *
+ *    Valid child model types are:
+ *
+ *      * ReadOnlyChildCollectionSync
+ *      * ReadOnlyChildModelSync
+ *
  * @function bo.ReadOnlyChildModelSync
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
@@ -73,9 +78,17 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
    *    _The name of the model type available as:
    *    __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyChildModelSync'._
    *
+   *    Valid parent model types are:
+   *
+   *      * ReadOnlyRootCollectionSync
+   *      * ReadOnlyChildCollectionSync
+   *      * ReadOnlyRootModelSync
+   *      * ReadOnlyChildModelSync
+   *      * CommandObjectSync
+   *
    * @name ReadOnlyChildModelSync
    * @constructor
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
@@ -160,7 +173,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function ReadOnlyChildModelSync#toCto
-     * @returns {{}} The client transfer object.
+     * @returns {object} The client transfer object.
      */
     this.toCto = function () {
       var cto = {};
@@ -243,7 +256,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
 
     //region Fetch
 
-    function data_fetch (filter, method) {
+    function data_fetch (data, method) {
       // Check permissions.
       if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
         try {
@@ -259,11 +272,11 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
           var dto = null;
           if (extensions.dataFetch) {
             // *** Custom fetch.
-            dto = extensions.dataFetch.call(self, getDataContext(), filter, method);
+            dto = extensions.dataFetch.call(self, getDataContext(), data, method);
           } else {
             // *** Standard fetch.
             // Child element gets data from parent.
-            dto = filter;
+            dto = data;
             fromDto.call(self, dto);
           }
           // Fetch children as well.
@@ -299,11 +312,11 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
      *
      * @function ReadOnlyChildModelSync#fetch
      * @protected
-     * @param {{}} [data] - The data to load into the business object.
+     * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
      */
-    this.fetch = function(filter, method) {
-      data_fetch(filter, method || M_FETCH);
+    this.fetch = function(data, method) {
+      data_fetch(data, method || M_FETCH);
     };
 
     //endregion
@@ -457,7 +470,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
    *
    * @function ReadOnlyChildModelSync.create
    * @protected
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {ReadOnlyChildModelSync} A new read-only business object.
    */
@@ -472,8 +485,8 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
    *
    * @function ReadOnlyChildModelSync.load
    * @protected
-   * @param {{}} parent - The parent business object.
-   * @param {{}} data - The data to load into the business object.
+   * @param {object} parent - The parent business object.
+   * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {ReadOnlyChildModelSync} The required read-only business object.
    *

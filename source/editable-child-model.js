@@ -42,6 +42,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 /**
  * Factory method to create definitions of asynchronous editable child models.
  *
+ *    Valid child model types are:
+ *
+ *      * ReadOnlyChildCollection
+ *      * ReadOnlyChildModel
+ *
  * @function bo.EditableChildModel
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
@@ -76,9 +81,15 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
    *    _The name of the model type available as:
    *    __&lt;instance&gt;.constructor.modelType__, returns 'EditableChildModel'._
    *
+   *    Valid parent model types are:
+   *
+   *      * EditableChildCollection
+   *      * EditableRootModel
+   *      * EditableChildModel
+   *
    * @name EditableChildModel
    * @constructor
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
@@ -196,7 +207,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModel#toCto
-     * @returns {{}} The client transfer object.
+     * @returns {object} The client transfer object.
      */
     this.toCto = function () {
       var cto = {};
@@ -229,7 +240,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildModel#fromCto
-     * @param {{}} cto - The client transfer object.
+     * @param {object} cto - The client transfer object.
      */
     this.fromCto = function (cto) {
       if (extensions.fromCto)
@@ -969,7 +980,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
      *
      * @function EditableChildModel#fetch
      * @protected
-     * @param {{}} [data] - The data to load into the business object.
+     * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
      * @param {external.cbDataPortal} callback - Returns the required editable business object.
      */
@@ -983,7 +994,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
      *
      * @function EditableChildModel#save
      * @protected
-     * @param {{}} connection - The connection data.
+     * @param {object} connection - The connection data.
      * @param {external.cbDataPortal} callback - The business object with the new state after the save.
      */
     this.save = function(connection, callback) {
@@ -1173,7 +1184,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
    *
    * @function EditableChildModel.create
    * @protected
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external.cbDataPortal} callback - Returns a new editable business object.
    *
@@ -1198,8 +1209,8 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
    *
    * @function EditableChildModel.load
    * @protected
-   * @param {{}} parent - The parent business object.
-   * @param {{}} data - The data to load into the business object.
+   * @param {object} parent - The parent business object.
+   * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external.cbDataPortal} callback - Returns the required editable business object.
    *

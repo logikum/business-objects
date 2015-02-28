@@ -16,6 +16,10 @@ var CLASS_NAME = 'EditableChildCollection';
 /**
  * Factory method to create definitions of asynchronous editable child collections.
  *
+ *    Valid collection item types are:
+ *
+ *      * EditableChildModel
+ *
  * @function bo.EditableChildCollection
  * @param {string} name - The name of the collection.
  * @param {EditableChildModel} itemType - The model type of the collection items.
@@ -44,9 +48,14 @@ var EditableChildCollectionFactory = function (name, itemType) {
    *    _The name of the model type available as:
    *    __&lt;instance&gt;.constructor.modelType__, returns 'EditableChildCollection'._
    *
+   *    Valid parent model types are:
+   *
+   *      * EditableRootModel
+   *      * EditableChildModel
+   *
    * @name EditableChildCollection
    * @constructor
-   * @param {{}} parent - The parent business object.
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends CollectionBase
@@ -208,7 +217,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#save
      * @protected
-     * @param {{}} connection - The connection data.
+     * @param {object} connection - The connection data.
      * @param {external.cbDataPortal} callback - Returns the eventual error.
      */
     this.save = function (connection, callback) {

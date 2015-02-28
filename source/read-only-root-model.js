@@ -40,6 +40,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 /**
  * Factory method to create definitions of asynchronous read-only root models.
  *
+ *    Valid child model types are:
+ *
+ *      * ReadOnlyChildCollection
+ *      * ReadOnlyChildModel
+ *
  * @function bo.ReadOnlyRootModel
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
@@ -152,7 +157,7 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
      * Transforms the business object to a plain object to send to the client.
      *
      * @function ReadOnlyRootModel#toCto
-     * @returns {{}} The client transfer object.
+     * @returns {object} The client transfer object.
      */
     this.toCto = function () {
       var cto = {};
@@ -359,8 +364,23 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
      * @param {external.cbDataPortal} callback - Returns the required read-only business object.
+     *
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The method must be a string or null.
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The callback must be a function.
+     * @throws {@link bo.rules.AuthorizationError Authorization error}:
+     *      The user has no permission to execute the action.
+     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     *      Fetching the business object has failed.
      */
     this.fetch = function(filter, method, callback) {
+
+      method = EnsureArgument.isOptionalString(method,
+          'm_optString', CLASS_NAME, 'fetch', 'method');
+      callback = EnsureArgument.isOptionalFunction(callback,
+          'm_manFunction', CLASS_NAME, 'fetch', 'callback');
+
       data_fetch(filter, method || M_FETCH, callback);
     };
 
@@ -519,10 +539,16 @@ var ReadOnlyRootModelFactory = function (properties, rules, extensions) {
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external.cbDataPortal} callback - Returns the required read-only business object.
    *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The method must be a string or null.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The event handlers must be an EventHandlerList object or null.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    * @throws {@link bo.shared.DataPortalError Data portal error}:
-   *    Fetching the business object has failed.
+   *      Fetching the business object has failed.
    */
   ReadOnlyRootModel.fetch = function(filter, method, eventHandlers, callback) {
     var instance = new ReadOnlyRootModel(eventHandlers);

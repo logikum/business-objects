@@ -58,7 +58,7 @@ function DataStore () {
    *
    * @param {bo.shared.PropertyInfo} property - The definition of the model property.
    * @param {*} value - The new value of the property.
-   * @returns {boolean} True if the value of the property has been changed, false otherwise.
+   * @returns {boolean} True if the value of the property has been changed, otherwise false.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
    * @throws {@link bo.system.ArgumentError Argument error}: The value must be defined.

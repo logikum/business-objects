@@ -41,6 +41,11 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
 /**
  * Factory method to create definitions of synchronous command object models.
  *
+ *    Valid child model types are:
+ *
+ *      * ReadOnlyChildModelSync
+ *      * ReadOnlyChildCollectionSync
+ *
  * @function bo.CommandObjectSync
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
@@ -300,18 +305,27 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
      * @param {string} [method] - An alternative execute method of the data access object.
      * @param {boolean} [isTransaction] - Indicates whether transaction is required.
      *
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The method must be a string or null.
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The transaction indicator must be a Boolean value or null.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
+     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     *      Executing the command object has failed.
      */
     this.execute = function(method, isTransaction) {
+
       if (typeof method === 'boolean' || method instanceof Boolean) {
         isTransaction = method;
         method = M_EXECUTE;
       }
+
       method = EnsureArgument.isOptionalString(method,
           'm_optString', CLASS_NAME, 'execute', 'method');
       isTransaction = EnsureArgument.isOptionalBoolean(isTransaction,
           'm_optBoolean', CLASS_NAME, 'execute', 'isTransaction');
+
       data_execute(method || M_EXECUTE, isTransaction);
     };
 
@@ -476,6 +490,9 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
    * @function CommandObjectSync.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {CommandObjectSync} A new command object.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The event handlers must be an EventHandlerList object or null.
    */
   CommandObjectSync.create = function(eventHandlers) {
     return new CommandObjectSync(eventHandlers);

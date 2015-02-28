@@ -6,49 +6,6 @@
  */
 var external = {
 
-  //region Callback methods
-
-  /**
-   * The callback to be called when the execution of a connection manager method has finished.
-   *
-   * @callback external.cbConnectionManager
-   * @param {error} err - The error that occurred in the connection manager.
-   * @param {object} connection - The connection for the data source.
-   */
-
-  /**
-   * The callback to be called when the execution of a method has finished
-   * that calls an asynchronous data portal action.
-   *
-   * @callback external.cbDataPortal
-   * @param {(bo.shared.DataPortalError|bo.rules.AuthorizationError)} err - The error that occurred in the data portal action.
-   * @param {object} result - The business object instance with the new state.
-   */
-
-  /**
-   * The callback to be called in collection methods.
-   *
-   * @callback external.cbCollectionItem
-   * @param {{}} currentValue - The current item being processed in the collection.
-   * @param {number} index - The index of the current item being processed in the collection.
-   * @param {Array.<{}>} collection - The collection method was called upon.
-   */
-
-  /**
-   * The callback to be called to define the sort order in a collection.
-   *
-   * @callback external.cbCompare
-   * @param {{}} a - First object to compare.
-   * @param {{}} b - Second object to compare.
-   * @returns {number} Returns
-   *
-   *    * < 0, when a comes first
-   *    * = 0, when a and b are left unchanged
-   *    * \> 0, when b comes first
-   */
-
-  //endregion
-
   //region Configuration
 
   /**
@@ -103,6 +60,29 @@ var external = {
    * @param {string} modelPath - The model definition path of the model instance
    *      that the data access object belongs to.
    * @returns {bo.dataAccess.DaoBase} The data access object.
+   */
+
+  //endregion
+
+  //region Property functions
+
+  /**
+   * Gets the value of a model property.
+   *
+   * @typedef external.propertyGetter
+   * @type {function}
+   * @param {bo.shared.PropertyContext} context - The context for custom property functions.
+   * @returns {*} The current value of the property.
+   */
+
+  /**
+   * Sets the value of a model property.
+   *
+   * @typedef external.propertySetter
+   * @type {function}
+   * @param {bo.shared.PropertyContext} context - The context for custom property functions.
+   * @param {*} value - The new value of the property.
+   * @returns {boolean} True if the value of the property has been changed, otherwise false.
    */
 
   //endregion
@@ -216,6 +196,49 @@ var external = {
    * @param {string} method - The name of the execution method, defaults to 'execute'.
    * @param {function} callback - Callback function to return child values or error (in asynchronous models).
    * @returns {object} Plain object holding child values (in synchronous models).
+   */
+
+  //endregion
+
+  //region Callback methods
+
+  /**
+   * The callback to be called when the execution of a connection manager method has finished.
+   *
+   * @callback external.cbConnectionManager
+   * @param {error} err - The error that occurred in the connection manager.
+   * @param {object} connection - The connection for the data source.
+   */
+
+  /**
+   * The callback to be called when the execution of a method has finished
+   * that calls an asynchronous data portal action.
+   *
+   * @callback external.cbDataPortal
+   * @param {(bo.shared.DataPortalError|bo.rules.AuthorizationError)} err - The error that occurred in the data portal action.
+   * @param {object} result - The business object instance with the new state.
+   */
+
+  /**
+   * The callback to be called in collection methods.
+   *
+   * @callback external.cbCollectionItem
+   * @param {{}} currentValue - The current item being processed in the collection.
+   * @param {number} index - The index of the current item being processed in the collection.
+   * @param {Array.<{}>} collection - The collection method was called upon.
+   */
+
+  /**
+   * The callback to be called to define the sort order in a collection.
+   *
+   * @callback external.cbCompare
+   * @param {object} a - First object to compare.
+   * @param {object} b - Second object to compare.
+   * @returns {number} Returns
+   *
+   *    * < 0, when a comes first
+   *    * = 0, when a and b are left unchanged
+   *    * \> 0, when b comes first
    */
 
   //endregion

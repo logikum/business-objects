@@ -118,7 +118,7 @@ var i18n = function (namespace, keyRoot) {
  *
  * @function bo.i18n.initialize
  * @param {string} pathOfLocales - The relative path of the directory that contains the project messages.
- * @param {function} [getLocale] - A function that returns the current locale.
+ * @param {external.getLocale} [getLocale] - A function that returns the current locale.
  *
  * @throws {@link bo.I18nError i18n error}: The path of locales must be a non-empty string.
  * @throws {@link bo.I18nError i18n error}: The path of locales is not a valid directory path.

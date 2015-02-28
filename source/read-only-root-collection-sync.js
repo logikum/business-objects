@@ -31,6 +31,10 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 /**
  * Factory method to create definitions of synchronous read-only root collections.
  *
+ *    Valid collection item types are:
+ *
+ *      * ReadOnlyChildModelSync
+ *
  * @function bo.ReadOnlyRootCollectionSync
  * @param {string} name - The name of the collection.
  * @param {ReadOnlyChildModelSync} itemType - The model type of the collection items.
@@ -282,8 +286,19 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
+     *
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The method must be a string or null.
+     * @throws {@link bo.rules.AuthorizationError Authorization error}:
+     *      The user has no permission to execute the action.
+     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     *      Fetching the business object has failed.
      */
     this.fetch = function(filter, method) {
+
+      method = EnsureArgument.isOptionalString(method,
+          'm_optString', CLASS_NAME, 'fetch', 'method');
+
       data_fetch(filter, method || M_FETCH);
     };
 
@@ -451,10 +466,14 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @returns {ReadOnlyRootCollectionSync} The required read-only business object collection.
    *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The method must be a string or null.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The event handlers must be an EventHandlerList object or null.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    * @throws {@link bo.shared.DataPortalError Data portal error}:
-   *    Fetching the business object collection has failed.
+   *      Fetching the business object collection has failed.
    */
   ReadOnlyRootCollectionSync.fetch = function(filter, method, eventHandlers) {
     var instance = new ReadOnlyRootCollectionSync(eventHandlers);

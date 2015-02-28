@@ -41,6 +41,11 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
 /**
  * Factory method to create definitions of asynchronous command object models.
  *
+ *    Valid child model types are:
+ *
+ *      * ReadOnlyChildModel
+ *      * ReadOnlyChildCollection
+ *
  * @function bo.CommandObject
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
@@ -385,10 +390,17 @@ var CommandObjectFactory = function (properties, rules, extensions) {
      * @param {boolean} [isTransaction] - Indicates whether transaction is required.
      * @param {external.cbDataPortal} callback - Returns the command object with the result.
      *
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The method must be a string or null.
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The transaction indicator must be a Boolean value or null.
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The callback must be a function.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
      */
     this.execute = function(method, isTransaction, callback) {
+
       if (!callback) {
         if (isTransaction) {
           callback = isTransaction;
@@ -402,12 +414,14 @@ var CommandObjectFactory = function (properties, rules, extensions) {
         isTransaction = method;
         method = M_EXECUTE;
       }
+
       method = EnsureArgument.isOptionalString(method,
           'm_optString', CLASS_NAME, 'execute', 'method');
       isTransaction = EnsureArgument.isOptionalBoolean(isTransaction,
           'm_optBoolean', CLASS_NAME, 'execute', 'isTransaction');
       callback = EnsureArgument.isOptionalFunction(callback,
           'm_manFunction', CLASS_NAME, 'execute', 'callback');
+
       data_execute(method || M_EXECUTE, isTransaction, callback);
     };
 
@@ -574,8 +588,17 @@ var CommandObjectFactory = function (properties, rules, extensions) {
    * @function CommandObject.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    * @param {external.cbDataPortal} callback - Returns a new command object.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The event handlers must be an EventHandlerList object or null.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The callback must be a function.
    */
   CommandObject.create = function(eventHandlers, callback) {
+
+    callback = EnsureArgument.isOptionalFunction(callback,
+        'm_manFunction', CLASS_NAME, 'create', 'callback');
+
     var instance = new CommandObject(eventHandlers);
     callback(null, instance);
   };
