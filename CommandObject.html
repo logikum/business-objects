@@ -690,11 +690,55 @@
 					<ul class="dropdown-menu ">
 						
 						<li>
-							<a href="tutorial-introduction.html">Introduction to Business Objects</a>
+							<a href="tutorial-00_toc.html">Table of Contents</a>
 						</li>
 						
 						<li>
-							<a href="tutorial-quick-start.html">Quick Start</a>
+							<a href="tutorial-01_introduction.html">Introduction</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-02_quick-start.html">Quick Start</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-03_models.html">Models</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-04_definitions.html">Model Definitions</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-05_data-types.html">Data Types</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-06_validation.html">Validation</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-07_authorization.html">Authorization</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-08_dao.html">Data Access Objects</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-09_i18n.html">Internationalization</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-10_configuration.html">Configuration</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-11_usage.html">Usage of Business Objects</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-12_misc.html">Miscellaneous</a>
 						</li>
 						
 
@@ -1053,7 +1097,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="external.html#cbDataPortal">external~cbDataPortal</a></span>
+<span class="param-type"><a href="external.html#cbDataPortal">external.cbDataPortal</a></span>
 
 
             
@@ -1119,6 +1163,28 @@
     
     
     
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>:     The event handlers must be an EventHandlerList object or null.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>:     The callback must be a function.
+    
+    </div>
+
+</li>
+        </ul>
     
     
     
@@ -1195,7 +1261,7 @@ of its child objects.</p>
         
             
 <dt>
-    <h4 class="name" id="execute"><span class="type-signature"></span>execute<span class="signature">(<span class="optional">method</span>, callback)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="execute"><span class="type-signature"></span>execute<span class="signature">(<span class="optional">method</span>, <span class="optional">isTransaction</span>, callback)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1274,13 +1340,46 @@ can be called as &lt;instance&gt;.method() as well.</em></p>
 
         <tr>
             
+                <td class="name"><code>isTransaction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Indicates whether transaction is required.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
                 <td class="name"><code>callback</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="external.html#cbDataPortal">external~cbDataPortal</a></span>
+<span class="param-type"><a href="external.html#cbDataPortal">external.cbDataPortal</a></span>
 
 
             
@@ -1347,8 +1446,38 @@ can be called as &lt;instance&gt;.method() as well.</em></p>
     
     
     <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
     
-            
+        <a href="bo.system.ArgumentError.html">Argument error</a>:     The method must be a string or null.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>:     The transaction indicator must be a Boolean value or null.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>:     The callback must be a function.
+    
+    </div>
+
+</li>
+        
+            <li>
 
     <div class="param-desc">
     
@@ -1356,8 +1485,8 @@ can be called as &lt;instance&gt;.method() as well.</em></p>
     
     </div>
 
-
-        
+</li>
+        </ul>
     
     
     
@@ -1914,7 +2043,7 @@ broken rules with severity of success, information and warning.</p>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on Tue Feb 17th 2015 using the <a
+		on February 28, 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>

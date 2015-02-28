@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects tutorialQuick Start</title>
+	<title>business-objects tutorialEditable Data Access Objects</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -690,11 +690,55 @@
 					<ul class="dropdown-menu ">
 						
 						<li>
-							<a href="tutorial-introduction.html">Introduction to Business Objects</a>
+							<a href="tutorial-00_toc.html">Table of Contents</a>
 						</li>
 						
 						<li>
-							<a href="tutorial-quick-start.html">Quick Start</a>
+							<a href="tutorial-01_introduction.html">Introduction</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-02_quick-start.html">Quick Start</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-03_models.html">Models</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-04_definitions.html">Model Definitions</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-05_data-types.html">Data Types</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-06_validation.html">Validation</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-07_authorization.html">Authorization</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-08_dao.html">Data Access Objects</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-09_i18n.html">Internationalization</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-10_configuration.html">Configuration</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-11_usage.html">Usage of Business Objects</a>
+						</li>
+						
+						<li>
+							<a href="tutorial-12_misc.html">Miscellaneous</a>
 						</li>
 						
 
@@ -716,166 +760,12 @@
 <header>
     
 
-    <h2>Quick Start</h2>
+    <h2>Editable Data Access Objects</h2>
 </header>
 
 <article>
-    <h3>1. Imports</h3>
-<p>Before you create a model definition, first define the namespaces and helper objects:</p>
-<pre><code>var bo = require('business-objects');
-
-var Properties = bo.shared.PropertyManager;
-var Rules = bo.rules.RuleManager;
-var Action = bo.rules.AuthorizationAction;
-var Extensions = bo.shared.ExtensionManager;
-var Property = bo.shared.PropertyInfo;
-var F = bo.shared.PropertyFlag;
-var dt = bo.dataTypes;
-var cr = bo.commonRules;</code></pre>
-<h3>2. Model definition</h3>
-<p>Next define the properties of the model:</p>
-<pre><code>var orderKey = new Property('orderKey', dt.Integer, F.key | F.readOnly);
-var vendorName = new Property('vendorName', dt.Text);
-var contractDate = new Property('contractDate', dt.DateTime);
-var totalPrice = new Property('totalPrice', dt.Decimal);
-var schedules = new Property('schedules', dt.Integer);
-var enabled = new Property('enabled', dt.Boolean);
-var createdDate = new Property('createdDate', dt.DateTime, F.readOnly);
-var modifiedDate = new Property('modifiedDate', dt.DateTime, F.readOnly);
-
-var properties = new Properties(
-  'BlanketOrder',
-  orderKey,
-  vendorName,
-  contractDate,
-  totalPrice,
-  schedules,
-  enabled,
-  createdDate,
-  modifiedDate
-);</code></pre>
-<p>Then define the rules of the model:</p>
-<pre><code>var rules = new Rules(
-  cr.required(vendorName),
-  cr.required(contractDate),
-  cr.required(totalPrice),
-  cr.required(schedules),
-  cr.required(enabled),
-  cr.isInRole(Action.fetchObject, null, 'developers', 'You are not authorized to retrieve blanket order.'),
-  cr.isInRole(Action.createObject, null, 'developers', 'You are not authorized to create blanket order.'),
-  cr.isInRole(Action.updateObject, null, 'developers', 'You are not authorized to modify blanket order.'),
-  cr.isInRole(Action.removeObject, null, 'developers', 'You are not authorized to delete blanket order.')
-);</code></pre>
-<p>Finally set up the model extensions:</p>
-<pre><code>var extensions = new Extensions('dao', __filename);</code></pre>
-<p>Now you can compose the model type and its factory object:</p>
-<pre><code>var BlanketOrder = bo.EditableRootModel(properties, rules, extensions);
-
-var BlanketOrderFactory = {
-  create: function (callback) {
-      BlanketOrder.create(callback);
-  },
-  get: function (key, callback) {
-      BlanketOrder.fetch(key, null, callback);
-  },
-  getByName: function (name, callback) {
-      BlanketOrder.fetch(name, 'fetchByName', callback);
-  }
-};</code></pre>
-<p>Save the model definition as blanket-order.js.</p>
-<h3>3. Data access object</h3>
-<p>The model will search a data access object named blanket-order.dao.js,
-create it with the required methods:</p>
-<pre><code>var util = require('util');
-var DaoBase = require('../../source/data-access/dao-base.js');
-
-var BlanketOrderDao = function() {
-  BlanketOrderDao.super_.call(this, 'BlanketOrderDao');
-};
-util.inherits(BlanketOrderDao, DaoBase);
-
-BlanketOrderDao.prototype.create = function(callback) {
-  ...
-  callback(null, data);
-};
-
-BlanketOrderDao.prototype.fetch = function(filter, callback) {
-  ...
-  callback(null, data);
-};
-
-BlanketOrderDao.prototype.fetchByName = function(filter, callback) {
-  ...
-  callback(null, data);
-};
-
-BlanketOrderDao.prototype.insert = function(data, callback) {
-  ...
-  callback(null, data);
-};
-
-BlanketOrderDao.prototype.update = function(data, callback) {
-  ...
-  callback(null, data);
-  }
-};
-
-BlanketOrderDao.prototype.remove = function(filter, callback) {
-  ...
-  callback(null);
-};</code></pre>
-<h3>4. Model usage</h3>
-<p>The model can be used now. Create an instance of the model and store it:</p>
-<pre><code>var BlanketOrder = require('./blanket-order.js');
-
-BlanketOrder.create(function (err, order) {
-  if (err) throw err;
-
-  order.vendorName = 'Acme Corp.';
-  order.contractDate = contractDate;
-  order.totalPrice = 497.5;
-  order.schedules = 2;
-  order.enabled = true;
-
-  order.save(function (err, order) {
-  if (err) throw err;
-
-  // Success.
-  var key = order.orderKey;
-  });
-});</code></pre>
-<p>Retrieve the created instance of the model, modify it and store it again:</p>
-<pre><code>var BlanketOrder = require('./blanket-order.js');
-
-BlanketOrder.get(1 /* key */, function (err, order) {
-  if (err) throw err;
-
-  order.vendorName = 'Summit Ltd.';
-  order.contractDate = contractDate_u;
-  order.totalPrice = 672.5;
-  order.schedules = 3;
-  order.enabled = false;
-
-  order.save(function (err, order) {
-    if (err) throw err;
-
-    // Success.
-    var timestamp = order.modifiedDate;
-  });
-});</code></pre>
-<p>Delete this instance of the model from the repository:</p>
-<pre><code>var BlanketOrder = require('./blanket-order.js');
-
-BlanketOrder.get(1 /* key */, function (err, order) {
-  if (err) throw err;
-
-  order.remove();
-  order.save(function (err, order) {
-    if (err) throw err;
-
-    // Success: order === null
-  });
-});</code></pre>
+    <p><a href="tutorial-00_toc.html">Table of Contents</a> > <a href="tutorial-08_dao.html">Data Access Objects</a> > Editable Data Access Objects</p>
+<p>TODO</p>
 </article>
 
 </section>
@@ -896,7 +786,7 @@ BlanketOrder.get(1 /* key */, function (err, order) {
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on Tue Feb 17th 2015 using the <a
+		on February 28, 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
