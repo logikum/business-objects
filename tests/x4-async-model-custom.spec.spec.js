@@ -634,7 +634,7 @@ describe('Asynchronous data portal method', function () {
       var cto = orderList.toCto();
       expect(cto.totalItems).toBe(2015);
 
-      var ctoItem = cto[0];
+      var ctoItem = cto.list[0];
 
       expect(ctoItem.orderKey).toBeUndefined();
       expect(ctoItem.orderCode).toBe('100');

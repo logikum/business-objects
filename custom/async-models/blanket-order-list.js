@@ -12,6 +12,21 @@ var BlanketOrderListItem = require('./blanket-order-list-item.js');
 var rules = new Rules(
 );
 
+//region Transfer object methods
+
+function toCto (ctx) {
+  var list = [];
+  this.forEach(function (item) {
+    list.push(item.toCto());
+  });
+  return {
+    list: list,
+    totalItems: this.totalItems
+  };
+}
+
+//endregion
+
 //region Data portal methods
 
 function dataFetch (ctx, filter, method, callback) {
@@ -36,6 +51,7 @@ function dataFetch (ctx, filter, method, callback) {
 
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
+extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
 var BlanketOrderList = bo.ReadOnlyRootCollection(

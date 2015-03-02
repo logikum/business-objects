@@ -225,7 +225,7 @@ var external = {
    * @callback external.cbCollectionItem
    * @param {{}} currentValue - The current item being processed in the collection.
    * @param {number} index - The index of the current item being processed in the collection.
-   * @param {Array.<{}>} collection - The collection method was called upon.
+   * @param {Array.<object>} collection - The collection method was called upon.
    */
 
   /**

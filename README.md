@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.7</dt>
+  <dd>
+    2015.03.02.<br/>
+    Adding extension point to root collections' transfer methods.
+  </dd>
+
   <dt>v1.0.6</dt>
   <dd>
     2015.02.28.<br/>

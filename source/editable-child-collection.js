@@ -107,7 +107,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildCollection#toCto
-     * @returns {Array.<{}>} The client transfer object.
+     * @returns {Array.<object>} The client transfer object.
      */
     this.toCto = function () {
       var cto = [];
@@ -122,7 +122,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildCollection#fromCto
-     * @param {Array.<{}>} data - The array of client transfer objects.
+     * @param {Array.<object>} data - The array of client transfer objects.
      */
     this.fromCto = function (data) {
       if (data instanceof Array) {
@@ -188,7 +188,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#fetch
      * @protected
-     * @param {Array.<{}>} [data] - The data to load into the business object collection.
+     * @param {Array.<object>} [data] - The data to load into the business object collection.
      * @param {external.cbDataPortal} callback - Returns the eventual error.
      */
     this.fetch = function (data, callback) {

@@ -109,7 +109,7 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function ReadOnlyChildCollectionSync#toCto
-     * @returns {Array.<{}>} The client transfer object.
+     * @returns {Array.<object>} The client transfer object.
      */
     this.toCto = function () {
       var cto = [];
@@ -129,7 +129,7 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
      *
      * @function ReadOnlyChildCollectionSync#fetch
      * @protected
-     * @param {Array.<{}>} [data] - The data to load into the business object collection.
+     * @param {Array.<object>} [data] - The data to load into the business object collection.
      */
     this.fetch = function (data) {
       if (data instanceof Array) {

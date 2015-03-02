@@ -11,6 +11,8 @@ var ModelError = require('./shared/model-error.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var EventHandlerList = require('./shared/event-handler-list.js');
 
+var TransferContext = require('./shared/transfer-context.js');
+
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
@@ -147,13 +149,11 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
 
     //region Transfer object methods
 
-    /**
-     * Transforms the business object collection to a plain object array to send to the client.
-     *
-     * @function ReadOnlyRootCollectionSync#toCto
-     * @returns {Array.<{}>} The client transfer object.
-     */
-    this.toCto = function () {
+    function getTransferContext () {
+      return new TransferContext(null, null, null);
+    }
+
+    function baseToCto() {
       var cto = [];
       items.forEach(function (item) {
         cto.push(item.toCto());
@@ -161,6 +161,19 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
       if (totalItems)
         cto.totalItems = totalItems;
       return cto;
+    }
+
+    /**
+     * Transforms the business object collection to a plain object array to send to the client.
+     *
+     * @function ReadOnlyRootCollectionSync#toCto
+     * @returns {Array.<object>} The client transfer object.
+     */
+    this.toCto = function () {
+      if (extensions.toCto)
+        return extensions.toCto.call(self, getTransferContext());
+      else
+        return baseToCto();
     };
 
     //endregion
