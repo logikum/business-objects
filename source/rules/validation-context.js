@@ -3,6 +3,7 @@
 var CLASS_NAME = 'ValidationContext';
 
 var EnsureArgument = require('../system/ensure-argument.js');
+var DataStore = require('../shared/data-store.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 
 /**
@@ -17,21 +18,26 @@ var BrokenRuleList = require('./broken-rule-list.js');
  *
  * @memberof bo.rules
  * @constructor
- * @param {internal~getValue} getValue - A function that returns the a property value.
+ * @param {bo.shared.DataStore} dataStore - The storage of the property values.
  * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
  *
- * @throws {@link bo.system.ArgumentError Argument error}: The getProperty argument must be a function.
+ * @throws {@link bo.system.ArgumentError Argument error}: The data store must be a DataStore object.
  * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
-function ValidationContext (getValue, brokenRules) {
+function ValidationContext (dataStore, brokenRules) {
+
+  dataStore = EnsureArgument.isMandatoryType(dataStore, DataStore,
+      'c_manType', CLASS_NAME, 'dataStore');
 
   /**
    * Returns the value of a model property.
    * @type {internal~getValue}
    * @readonly
    */
-  this.getValue = EnsureArgument.isMandatoryFunction(getValue,
-      'c_manFunction', CLASS_NAME, 'getValue');
+  this.getValue = function (property) {
+    return dataStore.hasValidValue(property) ? dataStore.getValue(property) : undefined;
+  };
+
   /**
    * The list of the broken rules.
    * @type {bo.rules.BrokenRuleList}

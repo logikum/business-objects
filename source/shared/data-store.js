@@ -36,6 +36,7 @@ function DataStore () {
         'm_optType', CLASS_NAME, 'initValue', 'value');
 
     data[property.name] = value;
+    status[property.name] = true;
   };
 
   /**
@@ -71,13 +72,6 @@ function DataStore () {
     value = EnsureArgument.isDefined(value,
         'm_defined', CLASS_NAME, 'setValue', 'value');
 
-    //property.type.check(value);
-    //if (value !== data[property.name]) {
-    //  data[property.name] = value;
-    //  return true;
-    //}
-    //return false;
-
     // Check value.
     var parsed = property.type.parse(value);
     if (parsed === undefined) {
@@ -99,6 +93,12 @@ function DataStore () {
     }
   };
 
+  /**
+   * Indicates whether a property has a valid value.
+   *
+   * @param {bo.shared.PropertyInfo} property - The definition of the model property.
+   * @returns {boolean} True if the property has a valid value, otherwise false.
+   */
   this.hasValidValue = function (property) {
 
     property = EnsureArgument.isMandatoryType(property, PropertyInfo,

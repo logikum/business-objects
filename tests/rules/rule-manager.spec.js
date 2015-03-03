@@ -9,6 +9,7 @@ var AuthorizationAction = require('../../source/rules/authorization-action.js');
 var NoAccessBehavior = require('../../source/rules/no-access-behavior.js');
 var BrokenRuleList = require('../../source/rules/broken-rule-list.js');
 var Text = require('../../source/data-types/text.js');
+var DataStore = require('../../source/shared/data-store.js');
 var PropertyInfo = require('../../source/shared/property-info.js');
 
 describe('Rule manager', function () {
@@ -82,11 +83,8 @@ describe('Rule manager', function () {
     var rm = new RuleManager(vr);
     rm.initialize(NoAccessBehavior.throwError);
 
-    function getProperty (property) {
-      return 'value';
-    }
     var brokenRules = new BrokenRuleList('modelName');
-    var context = new ValidationContext(getProperty, brokenRules);
+    var context = new ValidationContext(new DataStore(), brokenRules);
 
     var validate01 = function () { rm.validate(property, context); };
 

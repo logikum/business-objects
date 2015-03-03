@@ -405,9 +405,9 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
     this.checkRules = function() {
       brokenRules.clear();
 
-      properties.forEach(function(property) {
-        rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
-      });
+      //properties.forEach(function(property) {
+      //  rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
+      //});
       isValidated = true;
     };
 

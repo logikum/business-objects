@@ -21,6 +21,7 @@ var ValidationContext = require('./rules/validation-context.js');
 var TransferContext = require('./shared/transfer-context.js');
 
 var RuleManager = require('./rules/rule-manager.js');
+var DataTypeRule = require('./rules/data-type-rule.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
@@ -358,7 +359,7 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
       brokenRules.clear();
 
       properties.forEach(function(property) {
-        rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
+        rules.validate(property, new ValidationContext(store, brokenRules));
       });
       isValidated = true;
     };
@@ -423,11 +424,13 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
           },
           set: function (value) {
             if (property.isReadOnly)
-              throw new ModelError('readOnly', properties.name , property.name);
+              throw new ModelError('readOnly', properties.name, property.name);
             writePropertyValue(property, value);
           },
           enumerable: true
         });
+
+        rules.add(new DataTypeRule(property));
 
       } else {
         // Child item/collection
@@ -441,7 +444,7 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new ModelError('readOnly', properties.name , property.name);
+            throw new ModelError('readOnly', properties.name, property.name);
           },
           enumerable: false
         });

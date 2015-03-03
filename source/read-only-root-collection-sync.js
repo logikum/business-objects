@@ -347,9 +347,9 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
     this.checkRules = function() {
       brokenRules.clear();
 
-      properties.forEach(function(property) {
-        rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
-      });
+      //properties.forEach(function(property) {
+      //  rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
+      //});
       isValidated = true;
     };
 

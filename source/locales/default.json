@@ -105,16 +105,6 @@
     "messageId": "The identifier of the message is invalid. Use the [locale*][namespace:]key1[[.key2]...] format.",
     "ready": "i18n is already initialized."
   },
-  "DataTypeError": {
-    "default": "The data type of the passed value is invalid.",
-    "boolean": "The passed value is not Boolean.",
-    "date": "The passed value is not DateTime.",
-    "decimal": "The passed value is not Decimal.",
-    "integer": "The passed value is not Integer.",
-    "enum": "The passed value is not {0}.",
-    "text": "The passed value is not Text.",
-    "email": "The passed value is not Email."
-  },
   "EnumerationError": {
     "default": "An enumeration error occurred.",
     "enumValue": "The passed value ({1}) is not a {0} item.",
@@ -160,7 +150,8 @@
     "isInAnyRole": "The user is not member of any role of the following: {0}",
     "isNotInRole": "The user is member of {0} role.",
     "isNotInAnyRole": "The user is member of some roles of the following: {0}",
-    "invalid": "The model is invalid."
+    "invalid": "The model is invalid.",
+    "dataType": "The data type of the value of property {0} must be {1}."
   },
   "AuthorizationError": {
     "default": "The user has no permission to execute the action."

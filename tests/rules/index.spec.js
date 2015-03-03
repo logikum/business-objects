@@ -24,10 +24,10 @@ var BrokenRulesOutput = require('../../source/rules/broken-rules-output.js');
 var BrokenRuleList = require('../../source/rules/broken-rule-list.js');
 var BrokenRule = require('../../source/rules/broken-rule.js');
 
+var DataStore = require('../../source/shared/data-store.js');
 var Enumeration = require('../../source/system/enumeration.js');
 
 describe('Rule component index', function () {
-  function getProperty () { }
   var rule = new RuleBase('required');
   var brokenRules = new BrokenRuleList('modelName');
   var brs = new BrokenRulesOutput();
@@ -35,7 +35,7 @@ describe('Rule component index', function () {
   it('properties return correct components', function () {
 
     expect(new rules.ValidationRule('ruleName')).toEqual(jasmine.any(ValidationRule));
-    expect(new rules.ValidationContext(getProperty, brokenRules)).toEqual(jasmine.any(ValidationContext));
+    expect(new rules.ValidationContext(new DataStore(), brokenRules)).toEqual(jasmine.any(ValidationContext));
     expect(new rules.ValidationResult('ruleName', 'propertyName', 'message')).toEqual(jasmine.any(ValidationResult));
     expect(new rules.ValidationResponse(brs)).toEqual(jasmine.any(ValidationResponse));
 
