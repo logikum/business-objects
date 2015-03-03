@@ -2,7 +2,6 @@
 
 var util = require('util');
 var DataType = require('./data-type.js');
-var DataTypeError = require('./data-type-error.js');
 
 /**
  * @classdesc Provide methods to work with Text data.
@@ -22,14 +21,20 @@ util.inherits(Text, DataType);
 /**
  * Checks if value is a Text data.
  *
- * @function bo.dataTypes.Text#check
+ * @function bo.dataTypes.Text#parse
  * @param {*} [value] - The value to check.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Text.
+ * @returns {*} The Text value or null when the input value is valid, otherwise undefined.
  */
-Text.prototype.check = function (value) {
-  if (value !== null && typeof value !== 'string' && !(value instanceof String))
-    throw new DataTypeError('text');
+Text.prototype.parse = function (value) {
+
+  if (value === null || typeof value === 'string')
+    return value;
+  if (value === undefined)
+    return null;
+  if (value instanceof String)
+    return value.valueOf();
+
+  return new String(value).valueOf();
 };
 
 /**
@@ -38,12 +43,11 @@ Text.prototype.check = function (value) {
  * @function bo.dataTypes.Text#hasValue
  * @param {data} value - The value to check.
  * @returns {boolean} True if the value is Text and not null, otherwise false.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Text.
  */
 Text.prototype.hasValue = function (value) {
-  this.check(value);
-  return value !== null && value.length > 0;
+
+  var parsed = this.parse(value);
+  return parsed !== undefined && parsed !== null && parsed.length > 0;
 };
 
 module.exports = Text;

@@ -81,7 +81,7 @@ describe('Data store', function () {
     expect(setValue1).toThrow();
     expect(setValue2).toThrow();
     expect(setValue3).toThrow();
-    expect(setValue4).toThrow();
+    expect(setValue4).not.toThrow();
     expect(setValue5).toThrow();
     expect(setValue6).not.toThrow();
   });

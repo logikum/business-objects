@@ -2,7 +2,6 @@
 
 var util = require('util');
 var DataType = require('./data-type.js');
-var DataTypeError = require('./data-type-error.js');
 
 /**
  * @classdesc Provide methods to work with Boolean data.
@@ -22,15 +21,20 @@ util.inherits(Boolean, DataType);
 /**
  * Checks if value is a Boolean data.
  *
- * @function bo.dataTypes.Boolean#check
+ * @function bo.dataTypes.Boolean#parse
  * @param {*} [value] - The value to check.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Boolean.
+ * @returns {*} The Boolean value or null when the input value is valid, otherwise undefined.
  */
-Boolean.prototype.check = function (value) {
+Boolean.prototype.parse = function (value) {
 
-  if (value !== null && typeof value !== 'boolean' && !(value instanceof Boolean))
-    throw new DataTypeError('boolean');
+  if (value === null || typeof value === 'boolean')
+    return value;
+  if (value === undefined)
+    return null;
+  if (value instanceof Boolean)
+    return value.valueOf();
+
+  return new global.Boolean(value).valueOf();
 };
 
 /**
@@ -39,13 +43,11 @@ Boolean.prototype.check = function (value) {
  * @function bo.dataTypes.Boolean#hasValue
  * @param {data} value - The value to check.
  * @returns {boolean} True if the value is Boolean and not null, otherwise false.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Boolean.
  */
 Boolean.prototype.hasValue = function (value) {
 
-  this.check(value);
-  return value != undefined && value != null;
+  var parsed = this.parse(value);
+  return parsed !== undefined && parsed !== null;
 };
 
 module.exports = Boolean;

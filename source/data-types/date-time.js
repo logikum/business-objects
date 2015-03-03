@@ -2,7 +2,6 @@
 
 var util = require('util');
 var DataType = require('./data-type.js');
-var DataTypeError = require('./data-type-error.js');
 
 /**
  * @classdesc Provide methods to work with DateTime data.
@@ -22,15 +21,19 @@ util.inherits(DateTime, DataType);
 /**
  * Checks if value is a DateTime data.
  *
- * @function bo.dataTypes.DateTime#check
+ * @function bo.dataTypes.DateTime#parse
  * @param {*} [value] - The value to check.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not DateTime.
+ * @returns {*} The DateTime value or null when the input value is valid, otherwise undefined.
  */
-DateTime.prototype.check = function (value) {
+DateTime.prototype.parse = function (value) {
 
-  if (value !== null && !(value instanceof Date))
-    throw new DataTypeError('date');
+  if (value === null)
+    return value;
+  if (value === undefined)
+    return null;
+
+  var datetime = value instanceof Date ? value : new Date(value);
+  return isNaN(datetime.valueOf()) ? undefined : datetime;
 };
 
 /**
@@ -39,13 +42,11 @@ DateTime.prototype.check = function (value) {
  * @function bo.dataTypes.DateTime#hasValue
  * @param {data} value - The value to check.
  * @returns {boolean} True if the value is DateTime and not null, otherwise false.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not DateTime.
  */
 DateTime.prototype.hasValue = function (value) {
 
-  this.check(value);
-  return value != undefined && value != null;
+  var parsed = this.parse(value);
+  return parsed !== undefined && parsed !== null;
 };
 
 module.exports = DateTime;

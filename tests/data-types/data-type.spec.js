@@ -21,18 +21,18 @@ describe('Base data type', function() {
 
     expect(dt.name).toBe('DataType');
 
-    dt.check = undefined;
+    dt.parse = undefined;
     dt.hasValue = undefined;
 
-    expect(dt.check).toBeDefined();
+    expect(dt.parse).toBeDefined();
     expect(dt.hasValue).toBeDefined();
   });
 
   it('has two not implemented methods', function() {
-    dt.check = function () { return false; };
+    dt.parse = function () { return false; };
     dt.hasValue = function () { return true; };
 
-    function call1() { dt.check(1); }
+    function call1() { dt.parse(1); }
     function call2() { dt.hasValue(2); }
 
     expect(call1).toThrow();

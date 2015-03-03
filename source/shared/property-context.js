@@ -103,7 +103,6 @@ function PropertyContext (properties, getValue, setValue) {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The model has no property with the given name.
-   * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value has wrong data type.
    * @throws {@link bo.shared.ModelError Model error}: The property cannot be written.
    */
   this.setValue = function (propertyName, value) {

@@ -276,7 +276,7 @@ i18n.prototype.get = function (messageId, messageParams) {
     }
     // Get message of default locale.
     if (!found && locale !== NEUTRAL && ns[NEUTRAL])
-      readMessage(ns[NEUTRAL]);
+      found = readMessage(ns[NEUTRAL]);
   }
 
   // Format message with optional arguments.

@@ -28,16 +28,20 @@ function DataType (name) {
 }
 
 /**
- * Abstract method to check if the data type of the value conforms to the data type definition.
+ * Abstract method to check if the value conforms to the data type definition.
+ * Returns the value when it has the required data type. If not, but it can be
+ * converted into the required data type, then returns the converted value.
+ * Otherwise returns *undefined* to mark the value as invalid.
  *
  * @abstract
- * @function bo.dataTypes.DataType#check
+ * @function bo.dataTypes.DataType#isValid
  * @param {*} [value] - The value to check.
+ * @returns {*} The value in the defined data type or null when the value is valid, otherwise undefined.
  *
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.check method is not implemented.
  */
-DataType.prototype.check = function (value) {
-  throw new NotImplementedError('method', CLASS_NAME, 'check');
+DataType.prototype.parse = function (value) {
+  throw new NotImplementedError('method', CLASS_NAME, 'parse');
 };
 
 /**

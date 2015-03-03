@@ -17,6 +17,7 @@ var ModelBase = require('../model-base.js');
 function DataStore () {
 
   var data = {};
+  var status = {};
 
   /**
    * Initializes the value of a property in the store.
@@ -70,12 +71,40 @@ function DataStore () {
     value = EnsureArgument.isDefined(value,
         'm_defined', CLASS_NAME, 'setValue', 'value');
 
-    property.type.check(value);
-    if (value !== data[property.name]) {
-      data[property.name] = value;
-      return true;
+    //property.type.check(value);
+    //if (value !== data[property.name]) {
+    //  data[property.name] = value;
+    //  return true;
+    //}
+    //return false;
+
+    // Check value.
+    var parsed = property.type.parse(value);
+    if (parsed === undefined) {
+      // Invalid value.
+      status[property.name] = false;
+      return false;
+    } else {
+      // Valid value.
+      if (parsed !== data[property.name]) {
+        // Value has changed.
+        data[property.name] = parsed;
+        status[property.name] = true;
+        return true;
+      } else {
+        // Value is unchanged.
+        status[property.name] = true;
+        return false;
+      }
     }
-    return false;
+  };
+
+  this.hasValidValue = function (property) {
+
+    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
+        'm_manType', CLASS_NAME, 'hasValidValue', 'property');
+
+    return status[property.name];
   };
 
   // Immutable object.

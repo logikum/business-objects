@@ -2,7 +2,6 @@
 
 var util = require('util');
 var DataType = require('./data-type.js');
-var DataTypeError = require('./data-type-error.js');
 
 /**
  * @classdesc Provide methods to work with Text data.
@@ -22,15 +21,19 @@ util.inherits(Decimal, DataType);
 /**
  * Checks if value is a Decimal data.
  *
- * @function bo.dataTypes.Decimal#check
+ * @function bo.dataTypes.Decimal#parse
  * @param {*} [value] - The value to check.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Decimal.
+ * @returns {*} The Decimal value or null when the input value is valid, otherwise undefined.
  */
-Decimal.prototype.check = function (value) {
+Decimal.prototype.parse = function (value) {
 
-  if (value !== null && typeof value !== 'number' && !(value instanceof Number))
-    throw new DataTypeError('decimal');
+  if (value === null || typeof value === 'number')
+    return value;
+  if (value === undefined)
+    return null;
+
+  var number = value instanceof Number ? value.valueOf() : new Number(value).valueOf();
+  return isNaN(number) ? undefined : number;
 };
 
 /**
@@ -39,13 +42,11 @@ Decimal.prototype.check = function (value) {
  * @function bo.dataTypes.Decimal#hasValue
  * @param {data} value - The value to check.
  * @returns {boolean} True if the value is Decimal and not null, otherwise false.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Decimal.
  */
 Decimal.prototype.hasValue = function (value) {
 
-  this.check(value);
-  return value != undefined && value != null;
+  var parsed = this.parse(value);
+  return parsed !== undefined && parsed !== null;
 };
 
 module.exports = Decimal;

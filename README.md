@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.8</dt>
+  <dd>
+    2015.03.03.<br/>
+    Fixing a bug in localization.
+  </dd>
+
   <dt>v1.0.7</dt>
   <dd>
     2015.03.02.<br/>

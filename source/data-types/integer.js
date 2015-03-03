@@ -2,7 +2,6 @@
 
 var util = require('util');
 var DataType = require('./data-type.js');
-var DataTypeError = require('./data-type-error.js');
 
 /**
  * @classdesc Provide methods to work with Integer data.
@@ -22,16 +21,26 @@ util.inherits(Integer, DataType);
 /**
  * Checks if value is an Integer data.
  *
- * @function bo.dataTypes.Integer#check
+ * @function bo.dataTypes.Integer#parse
  * @param {*} [value] - The value to check.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Integer.
+ * @returns {*} The Integer value or null when the input value is valid, otherwise undefined.
  */
-Integer.prototype.check = function (value) {
-  if (value !== null &&
-      (typeof value !== 'number' || value % 1 !== 0) &&
-      (!(value instanceof Number) || value % 1 !== 0))
-    throw new DataTypeError('integer');
+Integer.prototype.parse = function (value) {
+
+  if (value === null)
+    return value;
+  if (value === undefined)
+    return null;
+
+  var integer;
+  if (typeof value === 'number')
+    integer = value;
+  else if (value instanceof Number)
+    integer = value.valueOf();
+  else
+    integer = new Number(value).valueOf();
+
+  return isNaN(integer) || (integer % 1 !== 0) ? undefined : integer;
 };
 
 /**
@@ -40,12 +49,11 @@ Integer.prototype.check = function (value) {
  * @function bo.dataTypes.Integer#hasValue
  * @param {data} value - The value to check.
  * @returns {boolean} True if the value is Integer and not null, otherwise false.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not Integer.
  */
 Integer.prototype.hasValue = function (value) {
-  this.check(value);
-  return value != undefined && value != null;
+
+  var parsed = this.parse(value);
+  return parsed !== undefined && parsed !== null;
 };
 
 module.exports = Integer;

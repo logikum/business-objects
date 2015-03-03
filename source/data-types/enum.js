@@ -4,7 +4,6 @@ var CLASS_NAME = 'Enum';
 
 var util = require('util');
 var DataType = require('./data-type.js');
-var DataTypeError = require('./data-type-error.js');
 var Enumeration = require('../system/enumeration.js');
 var EnsureArgument = require('../system/ensure-argument.js');
 
@@ -42,17 +41,21 @@ function Enum (enumType) {
 util.inherits(Enum, DataType);
 
 /**
- * Checks if value is the defined enumeration or null.
+ * Checks if value is a Enum data.
+ * Its value must be one of the defined enumeration values or null.
  *
- * @function bo.dataTypes.Enum#check
+ * @function bo.dataTypes.Enum#parse
  * @param {*} value - The value to check.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not enumeration type.
+ * @returns {*} The Enum value or null when the input value is valid, otherwise undefined.
  */
-Enum.prototype.check = function (value) {
+Enum.prototype.parse = function (value) {
 
-  if (value !== null && !this.type.hasMember(value))
-    throw new DataTypeError('enum', this.type.$name);
+  if (value === null)
+    return value;
+  if (value === undefined)
+    return null;
+
+  return this.type.hasMember(value) ? value : undefined;
 };
 
 /**
@@ -61,13 +64,11 @@ Enum.prototype.check = function (value) {
  * @function bo.dataTypes.Enum#hasValue
  * @param {*} value - The value to check.
  * @returns {boolean} True if the value is the defined enumeration and not null, otherwise false.
- *
- * @throws {@link bo.dataTypes.DataTypeError Data type error}: The passed value is not enumeration type.
  */
 Enum.prototype.hasValue = function (value) {
 
-  this.check(value);
-  return value != undefined && value != null;
+  var parsed = this.parse(value);
+  return parsed !== undefined && parsed !== null;
 };
 
 module.exports = Enum;
