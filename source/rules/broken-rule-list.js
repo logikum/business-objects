@@ -128,10 +128,11 @@ var BrokenRuleList = function (modelName) {
     namespace = EnsureArgument.isOptionalString(namespace,
         'm_optString', CLASS_NAME, 'output', 'namespace');
 
-    var data = null;
+    //var data = null;
+    var data = new BrokenRulesOutput();
 
     if (length) {
-      data = new BrokenRulesOutput();
+      //data = new BrokenRulesOutput();
 
       var ns = namespace ? namespace + ':' : '';
       for (var property in items) {
@@ -143,13 +144,9 @@ var BrokenRuleList = function (modelName) {
           });
         }
       }
-      delete data.add;
-      Object.freeze(data);
     }
     return data;
   };
-
-  //Object.freeze(this);
 };
 
 module.exports = BrokenRuleList;

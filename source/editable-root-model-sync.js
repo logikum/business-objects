@@ -467,46 +467,60 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
 
     //region Child methods
 
-    function fetchChildren(dto) {
+    function fetchChildren (dto) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.fetch(dto[property.name]);
       });
     }
 
-    function insertChildren(connection) {
+    function insertChildren (connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.save(connection);
       });
     }
 
-    function updateChildren(connection) {
+    function updateChildren (connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.save(connection);
       });
     }
 
-    function removeChildren(connection) {
+    function removeChildren (connection) {
       properties.children().forEach(function(property) {
         var child = getPropertyValue(property);
         child.save(connection);
       });
     }
 
-    function childrenAreValid() {
+    function childrenAreValid () {
       return properties.children().every(function(property) {
         var child = getPropertyValue(property);
         return child.isValid();
       });
     }
 
-    function checkChildRules() {
+    function checkChildRules () {
       properties.children().forEach(function (property) {
         var child = getPropertyValue(property);
         child.checkRules();
       });
+    }
+
+    function getChildBrokenRules (namespace, bro) {
+      properties.children().forEach(function (property) {
+        var child = getPropertyValue(property);
+        var childBrokenRules = child.getBrokenRules(namespace);
+        if (childBrokenRules) {
+          if (childBrokenRules instanceof Array)
+            bro.addChildren(property.name, childBrokenRules);
+          else
+            bro.addChild(property.name, childBrokenRules);
+        }
+      });
+      return bro;
     }
 
     //endregion
@@ -974,7 +988,9 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
      * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
      */
     this.getBrokenRules = function(namespace) {
-      return brokenRules.output(namespace);
+      var bro = brokenRules.output(namespace);
+      bro = getChildBrokenRules(namespace, bro);
+      return bro.$length ? bro : null;
     };
 
     //endregion

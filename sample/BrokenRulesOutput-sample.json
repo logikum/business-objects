@@ -1,0 +1,26 @@
+{
+  "BlanketOrder.vendorName": [
+    { "message": "Property vendorName is required.", "severity": 3 }
+  ],
+  "address": {
+    "Address.city": [
+	  { "message": "Property city is required.", "severity": 3 }
+	]
+  },
+  "items": {
+    "00000": {
+	  "BlanketOrderItem.productName": [
+	    { "message": "Property productName is required.", "severity": 3 }
+	  ]
+	},
+	"00001": {
+	  "schedules": {
+	    "00000": {
+		  "BlanketOrderSchedule.quantity": [
+		    { "message": "Property quantity is required.", "severity": 3 }
+		  ]
+		}
+	  }
+	}
+  }
+}

@@ -142,19 +142,6 @@ describe('Synchronous data portal method', function () {
     schedule2.shipTo = 'Copenhagen';
     schedule2.shipDate = shipDate2;
 
-    if (!order.isSavable) {
-      var br = order.getBrokenRules();
-
-      order.vendorName = 'Acme Corp.';
-      address.city = 'Toronto';
-      item1.productName = 'Tablet Creek 7';
-      schedule1.quantity = 2;
-
-      if (!order.isValid()) {
-        var br2 = order.getBrokenRules();
-      }
-    }
-
     //endregion
 
     order = order.save();

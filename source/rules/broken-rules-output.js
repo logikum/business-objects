@@ -19,6 +19,20 @@ var RuleSeverity = require('./rule-severity.js');
  */
 function BrokenRulesOutput () {
 
+  var length = 0;
+
+  /**
+   * Returns the count of properties that have broken rules.
+   *
+   * @name BrokenRulesOutput#$length
+   * @readonly
+   */
+  Object.defineProperty(this, '$length', {
+    get: function () {
+      return length;
+    }
+  });
+
   /**
    * Adds a broken rule item to the response object.
    *
@@ -44,8 +58,38 @@ function BrokenRulesOutput () {
 
     if (this[propertyName])
       this[propertyName].push(brokenRule);
-    else
+    else {
       this[propertyName] = new Array(brokenRule);
+      length++;
+    }
+  };
+
+  this.addChild = function (propertyName, output) {
+
+    propertyName = EnsureArgument.isMandatoryString(propertyName,
+        'm_manString', CLASS_NAME, 'addChild', 'propertyName');
+    output = EnsureArgument.isMandatoryType(output, BrokenRulesOutput,
+        'm_manType', CLASS_NAME, 'addChild', 'output');
+
+    this[propertyName] = output;
+    length++;
+  };
+
+  this.addChildren = function (propertyName, outputs) {
+
+    propertyName = EnsureArgument.isMandatoryString(propertyName,
+        'm_manString', CLASS_NAME, 'addChildren', 'propertyName');
+    outputs = EnsureArgument.isMandatoryArray(outputs, BrokenRulesOutput,
+        'm_manArray', CLASS_NAME, 'addChildren', 'outputs');
+
+    var list = {};
+
+    outputs.forEach(function (output, index) {
+      list[('00000' + index.toString()).slice(-5)] = output;
+    });
+
+    this[propertyName] = list;
+    length++;
   };
 }
 
