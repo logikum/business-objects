@@ -31,6 +31,9 @@ describe('Decimal type', function() {
     expect(dt.parse({})).toBeUndefined();
     expect(dt.parse([])).toBe(0);
     expect(dt.parse(fn)).toBeUndefined();
+    expect(dt.parse('123')).toBe(123);
+    expect(dt.parse('0x11')).toBe(17);
+    expect(dt.parse('0.987')).toBe(0.987);
   });
 
   it('hasValue method works', function() {

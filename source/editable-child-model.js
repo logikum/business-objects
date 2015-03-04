@@ -557,6 +557,20 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
         callback(null);
     }
 
+    function childrenAreValid() {
+      return properties.children().every(function(property) {
+        var child = getPropertyValue(property);
+        return child.isValid();
+      });
+    }
+
+    function checkChildRules() {
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        child.checkRules();
+      });
+    }
+
     //endregion
 
     //region Data portal methods
@@ -1033,24 +1047,28 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
      * Indicates whether all the validation rules of the business object, including
      * the ones of its child objects, succeeds. A valid business object may have
      * broken rules with severity of success, information and warning.
-     * <br/>_This method is usually called by the parent object._
+     *
+     * _This method is called by the parent object._
      *
      * @function EditableChildModel#isValid
+     * @protected
      * @returns {boolean} True when the business object is valid, otherwise false.
      */
     this.isValid = function() {
       if (!isValidated)
         this.checkRules();
 
-      return brokenRules.isValid();
+      return brokenRules.isValid() && childrenAreValid();
     };
 
     /**
      * Executes all the validation rules of the business object, including the ones
      * of its child objects.
-     * <br/>_This method is usually called by the parent object._
+     *
+     * _This method is called by the parent object._
      *
      * @function EditableChildModel#checkRules
+     * @protected
      */
     this.checkRules = function() {
       brokenRules.clear();
@@ -1058,14 +1076,18 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
       properties.forEach(function(property) {
         rules.validate(property, new ValidationContext(store, brokenRules));
       });
+      checkChildRules();
+
       isValidated = true;
     };
 
     /**
      * Gets the broken rules of the business object.
-     * <br/>_This method is usually called by the parent object._
+     *
+     * _This method is called by the parent object._
      *
      * @function EditableChildModel#getBrokenRules
+     * @protected
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
      * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
      */

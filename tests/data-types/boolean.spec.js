@@ -31,6 +31,8 @@ describe('Boolean type', function() {
     expect(dt.parse({})).toBe(true);
     expect(dt.parse([])).toBe(true);
     expect(dt.parse(fn)).toBe(true);
+    expect(dt.parse('false')).toBe(false);
+    expect(dt.parse('true')).toBe(true);
   });
 
   it('hasValue method works', function() {

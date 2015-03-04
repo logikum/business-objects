@@ -33,8 +33,10 @@ Boolean.prototype.parse = function (value) {
     return null;
   if (value instanceof Boolean)
     return value.valueOf();
+  if (value.toString().trim().toLowerCase() === 'false')
+    return false;
 
-  return new global.Boolean(value).valueOf();
+  return global.Boolean(value).valueOf();
 };
 
 /**

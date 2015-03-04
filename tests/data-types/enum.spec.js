@@ -25,13 +25,14 @@ describe('Enum type', function() {
 
     expect(dt.parse()).toBeNull();
     expect(dt.parse(null)).toBeNull();
-    expect(dt.parse(true)).toBeUndefined();
+    expect(dt.parse(true)).toBe(ModelState.created);
     expect(dt.parse(3.1415926)).toBeUndefined();
-    expect(dt.parse('')).toBeUndefined();
+    expect(dt.parse('')).toBe(ModelState.pristine);
     expect(dt.parse('Shakespeare')).toBeUndefined();
     expect(dt.parse(new Date())).toBeUndefined();
     expect(dt.parse(ModelState.changed)).toBe(ModelState.changed);
     expect(dt.parse(13)).toBeUndefined();
+    expect(dt.parse('4')).toBe(ModelState.removed);
   });
 
   it('hasValue method works', function() {

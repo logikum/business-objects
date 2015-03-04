@@ -125,7 +125,8 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
 
     /**
      * Initializes the items in the collection with data retrieved from the repository.
-     * <br/>_This method is called by the parent object._
+     *
+     * _This method is called by the parent object._
      *
      * @function ReadOnlyChildCollection#fetch
      * @protected
@@ -150,6 +151,35 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
         });
       } else
         callback(null);
+    };
+
+    /**
+     * Indicates whether all items of the business collection are valid.
+     *
+     * _This method is called by the parent object._
+     *
+     * @function ReadOnlyChildCollection#isValid
+     * @protected
+     * @returns {boolean}
+     */
+    this.isValid = function () {
+      return items.every(function (item) {
+        return item.isValid();
+      })
+    };
+
+    /**
+     * Executes validation on all items of the collection.
+     *
+     * _This method is called by the parent object._
+     *
+     * @function ReadOnlyChildCollection#checkRules
+     * @protected
+     */
+    this.checkRules = function () {
+      items.forEach(function (item) {
+        item.checkRules();
+      });
     };
 
     //endregion

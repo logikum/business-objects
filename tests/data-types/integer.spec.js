@@ -31,6 +31,8 @@ describe('Integer type', function() {
     expect(dt.parse({})).toBeUndefined();
     expect(dt.parse([])).toBe(0);
     expect(dt.parse(fn)).toBeUndefined();
+    expect(dt.parse('1456')).toBe(1456);
+    expect(dt.parse('0x101')).toBe(257);
   });
 
   it('hasValue method works', function() {

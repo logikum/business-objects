@@ -55,7 +55,8 @@ Enum.prototype.parse = function (value) {
   if (value === undefined)
     return null;
 
-  return this.type.hasMember(value) ? value : undefined;
+  var member = value instanceof Number ? value.valueOf() : Number(value);
+  return this.type.hasMember(member) ? member : undefined;
 };
 
 /**

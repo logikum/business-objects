@@ -32,7 +32,7 @@ Decimal.prototype.parse = function (value) {
   if (value === undefined)
     return null;
 
-  var number = value instanceof Number ? value.valueOf() : new Number(value).valueOf();
+  var number = value instanceof Number ? value.valueOf() : Number(value);
   return isNaN(number) ? undefined : number;
 };
 

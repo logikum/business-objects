@@ -491,6 +491,20 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
       });
     }
 
+    function childrenAreValid() {
+      return properties.children().every(function(property) {
+        var child = getPropertyValue(property);
+        return child.isValid();
+      });
+    }
+
+    function checkChildRules() {
+      properties.children().forEach(function (property) {
+        var child = getPropertyValue(property);
+        child.checkRules();
+      });
+    }
+
     //endregion
 
     //region Data portal methods
@@ -928,7 +942,7 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
       if (!isValidated)
         this.checkRules();
 
-      return brokenRules.isValid();
+      return brokenRules.isValid() && childrenAreValid();
     };
 
     /**
@@ -943,6 +957,8 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
       properties.forEach(function(property) {
         rules.validate(property, new ValidationContext(store, brokenRules));
       });
+      checkChildRules();
+
       isValidated = true;
     };
 

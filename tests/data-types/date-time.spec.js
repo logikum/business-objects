@@ -31,6 +31,8 @@ describe('DateTime type', function() {
     expect(dt.parse({})).toBeUndefined();
     expect(dt.parse([])).toBeUndefined();
     expect(dt.parse(fn)).toBeUndefined();
+    expect(dt.parse('1995-12-17T03:24:00')).toEqual(new Date(1995, 11, 17, 4, 24, 0));
+    expect(dt.parse('December 17, 1995 03:24:00')).toEqual(new Date(1995, 11, 17, 3, 24, 0));
   });
 
   it('hasValue method works', function() {

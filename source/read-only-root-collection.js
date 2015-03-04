@@ -388,10 +388,9 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * @returns {boolean} True when the business object is valid, otherwise false.
      */
     this.isValid = function() {
-      if (!isValidated)
-        this.checkRules();
-
-      return brokenRules.isValid();
+      return items.every(function (item) {
+        return item.isValid();
+      });
     };
 
     /**
@@ -405,9 +404,10 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
     this.checkRules = function() {
       brokenRules.clear();
 
-      //properties.forEach(function(property) {
-      //  rules.validate(property, new ValidationContext(getPropertyValue, brokenRules));
-      //});
+      items.forEach(function (item) {
+        item.checkRules();
+      });
+
       isValidated = true;
     };
 

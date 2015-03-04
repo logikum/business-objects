@@ -184,7 +184,8 @@ var EditableChildCollectionFactory = function (name, itemType) {
 
     /**
      * Initializes the items in the collection with data retrieved from the repository.
-     * <br/>_This method is called by the parent object._
+     *
+     * _This method is called by the parent object._
      *
      * @function EditableChildCollection#fetch
      * @protected
@@ -213,7 +214,8 @@ var EditableChildCollectionFactory = function (name, itemType) {
 
     /**
      * Saves the changes of the business object collection to the repository.
-     * <br/>_This method is called by the parent object._
+     *
+     * _This method is called by the parent object._
      *
      * @function EditableChildCollection#save
      * @protected
@@ -248,6 +250,35 @@ var EditableChildCollectionFactory = function (name, itemType) {
     this.remove = function () {
       items.forEach(function (item) {
         item.remove();
+      });
+    };
+
+    /**
+     * Indicates whether all items of the business collection are valid.
+     *
+     * _This method is called by the parent object._
+     *
+     * @function EditableChildCollection#isValid
+     * @protected
+     * @returns {boolean}
+     */
+    this.isValid = function () {
+      return items.every(function (item) {
+        return item.isValid();
+      });
+    };
+
+    /**
+     * Executes validation on all items of the collection.
+     *
+     * _This method is called by the parent object._
+     *
+     * @function EditableChildCollection#checkRules
+     * @protected
+     */
+    this.checkRules = function () {
+      items.forEach(function (item) {
+        item.checkRules();
       });
     };
 
