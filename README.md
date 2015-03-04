@@ -64,7 +64,8 @@ Synchronous models:
 <dl>
   <dt>v1.0.8</dt>
   <dd>
-    2015.03.03.<br/>
+    2015.03.04.<br/>
+    Fixing bugs in state management.<br/>
     Fixing a bug in localization.
   </dd>
 

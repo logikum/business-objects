@@ -95,7 +95,7 @@ describe('Synchronous data portal method', function () {
 
     //region Load data
 
-    order.vendorName = 'Acme Corp.';
+    //order.vendorName = 'Acme Corp.';
     order.contractDate = contractDate;
     order.totalPrice = 497.5;
     order.schedules = 2;
@@ -105,14 +105,14 @@ describe('Synchronous data portal method', function () {
 
     address.country = 'Canada';
     address.state = 'Ontario';
-    address.city = 'Toronto';
+    //address.city = 'Toronto';
     address.line1 = '100 Front Street W';
     address.line2 = '';
     address.postalCode = 'M5J 1E3';
 
     var item1 = order.items.create();
 
-    item1.productName = 'Tablet Creek 7';
+    //item1.productName = 'Tablet Creek 7';
     item1.obsolete = false;
     item1.expiry = expiry1;
     item1.quantity = 2;
@@ -128,7 +128,7 @@ describe('Synchronous data portal method', function () {
 
     var schedule1 = item2.schedules.create();
 
-    schedule1.quantity = 2;
+    //schedule1.quantity = 2;
     schedule1.totalMass = 0.24;
     schedule1.required = true;
     schedule1.shipTo = 'Madrid';
@@ -141,6 +141,19 @@ describe('Synchronous data portal method', function () {
     schedule2.required = true;
     schedule2.shipTo = 'Copenhagen';
     schedule2.shipDate = shipDate2;
+
+    if (!order.isSavable) {
+      var br = order.getBrokenRules();
+
+      order.vendorName = 'Acme Corp.';
+      address.city = 'Toronto';
+      item1.productName = 'Tablet Creek 7';
+      schedule1.quantity = 2;
+
+      if (!order.isValid()) {
+        var br2 = order.getBrokenRules();
+      }
+    }
 
     //endregion
 

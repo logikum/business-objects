@@ -324,6 +324,11 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
         propagateChange(); // up to the parent
         isValidated = false;
       }
+      else if (state === MODEL_STATE.created) {
+        isDirty = isDirty || itself;
+        propagateChange(); // up to the parent
+        isValidated = false;
+      }
       else if (state === MODEL_STATE.removed)
         illegal(MODEL_STATE.changed);
     }
@@ -447,25 +452,25 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
       }
     });
 
-    /**
-     * Indicates whether the business object can be saved to the repository,
-     * i.e. it has ben changed and is valid, and the user has permission to save it.
-     *
-     * @function EditableChildModel#isSavable
-     * @returns {boolean} True when the user can save the business object, otherwise false.
-     */
-    Object.defineProperty(this, 'isSavable', {
-      get: function () {
-        var auth;
-        if (self.isDeleted())
-          auth = canDo(AuthorizationAction.removeObject);
-        else if (self.isNew())
-          auth = canDo(AuthorizationAction.createObject);
-        else
-          auth = canDo(AuthorizationAction.updateObject);
-        return auth && self.isDirty() && self.isValid();
-      }
-    });
+    ///**
+    // * Indicates whether the business object can be saved to the repository,
+    // * i.e. it has ben changed and is valid, and the user has permission to save it.
+    // *
+    // * @function EditableChildModel#isSavable
+    // * @returns {boolean} True when the user can save the business object, otherwise false.
+    // */
+    //Object.defineProperty(this, 'isSavable', {
+    //  get: function () {
+    //    var auth;
+    //    if (self.isDeleted)
+    //      auth = canDo(AuthorizationAction.removeObject);
+    //    else if (self.isNew)
+    //      auth = canDo(AuthorizationAction.createObject);
+    //    else
+    //      auth = canDo(AuthorizationAction.updateObject);
+    //    return auth && self.isDirty && self.isValid();
+    //  }
+    //});
 
     //endregion
 

@@ -288,6 +288,10 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
         isDirty = isDirty || itself;
         isValidated = false;
       }
+      else if (state === MODEL_STATE.created) {
+        isDirty = isDirty || itself;
+        isValidated = false;
+      }
       else if (state === MODEL_STATE.removed)
         illegal(MODEL_STATE.changed);
     }
@@ -416,13 +420,13 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
     Object.defineProperty(this, 'isSavable', {
       get: function () {
         var auth;
-        if (self.isDeleted())
+        if (self.isDeleted)
           auth = canDo(AuthorizationAction.removeObject);
-        else if (self.isNew())
+        else if (self.isNew)
           auth = canDo(AuthorizationAction.createObject);
         else
           auth = canDo(AuthorizationAction.updateObject);
-        return auth && self.isDirty() && self.isValid();
+        return auth && self.isDirty && self.isValid();
       }
     });
 
