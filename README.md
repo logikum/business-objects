@@ -65,6 +65,8 @@ Synchronous models:
   <dt>v1.0.8</dt>
   <dd>
     2015.03.04.<br/>
+    Improving validation.<br/>
+    Adding data type conversions.<br/>
     Fixing bugs in state management.<br/>
     Fixing a bug in localization.
   </dd>

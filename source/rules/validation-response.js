@@ -59,13 +59,18 @@ function ValidationResponse (brokenRules, message) {
   this.count = 0;
 
   for (var property in brokenRules) {
-    if (brokenRules.hasOwnProperty(property) && brokenRules[property] instanceof Array) {
-      var errors = brokenRules[property].filter(function (brokenRule) {
-        return brokenRule.severity === RuleSeverity.error;
-      });
-      if (errors.length) {
-        this.data[property] = errors;
-        this.count += errors.length;
+    if (brokenRules.hasOwnProperty(property)) {
+
+      if (brokenRules[property] instanceof Array) {
+        var errors = brokenRules[property].filter(function (notice) {
+          return notice.severity === RuleSeverity.error;
+        });
+        if (errors.length) {
+          this.data[property] = errors;
+          this.count += errors.length;
+        }
+      } else if (brokenRules[property] instanceof Object) {
+
       }
     }
   }

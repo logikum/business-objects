@@ -3,6 +3,7 @@
 var CLASS_NAME = 'BrokenRulesOutput';
 
 var EnsureArgument = require('../system/ensure-argument.js');
+var RuleNotice = require('./rule-notice.js');
 var RuleSeverity = require('./rule-severity.js');
 
 /**
@@ -37,33 +38,35 @@ function BrokenRulesOutput () {
    * Adds a broken rule item to the response object.
    *
    * @param {string} propertyName - The name of the property.
-   * @param {string} message - The description or the message key of the broken rule.
-   * @param {bo.rules.RuleSeverity} severity - The severity of the broken rule.
+   * @param {bo.rules.RuleNotice} notice - The public form of the broken rule.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a non-empty string.
-   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
-   * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a RuleSeverity item.
+   * @throws {@link bo.system.ArgumentError Argument error}: The notice must be a RuleNotice object.
    */
-  this.add = function (propertyName, message, severity) {
+  this.add = function (propertyName, notice) {
 
     propertyName = EnsureArgument.isMandatoryString(propertyName,
         'm_manString', CLASS_NAME, 'add', 'propertyName');
-
-    var brokenRule = {
-      message: EnsureArgument.isMandatoryString(message,
-          'm_manString', CLASS_NAME, 'add', 'message'),
-      severity: EnsureArgument.isEnumMember(severity, RuleSeverity, null,
-          'm_enumMember', CLASS_NAME, 'add', 'severity')
-    };
+    notice = EnsureArgument.isMandatoryType(notice, RuleNotice,
+        'm_manType', CLASS_NAME, 'add', 'notice');
 
     if (this[propertyName])
-      this[propertyName].push(brokenRule);
+      this[propertyName].push(notice);
     else {
-      this[propertyName] = new Array(brokenRule);
+      this[propertyName] = new Array(notice);
       length++;
     }
   };
 
+  /**
+   * Adds a child response object to the response object.
+   *
+   * @param {string} propertyName - The name of the property.
+   * @param {bo.rules.BrokenRulesOutput} output - The response object of a child property.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The output must be a BrokenRulesOutput object.
+   */
   this.addChild = function (propertyName, output) {
 
     propertyName = EnsureArgument.isMandatoryString(propertyName,
@@ -75,6 +78,16 @@ function BrokenRulesOutput () {
     length++;
   };
 
+  /**
+   * Adds child response objects to the response object.
+   *
+   * @param {string} propertyName - The name of the property.
+   * @param {Array.<bo.rules.BrokenRulesOutput>} outputs - The response objects of a child collection property.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The outputs must be an array of BrokenRulesOutput objects or a single BrokenRulesOutput object.
+   */
   this.addChildren = function (propertyName, outputs) {
 
     propertyName = EnsureArgument.isMandatoryString(propertyName,

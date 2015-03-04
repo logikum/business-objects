@@ -170,6 +170,26 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
       });
     };
 
+    /**
+     * Gets the broken rules of all items of the collection.
+     *
+     * _This method is called by the parent object._
+     *
+     * @function ReadOnlyChildCollectionSync#getBrokenRules
+     * @protected
+     * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+     * @returns {Array.<bo.rules.BrokenRulesOutput>} The broken rules of the collection.
+     */
+    this.getBrokenRules = function(namespace) {
+      var bro = [];
+      items.forEach(function (item) {
+        var childBrokenRules = item.getBrokenRules(namespace);
+        if (childBrokenRules)
+          bro.push(childBrokenRules);
+      });
+      return bro.length ? bro : null;
+    };
+
     //endregion
 
     //region Public array methods

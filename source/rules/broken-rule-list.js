@@ -6,6 +6,7 @@ var EnsureArgument = require('../system/ensure-argument.js');
 var PropertyInfo = require('../shared/property-info.js');
 var BrokenRule = require('./broken-rule.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
+var RuleNotice = require('./rule-notice.js');
 var RuleSeverity = require('./rule-severity.js');
 
 /**
@@ -106,6 +107,7 @@ var BrokenRuleList = function (modelName) {
   this.isValid = function () {
     for (var propertyName in items) {
       if (items.hasOwnProperty(propertyName)) {
+
         if (items[propertyName].some(function (item) {
               return item.severity === RuleSeverity.error;
             }))
@@ -128,19 +130,20 @@ var BrokenRuleList = function (modelName) {
     namespace = EnsureArgument.isOptionalString(namespace,
         'm_optString', CLASS_NAME, 'output', 'namespace');
 
-    //var data = null;
     var data = new BrokenRulesOutput();
-
     if (length) {
-      //data = new BrokenRulesOutput();
 
       var ns = namespace ? namespace + ':' : '';
       for (var property in items) {
         if (items.hasOwnProperty(property)) {
+
           items[property].forEach(function(brokenRule) {
+
             var propertyName = modelName + '.' + brokenRule.propertyName;
             var message = brokenRule.message || ns + propertyName + '.' + brokenRule.ruleName;
-            data.add(propertyName, message, brokenRule.severity);
+            var notice = new RuleNotice(message, brokenRule.severity);
+
+            data.add(propertyName, notice);
           });
         }
       }

@@ -30,14 +30,14 @@ var Enumeration = require('../../source/system/enumeration.js');
 describe('Rule component index', function () {
   var rule = new RuleBase('required');
   var brokenRules = new BrokenRuleList('modelName');
-  var brs = new BrokenRulesOutput();
+  var bro = new BrokenRulesOutput();
 
   it('properties return correct components', function () {
 
     expect(new rules.ValidationRule('ruleName')).toEqual(jasmine.any(ValidationRule));
     expect(new rules.ValidationContext(new DataStore(), brokenRules)).toEqual(jasmine.any(ValidationContext));
     expect(new rules.ValidationResult('ruleName', 'propertyName', 'message')).toEqual(jasmine.any(ValidationResult));
-    expect(new rules.ValidationResponse(brs)).toEqual(jasmine.any(ValidationResponse));
+    expect(new rules.ValidationResponse(bro)).toEqual(jasmine.any(ValidationResponse));
 
     expect(new rules.AuthorizationRule('ruleName')).toEqual(jasmine.any(AuthorizationRule));
     expect(new rules.AuthorizationContext(AuthorizationAction.writeProperty, 'property', brokenRules)).toEqual(jasmine.any(AuthorizationContext));

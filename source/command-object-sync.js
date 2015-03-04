@@ -218,6 +218,20 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
       });
     }
 
+    function getChildBrokenRules (namespace, bro) {
+      properties.children().forEach(function (property) {
+        var child = getPropertyValue(property);
+        var childBrokenRules = child.getBrokenRules(namespace);
+        if (childBrokenRules) {
+          if (childBrokenRules instanceof Array)
+            bro.addChildren(property.name, childBrokenRules);
+          else
+            bro.addChild(property.name, childBrokenRules);
+        }
+      });
+      return bro;
+    }
+
     //endregion
 
     //region Data portal methods
@@ -388,7 +402,9 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
      * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
      */
     this.getBrokenRules = function(namespace) {
-      return brokenRules.output(namespace);
+      var bro = brokenRules.output(namespace);
+      bro = getChildBrokenRules(namespace, bro);
+      return bro.$length ? bro : null;
     };
 
     //endregion

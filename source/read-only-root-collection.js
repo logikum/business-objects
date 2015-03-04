@@ -421,7 +421,15 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object collection.
      */
     this.getBrokenRules = function(namespace) {
-      return brokenRules.output(namespace);
+      var bro = brokenRules.output(namespace);
+
+      items.forEach(function (item) {
+        var childBrokenRules = item.getBrokenRules(namespace);
+        if (childBrokenRules)
+          bro.addChild(property.name, childBrokenRules);
+      });
+
+      return bro.$length ? bro : null;
     };
 
     //endregion

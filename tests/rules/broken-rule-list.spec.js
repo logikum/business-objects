@@ -75,7 +75,7 @@ describe('Broken rule list', function () {
     brl.clearAll();
     brs = brl.output();
 
-    expect(brs).toBeNull();
+    expect(brs.$length).toBe(0);
   });
 
   it('clear and clearAll methods work for a property', function() {
@@ -95,7 +95,7 @@ describe('Broken rule list', function () {
     brl.clearAll(pi);
     brs = brl.output();
 
-    expect(brs).toBeNull();
+    expect(brs.$length).toBe(0);
   });
 
   it('clear and clearAll methods work for all properties', function() {
@@ -115,6 +115,6 @@ describe('Broken rule list', function () {
     brl.clearAll();
     brs = brl.output();
 
-    expect(brs).toBeNull();
+    expect(brs.$length).toBe(0);
   });
 });

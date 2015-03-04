@@ -6,6 +6,7 @@ var BlanketOrderList = require('../sample/sync/blanket-order-list.js');
 
 var DataPortalEvent = require('../source/shared/data-portal-event.js');
 var EventHandlerList = require('../source/shared/event-handler-list.js');
+var ValidationResponse = require('../source/rules/validation-response.js');
 
 var contractDate = new Date(2014, 12, 15, 15, 26);
 var contractDate_u = new Date(2014, 12, 20, 8, 40);
@@ -143,6 +144,11 @@ describe('Synchronous data portal method', function () {
     schedule2.shipDate = shipDate2;
 
     //endregion
+
+    if (!order.isSavable) {
+      var bro = order.getBrokenRules();
+      var vr = new ValidationResponse(bro);
+    }
 
     order = order.save();
 
