@@ -5,7 +5,7 @@ var rules = require('../../source/rules/index.js');
 var ValidationRule = require('../../source/rules/validation-rule.js');
 var ValidationContext = require('../../source/rules/validation-context.js');
 var ValidationResult = require('../../source/rules/validation-result.js');
-var ValidationResponse = require('../../source/rules/validation-response.js');
+var BrokenRulesResponse = require('../../source/rules/broken-rules-response.js');
 
 var AuthorizationRule = require('../../source/rules/authorization-rule.js');
 var AuthorizationContext = require('../../source/rules/authorization-context.js');
@@ -37,7 +37,7 @@ describe('Rule component index', function () {
     expect(new rules.ValidationRule('ruleName')).toEqual(jasmine.any(ValidationRule));
     expect(new rules.ValidationContext(new DataStore(), brokenRules)).toEqual(jasmine.any(ValidationContext));
     expect(new rules.ValidationResult('ruleName', 'propertyName', 'message')).toEqual(jasmine.any(ValidationResult));
-    expect(new rules.ValidationResponse(bro)).toEqual(jasmine.any(ValidationResponse));
+    expect(new rules.BrokenRulesResponse(bro)).toEqual(jasmine.any(BrokenRulesResponse));
 
     expect(new rules.AuthorizationRule('ruleName')).toEqual(jasmine.any(AuthorizationRule));
     expect(new rules.AuthorizationContext(AuthorizationAction.writeProperty, 'property', brokenRules)).toEqual(jasmine.any(AuthorizationContext));

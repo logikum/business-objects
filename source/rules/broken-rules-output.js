@@ -20,7 +20,11 @@ var RuleSeverity = require('./rule-severity.js');
  */
 function BrokenRulesOutput () {
 
+  var self = this;
   var length = 0;
+  var count = 0;
+  var childObjects = [];
+  var childCollections = [];
 
   /**
    * Returns the count of properties that have broken rules.
@@ -31,11 +35,41 @@ function BrokenRulesOutput () {
   Object.defineProperty(this, '$length', {
     get: function () {
       return length;
-    }
+    },
+    enumerable: false
   });
 
   /**
-   * Adds a broken rule item to the response object.
+   * Returns the count of broken rules.
+   *
+   * @name BrokenRulesOutput#$count
+   * @readonly
+   */
+  Object.defineProperty(this, '$count', {
+    get: function () {
+      var total = count;
+
+      // Add notice counts of child objects.
+      childObjects.forEach(function (childName) {
+        total += self[childName].$count;
+      });
+
+      // Add notice counts of child collection items.
+      childCollections.forEach(function (collectionName) {
+        var collection = self[collectionName];
+        for (var index in collection) {
+          if (collection.hasOwnProperty(index))
+            total += collection[index].$count;
+        }
+      });
+
+      return total;
+    },
+    enumerable: false
+  });
+
+  /**
+   * Adds a rule notice to the response object.
    *
    * @param {string} propertyName - The name of the property.
    * @param {bo.rules.RuleNotice} notice - The public form of the broken rule.
@@ -56,6 +90,7 @@ function BrokenRulesOutput () {
       this[propertyName] = new Array(notice);
       length++;
     }
+    count++;
   };
 
   /**
@@ -75,6 +110,7 @@ function BrokenRulesOutput () {
         'm_manType', CLASS_NAME, 'addChild', 'output');
 
     this[propertyName] = output;
+    childObjects.push(propertyName);
     length++;
   };
 
@@ -99,9 +135,11 @@ function BrokenRulesOutput () {
 
     outputs.forEach(function (output, index) {
       list[('00000' + index.toString()).slice(-5)] = output;
+      //list[index.toString()] = output;
     });
 
     this[propertyName] = list;
+    childCollections.push(propertyName);
     length++;
   };
 }

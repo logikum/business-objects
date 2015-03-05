@@ -1,11 +1,10 @@
 'use strict';
 
-var CLASS_NAME = 'ValidationResponse';
+var CLASS_NAME = 'BrokenRulesResponse';
 
 var t = require('../locales/i18n-bo.js')('Rules');
 var EnsureArgument = require('../system/ensure-argument.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
-var RuleSeverity = require('./rule-severity.js');
 
 /**
  * @classdesc
@@ -14,16 +13,17 @@ var RuleSeverity = require('./rule-severity.js');
  *      each model property that has broken rule. The array elements are objects
  *      with a message and a severity property, representing the broken rules.
  * @description
- *      Creates a new validation response instance.
+ *      Creates a new broken rules response instance.
  *
  * @memberof bo.rules
  * @param {bo.rules.BrokenRulesOutput} brokenRules - The broken rules to send to the client.
  * @param {string} [message] - Human-readable description of the reason of the failure.
  * @constructor
  *
+ * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRulesOutput object.
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a string value.
  */
-function ValidationResponse (brokenRules, message) {
+function BrokenRulesResponse (brokenRules, message) {
 
   brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRulesOutput,
       'c_manType', CLASS_NAME, 'brokenRules');
@@ -33,7 +33,7 @@ function ValidationResponse (brokenRules, message) {
    * @type {string}
    * @default
    */
-  this.name = 'ValidationError';
+  this.name = 'BrokenRules';
   /**
    * The status code of the HTTP response.
    * @type {number}
@@ -50,33 +50,16 @@ function ValidationResponse (brokenRules, message) {
    * The object of the broken rules.
    * @type {object}
    */
-  this.data = {};
+  this.data = brokenRules;
   /**
    * The count of the broken rules.
    * @type {number}
    * @default
    */
-  this.count = 0;
-
-  for (var property in brokenRules) {
-    if (brokenRules.hasOwnProperty(property)) {
-
-      if (brokenRules[property] instanceof Array) {
-        var errors = brokenRules[property].filter(function (notice) {
-          return notice.severity === RuleSeverity.error;
-        });
-        if (errors.length) {
-          this.data[property] = errors;
-          this.count += errors.length;
-        }
-      } else if (brokenRules[property] instanceof Object) {
-
-      }
-    }
-  }
+  this.count = brokenRules.$count;
 
   // Immutable object.
   Object.freeze(this);
 }
 
-module.exports = ValidationResponse;
+module.exports = BrokenRulesResponse;

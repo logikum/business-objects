@@ -64,7 +64,8 @@ Synchronous models:
 <dl>
   <dt>v1.0.8</dt>
   <dd>
-    2015.03.04.<br/>
+    2015.03.05.<br/>
+    Improving broken rules response.<br/>
     Improving validation.<br/>
     Adding data type conversions.<br/>
     Fixing bugs in state management.<br/>

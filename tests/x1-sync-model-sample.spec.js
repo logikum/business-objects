@@ -6,7 +6,6 @@ var BlanketOrderList = require('../sample/sync/blanket-order-list.js');
 
 var DataPortalEvent = require('../source/shared/data-portal-event.js');
 var EventHandlerList = require('../source/shared/event-handler-list.js');
-var ValidationResponse = require('../source/rules/validation-response.js');
 
 var contractDate = new Date(2014, 12, 15, 15, 26);
 var contractDate_u = new Date(2014, 12, 20, 8, 40);
@@ -96,7 +95,7 @@ describe('Synchronous data portal method', function () {
 
     //region Load data
 
-    //order.vendorName = 'Acme Corp.';
+    order.vendorName = 'Acme Corp.';
     order.contractDate = contractDate;
     order.totalPrice = 497.5;
     order.schedules = 2;
@@ -106,14 +105,14 @@ describe('Synchronous data portal method', function () {
 
     address.country = 'Canada';
     address.state = 'Ontario';
-    //address.city = 'Toronto';
+    address.city = 'Toronto';
     address.line1 = '100 Front Street W';
     address.line2 = '';
     address.postalCode = 'M5J 1E3';
 
     var item1 = order.items.create();
 
-    //item1.productName = 'Tablet Creek 7';
+    item1.productName = 'Tablet Creek 7';
     item1.obsolete = false;
     item1.expiry = expiry1;
     item1.quantity = 2;
@@ -129,7 +128,7 @@ describe('Synchronous data portal method', function () {
 
     var schedule1 = item2.schedules.create();
 
-    //schedule1.quantity = 2;
+    schedule1.quantity = 2;
     schedule1.totalMass = 0.24;
     schedule1.required = true;
     schedule1.shipTo = 'Madrid';
@@ -144,11 +143,6 @@ describe('Synchronous data portal method', function () {
     schedule2.shipDate = shipDate2;
 
     //endregion
-
-    if (!order.isSavable) {
-      var bro = order.getBrokenRules();
-      var vr = new ValidationResponse(bro);
-    }
 
     order = order.save();
 

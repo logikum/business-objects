@@ -1,6 +1,7 @@
 console.log('Testing rules/broken-rules-output.js...');
 
 var BrokenRulesOutput = require('../../source/rules/broken-rules-output.js');
+var RuleNotice = require('../../source/rules/rule-notice.js');
 var RuleSeverity = require('../../source/rules/rule-severity.js');
 
 describe('Broken rules output', function () {
@@ -13,30 +14,51 @@ describe('Broken rules output', function () {
 
   it('has read-only $length property', function() {
     var bro = new BrokenRulesOutput();
+    var notice = new RuleNotice('message', RuleSeverity.error);
 
     expect(bro.$length).toBe(0);
 
-    bro.add('property', 'message', RuleSeverity.error);
+    bro.add('property', notice);
+
+    expect(bro.$length).toBe(1);
+
+    bro.$length = 99;
 
     expect(bro.$length).toBe(1);
   });
 
+  it('has read-only $count property', function() {
+    var bro = new BrokenRulesOutput();
+    var notice = new RuleNotice('message', RuleSeverity.error);
+
+    expect(bro.$count).toBe(0);
+
+    bro.add('property', notice);
+
+    expect(bro.$count).toBe(1);
+
+    bro.$count = 99;
+
+    expect(bro.$count).toBe(1);
+  });
+
   it('add method expects two non-empty string and a severity argument', function() {
     var bro = new BrokenRulesOutput();
+    var notice = new RuleNotice('message', RuleSeverity.error);
 
     var add01 = function () { bro.add(); };
     var add02 = function () { bro.add('property'); };
-    var add03 = function () { bro.add('property', 'message'); };
-    var add04 = function () { bro.add('property', 'message', RuleSeverity.error); };
-    var add05 = function () { bro.add('', 'message', RuleSeverity.error); };
-    var add06 = function () { bro.add('property', '', RuleSeverity.error); };
-    var add07 = function () { bro.add('property', 'message', 3); };
-    var add08 = function () { bro.add(null, null, RuleSeverity.error); };
+    var add03 = function () { bro.add(notice); };
+    var add04 = function () { bro.add(notice, 'property'); };
+    var add05 = function () { bro.add('', notice); };
+    var add06 = function () { bro.add('message', RuleSeverity.error); };
+    var add07 = function () { bro.add('property', notice); };
+    var add08 = function () { bro.add(null, null); };
 
     expect(add01).toThrow();
     expect(add02).toThrow();
     expect(add03).toThrow();
-    expect(add04).not.toThrow();
+    expect(add04).toThrow();
     expect(add05).toThrow();
     expect(add06).toThrow();
     expect(add07).not.toThrow();
@@ -45,8 +67,8 @@ describe('Broken rules output', function () {
 
   it('add method creates an array property', function() {
     var bro = new BrokenRulesOutput();
-    bro.add('property', 'message #1', RuleSeverity.information);
-    bro.add('property', 'message #2', RuleSeverity.error);
+    bro.add('property', new RuleNotice('message #1', RuleSeverity.information));
+    bro.add('property', new RuleNotice('message #2', RuleSeverity.error));
 
     expect(bro.property).toEqual(jasmine.any(Array));
     expect(bro.property[0].message).toBe('message #1');

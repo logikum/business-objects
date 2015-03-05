@@ -12,7 +12,7 @@ var RuleSeverity = require('./rule-severity.js');
  * @memberof bo.rules
  * @constructor
  * @param {string} message - Human-readable description of the reason of the failure.
- * @param {bo.rules.RuleSeverity} severity - The severity of the rule failure.
+ * @param {bo.rules.RuleSeverity} [severity] - The severity of the rule failure, defaults to error.
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a RuleSeverity item.

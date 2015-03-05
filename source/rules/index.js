@@ -3,7 +3,7 @@
 var ValidationRule = require('./validation-rule.js');
 var ValidationContext = require('./validation-context.js');
 var ValidationResult = require('./validation-result.js');
-var ValidationResponse = require('./validation-response.js');
+var BrokenRulesResponse = require('./broken-rules-response.js');
 
 var AuthorizationRule = require('./authorization-rule.js');
 var AuthorizationContext = require('./authorization-context.js');
@@ -33,8 +33,8 @@ var BrokenRulesOutput = require('./broken-rules-output.js');
  *      constructor creates a new validation context instance.
  * @property {function} ValidationResult - {@link bo.rules.ValidationResult Validation result}
  *      constructor creates a new validation result instance.
- * @property {function} ValidationResponse - {@link bo.rules.ValidationResponse Validation response}
- *      constructor creates a new validation response instance.
+ * @property {function} BrokenRulesResponse - {@link bo.rules.BrokenRulesResponse Validation response}
+ *      constructor creates a new broken rules response instance.
  *
  * @property {function} AuthorizationRule - {@link bo.rules.AuthorizationRule Authorization rule}
  *      constructor creates a new authorization rule instance.
@@ -71,7 +71,7 @@ var index = {
   ValidationRule: ValidationRule,
   ValidationContext: ValidationContext,
   ValidationResult: ValidationResult,
-  ValidationResponse: ValidationResponse,
+  BrokenRulesResponse: BrokenRulesResponse,
 
   AuthorizationRule: AuthorizationRule,
   AuthorizationContext: AuthorizationContext,
