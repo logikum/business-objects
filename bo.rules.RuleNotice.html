@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects Class: DataTypeError</title>
+	<title>business-objects Class: RuleNotice</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -154,10 +154,6 @@
 						</li>
 						
 						<li>
-							<a href="bo.dataTypes.DataTypeError.html">bo.dataTypes.DataTypeError</a>
-						</li>
-						
-						<li>
 							<a href="bo.dataTypes.DateTime.html">bo.dataTypes.DateTime</a>
 						</li>
 						
@@ -222,6 +218,14 @@
 						</li>
 						
 						<li>
+							<a href="bo.rules.BrokenRulesResponse.html">bo.rules.BrokenRulesResponse</a>
+						</li>
+						
+						<li>
+							<a href="bo.rules.DataTypeRule.html">bo.rules.DataTypeRule</a>
+						</li>
+						
+						<li>
 							<a href="bo.rules.NoAccessBehavior.html">bo.rules.NoAccessBehavior</a>
 						</li>
 						
@@ -242,15 +246,15 @@
 						</li>
 						
 						<li>
+							<a href="bo.rules.RuleNotice.html">bo.rules.RuleNotice</a>
+						</li>
+						
+						<li>
 							<a href="bo.rules.RuleSeverity.html">bo.rules.RuleSeverity</a>
 						</li>
 						
 						<li>
 							<a href="bo.rules.ValidationContext.html">bo.rules.ValidationContext</a>
-						</li>
-						
-						<li>
-							<a href="bo.rules.ValidationResponse.html">bo.rules.ValidationResponse</a>
 						</li>
 						
 						<li>
@@ -758,17 +762,17 @@
 					
 
 
-	<h1 class="page-title">Class: DataTypeError</h1>
+	<h1 class="page-title">Class: RuleNotice</h1>
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.dataTypes.html">.dataTypes</a>.</span>
+        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.rules.html">.rules</a>.</span>
     
-    DataTypeError
+    RuleNotice
     </h2>
     
-        <div class="class-description"><p>Represents a data type error.</p></div>
+        <div class="class-description"><p>Represents the public information of a failed rule.</p></div>
     
 </header>
 
@@ -779,7 +783,7 @@
     
         
 <dt>
-    <h4 class="name" id="DataTypeError"><span class="type-signature"></span>new DataTypeError<span class="signature">(<span class="optional">message</span>, <span class="optional">messageParams</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="RuleNotice"><span class="type-signature"></span>new RuleNotice<span class="signature">(message, <span class="optional">severity</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -787,7 +791,7 @@
     
     
     <div class="description">
-        <p>Creates a data type error object.</p>
+        <p>Creates a new rule notice instance.</p>
     </div>
     
 
@@ -838,8 +842,6 @@
             
                 <td class="attributes">
                 
-                    &lt;optional><br>
-                
 
                 
 
@@ -849,20 +851,20 @@
 
             
 
-            <td class="description last"><p>Human-readable description of the error.</p></td>
+            <td class="description last"><p>Human-readable description of the reason of the failure.</p></td>
         </tr>
 
 	
 
         <tr>
             
-                <td class="name"><code>messageParams</code></td>
+                <td class="name"><code>severity</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type"><a href="bo.rules.RuleSeverity.html">bo.rules.RuleSeverity</a></span>
 
 
             
@@ -877,14 +879,12 @@
                 
 
                 
-                    &lt;repeatable><br>
-                
                 </td>
             
 
             
 
-            <td class="description last"><p>Optional interpolation parameters of the message.</p></td>
+            <td class="description last"><p>The severity of the rule failure, defaults to error.</p></td>
         </tr>
 
 	
@@ -920,13 +920,6 @@
 	
 
 	
-	<dt class="tag-see">See:</dt>
-	<dd class="tag-see">
-		<ul>
-			<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error">Error</a> for further information.</li>
-			</ul>
-	</dd>
-	
 
 	
 </dl>
@@ -939,6 +932,28 @@
     
     
     
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The message must be a non-empty string.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The severity must be a RuleSeverity item.
+    
+    </div>
+
+</li>
+        </ul>
     
     
     
@@ -948,12 +963,6 @@
     
     </div>
 
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        <ul>
-            <li>Error</li>
-        </ul>
     
 
     
@@ -977,7 +986,7 @@
 <dd>
     
     <div class="description">
-        <p>Human-readable description of the error.</p>
+        <p>Human-readable description of the reason of the failure.</p>
     </div>
     
 
@@ -1030,15 +1039,15 @@
 
         
             
-<dt class="name" id="name">
-    <h4><span class="type-signature"></span>name<span class="type-signature"> :string</span></h4>
+<dt class="name" id="severity">
+    <h4><span class="type-signature"></span>severity<span class="type-signature"> :<a href="bo.rules.RuleSeverity.html">bo.rules.RuleSeverity</a></span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>The name of the error type.</p>
+        <p>The severity of the rule failure.</p>
     </div>
     
 
@@ -1047,7 +1056,7 @@
         <ul>
             <li>
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="bo.rules.RuleSeverity.html">bo.rules.RuleSeverity</a></span>
 
 
             </li>
@@ -1072,13 +1081,6 @@
 
 	
 
-	
-	<dt class="tag-default">Default Value:</dt>
-	<dd class="tag-default">
-		<ul class="dummy">
-			<li>DataTypeError</li>
-		</ul>
-	</dd>
 	
 
 
@@ -1127,7 +1129,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on March 2, 2015 using the <a
+		on March 5, 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>

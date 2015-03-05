@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects Class: ReadOnlyChildModelSync</title>
+	<title>business-objects Class: DataTypeRule</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -762,15 +762,17 @@
 					
 
 
-	<h1 class="page-title">Class: ReadOnlyChildModelSync</h1>
+	<h1 class="page-title">Class: DataTypeRule</h1>
 <section>
 
 <header>
     <h2>
-    ReadOnlyChildModelSync
+        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.rules.html">.rules</a>.</span>
+    
+    DataTypeRule
     </h2>
     
-        <div class="class-description"><p>Represents the definition of a synchronous read-only child model.</p></div>
+        <div class="class-description"><p>The rule ensures that the property value is valid.</p></div>
     
 </header>
 
@@ -781,7 +783,7 @@
     
         
 <dt>
-    <h4 class="name" id="ReadOnlyChildModelSync"><span class="type-signature"></span>new ReadOnlyChildModelSync<span class="signature">(parent, <span class="optional">eventHandlers</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="DataTypeRule"><span class="type-signature"></span>new DataTypeRule<span class="signature">(primaryProperty)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -789,15 +791,7 @@
     
     
     <div class="description">
-        <p>Creates a new synchronous read-only child model instance.</p>
-<p>   <em>The name of the model type available as:
-   <strong>&lt;instance&gt;.constructor.modelType</strong>, returns 'ReadOnlyChildModelSync'.</em></p>
-<p>   Valid parent model types are:</p>
-<pre><code> * ReadOnlyRootCollectionSync
- * ReadOnlyChildCollectionSync
- * ReadOnlyRootModelSync
- * ReadOnlyChildModelSync
- * CommandObjectSync</code></pre>
+        <p>Creates a new data type rule object.</p>
     </div>
     
 
@@ -819,8 +813,6 @@
 		<th>Type</th>
 
 		
-		<th>Argument</th>
-		
 
 		
 
@@ -833,64 +825,23 @@
 
         <tr>
             
-                <td class="name"><code>parent</code></td>
+                <td class="name"><code>primaryProperty</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>The parent business object.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>eventHandlers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">bo.shared.EventHandlerList</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The event handlers of the instance.</p></td>
+            <td class="description last"><p>The property definition the rule relates to.</p></td>
         </tr>
 
 	
@@ -932,13 +883,6 @@
 
     
     
-    <h5>Fires:</h5>
-    <ul>
-        <li><a href="ReadOnlyChildModelSync.html#event:preFetch">ReadOnlyChildModelSync#event:preFetch</a></li>
-    
-        <li><a href="ReadOnlyChildModelSync.html#event:postFetch">ReadOnlyChildModelSync#event:postFetch</a></li>
-    </ul>
-    
 
     
 
@@ -946,27 +890,17 @@
     
     
     <h5>Throws:</h5>
-    <ul>
-            <li>
+    
+            
 
     <div class="param-desc">
     
-        <a href="bo.system.ArgumentError.html">Argument error</a>:   The parent object must be a ReadOnlyRootCollectionSync, ReadOnlyChildCollectionSync,   ReadOnlyRootModelSync, ReadOnlyChildModelSync or CommandObjectSync instance.
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The primary property must be a PropertyInfo object.
     
     </div>
 
-</li>
+
         
-            <li>
-
-    <div class="param-desc">
-    
-        <a href="bo.system.ArgumentError.html">Argument error</a>:   The event handlers must be an EventHandlerList object or null.
-    
-    </div>
-
-</li>
-        </ul>
     
     
     
@@ -980,7 +914,7 @@
         <h3 class="subsection-title">Extends</h3>
 
         <ul>
-            <li><a href="ModelBase.html">ModelBase</a></li>
+            <li><a href="bo.rules.ValidationRule.html">bo.rules.ValidationRule</a></li>
         </ul>
     
 
@@ -997,15 +931,15 @@
 
         <dl>
             
-<dt class="name" id="$modelName">
-    <h4><span class="type-signature">&lt;readonly> </span>$modelName<span class="type-signature"> :string</span></h4>
+<dt class="name" id="message">
+    <h4><span class="type-signature">&lt;readonly> </span>message<span class="type-signature"> :string</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>The name of the model. However, it can be hidden by a model property with the same name.</p>
+        <p>Human-readable description of the rule failure.</p>
     </div>
     
 
@@ -1030,7 +964,14 @@
 	
 
 	
-
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.RuleBase.html#message">bo.rules.RuleBase#message</a>
+			</li>
+		</ul>
+	</dd>
 	
 
 	
@@ -1039,6 +980,303 @@
 
 	
 
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="primaryProperty">
+    <h4><span class="type-signature">&lt;readonly> </span>primaryProperty<span class="type-signature"> :<a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The definition of the property the rule relates to.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.ValidationRule.html#primaryProperty">bo.rules.ValidationRule#primaryProperty</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="priority">
+    <h4><span class="type-signature">&lt;readonly> </span>priority<span class="type-signature"> :number</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The priority of the rule. Higher number means higher priority.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.RuleBase.html#priority">bo.rules.RuleBase#priority</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>10</li>
+		</ul>
+	</dd>
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="ruleName">
+    <h4><span class="type-signature">&lt;readonly> </span>ruleName<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The name of the rule object.
+The default value usually the name of the constructor, without the Rule suffix.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.RuleBase.html#ruleName">bo.rules.RuleBase#ruleName</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="stopsProcessing">
+    <h4><span class="type-signature">&lt;readonly> </span>stopsProcessing<span class="type-signature"> :boolean</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Indicates whether processing of the rules for a property stops when the rule fails.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">boolean</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.RuleBase.html#stopsProcessing">bo.rules.RuleBase#stopsProcessing</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default">Default Value:</dt>
+	<dd class="tag-default">
+		<ul class="dummy">
+			<li>false</li>
+		</ul>
+	</dd>
 	
 
 
@@ -1065,7 +1303,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="create"><span class="type-signature">&lt;protected, static> </span>create<span class="signature">(parent, <span class="optional">eventHandlers</span>)</span><span class="type-signature"> &rarr; {<a href="ReadOnlyChildModelSync.html">ReadOnlyChildModelSync</a>}</span></h4>
+    <h4 class="name" id="addAffectedProperty"><span class="type-signature"></span>addAffectedProperty<span class="signature">(property)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1073,8 +1311,7 @@
     
     
     <div class="description">
-        <p>Creates a new read-only business object instance.
-<br/><em>This method is called by the parent object.</em></p>
+        <p>Adds an additional property that is influenced by the rule.</p>
     </div>
     
 
@@ -1096,8 +1333,6 @@
 		<th>Type</th>
 
 		
-		<th>Argument</th>
-		
 
 		
 
@@ -1110,64 +1345,23 @@
 
         <tr>
             
-                <td class="name"><code>parent</code></td>
+                <td class="name"><code>property</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
 
 
             
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"><p>The parent business object.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>eventHandlers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">bo.shared.EventHandlerList</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The event handlers of the instance.</p></td>
+            <td class="description last"><p>An affected property influenced by the rule.</p></td>
         </tr>
 
 	
@@ -1185,218 +1379,14 @@
 	
 
 	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>A new read-only business object.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ReadOnlyChildModelSync.html">ReadOnlyChildModelSync</a></span>
-
-
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.ValidationRule.html#addAffectedProperty">bo.rules.ValidationRule#addAffectedProperty</a>
+			</li>
+		</ul>
 	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="load"><span class="type-signature">&lt;protected, static> </span>load<span class="signature">(parent, data, <span class="optional">eventHandlers</span>)</span><span class="type-signature"> &rarr; {<a href="ReadOnlyChildModelSync.html">ReadOnlyChildModelSync</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Initializes a read-only business object width data retrieved from the repository.
-<br/><em>This method is called by the parent object.</em></p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>parent</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The parent business object.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The data to load into the business object.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>eventHandlers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">bo.shared.EventHandlerList</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The event handlers of the instance.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
 	
 
 	
@@ -1434,7 +1424,7 @@
 
     <div class="param-desc">
     
-        <a href="bo.rules.AuthorizationError.html">Authorization error</a>:     The user has no permission to execute the action.
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The affected property must be a PropertyInfo object.
     
     </div>
 
@@ -1442,29 +1432,6 @@
         
     
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The required read-only business object.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="ReadOnlyChildModelSync.html">ReadOnlyChildModelSync</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
     
     
 </dd>
@@ -1472,7 +1439,7 @@
         
             
 <dt>
-    <h4 class="name" id="checkRules"><span class="type-signature">&lt;protected> </span>checkRules<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addInputProperty"><span class="type-signature"></span>addInputProperty<span class="signature">(property)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1480,10 +1447,7 @@
     
     
     <div class="description">
-        <p>Executes all the validation rules of the business object, including the ones
-of its child objects.</p>
-<p><em>This method is called by the parent object.</em></p>
-<p><em>By default read-only business objects are supposed to be valid.</em></p>
+        <p>Adds an additional property to the rule that will use its value.</p>
     </div>
     
 
@@ -1491,6 +1455,191 @@ of its child objects.</p>
     
     
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>property</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An input property that value is used by the rule of.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.ValidationRule.html#addInputProperty">bo.rules.ValidationRule#addInputProperty</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The input property must be a PropertyInfo object.
+    
+    </div>
+
+
+        
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="execute"><span class="type-signature">&lt;virtual> </span>execute<span class="signature">(inputs)</span><span class="type-signature"> &rarr; {<a href="bo.rules.ValidationResult.html">bo.rules.ValidationResult</a>|undefined}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Checks the validity of the property value.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>inputs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;*></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>An array of the values of the required properties.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -1534,6 +1683,32 @@ of its child objects.</p>
     
     
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Information about the failure.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="bo.rules.ValidationResult.html">bo.rules.ValidationResult</a></span>
+|
+
+<span class="param-type">undefined</span>
+
+
+	</dd>
+</dl>
+
+
+        
     
     
 </dd>
@@ -1541,7 +1716,7 @@ of its child objects.</p>
         
             
 <dt>
-    <h4 class="name" id="fetch"><span class="type-signature">&lt;protected> </span>fetch<span class="signature">(<span class="optional">data</span>, <span class="optional">method</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="getInputValues"><span class="type-signature"></span>getInputValues<span class="signature">(getValue)</span><span class="type-signature"> &rarr; {object}</span></h4>
     
     
 </dt>
@@ -1549,8 +1724,7 @@ of its child objects.</p>
     
     
     <div class="description">
-        <p>Initializes a business object with data retrieved from the repository.
-<br/><em>This method is called by the parent object.</em></p>
+        <p>Returns the values of the properties that are used by the rule.</p>
     </div>
     
 
@@ -1572,8 +1746,6 @@ of its child objects.</p>
 		<th>Type</th>
 
 		
-		<th>Argument</th>
-		
 
 		
 
@@ -1586,115 +1758,116 @@ of its child objects.</p>
 
         <tr>
             
-                <td class="name"><code>data</code></td>
+                <td class="name"><code>getValue</code></td>
             
 
             <td class="type">
             
                 
+<span class="param-type"><a href="internal.html#getValue">internal~getValue</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A function that returns the value of a property.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.ValidationRule.html#getInputValues">bo.rules.ValidationRule#getInputValues</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The getValue argument must be a function..
+    
+    </div>
+
+
+        
+    
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>An object that properties hold the values of the input properties of.</p>
+</div>
+
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
 <span class="param-type">object</span>
 
 
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The data to load into the business object.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>method</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>An alternative fetch method to check for permission.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
+	</dd>
 </dl>
 
-    
-    
 
-    
-
-    
-    
-    
-    
-    
+        
     
     
 </dd>
@@ -1702,7 +1875,7 @@ of its child objects.</p>
         
             
 <dt>
-    <h4 class="name" id="getBrokenRules"><span class="type-signature">&lt;protected> </span>getBrokenRules<span class="signature">(<span class="optional">namespace</span>)</span><span class="type-signature"> &rarr; {<a href="bo.rules.BrokenRulesOutput.html">bo.rules.BrokenRulesOutput</a>}</span></h4>
+    <h4 class="name" id="initialize"><span class="type-signature"></span>initialize<span class="signature">(primaryProperty, message, <span class="optional">priority</span>, <span class="optional">stopsProcessing</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -1710,9 +1883,7 @@ of its child objects.</p>
     
     
     <div class="description">
-        <p>Gets the broken rules of the business object.</p>
-<p><em>This method is called by the parent object.</em></p>
-<p><em>By default read-only business objects are supposed to be valid.</em></p>
+        <p>Sets the properties of the rule.</p>
     </div>
     
 
@@ -1738,6 +1909,8 @@ of its child objects.</p>
 		
 
 		
+		<th>Default</th>
+		
 
 		<th class="last">Description</th>
 	</tr>
@@ -1748,13 +1921,83 @@ of its child objects.</p>
 
         <tr>
             
-                <td class="name"><code>namespace</code></td>
+                <td class="name"><code>primaryProperty</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>The property definition the rule relates to.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
             
 
             <td class="type">
             
                 
 <span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>Human-readable description of the rule failure.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>priority</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
 
 
             
@@ -1773,197 +2016,59 @@ of its child objects.</p>
             
 
             
+                <td class="default">
+                
+                    10
+                
+                </td>
+            
 
-            <td class="description last"><p>The namespace of the message keys when messages are localizable.</p></td>
+            <td class="description last"><p>The priority of the rule.</p></td>
         </tr>
 
 	
-	</tbody>
-</table>
 
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
+        <tr>
             
-<div class="param-desc">
-    <p>The broken rules of the business object.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="bo.rules.BrokenRulesOutput.html">bo.rules.BrokenRulesOutput</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
+                <td class="name"><code>stopsProcessing</code></td>
             
-<dt>
-    <h4 class="name" id="isValid"><span class="type-signature">&lt;protected> </span>isValid<span class="signature">()</span><span class="type-signature"> &rarr; {boolean}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Indicates whether all the validation rules of the business object, including
-the ones of its child objects, succeeds. A valid business object may have
-broken rules with severity of success, information and warning.</p>
-<p><em>This method is called by the parent object.</em></p>
-<p><em>By default read-only business objects are supposed to be valid.</em></p>
-    </div>
-    
 
-    
-    
-    
-    
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
+            <td class="type">
             
-<div class="param-desc">
-    <p>True when the business object is valid, otherwise false.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
+                
 <span class="param-type">boolean</span>
 
 
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
             
-<dt>
-    <h4 class="name" id="toCto"><span class="type-signature"></span>toCto<span class="signature">()</span><span class="type-signature"> &rarr; {object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Transforms the business object to a plain object to send to the client.
-<br/><em>This method is usually called by the parent object.</em></p>
-    </div>
-    
+            </td>
 
-    
-    
-    
-    
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Indicates the rule behavior in case of failure.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
     
     
     
@@ -1974,6 +2079,204 @@ broken rules with severity of success, information and warning.</p>
 
 	
 
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.ValidationRule.html#initialize">bo.rules.ValidationRule#initialize</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The primary property must be a PropertyInfo object.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The message must be a non-empty string.
+    
+    </div>
+
+</li>
+        </ul>
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="result"><span class="type-signature"></span>result<span class="signature">(<span class="optional">message</span>, severity)</span><span class="type-signature"> &rarr; {<a href="bo.rules.ValidationResult.html">bo.rules.ValidationResult</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Returns the result of the rule executed.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+		<th>Argument</th>
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>message</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Human-readable description of the rule failure.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>severity</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.rules.RuleSeverity.html">bo.rules.RuleSeverity</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The severity of the failed rule.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+	<dt class="inherited-from">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="bo.rules.ValidationRule.html#result">bo.rules.ValidationRule#result</a>
+			</li>
+		</ul>
+	</dd>
 	
 
 	
@@ -2011,7 +2314,7 @@ broken rules with severity of success, information and warning.</p>
     
             
 <div class="param-desc">
-    <p>The client transfer object.</p>
+    <p>The result of the validation rule.</p>
 </div>
 
 
@@ -2022,7 +2325,7 @@ broken rules with severity of success, information and warning.</p>
 	</dt>
 	<dd>
 		
-<span class="param-type">object</span>
+<span class="param-type"><a href="bo.rules.ValidationResult.html">bo.rules.ValidationResult</a></span>
 
 
 	</dd>
@@ -2039,286 +2342,6 @@ broken rules with severity of success, information and warning.</p>
 
     
 
-    
-        <h3 class="subsection-title">Events</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name" id="event:postFetch">postFetch</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>The event arises after the business object instance has been retrieved from the repository.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>eventArgs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="bo.shared.DataPortalEventArgs.html">bo.shared.DataPortalEventArgs</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Data portal event arguments.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>newObject</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ReadOnlyChildModelSync.html">ReadOnlyChildModelSync</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The instance of the model after the data portal action.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="event:preFetch">preFetch</h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>The event arises before the business object instance will be retrieved from the repository.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>eventArgs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="bo.shared.DataPortalEventArgs.html">bo.shared.DataPortalEventArgs</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Data portal event arguments.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>oldObject</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ReadOnlyChildModelSync.html">ReadOnlyChildModelSync</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The instance of the model before the data portal action.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    
-    
-</dd>
-
-        </dl>
     
 </article>
 

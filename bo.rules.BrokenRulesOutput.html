@@ -154,10 +154,6 @@
 						</li>
 						
 						<li>
-							<a href="bo.dataTypes.DataTypeError.html">bo.dataTypes.DataTypeError</a>
-						</li>
-						
-						<li>
 							<a href="bo.dataTypes.DateTime.html">bo.dataTypes.DateTime</a>
 						</li>
 						
@@ -222,6 +218,14 @@
 						</li>
 						
 						<li>
+							<a href="bo.rules.BrokenRulesResponse.html">bo.rules.BrokenRulesResponse</a>
+						</li>
+						
+						<li>
+							<a href="bo.rules.DataTypeRule.html">bo.rules.DataTypeRule</a>
+						</li>
+						
+						<li>
 							<a href="bo.rules.NoAccessBehavior.html">bo.rules.NoAccessBehavior</a>
 						</li>
 						
@@ -242,15 +246,15 @@
 						</li>
 						
 						<li>
+							<a href="bo.rules.RuleNotice.html">bo.rules.RuleNotice</a>
+						</li>
+						
+						<li>
 							<a href="bo.rules.RuleSeverity.html">bo.rules.RuleSeverity</a>
 						</li>
 						
 						<li>
 							<a href="bo.rules.ValidationContext.html">bo.rules.ValidationContext</a>
-						</li>
-						
-						<li>
-							<a href="bo.rules.ValidationResponse.html">bo.rules.ValidationResponse</a>
 						</li>
 						
 						<li>
@@ -866,7 +870,7 @@
         <dl>
             
 <dt>
-    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(propertyName, message, severity)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(propertyName, notice)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -874,7 +878,7 @@
     
     
     <div class="description">
-        <p>Adds a broken rule item to the response object.</p>
+        <p>Adds a rule notice to the response object.</p>
     </div>
     
 
@@ -931,13 +935,13 @@
 
         <tr>
             
-                <td class="name"><code>message</code></td>
+                <td class="name"><code>notice</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="bo.rules.RuleNotice.html">bo.rules.RuleNotice</a></span>
 
 
             
@@ -947,30 +951,7 @@
 
             
 
-            <td class="description last"><p>The description or the message key of the broken rule.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>severity</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="bo.rules.RuleSeverity.html">bo.rules.RuleSeverity</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>The severity of the broken rule.</p></td>
+            <td class="description last"><p>The public form of the broken rule.</p></td>
         </tr>
 
 	
@@ -1034,7 +1015,157 @@
 
     <div class="param-desc">
     
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The message must be a non-empty string.
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The notice must be a RuleNotice object.
+    
+    </div>
+
+</li>
+        </ul>
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="addChild"><span class="type-signature"></span>addChild<span class="signature">(propertyName, output)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Adds a child response object to the response object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>propertyName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the property.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>output</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.rules.BrokenRulesOutput.html">bo.rules.BrokenRulesOutput</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The response object of a child property.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The property name must be a non-empty string.
     
     </div>
 
@@ -1044,7 +1175,167 @@
 
     <div class="param-desc">
     
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The severity must be a RuleSeverity item.
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The output must be a BrokenRulesOutput object.
+    
+    </div>
+
+</li>
+        </ul>
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="addChildren"><span class="type-signature"></span>addChildren<span class="signature">(propertyName, outputs)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Adds child response objects to the response object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>propertyName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the property.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>outputs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;<a href="bo.rules.BrokenRulesOutput.html">bo.rules.BrokenRulesOutput</a>></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The response objects of a child collection property.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The property name must be a non-empty string.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>:   The outputs must be an array of BrokenRulesOutput objects or a single BrokenRulesOutput object.
     
     </div>
 
@@ -1085,7 +1376,7 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on March 2, 2015 using the <a
+		on March 5, 2015 using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
