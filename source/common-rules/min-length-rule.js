@@ -8,8 +8,10 @@ var EnsureArgument = require('../system/ensure-argument.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
- * @classdesc The rule ensures that the length of the property value reaches a given length.
- * @description Creates a new min-length rule object.
+ * @classdesc
+ *      The rule ensures that the length of the property value reaches a given length.
+ * @description
+ *      Creates a new min-length rule object.
  *
  * @memberof bo.commonRules
  * @constructor

@@ -20,8 +20,9 @@ var RuleSeverity = require('./rule-severity.js');
 function RuleNotice (message, severity) {
 
   /**
-   * Human-readable description of the reason of the failure.
+   * Human-readable description of the reason of rule failure.
    * @type {string}
+   * @readonly
    */
   this.message = EnsureArgument.isMandatoryString(message,
       'c_manString', CLASS_NAME, 'message');
@@ -29,6 +30,7 @@ function RuleNotice (message, severity) {
   /**
    * The severity of the rule failure.
    * @type {bo.rules.RuleSeverity}
+   * @readonly
    */
   this.severity = EnsureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
       'c_enumMember', CLASS_NAME, 'severity');

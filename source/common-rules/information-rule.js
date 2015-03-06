@@ -8,8 +8,10 @@ var ValidationRule = require('../rules/validation-rule.js');
 var RuleSeverity = require('../rules/rule-severity.js');
 
 /**
- * @classdesc The rule ensures that an information is given for the property.
- * @description Creates a new information rule object.
+ * @classdesc
+ *      The rule ensures that an information is given for the property.
+ * @description
+ *      Creates a new information rule object.
  *
  * @memberof bo.commonRules
  * @constructor

@@ -19,24 +19,28 @@ function RuleSeverity() {
    * The rule executed successfully.
    * @type {number}
    * @readonly
+   * @default 0
    */
   this.success = 0;
   /**
    * The broken rule represents information.
    * @type {number}
    * @readonly
+   * @default 1
    */
   this.information = 1;
   /**
    * The broken rule represents a warning.
    * @type {number}
    * @readonly
+   * @default 2
    */
   this.warning = 2;
   /**
    * The broken rule represents an error.
    * @type {number}
    * @readonly
+   * @default 3
    */
   this.error = 3;
 

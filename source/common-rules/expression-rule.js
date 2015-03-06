@@ -9,8 +9,10 @@ var ValidationRule = require('../rules/validation-rule.js');
 var NullResultOption = require('./null-result-option.js');
 
 /**
- * @classdesc The rule ensures that the property value matches a regular expression.
- * @description Creates a new expression rule object.
+ * @classdesc
+ *      The rule ensures that the property value matches a regular expression.
+ * @description
+ *      Creates a new expression rule object.
  *
  * @memberof bo.commonRules
  * @constructor

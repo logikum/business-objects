@@ -10,9 +10,11 @@ var RuleSeverity = require('../rules/rule-severity.js');
 var PropertyInfo = require('../shared/property-info.js');
 
 /**
- * @classdesc The rule ensures that the changes of the property value start
+ * @classdesc
+ *      The rule ensures that the changes of the property value start
  *      the rule checking on the dependent properties as well.
- * @description Creates a new dependency rule object.
+ * @description
+ *      Creates a new dependency rule object.
  *
  * @memberof bo.commonRules
  * @constructor

@@ -9,8 +9,10 @@ var AuthorizationRule = require('../rules/authorization-rule.js');
 var UserInfo = require('../system/user-info.js');
 
 /**
- * @classdesc The rule ensures that the user is member of a role from a group.
- * @description Creates a new is-in-any-role rule object.
+ * @classdesc
+ *      The rule ensures that the user is member of a role from a group.
+ * @description
+ *      Creates a new is-in-any-role rule object.
  *
  * @memberof bo.commonRules
  * @constructor

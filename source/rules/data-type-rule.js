@@ -5,8 +5,12 @@ var t = require('../locales/i18n-bo.js')('Rules');
 var ValidationRule = require('./validation-rule.js');
 
 /**
- * @classdesc The rule ensures that the property value is valid.
- * @description Creates a new data type rule object.
+ * @classdesc
+ *      The rule ensures that the data type of the property value is valid.
+ *      This rule is used by the models internally to check the data types
+ *      of the properties.
+ * @description
+ *      Creates a new data type rule object.
  *
  * @memberof bo.rules
  * @constructor
@@ -14,7 +18,8 @@ var ValidationRule = require('./validation-rule.js');
  *
  * @extends bo.rules.ValidationRule
  *
- * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+ * @throws {@link bo.system.ArgumentError Argument error}:
+ *    The primary property must be a PropertyInfo object.
  */
 function DataTypeRule (primaryProperty) {
   ValidationRule.call(this, 'DataType');
@@ -35,7 +40,6 @@ util.inherits(DataTypeRule, ValidationRule);
 /**
  * Checks the validity of the property value.
  *
- * @abstract
  * @function bo.rules.DataTypeRule#execute
  * @param {Array.<*>} inputs - An array of the values of the required properties.
  * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.

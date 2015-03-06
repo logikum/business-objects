@@ -5,8 +5,10 @@ var t = require('../locales/i18n-bo.js')('Rules');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
- * @classdesc The rule ensures that the property value exists.
- * @description Creates a new required rule object.
+ * @classdesc
+ *      The rule ensures that the property value exists.
+ * @description
+ *      Creates a new required rule object.
  *
  * @memberof bo.commonRules
  * @constructor

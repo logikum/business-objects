@@ -8,10 +8,22 @@ var RuleSeverity = require('./rule-severity.js');
 
 /**
  * @classdesc
- *      Represents the public format of broken rules.
- *      The object properties are arrays, one for each model property that
- *      has broken rule. The array elements are objects with a message and
- *      a severity property, representing the broken rules.
+ *      Represents the public format of broken rules. The output object
+ *      has a property for each model property that has broken rule.
+ *
+ *      If the model property is a simple property, i.e. it is defined by
+ *      a {@link bo.dataTypes.DataType data type}, then the output property
+ *      is an array. The array elements are {@link bo.rules.RuleNotice rule notice}
+ *      objects representing the broken rules.
+ *
+ *      If the model property is a child model, then the output property
+ *      is an object as well, whose properties represents model properties
+ *      with broken rules, as described above.
+ *
+ *      If the model property is a child collection, then the output property
+ *      is an object as well, whose properties are the indeces of the items of
+ *      the collections. The property name is a number in '00000' format. The
+ *      property value represents the child item, as described above.
  * @description
  *      Creates a new broken rules output instance.
  *
@@ -28,7 +40,6 @@ function BrokenRulesOutput () {
 
   /**
    * Returns the count of properties that have broken rules.
-   *
    * @name BrokenRulesOutput#$length
    * @readonly
    */
@@ -41,7 +52,6 @@ function BrokenRulesOutput () {
 
   /**
    * Returns the count of broken rules.
-   *
    * @name BrokenRulesOutput#$count
    * @readonly
    */

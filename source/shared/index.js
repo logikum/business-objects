@@ -1,15 +1,15 @@
 'use strict';
 
 
-var ModelError = require('./model-error.js');
-var ConfigurationError = require('./configuration-error.js');
-//var configuration = require('./configuration-reader.js');
-//var ModelState = require('./model-state.js');
 //var ExtensionManagerBase = require('./extension-manager-base.js');
 var ExtensionManager = require('./extension-manager.js');
 var ExtensionManagerSync = require('./extension-manager-sync.js');
 var EventHandlerList = require('./event-handler-list.js');
 var DataStore = require('./data-store.js');
+var ModelState = require('./model-state.js');
+var ModelError = require('./model-error.js');
+var ConfigurationError = require('./configuration-error.js');
+//var configuration = require('./configuration-reader.js');
 
 var PropertyInfo = require('./property-info.js');
 var PropertyFlag = require('./property-flag.js');
@@ -28,10 +28,6 @@ var DataPortalError = require('./data-portal-error.js');
  *
  * @namespace bo.shared
  *
- * @property {function} ModelError - {@link bo.shared.ModelError Model error}
- *      constructor to create a new error related to a model.
- * @property {function} ConfigurationError - {@link bo.shared.ConfigurationError Configuration error}
- *      constructor to create a new error related to configuration.
  * @property {function} ExtensionManager - {@link bo.shared.ExtensionManager Extension manager}
  *      constructor to create new a new extension manager object for an asynchronous model.
  * @property {function} ExtensionManagerSync - {@link bo.shared.ExtensionManagerSync Extension manager}
@@ -40,6 +36,12 @@ var DataPortalError = require('./data-portal-error.js');
  *      constructor to create a new event handler collection.
  * @property {function} DataStore - {@link bo.shared.DataStore DataStore}
  *      constructor to create new data store.
+ * @property {object} ModelState - {@link bo.rules.ModelState Model state}
+ *      object specifies the possible states of the editable models.
+ * @property {function} ModelError - {@link bo.shared.ModelError Model error}
+ *      constructor to create a new error related to a model.
+ * @property {function} ConfigurationError - {@link bo.shared.ConfigurationError Configuration error}
+ *      constructor to create a new error related to configuration.
  *
  * @property {function} PropertyInfo - {@link bo.shared.PropertyInfo Property definition}
  *      constructor to create new property definition.
@@ -66,15 +68,15 @@ var DataPortalError = require('./data-portal-error.js');
  *
  */
 var index = {
-  ModelError: ModelError,
-  ConfigurationError: ConfigurationError,
-  //configuration: configuration,
-  //ModelState: ModelState,
   //ExtensionManagerBase: ExtensionManagerBase,
   ExtensionManager: ExtensionManager,
   ExtensionManagerSync: ExtensionManagerSync,
   EventHandlerList: EventHandlerList,
   DataStore: DataStore,
+  ModelState: ModelState,
+  ModelError: ModelError,
+  ConfigurationError: ConfigurationError,
+  //configuration: configuration,
 
   PropertyInfo: PropertyInfo,
   PropertyFlag: PropertyFlag,

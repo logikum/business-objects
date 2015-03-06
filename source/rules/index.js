@@ -3,7 +3,7 @@
 var ValidationRule = require('./validation-rule.js');
 var ValidationContext = require('./validation-context.js');
 var ValidationResult = require('./validation-result.js');
-var BrokenRulesResponse = require('./broken-rules-response.js');
+var DataTypeRule = require('./data-type-rule.js');
 
 var AuthorizationRule = require('./authorization-rule.js');
 var AuthorizationContext = require('./authorization-context.js');
@@ -20,7 +20,9 @@ var ResultBase = require('./result-base.js');
 
 var BrokenRule = require('./broken-rule.js');
 var BrokenRuleList = require('./broken-rule-list.js');
+var RuleNotice = require('./rule-notice.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
+var BrokenRulesResponse = require('./broken-rules-response.js');
 
 /**
  * Contains components used by authorization and validation rules.
@@ -33,8 +35,8 @@ var BrokenRulesOutput = require('./broken-rules-output.js');
  *      constructor creates a new validation context instance.
  * @property {function} ValidationResult - {@link bo.rules.ValidationResult Validation result}
  *      constructor creates a new validation result instance.
- * @property {function} BrokenRulesResponse - {@link bo.rules.BrokenRulesResponse Validation response}
- *      constructor creates a new broken rules response instance.
+ * @property {function} DataTypeRule - {@link bo.rules.DataTypeRule Data type rule}
+ *      constructor creates a new data type rule instance.
  *
  * @property {function} AuthorizationRule - {@link bo.rules.AuthorizationRule Authorization rule}
  *      constructor creates a new authorization rule instance.
@@ -64,14 +66,18 @@ var BrokenRulesOutput = require('./broken-rules-output.js');
  *      constructor creates a new broken rule instance.
  * @property {function} BrokenRuleList - {@link bo.rules.BrokenRuleList Broken rule list}
  *      constructor creates a new broken rule list instance.
+ * @property {function} RuleNotice - {@link bo.rules.RuleNotice Rule notice}
+ *      constructor creates a new rule notice instance.
  * @property {function} BrokenRulesOutput - {@link bo.rules.BrokenRulesOutput Broken rules output}
  *      constructor creates a new object instance holding the broken rule information.
+ * @property {function} BrokenRulesResponse - {@link bo.rules.BrokenRulesResponse Validation response}
+ *      constructor creates a new broken rules response instance.
  */
 var index = {
   ValidationRule: ValidationRule,
   ValidationContext: ValidationContext,
   ValidationResult: ValidationResult,
-  BrokenRulesResponse: BrokenRulesResponse,
+  DataTypeRule: DataTypeRule,
 
   AuthorizationRule: AuthorizationRule,
   AuthorizationContext: AuthorizationContext,
@@ -88,7 +94,9 @@ var index = {
 
   BrokenRule: BrokenRule,
   BrokenRuleList: BrokenRuleList,
-  BrokenRulesOutput: BrokenRulesOutput
+  RuleNotice: RuleNotice,
+  BrokenRulesOutput: BrokenRulesOutput,
+  BrokenRulesResponse: BrokenRulesResponse
 };
 
 // Immutable object.
