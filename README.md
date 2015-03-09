@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.9</dt>
+  <dd>
+    2015.03.09.<br/>
+    Adding getResponse() method to root models.
+  </dd>
+
   <dt>v1.0.8</dt>
   <dd>
     2015.03.05.<br/>

@@ -26,6 +26,7 @@ var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
+var BrokenRulesResponse = require('./rules/broken-rules-response.js');
 
 var DataPortalAction = require('./shared/data-portal-action.js');
 var DataPortalContext = require('./shared/data-portal-context.js');
@@ -1178,6 +1179,19 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
       var bro = brokenRules.output(namespace);
       bro = getChildBrokenRules(namespace, bro);
       return bro.$length ? bro : null;
+    };
+
+    /**
+     * Gets the response to send to the client in case of broken rules.
+     *
+     * @function EditableRootModel#getResponse
+     * @param {string} [message] - Human-readable description of the reason of the failure.
+     * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+     * @returns {bo.rules.BrokenRulesResponse} The broken rules response to send to the client.
+     */
+    this.getResponse = function (message, namespace) {
+      var output = this.getBrokenRules(namespace);
+      return output ? new BrokenRulesResponse(output, message) : null;
     };
 
     //endregion

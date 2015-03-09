@@ -26,6 +26,7 @@ var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
+var BrokenRulesResponse = require('./rules/broken-rules-response.js');
 
 var DataPortalAction = require('./shared/data-portal-action.js');
 var DataPortalContext = require('./shared/data-portal-context.js');
@@ -956,7 +957,7 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
      * @function EditableRootModelSync#isValid
      * @returns {boolean} True when the business object is valid, otherwise false.
      */
-    this.isValid = function() {
+    this.isValid = function () {
       if (!isValidated)
         this.checkRules();
 
@@ -969,7 +970,7 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
      *
      * @function EditableRootModelSync#checkRules
      */
-    this.checkRules = function() {
+    this.checkRules = function () {
       brokenRules.clear();
 
       properties.forEach(function(property) {
@@ -987,10 +988,23 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
      * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
      */
-    this.getBrokenRules = function(namespace) {
+    this.getBrokenRules = function (namespace) {
       var bro = brokenRules.output(namespace);
       bro = getChildBrokenRules(namespace, bro);
       return bro.$length ? bro : null;
+    };
+
+    /**
+     * Gets the response to send to the client in case of broken rules.
+     *
+     * @function EditableRootModelSync#getResponse
+     * @param {string} [message] - Human-readable description of the reason of the failure.
+     * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+     * @returns {bo.rules.BrokenRulesResponse} The broken rules response to send to the client.
+     */
+    this.getResponse = function (message, namespace) {
+      var output = this.getBrokenRules(namespace);
+      return output ? new BrokenRulesResponse(output, message) : null;
     };
 
     //endregion
