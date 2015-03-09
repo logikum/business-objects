@@ -23,10 +23,8 @@ var ModelError = require('./model-error.js');
 function PropertyManager (name /*, property1, property2 [, ...] */) {
 
   var items = [];
-  var changed_c = false;  // for children
-  var changed_k = false;  // for key
+  var changed = false;  // for children
   var children = [];
-  var key;
   var isFrozen = false;
 
   /**
@@ -40,8 +38,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
   Array.prototype.slice.call(arguments, 1)
       .forEach(function (arg) {
         items.push(EnsureArgument.isMandatoryType(arg, PropertyInfo, 'c_pm'));
-        changed_c = true;
-        changed_k = true;
+        changed = true;
       });
 
   //region Item management
@@ -60,8 +57,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
 
     items.push(EnsureArgument.isMandatoryType(property, PropertyInfo,
         'm_manType', CLASS_NAME, 'add', 'property'));
-    changed_c = true;
-    changed_k = true;
+    changed = true;
   };
 
   /**
@@ -92,8 +88,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
 
     var property = new PropertyInfo(name, type, flags);
     items.push(property);
-    changed_c = true;
-    changed_k = true;
+    changed = true;
     return property;
   };
 
@@ -191,11 +186,11 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
   //region Children
 
   function checkChildren () {
-    if (changed_c) {
+    if (changed) {
       children = items.filter(function (item) {
         return !(item.type instanceof DataType);
       });
-      changed_c = false;
+      changed = false;
     }
   }
 
@@ -256,38 +251,6 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
 
   //region Keys
 
-  function checkKeys (getPropertyValue) {
-    if (changed_k) {
-      // Get key properties.
-      var keys = items.filter(function (item) {
-        return item.isKey;
-      });
-      // Evaluate result.
-      switch (keys.length) {
-        case 0:
-          // No keys: dto will be used.
-          key = {};
-          items.forEach(function (item) {
-            if (item.isOnDto)
-              key[item.name] = getPropertyValue(item);
-          });
-          break;
-        case 1:
-          // One key: key value will be used.
-          key = getPropertyValue(keys[0]);
-          break;
-        default:
-          // More keys: key object will be used.
-          key = {};
-          keys.forEach(function (item) {
-            key[item.name] = getPropertyValue(item);
-          });
-      }
-      // Done.
-      changed_k = false;
-    }
-  }
-
   /**
    * Gets the key of the current model.
    *    </br></br>
@@ -300,9 +263,44 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    * @param {internal~getValue} getPropertyValue - A function that returns
    *    the current value of the given property.
    * @returns {*} The key value of the model.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The getPropertyValue argument must be a function.
    */
   this.getKey = function (getPropertyValue) {
-    checkKeys(getPropertyValue);
+
+    getPropertyValue = EnsureArgument.isMandatoryFunction(getPropertyValue,
+        'm_manFunction', CLASS_NAME, 'getKey', 'getPropertyValue');
+
+    // No properties - no keys.
+    if (!items.length)
+      return undefined;
+
+    var key;
+    // Get key properties.
+    var keys = items.filter(function (item) {
+      return item.isKey;
+    });
+    // Evaluate result.
+    switch (keys.length) {
+      case 0:
+        // No keys: dto will be used.
+        key = {};
+        items.forEach(function (item) {
+          if (item.isOnDto)
+            key[item.name] = getPropertyValue(item);
+        });
+        break;
+      case 1:
+        // One key: key value will be used.
+        key = getPropertyValue(keys[0]);
+        break;
+      default:
+        // More keys: key object will be used.
+        key = {};
+        keys.forEach(function (item) {
+          key[item.name] = getPropertyValue(item);
+        });
+    }
     return key;
   };
 
@@ -314,8 +312,17 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    * @param {internal~getValue} getPropertyValue - A function that returns
    *    the current value of the given property.
    * @returns {boolean} True when the values are equal, false otherwise.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The data argument must be an object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The getPropertyValue argument must be a function.
    */
   this.keyEquals = function (data, getPropertyValue) {
+
+    data = EnsureArgument.isMandatoryObject(data,
+        'm_defined', CLASS_NAME, 'keyEquals', 'data');
+    getPropertyValue = EnsureArgument.isMandatoryFunction(getPropertyValue,
+        'm_manFunction', CLASS_NAME, 'keyEquals', 'getPropertyValue');
+
     // Get key properties.
     var keys = items.filter(function (item) {
       return item.isKey;

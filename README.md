@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.10</dt>
+  <dd>
+    2015.03.09.<br/>
+    Fixing a bug in property management.
+  </dd>
+
   <dt>v1.0.9</dt>
   <dd>
     2015.03.09.<br/>
