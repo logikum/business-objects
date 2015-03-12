@@ -134,112 +134,6 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
     if (eventHandlers)
       eventHandlers.setup(self);
 
-    //region Transfer object methods
-
-    function getTransferContext (authorize) {
-      return authorize ?
-          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue) :
-          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
-    }
-
-    function baseToDto() {
-      var dto = {};
-      properties.filter(function (property) {
-        return property.isOnDto;
-      }).forEach(function (property) {
-        dto[property.name] = getPropertyValue(property);
-      });
-      return dto;
-    }
-
-    function toDto () {
-      if (extensions.toDto)
-        return extensions.toDto.call(self, getTransferContext(false));
-      else
-        return baseToDto();
-    }
-
-    function baseFromDto(dto) {
-      properties.filter(function (property) {
-        return property.isOnDto;
-      }).forEach(function (property) {
-        if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
-          setPropertyValue(property, dto[property.name]);
-        }
-      });
-    }
-
-    function fromDto (dto) {
-      if (extensions.fromDto)
-        extensions.fromDto.call(self, getTransferContext(false), dto);
-      else
-        baseFromDto(dto);
-    }
-
-    function baseToCto() {
-      var cto = {};
-      properties.filter(function (property) {
-        return property.isOnCto;
-      }).forEach(function (property) {
-        cto[property.name] = readPropertyValue(property);
-      });
-      return cto;
-    }
-
-    /**
-     * Transforms the business object to a plain object to send to the client.
-     *
-     * @function EditableRootModel#toCto
-     * @returns {object} The client transfer object.
-     */
-    this.toCto = function () {
-      var cto = {};
-      if (extensions.toCto)
-        cto = extensions.toCto.call(self, getTransferContext(true));
-      else
-        cto = baseToCto();
-
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        cto[property.name] = child.toCto();
-      });
-      return cto;
-    };
-
-    function baseFromCto(cto) {
-      if (cto && typeof cto === 'object') {
-        properties.filter(function (property) {
-          return property.isOnCto;
-        }).forEach(function (property) {
-          if (cto.hasOwnProperty(property.name) && typeof cto[property.name] !== 'function') {
-            writePropertyValue(property, cto[property.name]);
-          }
-        });
-      }
-    }
-
-    /**
-     * Rebuilds the business object from a plain object sent by the client.
-     *
-     * @function EditableRootModel#fromCto
-     * @param {object} cto - The client transfer object.
-     */
-    this.fromCto = function (cto) {
-      if (extensions.fromCto)
-        extensions.fromCto.call(self, getTransferContext(true), cto);
-      else
-        baseFromCto(cto);
-
-      properties.children().forEach(function (property) {
-        var child = getPropertyValue(property);
-        if (cto[property.name]) {
-          child.fromCto(cto[property.name]);
-        }
-      });
-    };
-
-    //endregion
-
     //region Mark object state
 
     /*
@@ -364,11 +258,9 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      * @function EditableRootModel#isNew
      * @returns {boolean} True when the business object is new, otherwise false.
      */
-    Object.defineProperty(this, 'isNew', {
-      get: function () {
-        return state === MODEL_STATE.created;
-      }
-    });
+    this.isNew = function () {
+      return state === MODEL_STATE.created;
+    };
 
     /**
      * Indicates whether the business object itself or any of its child objects differs the one
@@ -377,13 +269,11 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      * @function EditableRootModel#isDirty
      * @returns {boolean} True when the business object has been changed, otherwise false.
      */
-    Object.defineProperty(this, 'isDirty', {
-      get: function () {
-        return state === MODEL_STATE.created ||
-            state === MODEL_STATE.changed ||
-            state === MODEL_STATE.markedForRemoval;
-      }
-    });
+    this.isDirty = function () {
+      return state === MODEL_STATE.created ||
+             state === MODEL_STATE.changed ||
+             state === MODEL_STATE.markedForRemoval;
+    };
 
     /**
      * Indicates whether the business object itself, ignoring its child objects, differs the one
@@ -392,11 +282,9 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      * @function EditableRootModel#isSelfDirty
      * @returns {boolean} True when the business object itself has been changed, otherwise false.
      */
-    Object.defineProperty(this, 'isSelfDirty', {
-      get: function () {
-        return isDirty;
-      }
-    });
+    this.isSelfDirty = function () {
+      return isDirty;
+    };
 
     /**
      * Indicates whether the business object will be deleted from the repository,
@@ -405,11 +293,9 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      * @function EditableRootModel#isDeleted
      * @returns {boolean} True when the business object will be deleted, otherwise false.
      */
-    Object.defineProperty(this, 'isDeleted', {
-      get: function () {
-        return state === MODEL_STATE.markedForRemoval;
-      }
-    });
+    this.isDeleted = function () {
+      return state === MODEL_STATE.markedForRemoval;
+    };
 
     /**
      * Indicates whether the business object can be saved to the repository,
@@ -418,18 +304,122 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      * @function EditableRootModel#isSavable
      * @returns {boolean} True when the user can save the business object, otherwise false.
      */
-    Object.defineProperty(this, 'isSavable', {
-      get: function () {
-        var auth;
-        if (self.isDeleted)
-          auth = canDo(AuthorizationAction.removeObject);
-        else if (self.isNew)
-          auth = canDo(AuthorizationAction.createObject);
-        else
-          auth = canDo(AuthorizationAction.updateObject);
-        return auth && self.isDirty && self.isValid();
+    this.isSavable = function () {
+      var auth;
+      if (self.isDeleted)
+        auth = canDo(AuthorizationAction.removeObject);
+      else if (self.isNew)
+        auth = canDo(AuthorizationAction.createObject);
+      else
+        auth = canDo(AuthorizationAction.updateObject);
+      return auth && self.isDirty && self.isValid();
+    };
+
+    //endregion
+
+    //region Transfer object methods
+
+    function getTransferContext (authorize) {
+      return authorize ?
+          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue) :
+          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
+    }
+
+    function baseToDto() {
+      var dto = {};
+      properties.filter(function (property) {
+        return property.isOnDto;
+      }).forEach(function (property) {
+        dto[property.name] = getPropertyValue(property);
+      });
+      return dto;
+    }
+
+    function toDto () {
+      if (extensions.toDto)
+        return extensions.toDto.call(self, getTransferContext(false));
+      else
+        return baseToDto();
+    }
+
+    function baseFromDto(dto) {
+      properties.filter(function (property) {
+        return property.isOnDto;
+      }).forEach(function (property) {
+        if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
+          setPropertyValue(property, dto[property.name]);
+        }
+      });
+    }
+
+    function fromDto (dto) {
+      if (extensions.fromDto)
+        extensions.fromDto.call(self, getTransferContext(false), dto);
+      else
+        baseFromDto(dto);
+    }
+
+    function baseToCto() {
+      var cto = {};
+      properties.filter(function (property) {
+        return property.isOnCto;
+      }).forEach(function (property) {
+        cto[property.name] = readPropertyValue(property);
+      });
+      return cto;
+    }
+
+    /**
+     * Transforms the business object to a plain object to send to the client.
+     *
+     * @function EditableRootModel#toCto
+     * @returns {object} The client transfer object.
+     */
+    this.toCto = function () {
+      var cto = {};
+      if (extensions.toCto)
+        cto = extensions.toCto.call(self, getTransferContext(true));
+      else
+        cto = baseToCto();
+
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        cto[property.name] = child.toCto();
+      });
+      return cto;
+    };
+
+    function baseFromCto(cto) {
+      if (cto && typeof cto === 'object') {
+        properties.filter(function (property) {
+          return property.isOnCto;
+        }).forEach(function (property) {
+          if (cto.hasOwnProperty(property.name) && typeof cto[property.name] !== 'function') {
+            writePropertyValue(property, cto[property.name]);
+          }
+        });
       }
-    });
+    }
+
+    /**
+     * Rebuilds the business object from a plain object sent by the client.
+     *
+     * @function EditableRootModel#fromCto
+     * @param {object} cto - The client transfer object.
+     */
+    this.fromCto = function (cto) {
+      if (extensions.fromCto)
+        extensions.fromCto.call(self, getTransferContext(true), cto);
+      else
+        baseFromCto(cto);
+
+      properties.children().forEach(function (property) {
+        var child = getPropertyValue(property);
+        if (cto[property.name]) {
+          child.fromCto(cto[property.name]);
+        }
+      });
+    };
 
     //endregion
 

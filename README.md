@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.11</dt>
+  <dd>
+    2015.03.12.<br/>
+    Converting object state properties to functions.
+  </dd>
+
   <dt>v1.0.10</dt>
   <dd>
     2015.03.09.<br/>
