@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects Class: LengthIsRule</title>
+	<title>business-objects Class: BrokenRulesResponse</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -762,17 +762,31 @@
 					
 
 
-	<h1 class="page-title">Class: LengthIsRule</h1>
+	<h1 class="page-title">Class: BrokenRulesResponse</h1>
 <section>
 
 <header>
     <h2>
-        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.commonRules.html">.commonRules</a>.</span>
+        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.rules.html">.rules</a>.</span>
     
-    LengthIsRule
+    BrokenRulesResponse
     </h2>
     
-        <div class="class-description"><p>The rule ensures that the length of the property value has a given length.</p></div>
+        <div class="class-description"><p>Represents the HTTP Response format of broken rules. The data property
+     holds the information of broken rules.</p>
+<pre><code> If the model property is a simple property, i.e. it is defined by
+ a <a href="bo.dataTypes.DataType.html">data type</a>, then the output property
+ is an array. The array elements are objects with a message and a
+ severity property, that represent the broken rules.
+
+ If the model property is a child model, then the output property
+ is an object as well, whose properties represents model properties
+ with broken rules, as described above.
+
+ If the model property is a child collection, then the output property
+ is an object as well, whose properties are the indeces of the items of
+ the collections. The property name is a number in '00000' format. The
+ property value represents the child item, as described above.</code></pre></div>
     
 </header>
 
@@ -783,7 +797,7 @@
     
         
 <dt>
-    <h4 class="name" id="LengthIsRule"><span class="type-signature"></span>new LengthIsRule<span class="signature">(primaryProperty, length, message, <span class="optional">priority</span>, <span class="optional">stopsProcessing</span>)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="BrokenRulesResponse"><span class="type-signature"></span>new BrokenRulesResponse<span class="signature">(brokenRules, <span class="optional">message</span>)</span><span class="type-signature"></span></h4>
     
     
 </dt>
@@ -791,7 +805,7 @@
     
     
     <div class="description">
-        <p>Creates a new length-is rule object.</p>
+        <p>Creates a new broken rules response instance.</p>
     </div>
     
 
@@ -817,8 +831,6 @@
 		
 
 		
-		<th>Default</th>
-		
 
 		<th class="last">Description</th>
 	</tr>
@@ -829,13 +841,13 @@
 
         <tr>
             
-                <td class="name"><code>primaryProperty</code></td>
+                <td class="name"><code>brokenRules</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
+<span class="param-type"><a href="bo.rules.BrokenRulesOutput.html">bo.rules.BrokenRulesOutput</a></span>
 
 
             
@@ -852,47 +864,8 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last"><p>The property definition the rule relates to.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>length</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The required length of the property value.</p></td>
+            <td class="description last"><p>The broken rules to send to the client.</p></td>
         </tr>
 
 	
@@ -914,41 +887,6 @@
             
                 <td class="attributes">
                 
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Human-readable description of the rule failure.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>priority</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
                     &lt;optional><br>
                 
 
@@ -959,51 +897,8 @@
             
 
             
-                <td class="default">
-                
-                </td>
-            
 
-            <td class="description last"><p>The priority of the rule.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>stopsProcessing</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"><p>Indicates the rule behavior in case of failure.</p></td>
+            <td class="description last"><p>Human-readable description of the reason of the failure.</p></td>
         </tr>
 
 	
@@ -1057,7 +952,7 @@
 
     <div class="param-desc">
     
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The primary property must be a PropertyInfo object.
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The broken rules must be a BrokenRulesOutput object.
     
     </div>
 
@@ -1067,17 +962,7 @@
 
     <div class="param-desc">
     
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The length must be an integer value.
-    
-    </div>
-
-</li>
-        
-            <li>
-
-    <div class="param-desc">
-    
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The message must be a non-empty string.
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The message must be a string value.
     
     </div>
 
@@ -1093,12 +978,6 @@
     </div>
 
     
-        <h3 class="subsection-title">Extends</h3>
-
-        <ul>
-            <li><a href="bo.rules.ValidationRule.html">bo.rules.ValidationRule</a></li>
-        </ul>
-    
 
     
 
@@ -1113,15 +992,15 @@
 
         <dl>
             
-<dt class="name" id="length">
-    <h4><span class="type-signature">&lt;readonly> </span>length<span class="type-signature"> :number</span></h4>
+<dt class="name" id="count">
+    <h4><span class="type-signature"></span>count<span class="type-signature"> :number</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>The required length of the property value.</p>
+        <p>The count of the broken rules.</p>
     </div>
     
 
@@ -1131,6 +1010,67 @@
             <li>
                 
 <span class="param-type">number</span>
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<dt class="name" id="data">
+    <h4><span class="type-signature">&lt;readonly> </span>data<span class="type-signature"> :object</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The object of the broken rules.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">object</span>
 
 
             </li>
@@ -1182,7 +1122,7 @@
 <dd>
     
     <div class="description">
-        <p>Human-readable description of the rule failure.</p>
+        <p>Human-readable description of the reason of the failure.</p>
     </div>
     
 
@@ -1207,15 +1147,6 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.RuleBase.html#message">bo.rules.RuleBase#message</a>
-			</li>
-		</ul>
-	</dd>
-	
 
 	
 
@@ -1244,15 +1175,15 @@
 
         
             
-<dt class="name" id="primaryProperty">
-    <h4><span class="type-signature">&lt;readonly> </span>primaryProperty<span class="type-signature"> :<a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span></h4>
+<dt class="name" id="name">
+    <h4><span class="type-signature">&lt;readonly> </span>name<span class="type-signature"> :string</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>The definition of the property the rule relates to.</p>
+        <p>The name of the response object.</p>
     </div>
     
 
@@ -1261,7 +1192,7 @@
         <ul>
             <li>
                 
-<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
+<span class="param-type">string</span>
 
 
             </li>
@@ -1277,24 +1208,22 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
+
+	
+
+	
+
+	
+
+	
+
+	
+	<dt class="tag-default">Default Value:</dt>
+	<dd class="tag-default">
 		<ul class="dummy">
-			<li>
-				<a href="bo.rules.ValidationRule.html#primaryProperty">bo.rules.ValidationRule#primaryProperty</a>
-			</li>
+			<li>"BrokenRules"</li>
 		</ul>
 	</dd>
-	
-
-	
-
-	
-
-	
-
-	
-
 	
 
 
@@ -1314,15 +1243,15 @@
 
         
             
-<dt class="name" id="priority">
-    <h4><span class="type-signature">&lt;readonly> </span>priority<span class="type-signature"> :number</span></h4>
+<dt class="name" id="status">
+    <h4><span class="type-signature">&lt;readonly> </span>status<span class="type-signature"> :number</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>The priority of the rule. Higher number means higher priority.</p>
+        <p>The status code of the HTTP response.</p>
     </div>
     
 
@@ -1347,15 +1276,6 @@
 	
 
 	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.RuleBase.html#priority">bo.rules.RuleBase#priority</a>
-			</li>
-		</ul>
-	</dd>
-	
 
 	
 
@@ -1369,155 +1289,7 @@
 	<dt class="tag-default">Default Value:</dt>
 	<dd class="tag-default">
 		<ul class="dummy">
-			<li>10</li>
-		</ul>
-	</dd>
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt class="name" id="ruleName">
-    <h4><span class="type-signature">&lt;readonly> </span>ruleName<span class="type-signature"> :string</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>The name of the rule object.
-The default value usually the name of the constructor, without the Rule suffix.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">string</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.RuleBase.html#ruleName">bo.rules.RuleBase#ruleName</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<dt class="name" id="stopsProcessing">
-    <h4><span class="type-signature">&lt;readonly> </span>stopsProcessing<span class="type-signature"> :boolean</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Indicates whether processing of the rules for a property stops when the rule fails.</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">boolean</span>
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.RuleBase.html#stopsProcessing">bo.rules.RuleBase#stopsProcessing</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-	<dt class="tag-default">Default Value:</dt>
-	<dd class="tag-default">
-		<ul class="dummy">
-			<li>false</li>
+			<li>422</li>
 		</ul>
 	</dd>
 	
@@ -1540,1047 +1312,6 @@ The default value usually the name of the constructor, without the Rule suffix.<
         </dl>
     
 
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<dt>
-    <h4 class="name" id="addAffectedProperty"><span class="type-signature"></span>addAffectedProperty<span class="signature">(property)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Adds an additional property that is influenced by the rule.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>property</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An affected property influenced by the rule.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.ValidationRule.html#addAffectedProperty">bo.rules.ValidationRule#addAffectedProperty</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    <h5>Throws:</h5>
-    
-            
-
-    <div class="param-desc">
-    
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The affected property must be a PropertyInfo object.
-    
-    </div>
-
-
-        
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="addInputProperty"><span class="type-signature"></span>addInputProperty<span class="signature">(property)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Adds an additional property to the rule that will use its value.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>property</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An input property that value is used by the rule of.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.ValidationRule.html#addInputProperty">bo.rules.ValidationRule#addInputProperty</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    <h5>Throws:</h5>
-    
-            
-
-    <div class="param-desc">
-    
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The input property must be a PropertyInfo object.
-    
-    </div>
-
-
-        
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="execute"><span class="type-signature">&lt;virtual> </span>execute<span class="signature">(inputs)</span><span class="type-signature"> &rarr; {<a href="bo.rules.ValidationResult.html">bo.rules.ValidationResult</a>|undefined}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Checks if the length of the property value equals to the defined length.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>inputs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;*></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>An array of the values of the required properties.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Information about the failure.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="bo.rules.ValidationResult.html">bo.rules.ValidationResult</a></span>
-|
-
-<span class="param-type">undefined</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="getInputValues"><span class="type-signature"></span>getInputValues<span class="signature">(getValue)</span><span class="type-signature"> &rarr; {object}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Returns the values of the properties that are used by the rule.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>getValue</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="internal.html#getValue">internal~getValue</a></span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>A function that returns the value of a property.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.ValidationRule.html#getInputValues">bo.rules.ValidationRule#getInputValues</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    <h5>Throws:</h5>
-    
-            
-
-    <div class="param-desc">
-    
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The getValue argument must be a function..
-    
-    </div>
-
-
-        
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>An object that properties hold the values of the input properties of.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type">object</span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="initialize"><span class="type-signature"></span>initialize<span class="signature">(primaryProperty, message, <span class="optional">priority</span>, <span class="optional">stopsProcessing</span>)</span><span class="type-signature"></span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Sets the properties of the rule.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-		<th>Default</th>
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>primaryProperty</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="bo.shared.PropertyInfo.html">bo.shared.PropertyInfo</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>The property definition the rule relates to.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>message</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                </td>
-            
-
-            <td class="description last"><p>Human-readable description of the rule failure.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>priority</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    10
-                
-                </td>
-            
-
-            <td class="description last"><p>The priority of the rule.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>stopsProcessing</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-                <td class="default">
-                
-                    false
-                
-                </td>
-            
-
-            <td class="description last"><p>Indicates the rule behavior in case of failure.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.ValidationRule.html#initialize">bo.rules.ValidationRule#initialize</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    <h5>Throws:</h5>
-    <ul>
-            <li>
-
-    <div class="param-desc">
-    
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The primary property must be a PropertyInfo object.
-    
-    </div>
-
-</li>
-        
-            <li>
-
-    <div class="param-desc">
-    
-        <a href="bo.system.ArgumentError.html">Argument error</a>: The message must be a non-empty string.
-    
-    </div>
-
-</li>
-        </ul>
-    
-    
-    
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="result"><span class="type-signature"></span>result<span class="signature">(<span class="optional">message</span>, severity)</span><span class="type-signature"> &rarr; {<a href="bo.rules.ValidationResult.html">bo.rules.ValidationResult</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        <p>Returns the result of the rule executed.</p>
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-
-		<th>Type</th>
-
-		
-		<th>Argument</th>
-		
-
-		
-
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-
-	<tbody>
-	
-
-        <tr>
-            
-                <td class="name"><code>message</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>Human-readable description of the rule failure.</p></td>
-        </tr>
-
-	
-
-        <tr>
-            
-                <td class="name"><code>severity</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="bo.rules.RuleSeverity.html">bo.rules.RuleSeverity</a></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last"><p>The severity of the failed rule.</p></td>
-        </tr>
-
-	
-	</tbody>
-</table>
-
-    
-    
-    
-<dl class="details">
-	
-
-	
-
-	
-
-	
-	<dt class="inherited-from">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="bo.rules.ValidationRule.html#result">bo.rules.ValidationRule#result</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-    
-    
-
-    
-
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>The result of the validation rule.</p>
-</div>
-
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="bo.rules.ValidationResult.html">bo.rules.ValidationResult</a></span>
-
-
-	</dd>
-</dl>
-
-
-        
-    
-    
-</dd>
-
-        </dl>
     
 
     
