@@ -32,11 +32,14 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
   name = EnsureArgument.isMandatoryString(name,
       'c_manString', CLASS_NAME, 'name');
 
-  // Verify the model type of the item type.
-  if (itemType.modelType !== 'ReadOnlyChildModelSync')
-    throw new ModelError('invalidItem',
-        itemType.prototype.name, itemType.modelType,
-        CLASS_NAME, 'ReadOnlyChildModelSync');
+  // Check tree reference.
+  if (typeof itemType !== 'string') {
+    // Verify the model type of the item type.
+    if (itemType.modelType !== 'ReadOnlyChildModelSync')
+      throw new ModelError('invalidItem',
+          itemType.prototype.name, itemType.modelType,
+          CLASS_NAME, 'ReadOnlyChildModelSync');
+  }
 
   /**
    * @classdesc
@@ -75,6 +78,14 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
           'CommandObjectSync'
         ],
         'c_modelType', name, 'parent');
+
+    // Resolve tree reference.
+    if (typeof itemType === 'string') {
+      if (itemType === parent.$modelName)
+        itemType = parent.constructor;
+      else
+        throw new ModelError('invalidTree', itemType, parent.$modelName);
+    }
 
     var self = this;
     var items = [];

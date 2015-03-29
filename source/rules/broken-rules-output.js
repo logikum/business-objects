@@ -40,7 +40,7 @@ function BrokenRulesOutput () {
 
   /**
    * Returns the count of properties that have broken rules.
-   * @name BrokenRulesOutput#$length
+   * @name bo.rules.BrokenRulesOutput#$length
    * @readonly
    */
   Object.defineProperty(this, '$length', {
@@ -52,7 +52,7 @@ function BrokenRulesOutput () {
 
   /**
    * Returns the count of broken rules.
-   * @name BrokenRulesOutput#$count
+   * @name bo.rules.BrokenRulesOutput#$count
    * @readonly
    */
   Object.defineProperty(this, '$count', {

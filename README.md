@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.12</dt>
+  <dd>
+    2015.03.29.<br/>
+    Allowing tree reference in child collections.
+  </dd>
+
   <dt>v1.0.11</dt>
   <dd>
     2015.03.12.<br/>

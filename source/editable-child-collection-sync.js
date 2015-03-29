@@ -33,11 +33,14 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
   name = EnsureArgument.isMandatoryString(name,
       'c_manString', CLASS_NAME, 'name');
 
-  // Verify the model type of the item type.
-  if (itemType.modelType !== 'EditableChildModelSync')
-    throw new ModelError('invalidItem',
-        itemType.prototype.name, itemType.modelType,
-        CLASS_NAME, 'EditableChildModelSync');
+  // Check tree reference.
+  if (typeof itemType !== 'string') {
+    // Verify the model type of the item type.
+    if (itemType.modelType !== 'EditableChildModelSync')
+      throw new ModelError('invalidItem',
+          itemType.prototype.name, itemType.modelType,
+          CLASS_NAME, 'EditableChildModelSync');
+  }
 
   /**
    * @classdesc
@@ -73,6 +76,14 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
           'EditableChildModelSync'
         ],
         'c_modelType', name, 'parent');
+
+    // Resolve tree reference.
+    if (typeof itemType === 'string') {
+      if (itemType === parent.$modelName)
+        itemType = parent.constructor;
+      else
+        throw new ModelError('invalidTree', itemType, parent.$modelName);
+    }
 
     var self = this;
     var items = [];

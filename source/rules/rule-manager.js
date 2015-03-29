@@ -29,7 +29,7 @@ var RuleManager = function () {
 
   /**
    * Defines the default behavior for unauthorized operations.
-   * @name {bo.rules.RuleManager#noAccessBehavior}
+   * @name bo.rules.RuleManager#noAccessBehavior
    * @type {bo.rules.NoAccessBehavior}
    * @default {bo.rules.NoAccessBehavior#throwError}
    */
