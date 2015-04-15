@@ -57,7 +57,7 @@ function dataExecute (ctx, method) {
 var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
-extensions.methods.push('reschedule');
+extensions.addOtherMethod('reschedule');
 
 var RescheduleShippingCommand = bo.CommandObjectSync(properties, rules, extensions);
 

@@ -65,6 +65,9 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
         itemType.prototype.name, itemType.modelType,
         CLASS_NAME, 'ReadOnlyChildModel');
 
+  // Get data access object.
+  var dao = extensions.getDataAccessObject(name);
+
   /**
    * @classdesc
    *    Represents the definition of an asynchronous read-only root collection.
@@ -96,15 +99,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
     var items = [];
     var brokenRules = new BrokenRuleList(name);
     var isValidated = false;
-    var dao = null;
     var dataContext = null;
     var totalItems = null;
-
-    // Get data access object.
-    if (extensions.daoBuilder)
-      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-    else
-      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     /**
      * The name of the model.

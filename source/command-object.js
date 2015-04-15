@@ -73,6 +73,9 @@ var CommandObjectFactory = function (properties, rules, extensions) {
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildModel', 'ReadOnlyChildCollection' ]);
 
+  // Get data access object.
+  var dao = extensions.getDataAccessObject(properties.name);
+
   /**
    * @classdesc
    *    Represents the definition of an asynchronous command object model.
@@ -104,18 +107,11 @@ var CommandObjectFactory = function (properties, rules, extensions) {
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
     var isValidated = false;
-    var dao = null;
     var propertyContext = null;
     var dataContext = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
-
-    // Get data access object.
-    if (extensions.daoBuilder)
-      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-    else
-      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Set up event handlers.
     if (eventHandlers)
@@ -595,13 +591,8 @@ var CommandObjectFactory = function (properties, rules, extensions) {
       }
     });
 
-    if (extensions.methods) {
-      extensions.methods.map(function (methodName) {
-        self[methodName] = function (callback) {
-          self.execute(methodName, callback);
-        };
-      });
-    }
+    // Add other execute methods to the instance.
+    extensions.buildOtherMethods(self, false);
 
     //endregion
 

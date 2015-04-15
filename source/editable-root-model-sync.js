@@ -74,6 +74,9 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'EditableChildCollectionSync', 'EditableChildModelSync' ]);
 
+  // Get data access object.
+  var dao = extensions.getDataAccessObject(properties.name);
+
   /**
    * @classdesc
    *    Represents the definition of a synchronous editable root model.
@@ -117,19 +120,12 @@ var EditableRootModelSyncFactory = function (properties, rules, extensions) {
     var store = new DataStore();
     var brokenRules = new BrokenRuleList(properties.name);
     var isValidated = false;
-    var dao = null;
     var propertyContext = null;
     var dataContext = null;
     var connection = null;
 
     // Set up business rules.
     rules.initialize(config.noAccessBehavior);
-
-    // Get data access object.
-    if (extensions.daoBuilder)
-      dao = extensions.daoBuilder(extensions.dataSource, extensions.modelPath);
-    else
-      dao = config.daoBuilder(extensions.dataSource, extensions.modelPath);
 
     // Set up event handlers.
     if (eventHandlers)

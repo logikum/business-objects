@@ -2,6 +2,7 @@
 
 var CLASS_NAME = 'ExtensionManager';
 
+var config = require('./configuration-reader.js');
 var EnsureArgument = require('./../system/ensure-argument.js');
 var ModelError = require('./model-error.js');
 
@@ -43,7 +44,7 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
   var self = this;
   var methods = {};
   var definitions = [
-    { name: 'daoBuilder',  length: 2 },
+    { name: 'daoBuilder',  length: 3 },
     { name: 'toDto',       length: 1 },
     { name: 'fromDto',     length: 2 },
     { name: 'toCto',       length: 1 },
@@ -146,7 +147,64 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
     });
   });
 
-  this.methods = [];
+  //region Command object extensions
+
+  var otherMethods = [];
+
+  /**
+   * Adds a new instance method to the model.
+   * (The method will call a custom execute method on the data business object
+   * of command object.)
+   *
+   * @function bo.shared.ExtensionManagerBase#addOtherMethod
+   * @param {string} methodName - The name of the method on the data access object to be called.
+   */
+  this.addOtherMethod = function (methodName) {
+    otherMethods.push(EnsureArgument.isMandatoryString(methodName,
+        'm_manString', CLASS_NAME, 'addOtherMethod', 'methodName'));
+  };
+
+  /**
+   * Instantiate the defined custom methods on the model instance.
+   * (The method is currently used by command objects only.)
+   *
+   * @function bo.shared.ExtensionManagerBase#buildOtherMethods
+   * @protected
+   * @param {ModelBase} instance - An instance of the model.
+   * @param {boolean} isSync - Indicates whether the model is synchronous or asynchronous.
+   */
+  this.buildOtherMethods = function (instance, isSync) {
+    if (otherMethods) {
+      if (isSync)
+        otherMethods.map(function (methodName) {
+          instance[methodName] = function () {
+            instance.execute(methodName);
+          };
+        });
+      else
+        otherMethods.map(function (methodName) {
+          instance[methodName] = function (callback) {
+            instance.execute(methodName, callback);
+          };
+        });
+    }
+  };
+
+  //endregion
+
+  /**
+   * Gets the data access object instance of the model.
+   *
+   * @function bo.shared.ExtensionManagerBase#getDataAccessObject
+   * @protected
+   * @param {string} modelName - The name of the model.
+   * @returns {bo.dataAccess.DaoBase} The data access object instance of the model.
+   */
+  this.getDataAccessObject = function (modelName) {
+    return self.daoBuilder ?
+        self.daoBuilder(dataSource, modelPath, modelName) :
+        config.daoBuilder(dataSource, modelPath, modelName);
+  };
 
   // Immutable object.
   Object.freeze(this);

@@ -65,12 +65,14 @@ describe('Extension manager', function() {
     function set3() { em.daoBuilder = fn1; }
     function set4() { em.daoBuilder = fn2; }
     function set5() { em.daoBuilder = fn3; }
+    function set6() { em.daoBuilder = fn4; }
 
     expect(set1).toThrow();
     expect(set2).toThrow();
     expect(set3).toThrow();
-    expect(set4).not.toThrow();
-    expect(set5).toThrow();
+    expect(set4).toThrow();
+    expect(set5).not.toThrow();
+    expect(set6).toThrow();
   });
 
   it('toDto property works', function() {

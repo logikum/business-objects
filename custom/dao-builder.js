@@ -5,13 +5,16 @@ var path = require('path');
 var DaoBase = require('../source/data-access/dao-base.js');
 var ensureArgument = require('../source/system/ensure-argument.js');
 
-var daoBuilder = function (dataSource, modelPath) {
+var daoBuilder = function (dataSource, modelPath, modelName) {
 
   if (typeof dataSource !== 'string' || dataSource.trim().length === 0)
     throw new Error('The dataSource argument of daoBuilder function must be a non-empty string.');
 
   if (typeof modelPath !== 'string' || modelPath.trim().length === 0)
     throw new Error('The modelPath argument of daoBuilder function must be a non-empty string.');
+
+  if (typeof modelName !== 'string' || modelName.trim().length === 0)
+    throw new Error('The modelName argument of daoBuilder function must be a non-empty string.');
 
   var modelStats = fs.statSync(modelPath);
   if (!modelStats.isFile())

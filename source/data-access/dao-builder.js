@@ -8,12 +8,14 @@ var DaoError = require('./dao-error.js');
 /**
  * Factory method to create the data access object for a model instance.
  * The path of the data access object is created using the model path and
- * inserted the data source string before the extension.
+ * inserted the data source string before the extension. (The model name
+ * is not used by this implementation.)
  *
  * @function bo.dataAccess.daoBuilder
  * @param {string} dataSource - The name of the data source.
- * @param {string} modelPath - The model definition path of the model instance
- *      that the data access object belongs to.
+ * @param {string} modelPath - The model definition path of the business
+ *      object model instance that the data access object belongs to.
+ * @param {string} modelName - The name of the business object model.
  *
  * @throws {@link bo.dataAccess.DaoError Dao error}: The name of the data source must be a non-empty string.
  * @throws {@link bo.dataAccess.DaoError Dao error}: The model path must be a non-empty string.
@@ -26,12 +28,14 @@ var DaoError = require('./dao-error.js');
  * daoBuilder('oracle', '/path/to/model.js')
  * // returns require('/path/to/model.oracle.js')
  */
-var daoBuilder = function (dataSource, modelPath) {
+var daoBuilder = function (dataSource, modelPath, modelName) {
 
   if (typeof dataSource !== 'string' || dataSource.trim().length === 0)
     throw new DaoError('f_manString', 'dataSource');
   if (typeof modelPath !== 'string' || modelPath.trim().length === 0)
     throw new DaoError('f_manString', 'modelPath');
+  if (typeof modelName !== 'string' || modelName.trim().length === 0)
+    throw new DaoError('f_manString', 'modelName');
 
   var modelStats = fs.statSync(modelPath);
   if (!modelStats.isFile())

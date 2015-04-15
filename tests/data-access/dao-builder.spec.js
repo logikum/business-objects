@@ -13,7 +13,7 @@ describe('Data access object builder', function () {
 
   it('works', function () {
     var p = path.join(__dirname, '../../sample/widget.js');
-    var dao = DaoBuilder('dao', p);
+    var dao = DaoBuilder('dao', p, 'Horus');
 
     expect(dao).toEqual(jasmine.any(DaoBase));
     expect(dao.name).toBe('WidgetDao');

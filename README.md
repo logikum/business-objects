@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.13</dt>
+  <dd>
+    2015.04.15.<br/>
+    Adding modelName argument to daoBuilder function.
+  </dd>
+
   <dt>v1.0.12</dt>
   <dd>
     2015.03.29.<br/>

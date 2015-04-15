@@ -57,8 +57,9 @@ var external = {
    * @typedef external.daoBuilder
    * @type {function}
    * @param {string} dataSource - The name of the data source.
-   * @param {string} modelPath - The model definition path of the model instance
-   *      that the data access object belongs to.
+   * @param {string} modelPath - The model definition path of the business
+   *      object model instance that the data access object belongs to.
+   * @param {string} modelName - The name of the business object model.
    * @returns {bo.dataAccess.DaoBase} The data access object.
    */
 

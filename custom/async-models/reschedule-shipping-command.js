@@ -63,7 +63,7 @@ function dataExecute (ctx, method, callback) {
 var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
-extensions.methods.push('reschedule');
+extensions.addOtherMethod('reschedule');
 
 var RescheduleShippingCommand = bo.CommandObject(properties, rules, extensions);
 
