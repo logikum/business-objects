@@ -204,13 +204,6 @@ var external = {
   //region Callback methods
 
   /**
-   * The callback to be called when the execution of a model method has finished.
-   *
-   * @callback external.cbModel
-   * @param {error} err - The error that occurred in the model.
-   */
-
-  /**
    * The callback to be called when the execution of a connection manager method has finished.
    *
    * @callback external.cbConnectionManager
@@ -234,6 +227,13 @@ var external = {
    * @param {{}} currentValue - The current item being processed in the collection.
    * @param {number} index - The index of the current item being processed in the collection.
    * @param {Array.<object>} collection - The collection method was called upon.
+   */
+
+  /**
+   * The callback to be called when the execution of a model rebuild method has finished.
+   *
+   * @callback external.cbFromCto
+   * @param {error} err - The error that occurred in the model.
    */
 
   /**

@@ -402,7 +402,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      *
      * @function EditableRootModel#fromCto
      * @param {object} cto - The client transfer object.
-     * @param {external.cbModel} callback - Returns the eventual error.
+     * @param {external.cbFromCto} callback - Returns the eventual error.
      */
     this.fromCto = function (cto, callback) {
       if (extensions.fromCto)

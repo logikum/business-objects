@@ -134,7 +134,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#fromCto
      * @param {Array.<object>} data - The array of client transfer objects.
-     * @param {external.cbModel} callback - Returns the eventual error.
+     * @param {external.cbFromCto} callback - Returns the eventual error.
      */
     this.fromCto = function (data, callback) {
       if (!(data instanceof Array))
