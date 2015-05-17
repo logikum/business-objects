@@ -134,44 +134,82 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#fromCto
      * @param {Array.<object>} data - The array of client transfer objects.
+     * @param {external.cbModel} callback - Returns the eventual error.
      */
-    this.fromCto = function (data) {
-      if (data instanceof Array) {
-        var dataNew = data.filter(function () { return true; });
-        var itemsLate = [];
-        // Update existing items.
-        items.forEach(function (item, index) {
-          var dataFound = false;
-          var i = 0;
-          for (; i < dataNew.length; i++) {
-            var cto = data[i];
-            if (item.keyEquals(cto)) {
-              item.fromCto(cto);
-              dataFound = true;
-              break;
-            }
-          }
-          if (dataFound)
-            dataNew.splice(i, 1);
-          else
-            itemsLate.push(index);
-        });
-        // Remove non existing items.
-        itemsLate.forEach(function (index) {
-          items[index].remove();
-        });
-        // Insert non existing data.
-        dataNew.forEach(function (cto) {
-          itemType.create(parent, eventHandlers, function (err, item) {
-            if (err)
-              throw err;
-            else {
-              item.fromCto(cto);
-              items.push(item);
-            }
-          });
-        });
+    this.fromCto = function (data, callback) {
+      if (!(data instanceof Array))
+        callback(null);
+
+      var dataNew = data.filter(function () { return true; });
+      var itemsLive = [];
+      var itemsLate = [];
+      var count = 0;
+      var error = null;
+      var index;
+
+      function finish() {
+        if (++count == dataNew.length) {
+          return callback(error);
+        }
       }
+      function handleOldNew() {
+        count = 0;
+
+        // Remove non existing items.
+        for (index = 0; index < itemsLate.length; index++) {
+          items[itemsLate[index]].remove();
+        }
+        // Insert non existing data.
+        if (dataNew.length) {
+          dataNew.forEach(function (cto) {
+            itemType.create(parent, eventHandlers, function (err, item) {
+              if (err) {
+                error = error || err;
+                finish();
+              } else {
+                item.fromCto(cto, function (err) {
+                  if (err)
+                    error = error || err;
+                  else
+                    items.push(item);
+                  finish();
+                });
+              }
+            });
+          });
+        } else
+          return callback(null);
+      }
+
+      // Discover changed items.
+      for (index = 0; index < items.length; index++) {
+        var dataFound = false;
+        var i = 0;
+        for (; i < dataNew.length; i++) {
+          if (items[index].keyEquals(data[i])) {
+            itemsLive.push({ item: index, cto: i });
+            dataFound = true;
+            break;
+          }
+        }
+        if (dataFound)
+          dataNew.splice(i, 1);
+        else
+          itemsLate.push(index);
+      }
+      // Update existing items.
+      if (itemsLive.length)
+        for (index = 0; index < itemsLive.length; index++) {
+          var ix = itemsLive[index];
+          items[ix.item].fromCto(data[ix.cto], function (err) {
+            if (err)
+              error = error || err;
+            if (++count == itemsLive.length)
+              handleOldNew();
+          });
+        }
+      else
+        handleOldNew();
     };
 
     //endregion

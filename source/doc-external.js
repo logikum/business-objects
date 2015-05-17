@@ -204,6 +204,13 @@ var external = {
   //region Callback methods
 
   /**
+   * The callback to be called when the execution of a model method has finished.
+   *
+   * @callback external.cbModel
+   * @param {error} err - The error that occurred in the model.
+   */
+
+  /**
    * The callback to be called when the execution of a connection manager method has finished.
    *
    * @callback external.cbConnectionManager

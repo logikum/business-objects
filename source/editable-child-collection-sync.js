@@ -139,12 +139,14 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
       if (data instanceof Array) {
         var dataNew = data.filter(function () { return true; });
         var itemsLate = [];
+        var index, cto;
         // Update existing items.
-        items.forEach(function (item, index) {
+        for (index = 0; index < items.length; index++) {
+          var item = items[index];
           var dataFound = false;
           var i = 0;
           for (; i < dataNew.length; i++) {
-            var cto = data[i];
+            cto = data[i];
             if (item.keyEquals(cto)) {
               item.fromCto(cto);
               dataFound = true;
@@ -155,17 +157,18 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
             dataNew.splice(i, 1);
           else
             itemsLate.push(index);
-        });
+        }
         // Remove non existing items.
-        itemsLate.forEach(function (index) {
-          items[index].remove();
-        });
+        for (index = 0; index < itemsLate.length; index++) {
+          items[itemsLate[index]].remove();
+        }
         // Insert non existing data.
-        dataNew.forEach(function (cto) {
-          var item = itemType.create(parent, eventHandlers);
-          item.fromCto(cto);
-          items.push(item);
-        });
+        for (index = 0; index < dataNew.length; index++) {
+          cto = dataNew[index];
+          var newItem = itemType.create(parent, eventHandlers);
+          newItem.fromCto(cto);
+          items.push(newItem);
+        }
       }
     };
 

@@ -402,18 +402,30 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      *
      * @function EditableRootModel#fromCto
      * @param {object} cto - The client transfer object.
+     * @param {external.cbModel} callback - Returns the eventual error.
      */
-    this.fromCto = function (cto) {
+    this.fromCto = function (cto, callback) {
       if (extensions.fromCto)
         extensions.fromCto.call(self, getTransferContext(true), cto);
       else
         baseFromCto(cto);
 
+      // Build children.
+      var count = properties.childCount();
+      var error = null;
+
+      function finish (err) {
+        if (err)
+          error = error || err;
+        if (--count == 0)
+          return callback(error);
+      }
       properties.children().forEach(function (property) {
         var child = getPropertyValue(property);
-        if (cto[property.name]) {
-          child.fromCto(cto[property.name]);
-        }
+        if (cto[property.name])
+          child.fromCto(cto[property.name], finish);
+        else
+          finish(null);
       });
     };
 

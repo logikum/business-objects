@@ -62,6 +62,12 @@ Synchronous models:
 ### Release History
 
 <dl>
+  <dt>v1.0.14</dt>
+  <dd>
+    2015.05.17.<br/>
+    Fixing some bugs in asynchronous fromCto methods.
+  </dd>
+
   <dt>v1.0.13</dt>
   <dd>
     2015.04.15.<br/>
