@@ -28,8 +28,8 @@ var CollectionBase = require('../collection-base.js');
  * @param {string} name - The name of the property.
  * @param {*} type - The data type of the property.
  * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
- * @param {external.propertyGetter} getter - Custom function to read the value of the property.
- * @param {external.propertySetter} setter - Custom function to write the value of the property.
+ * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+ * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The type must be a data type, a model or a collection.
