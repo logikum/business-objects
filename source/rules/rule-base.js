@@ -22,7 +22,7 @@ var RuleBase = function (ruleName) {
 
   ruleName = EnsureArgument.isMandatoryString(ruleName, 'c_manString', CLASS_NAME, 'ruleName');
   /**
-   * The name of the rule object.
+   * The name of the rule type.
    * The default value usually the name of the constructor, without the Rule suffix.
    * @name bo.rules.RuleBase#ruleName
    * @type {string}

@@ -16,6 +16,7 @@ var DaoError = require('./dao-error.js');
  * @param {string} modelPath - The model definition path of the business
  *      object model instance that the data access object belongs to.
  * @param {string} modelName - The name of the business object model.
+ * @returns {bo.dataAccess.DaoBase} The data access object of the business object model.
  *
  * @throws {@link bo.dataAccess.DaoError Dao error}: The name of the data source must be a non-empty string.
  * @throws {@link bo.dataAccess.DaoError Dao error}: The model path must be a non-empty string.

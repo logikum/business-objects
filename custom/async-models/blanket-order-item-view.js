@@ -51,13 +51,13 @@ function fromDto (ctx, dto) {
 
 function toCto (ctx) {
   return {
-    orderItemKey:     this.orderItemKey,
-    orderKey:   this.orderKey,
-    productName: this.productName,
-    obsolete:   this.obsolete,
-    expiry:    this.expiry,
-    quantity:      this.quantity,
-    unitPrice: this.unitPrice
+    orderItemKey: this.orderItemKey,
+    orderKey:     this.orderKey,
+    productName:  this.productName,
+    obsolete:     this.obsolete,
+    expiry:       this.expiry,
+    quantity:     this.quantity,
+    unitPrice:    this.unitPrice
   };
 }
 

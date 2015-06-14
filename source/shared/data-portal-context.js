@@ -70,7 +70,7 @@ function DataPortalContext (dao, properties, getValue, setValue) {
   this.locale = config.getLocale();
 
   /**
-   * Indicates whether the current model itself has been changed.
+   * The connection object for the data source.
    * @name bo.shared.DataPortalContext#connection
    * @type {object}
    * @readonly
