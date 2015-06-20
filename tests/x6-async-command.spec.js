@@ -9,7 +9,7 @@ var EventHandlerList = require('../source/shared/event-handler-list.js');
 
 describe('Asynchronous data portal method', function () {
 
-  function logEvent (eventArgs, oldObject) {
+  function logEvent (eventArgs) {
     var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
     console.log('  : ' + text);
   }
@@ -29,10 +29,10 @@ describe('Asynchronous data portal method', function () {
 
     ClearScheduleCommand.create(ehClearScheduleCommand, function (err, cmd) {
 
-      cmd.on('preExecute', function (eventArgs, oldObject) {
+      cmd.on('preExecute', function (eventArgs) {
         console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
       });
-      cmd.on('postExecute', function (eventArgs, newObject) {
+      cmd.on('postExecute', function (eventArgs) {
         console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
       });
 

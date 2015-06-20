@@ -1,8 +1,9 @@
-#Business objects
+# Business objects
 
 ### a JavaScript object-oriented business layer for Node.js
 
-See documentation: [http://logikum.github.io/business-objects/](http://logikum.github.io/business-objects/)
+See tutorials: [http://bo.logikum.hu](http://bo.logikum.hu)  
+See class reference: [http://logikum.github.io/business-objects](http://logikum.github.io/business-objects)
 
 ### Installation
 
@@ -58,103 +59,3 @@ Synchronous models:
 * [Read-only root collection](http://logikum.github.io/business-objects/ReadOnlyRootCollectionSync.html)
 * [Read-only child collection](http://logikum.github.io/business-objects/ReadOnlyChildCollectionSync.html)
 * [Command object](http://logikum.github.io/business-objects/CommandObjectSync.html)
-
-### Release History
-
-<dl>
-  <dt>v1.0.14</dt>
-  <dd>
-    2015.05.17.<br/>
-    Fixing some bugs in asynchronous fromCto methods.
-  </dd>
-
-  <dt>v1.0.13</dt>
-  <dd>
-    2015.04.15.<br/>
-    Adding modelName argument to daoBuilder function.
-  </dd>
-
-  <dt>v1.0.12</dt>
-  <dd>
-    2015.03.29.<br/>
-    Allowing tree reference in child collections.
-  </dd>
-
-  <dt>v1.0.11</dt>
-  <dd>
-    2015.03.12.<br/>
-    Converting object state properties to functions.
-  </dd>
-
-  <dt>v1.0.10</dt>
-  <dd>
-    2015.03.09.<br/>
-    Fixing a bug in property management.
-  </dd>
-
-  <dt>v1.0.9</dt>
-  <dd>
-    2015.03.09.<br/>
-    Adding getResponse() method to root models.
-  </dd>
-
-  <dt>v1.0.8</dt>
-  <dd>
-    2015.03.05.<br/>
-    Improving broken rules response.<br/>
-    Improving validation.<br/>
-    Adding data type conversions.<br/>
-    Fixing bugs in state management.<br/>
-    Fixing a bug in localization.
-  </dd>
-
-  <dt>v1.0.7</dt>
-  <dd>
-    2015.03.02.<br/>
-    Adding extension point to root collections' transfer methods.
-  </dd>
-
-  <dt>v1.0.6</dt>
-  <dd>
-    2015.02.28.<br/>
-    Adding totalItems property to root collection.<br/>
-    Making transaction optional in command execution.<br/>
-    Fixing bugs in custom property functions.
-  </dd>
-
-  <dt>v1.0.5</dt>
-  <dd>
-    2015.02.25.<br/>
-    Fixing a bug in root collection.
-  </dd>
-
-  <dt>v1.0.4</dt>
-  <dd>
-    2015.02.17.<br/>
-    Adding email and enum data types.
-  </dd>
-
-  <dt>v1.0.3</dt>
-  <dd>
-    2015.02.16.<br/>
-    Fixing configuration setup bug.
-  </dd>
-
-  <dt>v1.0.2</dt>
-  <dd>
-    2015.02.15.<br/>
-    Adding configuration setup.
-  </dd>
-
-  <dt>v1.0.1</dt>
-  <dd>
-    2015.02.10.<br/>
-    Fixing locale access bug.
-  </dd>
-
-  <dt>v1.0.0</dt>
-  <dd>
-    2015.02.09.<br/>
-    First public release.
-  </dd>
-</dl>

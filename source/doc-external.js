@@ -250,4 +250,17 @@ var external = {
    */
 
   //endregion
+
+  //region Events
+
+  /**
+   * Executes some actions on an event of a business object instance.
+   *
+   * @typedef external.eventHandler
+   * @type {function}
+   * @this ModelBase
+   * @param {bo.shared.DataPortalEventArgs} context - The context for data portal events.
+   */
+
+  //endregion
 };

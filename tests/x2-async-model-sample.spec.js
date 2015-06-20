@@ -18,7 +18,7 @@ describe('Asynchronous data portal method', function () {
 
   //region Event handlers
 
-  function logEvent (eventArgs, oldObject) {
+  function logEvent (eventArgs) {
     var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
     if (eventArgs.eventName.substr(-4) === 'Save')
       console.log(' :: ' + text);

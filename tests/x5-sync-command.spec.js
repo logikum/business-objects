@@ -9,7 +9,7 @@ var EventHandlerList = require('../source/shared/event-handler-list.js');
 
 describe('Synchronous data portal method', function () {
 
-  function logEvent (eventArgs, oldObject) {
+  function logEvent (eventArgs) {
     var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
     console.log('  : ' + text);
   }
@@ -43,10 +43,10 @@ describe('Synchronous data portal method', function () {
 
     var cmd = RescheduleShippingCommand.create(ehRescheduleShippingCommand);
 
-    cmd.on('preExecute', function (eventArgs, oldObject) {
+    cmd.on('preExecute', function (eventArgs) {
       console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
     });
-    cmd.on('postExecute', function (eventArgs, newObject) {
+    cmd.on('postExecute', function (eventArgs) {
       console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
     });
 

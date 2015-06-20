@@ -207,8 +207,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
     function raiseEvent (event, methodName, error) {
       self.emit(
           DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error),
-          self
+          new DataPortalEventArgs(event, name, null, methodName, error)
       );
     }
 

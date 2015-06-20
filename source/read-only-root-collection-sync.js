@@ -208,8 +208,7 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
     function raiseEvent (event, methodName, error) {
       self.emit(
           DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error),
-          self
+          new DataPortalEventArgs(event, name, null, methodName, error)
       );
     }
 

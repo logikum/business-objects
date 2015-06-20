@@ -18,7 +18,8 @@ describe('Synchronous data portal method', function () {
 
   //region Event handlers
 
-  function logEvent (eventArgs, oldObject) {
+  function logEvent (eventArgs) {
+    var self = this;
     var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
     if (eventArgs.eventName.substr(-4) === 'Save')
       console.log(' :: ' + text);

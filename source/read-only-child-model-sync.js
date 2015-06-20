@@ -273,8 +273,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
     function raiseEvent (event, methodName, error) {
       self.emit(
           DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, properties.name, null, methodName, error),
-          self
+          new DataPortalEventArgs(event, properties.name, null, methodName, error)
       );
     }
 
