@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects v1.0.14 Index</title>
+	<title>business-objects v1.0.15 Index</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -18,7 +18,7 @@
 <div class="container-fluid">
 	<div class="navbar navbar-fixed-top navbar-inverse">
 		<div class="navbar-inner">
-			<a class="brand" href="index.html">business-objects v1.0.14</a>
+			<a class="brand" href="index.html">business-objects v1.0.15</a>
 			<ul class="nav">
 				
 				<li class="dropdown">
@@ -291,6 +291,10 @@
 						
 						<li>
 							<a href="bo.shared.DataStore.html">bo.shared.DataStore</a>
+						</li>
+						
+						<li>
+							<a href="bo.shared.EventHandlerList.html">bo.shared.EventHandlerList</a>
 						</li>
 						
 						<li>
@@ -687,68 +691,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="tutorial-00_toc.html">Table of Contents</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-01_introduction.html">Introduction</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-02_quick-start.html">Quick Start</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-03_models.html">Models</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-04_definitions.html">Model Definitions</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-05_data-types.html">Data Types</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-06_validation.html">Validation</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-07_authorization.html">Authorization</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-08_dao.html">Data Access Objects</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-09_i18n.html">Internationalization</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-10_configuration.html">Configuration</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-11_usage.html">Usage of Business Objects</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-12_misc.html">Miscellaneous</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -788,7 +730,7 @@
     <section class="readme-section">
         <article><h1>Business objects</h1>
 <h3>a JavaScript object-oriented business layer for Node.js</h3>
-<p>See documentation: <a href="http://logikum.github.io/business-objects/"><a href="http://logikum.github.io/business-objects/">http://logikum.github.io/business-objects/</a></a></p>
+<p>See tutorials: <a href="http://bo.logikum.hu"><a href="http://bo.logikum.hu">http://bo.logikum.hu</a></a><br>See class reference: <a href="http://logikum.github.io/business-objects"><a href="http://logikum.github.io/business-objects">http://logikum.github.io/business-objects</a></a></p>
 <h3>Installation</h3>
 <p>If you want to use it in your project:</p>
 <pre><code>$ npm install business-objects</code></pre>
@@ -824,105 +766,7 @@ $ grunt baseline</code></pre>
 <li><a href="http://logikum.github.io/business-objects/ReadOnlyRootCollectionSync.html">Read-only root collection</a></li>
 <li><a href="http://logikum.github.io/business-objects/ReadOnlyChildCollectionSync.html">Read-only child collection</a></li>
 <li><a href="http://logikum.github.io/business-objects/CommandObjectSync.html">Command object</a></li>
-</ul>
-<h3>Release History</h3>
-<dl>
-  <dt>v1.0.14</dt>
-  <dd>
-    2015.05.17.<br/>
-    Fixing some bugs in asynchronous fromCto methods.
-  </dd>
-
-  <dt>v1.0.13</dt>
-  <dd>
-    2015.04.15.<br/>
-    Adding modelName argument to daoBuilder function.
-  </dd>
-
-  <dt>v1.0.12</dt>
-  <dd>
-    2015.03.29.<br/>
-    Allowing tree reference in child collections.
-  </dd>
-
-  <dt>v1.0.11</dt>
-  <dd>
-    2015.03.12.<br/>
-    Converting object state properties to functions.
-  </dd>
-
-  <dt>v1.0.10</dt>
-  <dd>
-    2015.03.09.<br/>
-    Fixing a bug in property management.
-  </dd>
-
-  <dt>v1.0.9</dt>
-  <dd>
-    2015.03.09.<br/>
-    Adding getResponse() method to root models.
-  </dd>
-
-  <dt>v1.0.8</dt>
-  <dd>
-    2015.03.05.<br/>
-    Improving broken rules response.<br/>
-    Improving validation.<br/>
-    Adding data type conversions.<br/>
-    Fixing bugs in state management.<br/>
-    Fixing a bug in localization.
-  </dd>
-
-  <dt>v1.0.7</dt>
-  <dd>
-    2015.03.02.<br/>
-    Adding extension point to root collections' transfer methods.
-  </dd>
-
-  <dt>v1.0.6</dt>
-  <dd>
-    2015.02.28.<br/>
-    Adding totalItems property to root collection.<br/>
-    Making transaction optional in command execution.<br/>
-    Fixing bugs in custom property functions.
-  </dd>
-
-  <dt>v1.0.5</dt>
-  <dd>
-    2015.02.25.<br/>
-    Fixing a bug in root collection.
-  </dd>
-
-  <dt>v1.0.4</dt>
-  <dd>
-    2015.02.17.<br/>
-    Adding email and enum data types.
-  </dd>
-
-  <dt>v1.0.3</dt>
-  <dd>
-    2015.02.16.<br/>
-    Fixing configuration setup bug.
-  </dd>
-
-  <dt>v1.0.2</dt>
-  <dd>
-    2015.02.15.<br/>
-    Adding configuration setup.
-  </dd>
-
-  <dt>v1.0.1</dt>
-  <dd>
-    2015.02.10.<br/>
-    Fixing locale access bug.
-  </dd>
-
-  <dt>v1.0.0</dt>
-  <dd>
-    2015.02.09.<br/>
-    First public release.
-  </dd>
-</dl></article>
+</ul></article>
     </section>
 
 
@@ -947,7 +791,7 @@ $ grunt baseline</code></pre>
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on May 17, 2015 using the <a
+		on 2015. June 20. using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>

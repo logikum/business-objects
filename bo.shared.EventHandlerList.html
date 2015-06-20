@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>business-objects v1.0.14 tutorialPredefined Authorization Rules</title>
+	<title>business-objects v1.0.15 Class: EventHandlerList</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -18,7 +18,7 @@
 <div class="container-fluid">
 	<div class="navbar navbar-fixed-top navbar-inverse">
 		<div class="navbar-inner">
-			<a class="brand" href="index.html">business-objects v1.0.14</a>
+			<a class="brand" href="index.html">business-objects v1.0.15</a>
 			<ul class="nav">
 				
 				<li class="dropdown">
@@ -291,6 +291,10 @@
 						
 						<li>
 							<a href="bo.shared.DataStore.html">bo.shared.DataStore</a>
+						</li>
+						
+						<li>
+							<a href="bo.shared.EventHandlerList.html">bo.shared.EventHandlerList</a>
 						</li>
 						
 						<li>
@@ -687,68 +691,6 @@
 					</ul>
 				</li>
 				
-				<li class="dropdown">
-					<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b
-						class="caret"></b></a>
-
-					<ul class="dropdown-menu ">
-						
-						<li>
-							<a href="tutorial-00_toc.html">Table of Contents</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-01_introduction.html">Introduction</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-02_quick-start.html">Quick Start</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-03_models.html">Models</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-04_definitions.html">Model Definitions</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-05_data-types.html">Data Types</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-06_validation.html">Validation</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-07_authorization.html">Authorization</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-08_dao.html">Data Access Objects</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-09_i18n.html">Internationalization</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-10_configuration.html">Configuration</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-11_usage.html">Usage of Business Objects</a>
-						</li>
-						
-						<li>
-							<a href="tutorial-12_misc.html">Miscellaneous</a>
-						</li>
-						
-
-					</ul>
-				</li>
-				
 			</ul>
 		</div>
 	</div>
@@ -756,24 +698,451 @@
 	<div class="row-fluid">
 
 		
-			<div class="span12">
-				
+		<div class="span8">
+			
 				<div id="main">
-					<section class="tutorial-section">
+					
+
+
+	<h1 class="page-title">Class: EventHandlerList</h1>
+<section>
 
 <header>
-  <!--
+    <h2>
+        <span class="ancestors"><a href="bo.html">bo</a><a href="bo.shared.html">.shared</a>.</span>
     
-  -->
-    <h2>Predefined Authorization Rules</h2>
+    EventHandlerList
+    </h2>
+    
+        <div class="class-description"><p>Provides methods to manage the event handlers of a business object instance.</p></div>
+    
 </header>
 
 <article>
-    <p><a href="tutorial-00_toc.html">Table of Contents</a> > <a href="tutorial-07_authorization.html">Authorization</a> > Predefined Authorization Rules</p>
-<p>TODO</p>
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <h4 class="name" id="EventHandlerList"><span class="type-signature"></span>new EventHandlerList<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Creates a new event handler list object.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <h4 class="name" id="add"><span class="type-signature"></span>add<span class="signature">(modelName, event, handler)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Adds a new event handler to to list.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>modelName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The name of the business object model.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="bo.shared.DataPortalEvent.html">bo.shared.DataPortalEvent</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The event to listen.</p></td>
+        </tr>
+
+	
+
+        <tr>
+            
+                <td class="name"><code>handler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="external.html#eventHandler">external.eventHandler</a></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A function to be invoked when the event is emitted.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The model name must be a non-empty string.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The event must be a DataPortalEvent member.
+    
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The handler must be a function.
+    
+    </div>
+
+</li>
+        </ul>
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="setup"><span class="type-signature">&lt;protected> </span>setup<span class="signature">(target)</span><span class="type-signature"></span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        <p>Adds the event handlers with the model name of the target object
+to the target object for all events. This method is called by models
+internally to set up the event handlers.</p>
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+
+		<th>Type</th>
+
+		
+
+		
+
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+
+	<tbody>
+	
+
+        <tr>
+            
+                <td class="name"><code>target</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">bo.ModalBase</span>
+|
+
+<span class="param-type">bo.CollectionBase</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>A business object instance.</p></td>
+        </tr>
+
+	
+	</tbody>
+</table>
+
+    
+    
+    
+<dl class="details">
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    <h5>Throws:</h5>
+    
+            
+
+    <div class="param-desc">
+    
+        <a href="bo.system.ArgumentError.html">Argument error</a>: The model name must be a non-empty string.
+    
+    </div>
+
+
+        
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
 </article>
 
 </section>
+
+
+
 
 				</div>
 
@@ -791,12 +1160,16 @@
 					
 		<span class="jsdoc-message">
 		Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a>
-		on May 17, 2015 using the <a
+		on 2015. June 20. using the <a
 			href="https://github.com/terryweiss/docstrap">DocStrap template</a>.
 		</span>
 				</footer>
 			</div>
 
+			
+			<div class="span3">
+				<div id="toc"></div>
+			</div>
 			
 			<br clear="both">
 		</div>
