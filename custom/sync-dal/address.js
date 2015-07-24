@@ -21,7 +21,8 @@ AddressDao.prototype.create = function(connection) {
   };
 };
 
-AddressDao.prototype.fetch = function(connection, filter) {
+/* Special fetch method for test circumstances. */
+AddressDao.prototype.fetchForOrder = function(connection, filter) {
   console.log('--- Blanket order address DAO.fetch');
 
   for (var key in global.addresses) {

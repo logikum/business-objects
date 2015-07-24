@@ -32,7 +32,7 @@ BlanketOrderDao.prototype.fetch = function(connection, filter, callback) {
   }
 
   var order = global.orders[key];
-  daoAddress.fetch(connection, order.orderKey, function (err, address) {
+  daoAddress.fetchForOrder(connection, order.orderKey, function (err, address) {
     if (err) {
       callback(err);
       return;
@@ -74,7 +74,7 @@ BlanketOrderDao.prototype.fetchByName = function(connection, filter, callback) {
       if (order.vendorName === filter) {
         found = true;
 
-        daoAddress.fetch(connection, order.orderKey, function (err, address) {
+        daoAddress.fetchForOrder(connection, order.orderKey, function (err, address) {
           if (err) {
             callback(err);
             return;

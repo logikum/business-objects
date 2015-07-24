@@ -36,7 +36,7 @@ BlanketOrderDao.prototype.fetch = function(connection, filter) {
     throw new Error('Blanket order not found.');
 
   var order = global.orders[key];
-  order.address = daoAddress.fetch(connection, order.orderKey);
+  order.address = daoAddress.fetchForOrder(connection, order.orderKey);
   order.items = daoOrderItem.fetchForOrder(connection, order.orderKey);
   for (var i = 0; i < order.items.length; i++) {
     var item = order.items[i];
@@ -54,7 +54,7 @@ BlanketOrderDao.prototype.fetchByName = function(connection, filter) {
       var order = global.orders[key];
       if (order.vendorName === filter) {
 
-        order.address = daoAddress.fetch(connection, order.orderKey);
+        order.address = daoAddress.fetchForOrder(connection, order.orderKey);
         order.items = daoOrderItem.fetchForOrder(connection, order.orderKey);
         for (var i = 0; i < order.items.length; i++) {
           var item = order.items[i];

@@ -14,15 +14,7 @@ BlanketOrderScheduleDao.prototype.create = function(connection, callback) {
   callback(null, {});
 };
 
-BlanketOrderScheduleDao.prototype.fetch = function(connection, filter, callback) {
-  console.log('--- Blanket order schedule DAO.fetch');
-
-  if (!global.schedules[filter])
-    callback(new Error('Blanket order schedule not found.'));
-  else
-    callback(null, global.schedules[filter]);
-};
-
+/* Special fetch method for test circumstances. */
 BlanketOrderScheduleDao.prototype.fetchForItem = function(connection, filter, callback) {
   console.log('--- Blanket order schedule DAO.fetchForItem');
 

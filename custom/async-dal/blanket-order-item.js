@@ -20,15 +20,7 @@ BlanketOrderItemDao.prototype.create = function(connection, callback) {
   });
 };
 
-BlanketOrderItemDao.prototype.fetch = function(connection, filter, callback) {
-  console.log('--- Blanket order item DAO.fetch');
-
-  if (!global.items[filter])
-    callback(new Error('Blanket order item not found.'));
-  else
-    callback(null, global.items[filter]);
-};
-
+/* Special fetch method for test circumstances. */
 BlanketOrderItemDao.prototype.fetchForOrder = function(connection, filter, callback) {
   console.log('--- Blanket order item DAO.fetchForOrder');
 
