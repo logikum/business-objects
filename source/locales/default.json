@@ -25,8 +25,8 @@
     "enumMember": "The argument must be a {0} item.",
     "optArray": "The argument must be an array of {0} objects, or a single {0} object or null.",
     "manArray": "The argument must be an array of {0} objects or a single {0} object.",
-    "optArrayPrim": "The argument must be an array of {0} values, or a single {0} values or null.",
-    "manArrayPrim": "The argument must be an array of {0} values or a single {0} values.",
+    "optArrayPrim": "The argument must be an array of {0} values, or a single {0} value or null.",
+    "manArrayPrim": "The argument must be an array of {0} values or a single {0} value.",
 
     "c_defined": "The {1} argument of {0} constructor must be supplied.",
     "c_required": "The {1} argument of {0} constructor is required.",

@@ -1,5 +1,9 @@
 # Release History
 
+* __v1.0.16__  
+  2015.08.11.  
+  Adding Hungarian locales.  
+  
 * __v1.0.15__  
   2015.06.20.  
   Improving event handling and documentation.  
