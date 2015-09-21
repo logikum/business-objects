@@ -14,7 +14,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @constructor
  * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
  * @param {string} message - Human-readable description of the rule failure.
- * @param {number} [priority=100] - The priority of the rule.
+ * @param {number} [priority=50] - The priority of the rule.
  * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
  *
  * @extends bo.rules.ValidationRule
@@ -29,7 +29,7 @@ function RequiredRule (primaryProperty, message, priority, stopsProcessing) {
   this.initialize(
       primaryProperty,
       message || t('required', primaryProperty.name),
-      priority || 100,
+      priority || 50,
       stopsProcessing
   );
 

@@ -141,7 +141,7 @@
     "lengthIs1": "The length of property {0} has to be 1 character.",
     "maxLength": "The length of property {0} cannot exceed {1} characters.",
     "maxLength1": "The length of property {0} cannot exceed 1 character.",
-    "maxValue": "The value of property {0} cannot exceed {1}.'",
+    "maxValue": "The value of property {0} cannot exceed {1}.",
     "minLength": "The length of property {0} has to be {1} characters at least.",
     "minLength1": "The length of property {0} has to be 1 character at least.",
     "minValue": "The value of property {0} has to be {1} at least.",

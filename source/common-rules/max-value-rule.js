@@ -18,7 +18,7 @@ var ValidationRule = require('../rules/validation-rule.js');
  * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
  * @param {number} maxValue - The maximum value of the property.
  * @param {string} message - Human-readable description of the rule failure.
- * @param {number} [priority] - The priority of the rule.
+ * @param {number} [priority=10] - The priority of the rule.
  * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
  *
  * @extends bo.rules.ValidationRule

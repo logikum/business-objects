@@ -1,5 +1,8 @@
 'use strict';
 
+var util = require('util');
+var Enumeration = require('./../system/enumeration.js');
+
 /**
  * @classdesc Represents the eligible attributes of
  *    a {@link bo.shared.PropertyInfo property definition}.
@@ -12,6 +15,7 @@
  * @extends bo.system.Enumeration
  */
 function PropertyFlag () {
+  Enumeration.call(this);
 
   /**
    * None of the property flags.
@@ -59,5 +63,6 @@ function PropertyFlag () {
   // Immutable object.
   Object.freeze(this);
 }
+util.inherits(PropertyFlag, Enumeration);
 
 module.exports = new PropertyFlag();

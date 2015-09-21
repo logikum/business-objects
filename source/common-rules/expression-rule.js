@@ -20,7 +20,7 @@ var NullResultOption = require('./null-result-option.js');
  * @param {regexp} regex - The regular expression that specifies the rule.
  * @param {bo.commonRules.NullResultOption} option - The action to execute when the value is null.
  * @param {string} message - Human-readable description of the rule failure.
- * @param {number} [priority=100] - The priority of the rule.
+ * @param {number} [priority=10] - The priority of the rule.
  * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
  *
  * @extends bo.rules.ValidationRule

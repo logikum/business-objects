@@ -22,7 +22,7 @@ var PropertyInfo = require('../shared/property-info.js');
  * @param {(bo.shared.PropertyInfo|Array.<bo.shared.PropertyInfo>)} dependencies -
  *    A single dependent property or an array of them.
  * @param {string} message - Human-readable description of the rule failure.
- * @param {number} [priority] - The priority of the rule.
+ * @param {number} [priority=-100] - The priority of the rule.
  * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
  *
  * @extends bo.rules.ValidationRule

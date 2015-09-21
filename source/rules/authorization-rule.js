@@ -67,7 +67,7 @@ function AuthorizationRule (ruleName) {
    * @param {bo.rules.AuthorizationAction} action - The action to be authorized.
    * @param {(bo.shared.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
    * @param {string} message - Human-readable description of the rule failure.
-   * @param {number} [priority=10] - The priority of the rule.
+   * @param {number} [priority=100] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The action must be a AuthorizationAction item.
@@ -99,7 +99,7 @@ function AuthorizationRule (ruleName) {
     }
 
     // Initialize base properties.
-    RuleBase.prototype.initialize.call(this, message, priority, stopsProcessing);
+    RuleBase.prototype.initialize.call(this, message, priority || 100, stopsProcessing);
   };
 
   function behaviorToSeverity() {
