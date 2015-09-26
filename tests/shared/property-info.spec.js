@@ -60,4 +60,11 @@ describe('Property description', function() {
     expect(pi.isOnDto).toBe(true);
     expect(pi.isOnCto).toBe(true);
   });
+
+  it('hasValue method works', function() {
+    expect(pi.hasValue(null)).toBe(false);
+    expect(pi.hasValue(undefined)).toBe(false);
+    expect(pi.hasValue('')).toBe(false);
+    expect(pi.hasValue('hasValue')).toBe(true);
+  });
 });

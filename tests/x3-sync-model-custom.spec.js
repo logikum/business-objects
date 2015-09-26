@@ -20,11 +20,11 @@ describe('Synchronous data portal method', function () {
 
   function logEvent (eventArgs) {
     var self = this;
-    var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
+    var id = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName;
     if (eventArgs.eventName.substr(-4) === 'Save')
-      console.log(' :: ' + text);
+      console.log(' :: ' + id + ' event.');
     else
-      console.log('  : ' + text);
+      console.log('  : ' + id + ' event.');
   }
 
   var ehBlanketOrder = new EventHandlerList();

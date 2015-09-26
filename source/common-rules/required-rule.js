@@ -50,7 +50,7 @@ RequiredRule.prototype.execute = function (inputs) {
 
   var value = inputs[this.primaryProperty.name];
 
-  if (!this.primaryProperty.type.hasValue(value))
+  if (!this.primaryProperty.hasValue(value))
     return this.result(this.message);
 };
 

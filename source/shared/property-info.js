@@ -115,6 +115,18 @@ function PropertyInfo (name, type, flags, getter, setter) {
    */
   this.isOnCto = (flags & PropertyFlag.notOnCto) === PropertyFlag.none;
 
+  /**
+   * Checks if value has the appropriate type and it is not null,
+   * and not empty in case of Text data type.
+   *
+   * @function bo.shared.PropertyInfo#hasValue
+   * @param {data} value - The value to check.
+   * @returns {boolean} True if the value is neither null nor empty, otherwise false.
+   */
+  this.hasValue = function (value) {
+    return this.type.hasValue(value);
+  };
+
   // Immutable object.
   Object.freeze(this);
 }

@@ -90,7 +90,10 @@ function ValidationRule (ruleName) {
 
   /**
    * Returns the values of the properties that are used by the rule.
+   * This method is called by the rule manager internally to provide
+   * the values of the input properties for the execute() method.
    *
+   * @protected
    * @param {internal~getValue} getValue - A function that returns the value of a property.
    * @returns {object} An object that properties hold the values of the input properties of.
    *

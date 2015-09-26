@@ -382,8 +382,9 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
     this.checkRules = function() {
       brokenRules.clear();
 
+      var context = new ValidationContext(store, brokenRules);
       properties.forEach(function(property) {
-        rules.validate(property, new ValidationContext(store, brokenRules));
+        rules.validate(property, context);
       });
       checkChildRules();
 

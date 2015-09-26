@@ -10,8 +10,8 @@ var EventHandlerList = require('../source/shared/event-handler-list.js');
 describe('Asynchronous data portal method', function () {
 
   function logEvent (eventArgs) {
-    var text = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName + ' event.';
-    console.log('  : ' + text);
+    var id = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName;
+    console.log('  : ' + id + ' event.');
   }
 
   var ehClearScheduleCommand = new EventHandlerList();
@@ -51,13 +51,6 @@ describe('Asynchronous data portal method', function () {
     console.log('\n*** Asynchronous RESCHEDULE');
 
     RescheduleShippingCommand.create(ehRescheduleShippingCommand, function (err, cmd) {
-
-      cmd.on('preExecute', function (eventArgs, oldObject) {
-        console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
-      });
-      cmd.on('postExecute', function (eventArgs, newObject) {
-        console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
-      });
 
       cmd.orderKey = 1;
       cmd.orderItemKey = 2;
