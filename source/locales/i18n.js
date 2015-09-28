@@ -41,10 +41,14 @@ function readLocales (namespace, localePath) {
 }
 
 // Read business-objects locales.
-if (fs.existsSync(path.join(process.cwd(), 'source/locales')))
-  readLocales(NS_BO, path.join(process.cwd(), 'source/locales'));
-else
-  readLocales(NS_BO, path.join(process.cwd(), 'node_modules/business-objects/source/locales'));
+var bolDirectories = ['node_modules/business-objects/locales', 'source/locales', 'locales'];
+for (var i = 0; i < bolDirectories.length; i++) {
+  var bolDirectory = bolDirectories[i];
+  if (fs.existsSync(path.join(process.cwd(), bolDirectory))) {
+    readLocales(NS_BO, path.join(process.cwd(), bolDirectory));
+    break;
+  }
+}
 
 //endregion
 

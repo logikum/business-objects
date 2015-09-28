@@ -8,22 +8,8 @@
   "homepage": "https://bo.logikum.hu",
   "license": "MIT",
   "author": "Mármarosi József <marmarosi@logikum.hu>",
-  "main": "source/index.js",
-  "scripts": {
-    "test": "jasmine-node ./tests",
-    "documentation": "grunt default"
-  },
+  "main": "index.js",
   "dependencies": {},
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-exec": "^0.4.6",
-    "grunt-jsdoc": "^0.5.7",
-    "grunt-remove-plus-remove-empty": "^0.2.0",
-    "ink-docstrap": "^0.5.2",
-    "jasmine-node": "^1.14.5",
-    "jsdoc": "^3.3.0-beta1",
-    "jsdoc-baseline": "https://github.com/hegemonic/baseline/tarball/master"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/logikum/business-objects.git"
