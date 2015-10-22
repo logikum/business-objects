@@ -79,7 +79,9 @@
     "c_pm": "Az első kivételével a PropertyManager konstruktor összes paraméterének PropertyInfo objektumnak kell lennie.",
     "m_property": "A {0} objektumnak nincs {1} nevű tulajdonsága.",
     "m_notInit": "A {0}.{1} eljárás {2} paramétere nincs inicializálva.",
-    "m_null": "A {0}.{1} eljárás {2} paraméterének nullnak kell lennie."
+    "m_null": "A {0}.{1} eljárás {2} paraméterének nullnak kell lennie.",
+    "p_enumMember": "A {0}.{1} tulajdonság értékének egy {2} elemnek kell lennie.",
+    "p_optString": "A {0}.{1} tulajdonság értékének szövegnek vagy nullnak kell lennie."
   },
   "ConfigurationError": {
     "default": "Hiba van az üzleti objektumok konfigurációjában.",

@@ -79,7 +79,9 @@
     "c_pm": "All arguments of PropertyManager constructor but the first must be a PropertyInfo object.",
     "m_property": "The {0} object has no property named {1}.",
     "m_notInit": "The {2} argument of {0}.{1} method is not initialized.",
-    "m_null": "The {2} argument of {0}.{1} method must be null."
+    "m_null": "The {2} argument of {0}.{1} method must be null.",
+    "p_enumMember": "The value of {0}.{1} property must be a {2} item.",
+    "p_optString": "The value of {0}.{1} property must be a string or null."
   },
   "ConfigurationError": {
     "default": "An error occurred in the business objects' configuration.",

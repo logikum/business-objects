@@ -1,5 +1,16 @@
 # Release History
 
+* __v1.0.18__  
+  2015.10.22.  
+  Using partial localization files.
+  Restoring missing locales.  
+  
+* __v1.0.17__  
+  2015.09.26.  
+  Improving validation.
+  Renaming Hungarian locales.  
+  Improving tests and documentation.
+  
 * __v1.0.17__  
   2015.09.26.  
   Improving validation.

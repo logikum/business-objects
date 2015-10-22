@@ -38,6 +38,35 @@ function readLocales (namespace, localePath) {
     //if (fs.statSync(filePath).isFile())
       locales[namespace][path.basename(fileName, '.json')] = require(filePath);
   });
+  mergeLocales(namespace);
+}
+
+function mergeLocales (namespace) {
+  for (var langExt in locales[namespace]) {
+    if( locales[namespace].hasOwnProperty( langExt ) ) {
+      var ix = langExt.indexOf('.');
+      if (ix > 0) {
+        // It is an extension.
+        var langBase = langExt.substr(0, ix);
+        var objExt = locales[namespace][langExt];
+        var objBase = locales[namespace][langBase];
+        if (!objBase)
+          objBase = { };
+        // Copy items to base language.
+        for (var key in objExt) {
+          if( objExt.hasOwnProperty( key ) ) {
+            if (objBase[key])
+              console.log('Duplicated locale: ' + namespace + '["' + langExt + '"].' + key +
+                ' => ' + namespace + '.' + langBase + '.' + key);
+            else
+              objBase[key] = objExt[key];
+          }
+        }
+        // Remove extension.
+        delete locales[namespace][langExt];
+      }
+    }
+  }
 }
 
 // Read business-objects locales.
