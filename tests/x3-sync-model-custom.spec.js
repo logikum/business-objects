@@ -111,7 +111,7 @@ describe('Synchronous data portal method', function () {
     address.line2 = '';
     address.postalCode = 'M5J 1E3';
 
-    var item1 = order.items.create();
+    var item1 = order.items.createItem();
 
     item1.productName = 'Tablet Creek 7';
     item1.obsolete = false;
@@ -119,7 +119,7 @@ describe('Synchronous data portal method', function () {
     item1.quantity = 2;
     item1.unitPrice = 200;
 
-    var item2 = order.items.create();
+    var item2 = order.items.createItem();
 
     item2.productName = 'USB 3.0 cable';
     item2.obsolete = false;
@@ -127,7 +127,7 @@ describe('Synchronous data portal method', function () {
     item2.quantity = 5;
     item2.unitPrice = 19.5;
 
-    var schedule1 = item2.schedules.create();
+    var schedule1 = item2.schedules.createItem();
 
     schedule1.quantity = 2;
     schedule1.totalMass = 0.24;
@@ -135,7 +135,7 @@ describe('Synchronous data portal method', function () {
     schedule1.shipTo = 'Madrid';
     schedule1.shipDate = shipDate1;
 
-    var schedule2 = item2.schedules.create();
+    var schedule2 = item2.schedules.createItem();
 
     schedule2.quantity = 3;
     schedule2.totalMass = 0.36;
@@ -684,7 +684,7 @@ describe('Synchronous data portal method', function () {
     item2.quantity = 11;
     item2.unitPrice = 49.5;
 
-    var item3 = order.items.create();
+    var item3 = order.items.createItem();
 
     item3.productName = 'DataExpert 32GB pen drive';
     item3.obsolete = false;
@@ -703,7 +703,7 @@ describe('Synchronous data portal method', function () {
     schedule2.shipTo = 'Stockholm';
     schedule2.shipDate = shipDate1;
 
-    var schedule3 = item2.schedules.create();
+    var schedule3 = item2.schedules.createItem();
 
     schedule3.quantity = 7;
     schedule3.totalMass = 0.84;
@@ -711,7 +711,7 @@ describe('Synchronous data portal method', function () {
     schedule3.shipTo = 'Vienna';
     schedule3.shipDate = shipDate2;
 
-    var schedule4 = item3.schedules.create();
+    var schedule4 = item3.schedules.createItem();
 
     schedule4.quantity = 4;
     schedule4.totalMass = 0.06;

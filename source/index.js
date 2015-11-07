@@ -14,6 +14,7 @@ var CommandObject = require('./command-object.js');
 
 var EditableRootModelSync = require('./editable-root-model-sync.js');
 var EditableChildModelSync = require('./editable-child-model-sync.js');
+var EditableRootCollectionSync = require('./editable-root-collection-sync.js');
 var EditableChildCollectionSync = require('./editable-child-collection-sync.js');
 var ReadOnlyRootModelSync = require('./read-only-root-model-sync.js');
 var ReadOnlyChildModelSync = require('./read-only-child-model-sync.js');
@@ -69,6 +70,7 @@ var index = {
 
   EditableRootModelSync: EditableRootModelSync,
   EditableChildModelSync: EditableChildModelSync,
+  EditableRootCollectionSync: EditableRootCollectionSync,
   EditableChildCollectionSync: EditableChildCollectionSync,
   ReadOnlyRootModelSync: ReadOnlyRootModelSync,
   ReadOnlyChildModelSync: ReadOnlyChildModelSync,

@@ -121,7 +121,7 @@ var EditableChildModelFactory = function (properties, rules, extensions) {
     // Verify the model type of the parent model.
     parent = EnsureArgument.isModelType(parent,
         [
-          //'EditableRootCollection',
+          'EditableRootCollection',
           'EditableChildCollection',
           'EditableRootModel',
           'EditableChildModel'

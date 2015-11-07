@@ -463,7 +463,7 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
      * @param {external.cbCompare} [fnCompare] - Function that defines the sort order.
      *      If omitted, the collection is sorted according to each character's Unicode
      *      code point value, according to the string conversion of each item.
-     * @returns {ReadOnlyRootCollectionSync} The sorted collection.
+     * @returns {Array.<ReadOnlyChildModelSync>} The sorted collection.
      */
     this.sort = function (fnCompare) {
       return items.sort(fnCompare);

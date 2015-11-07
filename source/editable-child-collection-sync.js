@@ -177,14 +177,17 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
     //region Actions
 
     /**
-     * Creates a new item in the collection.
+     * Creates a new item and adds it to the collection at the specified index.
      *
      * @function EditableChildCollectionSync#create
+     * @param {number} index - The index of the new item.
      * @returns {EditableChildModelSync} The newly created business object.
      */
-    this.create = function () {
+    this.createItem = function (index) {
       var item = itemType.create(parent, eventHandlers);
-      items.push(item);
+      var ix = parseInt(index, 10);
+      ix = isNaN(ix) ? items.length : ix;
+      items.splice(ix, 0, item);
       return item;
     };
 

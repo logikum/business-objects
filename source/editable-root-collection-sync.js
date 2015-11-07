@@ -10,6 +10,7 @@ var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
 var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var EventHandlerList = require('./shared/event-handler-list.js');
+var DataStore = require('./shared/data-store.js');
 
 var TransferContext = require('./shared/transfer-context.js');
 
@@ -60,6 +61,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
     var state = null;
     var isDirty = false;
     var items = [];
+    var store = new DataStore();
     var brokenRules = new BrokenRuleList(name);
     var isValidated = false;
     var dataContext = null;
@@ -274,6 +276,112 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
 
     //endregion
 
+    //region Transfer object methods
+
+    function getTransferContext (authorize) {
+      return authorize ?
+          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue) :
+          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
+    }
+
+    function baseToDto() {
+      var dto = {};
+      properties.filter(function (property) {
+        return property.isOnDto;
+      }).forEach(function (property) {
+        dto[property.name] = getPropertyValue(property);
+      });
+      return dto;
+    }
+
+    function toDto () {
+      if (extensions.toDto)
+        return extensions.toDto.call(self, getTransferContext(false));
+      else
+        return baseToDto();
+    }
+
+    function baseFromDto(dto) {
+      properties.filter(function (property) {
+        return property.isOnDto;
+      }).forEach(function (property) {
+        if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
+          setPropertyValue(property, dto[property.name]);
+        }
+      });
+    }
+
+    function fromDto (dto) {
+      if (extensions.fromDto)
+        extensions.fromDto.call(self, getTransferContext(false), dto);
+      else
+        baseFromDto(dto);
+    }
+
+    function baseToCto() {
+      var cto = {};
+      properties.filter(function (property) {
+        return property.isOnCto;
+      }).forEach(function (property) {
+        cto[property.name] = readPropertyValue(property);
+      });
+      return cto;
+    }
+
+    /**
+     * Transforms the business object to a plain object to send to the client.
+     *
+     * @function EditableRootModelSync#toCto
+     * @returns {object} The client transfer object.
+     */
+    this.toCto = function () {
+      var cto = {};
+      if (extensions.toCto)
+        cto = extensions.toCto.call(self, getTransferContext(true));
+      else
+        cto = baseToCto();
+
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        cto[property.name] = child.toCto();
+      });
+      return cto;
+    };
+
+    function baseFromCto(cto) {
+      if (cto && typeof cto === 'object') {
+        properties.filter(function (property) {
+          return property.isOnCto;
+        }).forEach(function (property) {
+          if (cto.hasOwnProperty(property.name) && typeof cto[property.name] !== 'function') {
+            writePropertyValue(property, cto[property.name]);
+          }
+        });
+      }
+    }
+
+    /**
+     * Rebuilds the business object from a plain object sent by the client.
+     *
+     * @function EditableRootModelSync#fromCto
+     * @param {object} cto - The client transfer object.
+     */
+    this.fromCto = function (cto) {
+      if (extensions.fromCto)
+        extensions.fromCto.call(self, getTransferContext(true), cto);
+      else
+        baseFromCto(cto);
+
+      properties.children().forEach(function (property) {
+        var child = getPropertyValue(property);
+        if (cto[property.name]) {
+          child.fromCto(cto[property.name]);
+        }
+      });
+    };
+
+    //endregion
+
     //region Permissions
 
     function getAuthorizationContext(action, targetName) {
@@ -297,49 +405,43 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
     //region Child methods
 
     function fetchChildren (dto) {
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        child.fetch(dto[property.name]);
+      items.forEach(function (item) {
+        item.fetch(dto[property.name]);
       });
     }
 
     function insertChildren (connection) {
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        child.save(connection);
+      items.forEach(function (item) {
+        item.save(connection);
       });
     }
 
     function updateChildren (connection) {
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        child.save(connection);
+      items.forEach(function (item) {
+        item.save(connection);
       });
     }
 
     function removeChildren (connection) {
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        child.save(connection);
+      items.forEach(function (item) {
+        item.save(connection);
       });
     }
 
     function childrenAreValid () {
-      return properties.children().every(function(property) {
-        var child = getPropertyValue(property);
-        return child.isValid();
+      return items.every(function (item) {
+        return item.isValid();
       });
     }
 
     function checkChildRules () {
-      properties.children().forEach(function (property) {
-        var child = getPropertyValue(property);
-        child.checkRules();
+      items.forEach(function (item) {
+        item.checkRules();
       });
     }
 
     function getChildBrokenRules (namespace, bro) {
-      properties.children().forEach(function (property) {
+      items.forEach(function (property) {
         var child = getPropertyValue(property);
         var childBrokenRules = child.getBrokenRules(namespace);
         if (childBrokenRules) {
@@ -351,6 +453,316 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
       });
       return bro;
     }
+
+    //endregion
+
+    //region Data portal methods
+
+    //region Helper
+
+    function getDataContext (connection) {
+      if (!dataContext)
+        dataContext = new DataPortalContext(dao);
+      return dataContext.setState(connection, false);
+    }
+
+    function raiseEvent (event, methodName, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, name, null, methodName, error)
+      );
+    }
+
+    function raiseSave (event, action, error) {
+      self.emit(
+          DataPortalEvent.getName(event),
+          new DataPortalEventArgs(event, name, action, null, error)
+      );
+    }
+
+    function wrapError (error) {
+      return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
+    }
+
+    //endregion
+
+    //region Create
+
+    function data_create () {
+      //if (extensions.dataCreate || dao.$hasCreate()) {
+        try {
+          // Open connection.
+          connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Launch start event.
+          /**
+           * The event arises before the business object collection will be initialized in the repository.
+           * @event EditableRootCollectionSync#preCreate
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
+           */
+          raiseEvent(DataPortalEvent.preCreate);
+          // Execute creation.
+          //if (extensions.dataCreate) {
+          //  // *** Custom creation.
+          //  extensions.dataCreate.call(self, getDataContext(connection));
+          //} else {
+          //  // *** Standard creation.
+          //  var dto = dao.$runMethod('create', connection);
+          //  fromDto.call(self, dto);
+          //}
+          markAsCreated();
+          // Launch finish event.
+          /**
+           * The event arises after the business object collection has been initialized in the repository.
+           * @event EditableRootCollectionSync#postCreate
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} newObject - The instance of the collection after the data portal action.
+           */
+          raiseEvent(DataPortalEvent.postCreate);
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.create, e);
+          // Launch finish event.
+          if (connection)
+            raiseEvent(DataPortalEvent.postCreate, null, dpError);
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+          // Rethrow error.
+          throw dpError;
+        }
+      //}
+    }
+
+    //endregion
+
+    //region Fetch
+
+    function data_fetch (filter, method) {
+      // Check permissions.
+      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
+        try {
+          // Open connection.
+          connection = config.connectionManager.openConnection(extensions.dataSource);
+          // Launch start event.
+          /**
+           * The event arises before the collection instance will be retrieved from the repository.
+           * @event EditableRootCollectionSync#preFetch
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} oldObject - The collection instance before the data portal action.
+           */
+          raiseEvent(DataPortalEvent.preFetch, method);
+          // Execute fetch.
+          var dto = null;
+          if (extensions.dataFetch) {
+            // *** Custom fetch.
+            dto = extensions.dataFetch.call(self, getDataContext(connection), filter, method);
+          } else {
+            // *** Standard fetch.
+            // Root element fetches data from repository.
+            dto = dao.$runMethod(method, connection, filter);
+          }
+          // Load children.
+          if (dto instanceof Array) {
+            dto.forEach(function (data) {
+              var item = itemType.load(self, data, eventHandlers);
+              items.push(item);
+            });
+          }
+          markAsPristine();
+          // Launch finish event.
+          /**
+           * The event arises after the collection instance has been retrieved from the repository.
+           * @event EditableRootCollectionSync#postFetch
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} newObject - The collection instance after the data portal action.
+           */
+          raiseEvent(DataPortalEvent.postFetch, method);
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(e);
+          // Launch finish event.
+          raiseEvent(DataPortalEvent.postFetch, method, dpError);
+          // Close connection.
+          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+          // Rethrow error.
+          throw dpError;
+        }
+      }
+    }
+
+    //endregion
+
+    //region Insert
+
+    function data_insert () {
+      // Check permissions.
+      if (canDo(AuthorizationAction.createObject)) {
+        try {
+          // Start transaction.
+          connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Launch start event.
+          raiseSave(DataPortalEvent.preSave, DataPortalAction.insert);
+          /**
+           * The event arises before the business object collection will be created in the repository.
+           * @event EditableRootCollectionSync#preInsert
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
+           */
+          raiseEvent(DataPortalEvent.preInsert);
+          // Execute insert.
+          //if (extensions.dataInsert) {
+          //  // *** Custom insert.
+          //  extensions.dataInsert.call(self, getDataContext(connection));
+          //} else {
+          //  // *** Standard insert.
+          //  var dto = toDto.call(self);
+          //  var dto = dao.$runMethod('insert', connection, dto);
+          //  fromDto.call(self, dto);
+          //}
+          // Insert children as well.
+          insertChildren(connection);
+          markAsPristine();
+          // Launch finish event.
+          /**
+           * The event arises after the business object collection has been created in the repository.
+           * @event EditableRootCollectionSync#postInsert
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} newObject - The instance of the collection after the data portal action.
+           */
+          raiseEvent(DataPortalEvent.postInsert);
+          raiseSave(DataPortalEvent.postSave, DataPortalAction.insert);
+          // Finish transaction.
+          connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.insert, e);
+          // Launch finish event.
+          if (connection) {
+            raiseEvent(DataPortalEvent.postInsert, null, dpError);
+            raiseSave(DataPortalEvent.postSave, DataPortalAction.insert, dpError);
+          }
+          // Undo transaction.
+          connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
+          // Rethrow error.
+          throw dpError;
+        }
+      }
+    }
+
+    //endregion
+
+    //region Update
+
+    function data_update () {
+      // Check permissions.
+      if (canDo(AuthorizationAction.updateObject)) {
+        try {
+          // Start transaction.
+          connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Launch start event.
+          raiseSave(DataPortalEvent.preSave, DataPortalAction.update);
+          /**
+           * The event arises before the business object collection will be updated in the repository.
+           * @event EditableRootCollectionSync#preUpdate
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
+           */
+          raiseEvent(DataPortalEvent.preUpdate);
+          // Execute update.
+          //if (extensions.dataUpdate) {
+          //  // *** Custom update.
+          //  extensions.dataUpdate.call(self, getDataContext(connection));
+          //} else if (isDirty) {
+          //  // *** Standard update.
+          //  var dto = toDto.call(self);
+          //  var dto = dao.$runMethod('update', connection, dto);
+          //  fromDto.call(self, dto);
+          //}
+          // Update children as well.
+          updateChildren(connection);
+          markAsPristine();
+          // Launch finish event.
+          /**
+           * The event arises after the business object collection has been updated in the repository.
+           * @event EditableRootCollectionSync#postUpdate
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} newObject - The instance of the collection after the data portal action.
+           */
+          raiseEvent(DataPortalEvent.postUpdate);
+          raiseSave(DataPortalEvent.postSave, DataPortalAction.update);
+          // Finish transaction.
+          connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.update, e);
+          // Launch finish event.
+          if (connection) {
+            raiseEvent(DataPortalEvent.postUpdate, null, dpError);
+            raiseSave(DataPortalEvent.postSave, DataPortalAction.update, dpError);
+          }
+          // Undo transaction.
+          connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
+          // Rethrow error.
+          throw dpError;
+        }
+      }
+    }
+
+    //endregion
+
+    //region Remove
+
+    function data_remove () {
+      // Check permissions.
+      if (canDo(AuthorizationAction.removeObject)) {
+        try {
+          // Start transaction.
+          connection = config.connectionManager.beginTransaction(extensions.dataSource);
+          // Launch start event.
+          raiseSave(DataPortalEvent.preSave, DataPortalAction.remove);
+          /**
+           * The event arises before the business object collection will be removed from the repository.
+           * @event EditableRootCollectionSync#preRemove
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
+           */
+          raiseEvent(DataPortalEvent.preRemove);
+          // Remove children first.
+          removeChildren(connection);
+          // Execute removal - finished.
+          markAsRemoved();
+          // Launch finish event.
+          /**
+           * The event arises after the business object collection has been removed from the repository.
+           * @event EditableRootCollectionSync#postRemove
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollectionSync} newObject - The instance of the collection after the data portal action.
+           */
+          raiseEvent(DataPortalEvent.postRemove);
+          raiseSave(DataPortalEvent.postSave, DataPortalAction.remove);
+          // Finish transaction.
+          connection = config.connectionManager.commitTransaction(extensions.dataSource, connection);
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(DataPortalAction.remove, e);
+          // Launch finish event.
+          if (connection) {
+            raiseEvent(DataPortalEvent.postRemove, null, dpError);
+            raiseSave(DataPortalEvent.postSave, DataPortalAction.remove, dpError);
+          }
+          // Undo transaction.
+          connection = config.connectionManager.rollbackTransaction(extensions.dataSource, connection);
+          // Rethrow error.
+          throw dpError;
+        }
+      }
+    }
+
+    //endregion
 
     //endregion
 
@@ -370,6 +782,21 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
      */
     this.create = function() {
       data_create();
+    };
+
+    /**
+     * Creates a new item and adds it to the collection at the specified index.
+     *
+     * @function EditableRootCollectionSync#create
+     * @param {number} index - The index of the new item.
+     * @returns {EditableChildModelSync} The newly created business object.
+     */
+    this.createItem = function (index) {
+      var item = itemType.create(self, eventHandlers);
+      var ix = parseInt(index, 10);
+      ix = isNaN(ix) ? items.length : ix;
+      items.splice(ix, 0, item);
+      return item;
     };
 
     /**
@@ -412,6 +839,11 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
      *      Deleting the business object collection has failed.
      */
     this.save = function() {
+      function clearRemovedItems() {
+        items = items.filter(function (item) {
+          return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
+        });
+      }
       if (this.isValid()) {
         /**
          * The event arises before the business object collection will be saved in the repository.
@@ -427,9 +859,11 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
             return this;
           case MODEL_STATE.changed:
             data_update();
+            clearRemovedItems();
             return this;
           case MODEL_STATE.markedForRemoval:
             data_remove();
+            clearRemovedItems();
             return null;
           default:
             return this;
@@ -482,10 +916,6 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
     this.checkRules = function () {
       brokenRules.clear();
 
-      var context = new ValidationContext(store, brokenRules);
-      properties.forEach(function(property) {
-        rules.validate(property, context);
-      });
       checkChildRules();
 
       isValidated = true;
@@ -515,6 +945,90 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
     this.getResponse = function (message, namespace) {
       var output = this.getBrokenRules(namespace);
       return output ? new BrokenRulesResponse(output, message) : null;
+    };
+
+    //endregion
+
+    //region Public array methods
+
+    /**
+     * Gets a collection item at a specific position.
+     *
+     * @function EditableRootCollectionSync#at
+     * @param {number} index - The index of the required item in the collection.
+     * @returns {EditableChildModelSync} The required collection item.
+     */
+    this.at = function (index) {
+      return items[index];
+    };
+
+    /**
+     * Executes a provided function once per collection item.
+     *
+     * @function EditableRootCollectionSync#forEach
+     * @param {external.cbCollectionItem} callback - Function that produces an item of the new collection.
+     */
+    this.forEach = function (callback) {
+      items.forEach(callback);
+    };
+
+    /**
+     * Tests whether all items in the collection pass the test implemented by the provided function.
+     *
+     * @function EditableRootCollectionSync#every
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {boolean} True when callback returns truthy value for each item, otherwise false.
+     */
+    this.every = function (callback) {
+      return items.every(callback);
+    };
+
+    /**
+     * Tests whether some item in the collection pass the test implemented by the provided function.
+     *
+     * @function EditableRootCollectionSync#some
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {boolean} True when callback returns truthy value for some item, otherwise false.
+     */
+    this.some = function (callback) {
+      return items.some(callback);
+    };
+
+    /**
+     * Creates a new array with all collection items that pass the test
+     * implemented by the provided function.
+     *
+     * @function EditableRootCollectionSync#filter
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {Array.<EditableChildModelSync>} The new array of collection items.
+     */
+    this.filter = function (callback) {
+      return items.filter(callback);
+    };
+
+    /**
+     * Creates a new array with the results of calling a provided function
+     * on every item in this collection.
+     *
+     * @function EditableRootCollectionSync#map
+     * @param {external.cbCollectionItem} callback - Function to test for each collection item.
+     * @returns {Array.<*>} The new array of callback results.
+     */
+    this.map = function (callback) {
+      return items.map(callback);
+    };
+
+    /**
+     * Sorts the items of the collection in place and returns the collection.
+     *
+     * @function EditableRootCollectionSync#sort
+     * @param {external.cbCompare} [fnCompare] - Function that defines the sort order.
+     *      If omitted, the collection is sorted according to each character's Unicode
+     *      code point value, according to the string conversion of each item.
+     * @returns {Array.<EditableChildModelSync>} The sorted collection.
+     */
+    this.sort = function (fnCompare) {
+      return items.sort(fnCompare);
     };
 
     //endregion
