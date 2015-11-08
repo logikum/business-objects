@@ -279,91 +279,71 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
     //region Transfer object methods
 
     function getTransferContext (authorize) {
-      return authorize ?
-          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue) :
-          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
-    }
-
-    function baseToDto() {
-      var dto = {};
-      properties.filter(function (property) {
-        return property.isOnDto;
-      }).forEach(function (property) {
-        dto[property.name] = getPropertyValue(property);
-      });
-      return dto;
-    }
-
-    function toDto () {
-      if (extensions.toDto)
-        return extensions.toDto.call(self, getTransferContext(false));
-      else
-        return baseToDto();
-    }
-
-    function baseFromDto(dto) {
-      properties.filter(function (property) {
-        return property.isOnDto;
-      }).forEach(function (property) {
-        if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
-          setPropertyValue(property, dto[property.name]);
-        }
-      });
-    }
-
-    function fromDto (dto) {
-      if (extensions.fromDto)
-        extensions.fromDto.call(self, getTransferContext(false), dto);
-      else
-        baseFromDto(dto);
+      return new TransferContext(null, null, null);
     }
 
     function baseToCto() {
-      var cto = {};
-      properties.filter(function (property) {
-        return property.isOnCto;
-      }).forEach(function (property) {
-        cto[property.name] = readPropertyValue(property);
+      var cto = [];
+      items.forEach(function (item) {
+        cto.push(item.toCto());
       });
       return cto;
     }
 
     /**
-     * Transforms the business object to a plain object to send to the client.
+     * Transforms the business object collection to a plain object array to send to the client.
      *
-     * @function EditableRootModelSync#toCto
+     * @function EditableRootCollectionSync#toCto
      * @returns {object} The client transfer object.
      */
     this.toCto = function () {
-      var cto = {};
       if (extensions.toCto)
-        cto = extensions.toCto.call(self, getTransferContext(true));
+        return extensions.toCto.call(self, getTransferContext());
       else
-        cto = baseToCto();
-
-      properties.children().forEach(function(property) {
-        var child = getPropertyValue(property);
-        cto[property.name] = child.toCto();
-      });
-      return cto;
+        return baseToCto();
     };
 
-    function baseFromCto(cto) {
-      if (cto && typeof cto === 'object') {
-        properties.filter(function (property) {
-          return property.isOnCto;
-        }).forEach(function (property) {
-          if (cto.hasOwnProperty(property.name) && typeof cto[property.name] !== 'function') {
-            writePropertyValue(property, cto[property.name]);
+    function baseFromCto(data) {
+      if (data instanceof Array) {
+        var dataNew = data.filter(function () { return true; });
+        var itemsLate = [];
+        var index, cto;
+        // Update existing items.
+        for (index = 0; index < items.length; index++) {
+          var item = items[index];
+          var dataFound = false;
+          var i = 0;
+          for (; i < dataNew.length; i++) {
+            cto = data[i];
+            if (item.keyEquals(cto)) {
+              item.fromCto(cto);
+              dataFound = true;
+              break;
+            }
           }
-        });
+          if (dataFound)
+            dataNew.splice(i, 1);
+          else
+            itemsLate.push(index);
+        }
+        // Remove non existing items.
+        for (index = 0; index < itemsLate.length; index++) {
+          items[itemsLate[index]].remove();
+        }
+        // Insert non existing data.
+        for (index = 0; index < dataNew.length; index++) {
+          cto = dataNew[index];
+          var newItem = itemType.create(self, eventHandlers);
+          newItem.fromCto(cto);
+          items.push(newItem);
+        }
       }
     }
 
     /**
-     * Rebuilds the business object from a plain object sent by the client.
+     * Rebuilds the business object collection from a plain object array sent by the client.
      *
-     * @function EditableRootModelSync#fromCto
+     * @function EditableRootCollectionSync#fromCto
      * @param {object} cto - The client transfer object.
      */
     this.fromCto = function (cto) {
@@ -371,13 +351,6 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
         extensions.fromCto.call(self, getTransferContext(true), cto);
       else
         baseFromCto(cto);
-
-      properties.children().forEach(function (property) {
-        var child = getPropertyValue(property);
-        if (cto[property.name]) {
-          child.fromCto(cto[property.name]);
-        }
-      });
     };
 
     //endregion
@@ -438,20 +411,6 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
       items.forEach(function (item) {
         item.checkRules();
       });
-    }
-
-    function getChildBrokenRules (namespace, bro) {
-      items.forEach(function (property) {
-        var child = getPropertyValue(property);
-        var childBrokenRules = child.getBrokenRules(namespace);
-        if (childBrokenRules) {
-          if (childBrokenRules instanceof Array)
-            bro.addChildren(property.name, childBrokenRules);
-          else
-            bro.addChild(property.name, childBrokenRules);
-        }
-      });
-      return bro;
     }
 
     //endregion
@@ -930,7 +889,13 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
      */
     this.getBrokenRules = function (namespace) {
       var bro = brokenRules.output(namespace);
-      bro = getChildBrokenRules(namespace, bro);
+
+      items.forEach(function (item) {
+        var childBrokenRules = item.getBrokenRules(namespace);
+        if (childBrokenRules)
+          bro.addChild(name, childBrokenRules);
+      });
+
       return bro.$length ? bro : null;
     };
 

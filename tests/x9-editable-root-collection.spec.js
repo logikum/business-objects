@@ -201,6 +201,8 @@ describe('Synchronous data portal method', function () {
 
     expect(orders.count).toBe(2);
 
+    /* ---------------------------------------- */
+
     var order1 = orders.at(0);
 
     expect(order1.orderKey).toBe(9);
@@ -435,6 +437,8 @@ describe('Synchronous data portal method', function () {
 
     expect(orders.count).toBe(2);
 
+    /* ---------------------------------------- */
+
     var order1 = orders.at(0);
 
     expect(order1.orderKey).toBe(9);
@@ -516,6 +520,158 @@ describe('Synchronous data portal method', function () {
     /* ---------------------------------------- */
 
     var order2 = orders.at(1);
+
+    expect(order2.orderKey).toBe(11);
+    expect(order2.vendorName).toBe('Coward Rabbit');
+    expect(order2.contractDate).toBe(contractDate3);
+    expect(order2.totalPrice).toBe(980);
+    expect(order2.schedules).toBe(5);
+    expect(order2.enabled).toBe(false);
+    expect(order2.createdDate.getDate()).toBe(new Date().getDate());
+    expect(order2.modifiedDate).toBeNull();
+
+    address2 = order2.address;
+
+    address2.country = 'Slovakia';
+    address2.state = '';
+    address2.city = 'Komárno';
+    address2.line1 = 'Ulica františkánov 22.';
+    address2.line2 = '';
+    address2.postalCode = '945 01';
+
+    expect(address2.addressKey).toBe(11);
+    expect(address2.orderKey).toBe(11);
+    expect(address2.country).toBe('Slovakia');
+    expect(address2.state).toBe('');
+    expect(address2.city).toBe('Komárno');
+    expect(address2.line1).toBe('Ulica františkánov 22.');
+    expect(address2.line2).toBe('');
+    expect(address2.postalCode).toBe('945 01');
+
+    expect(order2.items.count).toBe(1);
+
+    item3 = order2.items.at(0);
+
+    expect(item3.orderItemKey).toBe(30);
+    expect(item3.orderKey).toBe(11);
+    expect(item3.productName).toBe('OpenShift Origin');
+    expect(item3.obsolete).toBe(false);
+    expect(item3.expiry).toBe(expiry1);
+    expect(item3.quantity).toBe(49);
+    expect(item3.unitPrice).toBe(4.0);
+
+    expect(item3.schedules.count).toBe(1);
+
+    schedule3 = item3.schedules.at(0);
+
+    expect(schedule3.orderScheduleKey).toBe(39);
+    expect(schedule3.orderItemKey).toBe(30);
+    expect(schedule3.quantity).toBe(10);
+    expect(schedule3.totalMass).toBe(13.7);
+    expect(schedule3.required).toBe(true);
+    expect(schedule3.shipTo).toBe('Bratislava');
+    expect(schedule3.shipDate).toBe(shipDate3);
+
+    //endregion
+  });
+
+  it('client conversion of sample editable collection', function() {
+    console.log('\n*** Synchronous collection TO_FROM_CTO');
+
+    console.log('    < Fetch order collection >');
+    var orders1 = BlanketOrders.getFromTo(9, 11, ehBlanketOrders);
+
+    var data = orders1.toCto();
+    var orders2 = BlanketOrders.create(ehBlanketOrders);
+    orders2.fromCto(data);
+
+    //region Check data
+
+    expect(orders2.count).toBe(2);
+
+    /* ---------------------------------------- */
+
+    var order1 = orders2.at(0);
+
+    expect(order1.orderKey).toBe(9);
+    expect(order1.vendorName).toBe('Pink Giraffe');
+    expect(order1.contractDate).toBe(contractDate2);
+    expect(order1.totalPrice).toBe(500.0);
+    expect(order1.schedules).toBe(5);
+    expect(order1.enabled).toBe(false);
+    expect(order1.createdDate.getDate()).toBe(new Date().getDate());
+    expect(order1.modifiedDate.getDate()).toBe(new Date().getDate());
+
+    address1 = order1.address;
+
+    expect(address1.addressKey).toBe(9);
+    expect(address1.orderKey).toBe(9);
+    expect(address1.country).toBe('Italia');
+    expect(address1.state).toBe('');
+    expect(address1.city).toBe('Milano');
+    expect(address1.line1).toBe('Via Battistotti Sassi 13');
+    expect(address1.line2).toBe('');
+    expect(address1.postalCode).toBe('20133');
+
+    expect(order1.items.count).toBe(2);
+
+    item1 = order1.items.at(0);
+
+    expect(item1.orderItemKey).toBe(26);
+    expect(item1.orderKey).toBe(9);
+    expect(item1.productName).toBe('D810B');
+    expect(item1.obsolete).toBe(false);
+    expect(item1.expiry).toBe(expiry2);
+    expect(item1.quantity).toBe(20);
+    expect(item1.unitPrice).toBe(35);
+
+    item2 = order1.items.at(1);
+
+    expect(item2.orderItemKey).toBe(29);
+    expect(item2.orderKey).toBe(9);
+    expect(item2.productName).toBe('Babel Tower');
+    expect(item2.obsolete).toBe(false);
+    expect(item2.expiry).toBe(expiry1);
+    expect(item2.quantity).toBe(3);
+    expect(item2.unitPrice).toBe(49.9);
+
+    expect(item1.schedules.count).toBe(2);
+
+    expect(item2.schedules.count).toBe(1);
+
+    schedule1 = item1.schedules.at(0);
+
+    expect(schedule1.orderScheduleKey).toBe(35);
+    expect(schedule1.orderItemKey).toBe(26);
+    expect(schedule1.quantity).toBe(10);
+    expect(schedule1.totalMass).toBe(2.5);
+    expect(schedule1.required).toBe(true);
+    expect(schedule1.shipTo).toBe('Verona');
+    expect(schedule1.shipDate).toBe(shipDate1);
+
+    schedule2 = item1.schedules.at(1);
+
+    expect(schedule2.orderScheduleKey).toBe(37);
+    expect(schedule2.orderItemKey).toBe(26);
+    expect(schedule2.quantity).toBe(10);
+    expect(schedule2.totalMass).toBe(2.5);
+    expect(schedule2.required).toBe(false);
+    expect(schedule2.shipTo).toBe('Torino');
+    expect(schedule2.shipDate).toBe(shipDate2);
+
+    schedule3 = item2.schedules.at(0);
+
+    expect(schedule3.orderScheduleKey).toBe(38);
+    expect(schedule3.orderItemKey).toBe(29);
+    expect(schedule3.quantity).toBe(3);
+    expect(schedule3.totalMass).toBe(23.4);
+    expect(schedule3.required).toBe(true);
+    expect(schedule3.shipTo).toBe('Siena');
+    expect(schedule3.shipDate).toBe(shipDate3);
+
+    /* ---------------------------------------- */
+
+    var order2 = orders2.at(1);
 
     expect(order2.orderKey).toBe(11);
     expect(order2.vendorName).toBe('Coward Rabbit');
