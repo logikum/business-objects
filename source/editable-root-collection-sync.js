@@ -61,7 +61,6 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
     var state = null;
     var isDirty = false;
     var items = [];
-    var store = new DataStore();
     var brokenRules = new BrokenRuleList(name);
     var isValidated = false;
     var dataContext = null;
@@ -89,6 +88,9 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
       },
       enumerable: false
     });
+
+    // Set up business rules.
+    rules.initialize(config.noAccessBehavior);
 
     // Set up event handlers.
     if (eventHandlers)
