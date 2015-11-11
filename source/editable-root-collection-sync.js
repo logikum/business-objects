@@ -462,15 +462,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
            * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
            */
           raiseEvent(DataPortalEvent.preCreate);
-          // Execute creation.
-          //if (extensions.dataCreate) {
-          //  // *** Custom creation.
-          //  extensions.dataCreate.call(self, getDataContext(connection));
-          //} else {
-          //  // *** Standard creation.
-          //  var dto = dao.$runMethod('create', connection);
-          //  fromDto.call(self, dto);
-          //}
+          // Execute creation - nothing to do.
           markAsCreated();
           // Launch finish event.
           /**
@@ -574,16 +566,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
            * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
            */
           raiseEvent(DataPortalEvent.preInsert);
-          // Execute insert.
-          //if (extensions.dataInsert) {
-          //  // *** Custom insert.
-          //  extensions.dataInsert.call(self, getDataContext(connection));
-          //} else {
-          //  // *** Standard insert.
-          //  var dto = toDto.call(self);
-          //  var dto = dao.$runMethod('insert', connection, dto);
-          //  fromDto.call(self, dto);
-          //}
+          // Execute insert - nothing to do.
           // Insert children as well.
           insertChildren(connection);
           markAsPristine();
@@ -633,16 +616,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
            * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
            */
           raiseEvent(DataPortalEvent.preUpdate);
-          // Execute update.
-          //if (extensions.dataUpdate) {
-          //  // *** Custom update.
-          //  extensions.dataUpdate.call(self, getDataContext(connection));
-          //} else if (isDirty) {
-          //  // *** Standard update.
-          //  var dto = toDto.call(self);
-          //  var dto = dao.$runMethod('update', connection, dto);
-          //  fromDto.call(self, dto);
-          //}
+          // Execute update - nothing to do.
           // Update children as well.
           updateChildren(connection);
           markAsPristine();
@@ -694,7 +668,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
           raiseEvent(DataPortalEvent.preRemove);
           // Remove children first.
           removeChildren(connection);
-          // Execute removal - finished.
+          // Execute removal - nothing to do.
           markAsRemoved();
           // Launch finish event.
           /**

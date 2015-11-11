@@ -1029,7 +1029,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      */
     this.create = function(callback) {
 
-      callback = EnsureArgument.isOptionalFunction(callback,
+      callback = EnsureArgument.isMandatoryFunction(callback,
           'm_manFunction', CLASS_NAME, 'create', 'callback');
 
       data_create(callback);
@@ -1058,7 +1058,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
 
       method = EnsureArgument.isOptionalString(method,
           'm_optString', CLASS_NAME, 'fetch', 'method');
-      callback = EnsureArgument.isOptionalFunction(callback,
+      callback = EnsureArgument.isMandatoryFunction(callback,
           'm_manFunction', CLASS_NAME, 'fetch', 'callback');
 
       data_fetch(filter, method || M_FETCH, callback);
@@ -1068,7 +1068,8 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      * Saves the changes of the business object to the repository.
      *
      * @function EditableRootModel#save
-     * @param {external.cbDataPortal} callback - The business object with the new state after the save.
+     * @param {external.cbDataPortal} callback - Returns the business object
+     *      with the new state after the save.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -1083,7 +1084,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      */
     this.save = function(callback) {
 
-      callback = EnsureArgument.isOptionalFunction(callback,
+      callback = EnsureArgument.isMandatoryFunction(callback,
           'm_manFunction', CLASS_NAME, 'save', 'callback');
 
       if (this.isValid()) {

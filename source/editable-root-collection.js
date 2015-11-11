@@ -462,15 +462,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
          * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
          */
         raiseEvent(DataPortalEvent.preCreate);
-        // Execute creation.
-        //if (extensions.dataCreate) {
-        //  // *** Custom creation.
-        //  extensions.dataCreate.call(self, getDataContext(connection));
-        //} else {
-        //  // *** Standard creation.
-        //  var dto = dao.$runMethod('create', connection);
-        //  fromDto.call(self, dto);
-        //}
+        // Execute creation - nothing to do.
         markAsCreated();
         // Launch finish event.
         /**
@@ -574,16 +566,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
            * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
            */
           raiseEvent(DataPortalEvent.preInsert);
-          // Execute insert.
-          //if (extensions.dataInsert) {
-          //  // *** Custom insert.
-          //  extensions.dataInsert.call(self, getDataContext(connection));
-          //} else {
-          //  // *** Standard insert.
-          //  var dto = toDto.call(self);
-          //  var dto = dao.$runMethod('insert', connection, dto);
-          //  fromDto.call(self, dto);
-          //}
+          // Execute insert - nothing to do.
           // Insert children as well.
           insertChildren(connection);
           markAsPristine();
@@ -633,16 +616,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
            * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
            */
           raiseEvent(DataPortalEvent.preUpdate);
-          // Execute update.
-          //if (extensions.dataUpdate) {
-          //  // *** Custom update.
-          //  extensions.dataUpdate.call(self, getDataContext(connection));
-          //} else if (isDirty) {
-          //  // *** Standard update.
-          //  var dto = toDto.call(self);
-          //  var dto = dao.$runMethod('update', connection, dto);
-          //  fromDto.call(self, dto);
-          //}
+          // Execute update - nothing to do.
           // Update children as well.
           updateChildren(connection);
           markAsPristine();
@@ -694,7 +668,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
           raiseEvent(DataPortalEvent.preRemove);
           // Remove children first.
           removeChildren(connection);
-          // Execute removal - finished.
+          // Execute removal - nothing to do.
           markAsRemoved();
           // Launch finish event.
           /**
@@ -735,14 +709,21 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#create
      * @protected
+     * @param {external.cbDataPortal} callback - Returns a new editable business object collection.
      *
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The callback must be a function.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Creating the business object collection has failed.
      */
-    this.create = function() {
-      data_create();
+    this.create = function(callback) {
+
+      callback = EnsureArgument.isMandatoryFunction(callback,
+          'm_manFunction', CLASS_NAME, 'create', 'callback');
+
+      data_create(callback);
     };
 
     /**
@@ -750,14 +731,28 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#create
      * @param {number} index - The index of the new item.
-     * @returns {EditableChildModel} The newly created business object.
+     * @param {external.cbDataPortal} callback - Returns the newly created business object
+     *      of the collection.
      */
-    this.createItem = function (index) {
-      var item = itemType.create(self, eventHandlers);
-      var ix = parseInt(index, 10);
-      ix = isNaN(ix) ? items.length : ix;
-      items.splice(ix, 0, item);
-      return item;
+    this.createItem = function (index, callback) {
+      if (!callback) {
+        callback = index;
+        index = items.length;
+      }
+
+      callback = EnsureArgument.isMandatoryFunction(callback,
+          'm_manFunction', CLASS_NAME, 'createItem', 'callback');
+
+      itemType.create(self, eventHandlers, function (err, item) {
+        if (err)
+          callback(err);
+        else {
+          var ix = parseInt(index, 10);
+          ix = isNaN(ix) ? items.length : ix;
+          items.splice(ix, 0, item);
+          callback(null, item);
+        }
+      });
     };
 
     /**
@@ -768,28 +763,36 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
+     * @param {external.cbDataPortal} callback - Returns the required editable business object collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The callback must be a function.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Fetching the business object collection has failed.
      */
-    this.fetch = function(filter, method) {
+    this.fetch = function(filter, method, callback) {
 
       method = EnsureArgument.isOptionalString(method,
           'm_optString', CLASS_NAME, 'fetch', 'method');
+      callback = EnsureArgument.isMandatoryFunction(callback,
+          'm_manFunction', CLASS_NAME, 'fetch', 'callback');
 
-      data_fetch(filter, method || M_FETCH);
+      data_fetch(filter, method || M_FETCH, callback);
     };
 
     /**
      * Saves the changes of the business object collection to the repository.
      *
      * @function EditableRootCollection#save
-     * @returns {EditableRootCollection} The business object collection with the new state after the save.
+     * @param {external.cbDataPortal} callback - Returns the business object
+     *      collection with the new state after the save.
      *
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The callback must be a function.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
      * @throws {@link bo.shared.DataPortalError Data portal error}:
@@ -799,7 +802,11 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Deleting the business object collection has failed.
      */
-    this.save = function() {
+    this.save = function(callback) {
+
+      callback = EnsureArgument.isMandatoryFunction(callback,
+          'm_manFunction', CLASS_NAME, 'save', 'callback');
+
       function clearRemovedItems() {
         items = items.filter(function (item) {
           return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
@@ -816,18 +823,30 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
          */
         switch (state) {
           case MODEL_STATE.created:
-            data_insert();
-            return this;
+            data_insert(callback);
+            break;
           case MODEL_STATE.changed:
-            data_update();
-            clearRemovedItems();
-            return this;
+            data_update(function (err, updated) {
+              if (err)
+                callback(err);
+              else {
+                clearRemovedItems();
+                callback(null, self);
+              }
+            });
+            break;
           case MODEL_STATE.markedForRemoval:
-            data_remove();
-            clearRemovedItems();
-            return null;
+            data_remove(function (err, removed) {
+              if (err)
+                callback(err);
+              else {
+                clearRemovedItems();
+                callback(null, self);
+              }
+            });
+            break;
           default:
-            return this;
+            callback(null, this);
         }
         /**
          * The event arises after the business object collection has been saved in the repository.
@@ -1023,7 +1042,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    *
    * @function EditableRootCollection.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {EditableRootCollection} A new editable business collection.
+   * @param {external.cbDataPortal} callback - Returns a new editable business object collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The event handlers must be an EventHandlerList object or null.
@@ -1032,10 +1051,14 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *      Creating the business object collection has failed.
    */
-  EditableRootCollection.create = function(eventHandlers) {
+  EditableRootCollection.create = function(eventHandlers, callback) {
     var instance = new EditableRootCollection(eventHandlers);
-    instance.create();
-    return instance;
+    instance.create(function (err) {
+      if (err)
+        callback(err);
+      else
+        callback(null, instance);
+    });
   };
 
   /**
@@ -1045,7 +1068,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {EditableRootCollection} The required editable business object collection.
+   * @param {external.cbDataPortal} callback - Returns the required editable business object collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.
@@ -1056,10 +1079,14 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *      Fetching the business object collection has failed.
    */
-  EditableRootCollection.fetch = function(filter, method, eventHandlers) {
+  EditableRootCollection.fetch = function(filter, method, eventHandlers, callback) {
     var instance = new EditableRootCollection(eventHandlers);
-    instance.fetch(filter, method);
-    return instance;
+    instance.fetch(filter, method, function (err) {
+      if (err)
+        callback(err);
+      else
+        callback(null, instance);
+    });
   };
 
   //endregion

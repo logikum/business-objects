@@ -12,6 +12,8 @@ describe('Property flag', function () {
     expect(PropertyFlag.parentKey).toBe(4);
     expect(PropertyFlag.notOnDto).toBe(8);
     expect(PropertyFlag.notOnCto).toBe(16);
+    expect(PropertyFlag.onCtoOnly).toBe(8);
+    expect(PropertyFlag.onDtoOnly).toBe(16);
   });
 
   it('items are read-only', function() {
@@ -21,6 +23,8 @@ describe('Property flag', function () {
     PropertyFlag.parentKey = 11;
     PropertyFlag.notOnDto = 12;
     PropertyFlag.notOnCto = 13;
+    PropertyFlag.onCtoOnly = 112;
+    PropertyFlag.onDtoOnly = 113;
 
     expect(PropertyFlag.none).toBe(0);
     expect(PropertyFlag.readOnly).toBe(1);
@@ -28,5 +32,7 @@ describe('Property flag', function () {
     expect(PropertyFlag.parentKey).toBe(4);
     expect(PropertyFlag.notOnDto).toBe(8);
     expect(PropertyFlag.notOnCto).toBe(16);
+    expect(PropertyFlag.onCtoOnly).toBe(8);
+    expect(PropertyFlag.onDtoOnly).toBe(16);
   });
 });
