@@ -22,7 +22,16 @@ BlanketOrdersDao.prototype.fetch = function(connection) {
   var orders = [];
   for (var key in global.orders) {
     if (global.orders.hasOwnProperty(key)) {
-      orders.push(global.orders[key]);
+      var order = global.orders[key];
+
+      order.address = daoAddress.fetchForOrder(connection, order.orderKey);
+      order.items = daoOrderItem.fetchForOrder(connection, order.orderKey);
+      for (var i = 0; i < order.items.length; i++) {
+        var item = order.items[i];
+        item.schedules = daoOrderSchedule.fetchForItem(connection, item.orderItemKey);
+      }
+
+      orders.push(order);
     }
   }
   return orders;

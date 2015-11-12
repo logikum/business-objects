@@ -14,18 +14,18 @@ var rules = new Rules(
 var extensions = new Extensions('dao', __filename);
 
 var BlanketOrderList = bo.ReadOnlyRootCollection(
-  'BlanketOrderList',
-  BlanketOrderListItem,
-  rules,
-  extensions
+    'BlanketOrderList',
+    BlanketOrderListItem,
+    rules,
+    extensions
 );
 
 var BlanketOrderListFactory = {
   getAll: function (eventHandlers, callback) {
-    return BlanketOrderList.fetch(null, null, eventHandlers, callback);
+    BlanketOrderList.fetch(null, null, eventHandlers, callback);
   },
   getByName: function (name, eventHandlers, callback) {
-    return BlanketOrderList.fetch(name, 'fetchByName', eventHandlers, callback);
+    BlanketOrderList.fetch(name, 'fetchByName', eventHandlers, callback);
   }
 };
 
