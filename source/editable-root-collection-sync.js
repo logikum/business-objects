@@ -33,6 +33,25 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 //endregion
 
+/**
+ * Factory method to create definitions of synchronous editable root collections.
+ *
+ *    Valid collection item types are:
+ *
+ *      * EditableChildModelSync
+ *
+ * @function bo.EditableRootCollectionSync
+ * @param {string} name - The name of the collection.
+ * @param {EditableChildModelSync} itemType - The model type of the collection items.
+ * @param {bo.shared.RuleManager} rules - The authorization rules.
+ * @param {bo.shared.ExtensionManagerSync} extensions - The customization of the collection.
+ * @returns {EditableRootCollectionSync} The constructor of a synchronous editable root collection.
+ *
+ * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModelSync.
+ */
 var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensions) {
 
   name = EnsureArgument.isMandatoryString(name,
@@ -51,6 +70,37 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
   // Get data access object.
   var dao = extensions.getDataAccessObject(name);
 
+  /**
+   * @classdesc
+   *    Represents the definition of a synchronous editable root collection.
+   * @description
+   *    Creates a new synchronous editable root collection instance.
+   *
+   *    _The name of the model type available as:
+   *    __&lt;instance&gt;.constructor.modelType__, returns 'EditableRootCollectionSync'._
+   *
+   * @name EditableRootCollectionSync
+   * @constructor
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   *
+   * @extends CollectionBase
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The event handlers must be an EventHandlerList object or null.
+   *
+   * @fires EditableRootCollectionSync#preCreate
+   * @fires EditableRootCollectionSync#postCreate
+   * @fires EditableRootCollectionSync#preFetch
+   * @fires EditableRootCollectionSync#postFetch
+   * @fires EditableRootCollectionSync#preInsert
+   * @fires EditableRootCollectionSync#postInsert
+   * @fires EditableRootCollectionSync#preUpdate
+   * @fires EditableRootCollectionSync#postUpdate
+   * @fires EditableRootCollectionSync#preRemove
+   * @fires EditableRootCollectionSync#postRemove
+   * @fires EditableRootCollectionSync#preSave
+   * @fires EditableRootCollectionSync#postSave
+   */
   var EditableRootCollectionSync = function (eventHandlers) {
     CollectionBase.call(this);
 
@@ -380,9 +430,12 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
     //region Child methods
 
     function fetchChildren (dto) {
-      items.forEach(function (item) {
-        item.fetch(dto[property.name]);
-      });
+      if (dto instanceof Array) {
+        dto.forEach(function (data) {
+          var item = itemType.load(self, data, eventHandlers);
+          items.push(item);
+        });
+      }
     }
 
     function insertChildren (connection) {
@@ -450,42 +503,40 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
     //region Create
 
     function data_create () {
-      //if (extensions.dataCreate || dao.$hasCreate()) {
-        try {
-          // Open connection.
-          connection = config.connectionManager.openConnection(extensions.dataSource);
-          // Launch start event.
-          /**
-           * The event arises before the business object collection will be initialized in the repository.
-           * @event EditableRootCollectionSync#preCreate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-           * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
-           */
-          raiseEvent(DataPortalEvent.preCreate);
-          // Execute creation - nothing to do.
-          markAsCreated();
-          // Launch finish event.
-          /**
-           * The event arises after the business object collection has been initialized in the repository.
-           * @event EditableRootCollectionSync#postCreate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-           * @param {EditableRootCollectionSync} newObject - The instance of the collection after the data portal action.
-           */
-          raiseEvent(DataPortalEvent.postCreate);
-          // Close connection.
-          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
-        } catch (e) {
-          // Wrap the intercepted error.
-          var dpError = wrapError(DataPortalAction.create, e);
-          // Launch finish event.
-          if (connection)
-            raiseEvent(DataPortalEvent.postCreate, null, dpError);
-          // Close connection.
-          connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
-          // Rethrow error.
-          throw dpError;
-        }
-      //}
+      try {
+        // Open connection.
+        connection = config.connectionManager.openConnection(extensions.dataSource);
+        // Launch start event.
+        /**
+         * The event arises before the business object collection will be initialized in the repository.
+         * @event EditableRootCollectionSync#preCreate
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootCollectionSync} oldObject - The instance of the collection before the data portal action.
+         */
+        raiseEvent(DataPortalEvent.preCreate);
+        // Execute creation - nothing to do.
+        markAsCreated();
+        // Launch finish event.
+        /**
+         * The event arises after the business object collection has been initialized in the repository.
+         * @event EditableRootCollectionSync#postCreate
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootCollectionSync} newObject - The instance of the collection after the data portal action.
+         */
+        raiseEvent(DataPortalEvent.postCreate);
+        // Close connection.
+        connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+      } catch (e) {
+        // Wrap the intercepted error.
+        var dpError = wrapError(DataPortalAction.create, e);
+        // Launch finish event.
+        if (connection)
+          raiseEvent(DataPortalEvent.postCreate, null, dpError);
+        // Close connection.
+        connection = config.connectionManager.closeConnection(extensions.dataSource, connection);
+        // Rethrow error.
+        throw dpError;
+      }
     }
 
     //endregion
@@ -517,12 +568,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
             dto = dao.$runMethod(method, connection, filter);
           }
           // Load children.
-          if (dto instanceof Array) {
-            dto.forEach(function (data) {
-              var item = itemType.load(self, data, eventHandlers);
-              items.push(item);
-            });
-          }
+          fetchChildren(dto);
           markAsPristine();
           // Launch finish event.
           /**

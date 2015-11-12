@@ -81,7 +81,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
    * @constructor
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
-   * @extends ModelBase
+   * @extends CollectionBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The event handlers must be an EventHandlerList object or null.
