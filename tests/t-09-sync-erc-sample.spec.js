@@ -1,4 +1,4 @@
-console.log('Testing data portal methods of sample synchronous collection...');
+console.log('Testing data portal methods of sample synchronous root collection...');
 
 var BlanketOrders = require('../sample/sync/blanket-orders.js');
 var BlanketOrderChild = require('../sample/sync/blanket-order-child.js');

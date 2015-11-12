@@ -5,6 +5,7 @@
 
 var EditableRootModel = require('./editable-root-model.js');
 var EditableChildModel = require('./editable-child-model.js');
+var EditableRootCollection = require('./editable-root-collection.js');
 var EditableChildCollection = require('./editable-child-collection.js');
 var ReadOnlyRootModel = require('./read-only-root-model.js');
 var ReadOnlyChildModel = require('./read-only-child-model.js');
@@ -61,6 +62,7 @@ var index = {
 
   EditableRootModel: EditableRootModel,
   EditableChildModel: EditableChildModel,
+  EditableRootCollection: EditableRootCollection,
   EditableChildCollection: EditableChildCollection,
   ReadOnlyRootModel: ReadOnlyRootModel,
   ReadOnlyChildModel: ReadOnlyChildModel,
