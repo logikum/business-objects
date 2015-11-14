@@ -429,13 +429,24 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
 
     //region Child methods
 
-    function fetchChildren (dto) {
-      if (dto instanceof Array) {
+    function fetchChildren (dto, callback) {
+      if (dto instanceof Array && dto.length) {
+        var count = 0;
+        var error = null;
+
         dto.forEach(function (data) {
-          var item = itemType.load(self, data, eventHandlers);
-          items.push(item);
+          itemType.load(self, data, eventHandlers, function (err, item) {
+            if (err)
+              error = error || err;
+            else
+              items.push(item);
+            // Check if all items are done.
+            if (++count === dto.length)
+              callback(error);
+          });
         });
-      }
+      } else
+        callback(null);
     }
 
     function insertChildren(connection, callback) {
@@ -451,10 +462,10 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
     }
 
     function saveChildren(connection, callback) {
-      var count = 0;
-      var error = null;
-
       if (items.length) {
+        var count = 0;
+        var error = null;
+
         items.forEach(function (item) {
           item.save(connection, function (err) {
             error = error || err;
@@ -607,17 +618,22 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
       // Helper function for post-fetch actions.
       function finish (dto, cb) {
         // Load children.
-        fetchChildren(dto);
-        markAsPristine();
-        // Launch finish event.
-        /**
-         * The event arises after the collection instance has been retrieved from the repository.
-         * @event EditableRootCollection#postFetch
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} newObject - The collection instance after the data portal action.
-         */
-        raiseEvent(DataPortalEvent.postFetch, method);
-        cb(null, self);
+        fetchChildren(dto, function (err) {
+          if (err)
+            cb(err);
+          else {
+            markAsPristine();
+            // Launch finish event.
+            /**
+             * The event arises after the collection instance has been retrieved from the repository.
+             * @event EditableRootCollection#postFetch
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {EditableRootCollection} newObject - The collection instance after the data portal action.
+             */
+            raiseEvent(DataPortalEvent.postFetch, method);
+            cb(null, self);
+          }
+        });
       }
       // Helper callback for failure.
       function failed (err, cb) {

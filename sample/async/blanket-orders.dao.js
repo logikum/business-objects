@@ -84,40 +84,43 @@ BlanketOrdersDao.prototype.fetchFromTo = function(connection, filter, callback) 
     }
   }
 
-  orders.forEach(function (order) {
-    daoAddress.fetchForOrder(connection, order.orderKey, function (err, address) {
-      if (err) {
-        callback(err);
-        return;
-      }
-      order.address = address;
-
-      daoOrderItem.fetchForOrder(connection, order.orderKey, function (err, items) {
+  if (orders.length) {
+    orders.forEach(function (order) {
+      daoAddress.fetchForOrder(connection, order.orderKey, function (err, address) {
         if (err) {
           callback(err);
           return;
         }
-        order.items = items;
+        order.address = address;
 
-        var count = 0;
-        for (var i = 0; i < order.items.length; i++) {
-          var item = order.items[i];
-          daoOrderSchedule.fetchForItem(connection, item.orderItemKey, function (err, schedules) {
-            if (err) {
-              callback(err);
-              return;
-            }
-            item.schedules = schedules;
+        daoOrderItem.fetchForOrder(connection, order.orderKey, function (err, items) {
+          if (err) {
+            callback(err);
+            return;
+          }
+          order.items = items;
 
-            if (++count === order.items.length) {
-              if (++countOrders === totalOrders)
-                callback(null, order);
-            }
-          });
-        }
+          var count = 0;
+          for (var i = 0; i < order.items.length; i++) {
+            var item = order.items[i];
+            daoOrderSchedule.fetchForItem(connection, item.orderItemKey, function (err, schedules) {
+              if (err) {
+                callback(err);
+                return;
+              }
+              item.schedules = schedules;
+
+              if (++count === order.items.length) {
+                if (++countOrders === totalOrders)
+                  callback(null, orders);
+              }
+            });
+          }
+        });
       });
     });
-  });
+  } else
+    callback(null, orders);
 };
 
 module.exports = BlanketOrdersDao;

@@ -217,16 +217,23 @@ var EditableChildCollectionFactory = function (name, itemType) {
     //region Actions
 
     /**
-     * Creates a new item in the collection.
+     * Creates a new item and adds it to the collection at the specified index.
      *
      * @function EditableChildCollection#create
+     * @param {number} index - The index of the new item.
      * @param {external.cbDataPortal} callback - Returns the newly created editable business object.
      */
-    this.create = function (callback) {
+    this.createItem = function (index, callback) {
+      if (!callback) {
+        callback = index;
+        index = items.length;
+      }
       itemType.create(parent, eventHandlers, function (err, item) {
         if (err)
           callback(err);
-        items.push(item);
+        var ix = parseInt(index, 10);
+        ix = isNaN(ix) ? items.length : ix;
+        items.splice(ix, 0, item);
         callback(null, item);
       });
     };
@@ -245,6 +252,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
       if (data instanceof Array && data.length) {
         var count = 0;
         var error = null;
+
         data.forEach(function (dto) {
           itemType.load(parent, dto, eventHandlers, function (err, item) {
             if (err)
