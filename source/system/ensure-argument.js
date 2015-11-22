@@ -43,7 +43,7 @@ var EnsureArgument = function () {};
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {*} The checked value.
  *
- * @throws {@link bo.system.ArgumentError Argument error}: TThe argument must be supplied.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be supplied.
  */
 EnsureArgument.isDefined = function (value, message) {
   if (value === undefined)
@@ -417,22 +417,6 @@ EnsureArgument.isModelType = function (value, model, message) {
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an enumeration type item.
  */
 EnsureArgument.isEnumMember = function (value, type, defaultValue, message) {
-  if (typeof this === 'function' && this.name === 'set_noAccessBehavior') {
-    var source;
-    try {
-      //var constructor = Error.bind.apply(this);
-      //throw new constructor();
-      throw new Error();
-    }
-    catch (e) {
-      var re = /([\w.]+)@|at ([\w.]+) \(/g, st = e.stack, m;
-      m = re.exec(st);
-      source = m[1] || m[2];
-    }
-    var methodName = source.substr(source.lastIndexOf('.') + 1);
-    var className = source.substr(0, source.indexOf('.'));
-    //var className = Object.getPrototypeOf(this).constructor.name;
-  }
   if (!(type && type.hasMember && type.constructor &&
       type.constructor.super_ && type.constructor.super_.name === 'Enumeration'))
     failed(arguments, 4, 'enumType', type);

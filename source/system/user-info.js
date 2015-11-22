@@ -29,7 +29,7 @@ function UserInfo (userCode) {
       return userCode;
     },
     set: function (value) {
-      userCode = EnsureArgument.isMandatoryString(userCode, 'p_optString', CLASS_NAME, 'userCode');
+      userCode = EnsureArgument.isMandatoryString(value, 'p_optString', CLASS_NAME, 'userCode');
     },
     enumeration: true
   });
