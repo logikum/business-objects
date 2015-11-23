@@ -1,4 +1,4 @@
-console.log('Testing shared/argument-error.js...');
+console.log('Testing system/argument-error.js...');
 
 var ArgumentError = require('../../source/system/argument-error.js');
 
