@@ -185,7 +185,7 @@ function hasValue () {
  * forOptional: Checks if value is a string or null.<br/>
  * forMandatory: Checks if value is a non-empty string.
  *
- * @function bo.system.EnsureArgument.isString
+ * @function bo.system.ArgumentCheck.asString
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(string|null)} The checked value.
@@ -222,7 +222,7 @@ function asString () {
  * forOptional: Checks if value is a number or null.<br/>
  * forMandatory: Checks if value is a number.
  *
- * @function bo.system.EnsureArgument.isOptionalNumber
+ * @function bo.system.ArgumentCheck.asNumber
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(number|null)} The checked value.
@@ -251,7 +251,7 @@ function asNumber () {
  * forOptional: Checks if value is an integer or null.<br/>
  * forMandatory: Checks if value is an integer.
  *
- * @function bo.system.EnsureArgument.isOptionalInteger
+ * @function bo.system.ArgumentCheck.asInteger
  * @param {string} [message] - Human-readable description of the error.
  * @param {...*} [messageParams] - Optional interpolation parameters of the message.
  * @returns {(number|null)} The checked value.
@@ -271,6 +271,261 @@ function asInteger () {
       this.exception('optInteger', arguments);
   }
   return this.value;
+}
+
+//endregion
+
+//region Boolean
+
+/**
+ * forOptional: Checks if value is a Boolean or null.<br/>
+ * forMandatory: Checks if value is a Boolean.
+ *
+ * @function bo.system.ArgumentCheck.asBoolean
+ * @param {string} [message] - Human-readable description of the error.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+ * @returns {(boolean|null)} The checked value.
+ *
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a Boolean value or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a Boolean value.
+ */
+function asBoolean () {
+  if (this.isMandatory) {
+    if (typeof this.value !== 'boolean' && !(this.value instanceof Boolean))
+      this.exception('manBoolean', arguments);
+  } else {
+    if (this.value === undefined)
+      this.value = null;
+    if (this.value !== null && typeof this.value !== 'boolean' && !(this.value instanceof Boolean))
+      this.exception('optBoolean', arguments);
+  }
+  return this.value;
+}
+
+//endregion
+
+//region Object
+
+/**
+ * forOptional: Checks if value is an object or null.<br/>
+ * forMandatory: Checks if value is an object.
+ *
+ * @function bo.system.ArgumentCheck.asObject
+ * @param {string} [message] - Human-readable description of the error.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+ * @returns {(object|null)} The checked value.
+ *
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an object or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an object.
+ */
+function asObject () {
+  if (this.isMandatory) {
+    if (typeof this.value !== 'object' || this.value === null)
+      this.exception('manObject', arguments);
+  } else {
+    if (this.value === undefined)
+      this.value = null;
+    if (typeof this.value !== 'object')
+      this.exception('optObject', arguments);
+  }
+  return this.value;
+}
+
+//endregion
+
+//region Function
+
+/**
+ * forOptional: Checks if value is a function or null.<br/>
+ * forMandatory: Checks if value is a function.
+ *
+ * @function bo.system.ArgumentCheck.asFunction
+ * @param {string} [message] - Human-readable description of the error.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+ * @returns {(function|null)} The checked value.
+ *
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a function or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a function.
+ */
+function asFunction () {
+  if (this.isMandatory) {
+    if (typeof this.value !== 'function')
+      this.exception('manFunction', arguments);
+  } else {
+    if (this.value === undefined)
+      this.value = null;
+    if (this.value !== null && typeof this.value !== 'function')
+      this.exception('optFunction', arguments);
+  }
+  return this.value;
+}
+
+//endregion
+
+//region Type
+
+function typeNames (types) {
+  var list = '<< no types >>';
+  if (types.length) {
+    list = types.map(function (type) {
+      return type.name ? type.name : '-unknown-'
+    }).join(' | ');
+  }
+  return list;
+}
+
+/**
+ * forOptional: Checks if value is a given type or null.<br/>
+ * forMandatory: Checks if value is a given type.
+ *
+ * @function bo.system.ArgumentCheck.asType
+ * @param {(constructor|Array.<constructor>)} type - The type that value must inherit.
+ * @param {string} [message] - Human-readable description of the error.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+ * @returns {(object|null)} The checked value.
+ *
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a TYPE object or null.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a TYPE object.
+ */
+function asType () {
+  var args = Array.prototype.slice.call(arguments);
+  var type = args.shift();
+  var types = type instanceof Array ? type : [ type ];
+
+  if (this.isMandatory) {
+    if (!(types.some(function (option) {
+          return this.value && (this.value instanceof option || this.value.super_ === option);
+        }))) {
+      args.unshift(typeNames(types));
+      this.exception('manType', args);
+    }
+  } else {
+    if (this.value === undefined)
+      this.value = null;
+    if (this.value !== null && !(types.some(function (option) {
+          return this.value && (this.value instanceof option || this.value.super_ === option);
+        }))) {
+      args.unshift(typeNames(types));
+      this.exception('manType', args);
+    }
+  }
+  return this.value;
+}
+
+//endregion
+
+//region Model
+
+/**
+ * for: Checks if value is an instance of a given model type.
+ *
+ * @function bo.system.ArgumentCheck.asModelType
+ * @param {(constructor|Array.<constructor>)} model - The model type that value must be an instance of.
+ * @param {string} [message] - Human-readable description of the error.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+ * @returns {object} The checked value.
+ *
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a model type.
+ */
+function asModelType () {
+  var args = Array.prototype.slice.call(arguments);
+  var model = args.shift();
+  var models = model instanceof Array ? model : [ model ];
+
+  if (!(models.some(function (modelType) {
+        return this.value && this.value.constructor && this.value.constructor.modelType === modelType;
+      }))) {
+    args.unshift(models.join(' | '));
+    this.exception('manType', args);
+  }
+  return this.value;
+}
+
+//endregion
+
+//region Enumeration
+
+/**
+ * for: Checks if value is member of a given enumeration.
+ *
+ * @function bo.system.ArgumentCheck.asEnumMember
+ * @param {constructor} type - The type of the enumeration.
+ * @param {number} [defaultValue] - The type of the enumeration.
+ * @param {string} [message] - Human-readable description of the error.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+ * @returns {number} The checked value.
+ *
+ * @throws {@link bo.system.ArgumentError Argument error}: Type is not an enumeration type.
+ * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an enumeration type item.
+ */
+function asEnumMember () {
+  var args = Array.prototype.slice.call(arguments);
+  var type = args.shift();
+  var defaultValue = args.shift();
+
+  if (!(type && type.hasMember && type.constructor &&
+      type.constructor.super_ && type.constructor.super_.name === 'Enumeration'))
+    this.exception('enumType', arguments);
+  if ((this.value === null || this.value === undefined) && typeof defaultValue === 'number')
+    this.value = defaultValue;
+  if (!type.hasMember(this.value))
+    this.exception('enumMember', arguments);
+
+  return this.value;
+}
+
+//endregion
+
+//region Array
+
+/**
+ * forOptional: Checks if value is an array of a given type or null.<br/>
+ * forMandatory: Checks if value is an array of a given type.
+ *
+ * @function bo.system.ArgumentCheck.asArray
+ * @param {*} type - The type of the array items - a primitive type or a constructor.
+ * @param {string} [message] - Human-readable description of the error.
+ * @param {...*} [messageParams] - Optional interpolation parameters of the message.
+ * @returns {(Array.<type>|null)} The checked value.
+ *
+ * @throws {@link bo.system.ArgumentError Argument error}:
+ *      The argument must be an array of TYPE values, or a single TYPE value or null.
+ * @throws {@link bo.system.ArgumentError Argument error}:
+ *      The argument must be an array of TYPE objects, or a single TYPE object or null.
+ * @throws {@link bo.system.ArgumentError Argument error}:
+ *      The argument must be an array of TYPE values, or a single TYPE value.
+ * @throws {@link bo.system.ArgumentError Argument error}:
+ *      The argument must be an array of TYPE objects, or a single TYPE object.
+ */
+function asArray () {
+  if (!this.isMandatory) {
+    if (this.value === undefined || this.value === null)
+      return [];
+  }
+  var msgKey;
+  var type = Array.prototype.slice.call(arguments).shift();
+
+  if (type === String || type === Number || type === Boolean) {
+    msgKey = this.isMandatory ? 'manArrayPrim' : 'optArrayPrim';
+    var typeName = type.name.toLowerCase();
+
+    if (typeof this.value === typeName || this.value instanceof type)
+      return [this.value];
+    if (this.value instanceof Array && (!this.value.length || this.value.every(function (item) {
+          return typeof item === typeName || item instanceof type;
+        })))
+      return this.value;
+  } else {
+    msgKey = this.isMandatory ? 'manArray' : 'optArray';
+
+    if (this.value instanceof type)
+      return [this.value];
+    if (this.value instanceof Array && (!this.value.length || this.value.every(function (item) {
+          return item instanceof type;
+        })))
+      return this.value;
+  }
+  this.exception(msgKey, arguments);
 }
 
 //endregion
@@ -295,7 +550,16 @@ function ArgumentCheckBuilder (argumentGroup, className, methodName, propertyNam
 
     asDefined: asDefined,
     hasValue: hasValue,
-    asString: asString
+    asString: asString,
+    asNumber: asNumber,
+    asInteger: asInteger,
+    asBoolean: asBoolean,
+    asObject: asObject,
+    asFunction: asFunction,
+    asType: asType,
+    asModelType: asModelType,
+    asEnumMember: asEnumMember,
+    asArray: asArray
   };
 
   return ArgumentCheck.bind(builderBase);
