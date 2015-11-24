@@ -115,7 +115,7 @@ function exception (defaultMessage, userArguments) {
     parameters = Array.prototype.slice.call(userArguments);
     message = parameters.shift() || defaultMessage;
   }
-  var args = [message || 'default', this.argumentName];
+  var args = [null, message || 'default'];
 
   switch (this.argumentGroup) {
     case ArgumentGroup.Property:
@@ -135,7 +135,10 @@ function exception (defaultMessage, userArguments) {
       type = ArgumentError;
       break;
   }
-  if (parameters.length) args.push(parameters);
+  args.push(this.argumentName);
+  if (parameters.length)
+    args.push(parameters);
+
   error = type.bind.apply(type, args);
   throw new error();
 }
@@ -562,7 +565,13 @@ function ArgumentCheckBuilder (argumentGroup, className, methodName, propertyNam
     asArray: asArray
   };
 
-  return ArgumentCheck.bind(builderBase);
+  var fnCheck = ArgumentCheck.bind(builderBase);
+
+  fnCheck.check = function (value) {
+    return this(value);
+  };
+
+  return fnCheck;
 }
 
 //endregion
@@ -573,8 +582,8 @@ function ArgumentCheckFactory() {
   return ArgumentCheckBuilder(ArgumentGroup.General, '', '', '');
 }
 
-ArgumentCheckFactory.check = function() {
-  return ArgumentCheckBuilder(ArgumentGroup.General, '', '', '');
+ArgumentCheckFactory.check = function(value) {
+  return ArgumentCheckBuilder(ArgumentGroup.General, '', '', '')(value);
 };
 
 ArgumentCheckFactory.inConstructor = function (className) {
