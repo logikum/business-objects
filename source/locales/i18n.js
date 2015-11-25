@@ -35,8 +35,7 @@ function readLocales (namespace, localePath) {
     return fs.statSync(path.join(localePath, fileName)).isFile() && path.extname(fileName) === '.json';
   }).forEach(function (fileName) {
     var filePath = path.join(localePath, fileName);
-    //if (fs.statSync(filePath).isFile())
-      locales[namespace][path.basename(fileName, '.json')] = require(filePath);
+    locales[namespace][path.basename(fileName, '.json')] = require(filePath);
   });
   mergeLocales(namespace);
 }
@@ -57,7 +56,7 @@ function mergeLocales (namespace) {
           if( objExt.hasOwnProperty( key ) ) {
             if (objBase[key])
               console.log('Duplicated locale: ' + namespace + '["' + langExt + '"].' + key +
-                ' => ' + namespace + '.' + langBase + '.' + key);
+                  ' => ' + namespace + '.' + langBase + '.' + key);
             else
               objBase[key] = objExt[key];
           }
