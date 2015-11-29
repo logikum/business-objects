@@ -523,4 +523,224 @@ describe('Argument checking function', function () {
   });
 
   //endregion
+
+  //region Object
+
+  it('asObject (optional) method works', function () {
+    function call01() { return Argument.check(false).forOptional().asObject(); }
+    function call02() { return Argument.check(1).forOptional().asObject(); }
+    function call03() { return Argument.check(-100.99).forOptional().asObject(); }
+    function call04() { return Argument.check('').forOptional().asObject(); }
+    function call05() { return Argument.check('Romeo and Juliet').forOptional().asObject(); }
+    function call06() { return Argument.check(function() {}).forOptional().asObject(); }
+
+    var any01 = Argument.check().forOptional().asObject();
+    var any02 = Argument.check(null).forOptional().asObject();
+    var any03 = Argument.check({}).forOptional().asObject();
+    var any04 = Argument.check([]).forOptional().asObject();
+    var any05 = Argument.check(new Date()).forOptional().asObject();
+    var any06 = Argument.check(new RegExp('[0-9]+')).forOptional().asObject();
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow();
+    expect(call06).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+    expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
+  });
+
+  it('asObject (mandatory) method works', function () {
+    function call01() { return Argument.check().forMandatory().asObject(); }
+    function call02() { return Argument.check(null).forMandatory().asObject(); }
+    function call03() { return Argument.check(false).forMandatory().asObject(); }
+    function call04() { return Argument.check(1).forMandatory().asObject(); }
+    function call05() { return Argument.check(-100.99).forMandatory().asObject(); }
+    function call06() { return Argument.check('').forMandatory().asObject(); }
+    function call07() { return Argument.check('Romeo and Juliet').forMandatory().asObject(); }
+    function call08() { return Argument.check(function() {}).forMandatory().asObject(); }
+
+    var any01 = Argument.check({}).forMandatory().asObject();
+    var any02 = Argument.check([]).forMandatory().asObject();
+    var any03 = Argument.check(new Date()).forMandatory().asObject();
+    var any04 = Argument.check(new RegExp('[0-9]+')).forMandatory().asObject();
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow();
+    expect(call06).toThrow();
+    expect(call07).toThrow();
+    expect(call08).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+  });
+
+  //endregion
+
+  //region Function
+
+  it('asFunction (optional) method works', function () {
+    function call01() { return Argument.check(false).forOptional().asFunction(); }
+    function call02() { return Argument.check(1).forOptional().asFunction(); }
+    function call03() { return Argument.check(-100.99).forOptional().asFunction(); }
+    function call04() { return Argument.check('').forOptional().asFunction(); }
+    function call05() { return Argument.check('Romeo and Juliet').forOptional().asFunction(); }
+    function call06() { return Argument.check([]).forOptional().asFunction(); }
+    function call07() { return Argument.check({}).forOptional().asFunction(); }
+    function call08() { return Argument.check(new Date()).forOptional().asFunction(); }
+    function call09() { return Argument.check(new RegExp('[0-9]+')).forOptional().asFunction(); }
+
+    var any01 = Argument.check().forOptional().asFunction();
+    var any02 = Argument.check(null).forOptional().asFunction();
+    var any03 = Argument.check(function() {}).forOptional().asFunction();
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow();
+    expect(call06).toThrow();
+    expect(call07).toThrow();
+    expect(call08).toThrow();
+    expect(call09).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+  });
+
+  it('isMandatoryFunction method works', function () {
+    function call01() { return Argument.check(false).forMandatory().asFunction(); }
+    function call02() { return Argument.check().forMandatory().asFunction(); }
+    function call03() { return Argument.check(null).forMandatory().asFunction(); }
+    function call04() { return Argument.check(1).forMandatory().asFunction(); }
+    function call05() { return Argument.check(-100.99).forMandatory().asFunction(); }
+    function call06() { return Argument.check('').forMandatory().asFunction(); }
+    function call07() { return Argument.check('Romeo and Juliet').forMandatory().asFunction(); }
+    function call08() { return Argument.check([]).forMandatory().asFunction(); }
+    function call09() { return Argument.check({}).forMandatory().asFunction(); }
+    function call10() { return Argument.check(new Date()).forMandatory().asFunction(); }
+    function call11() { return Argument.check(new RegExp('[0-9]+')).forMandatory().asFunction(); }
+
+    var any01 = Argument.check(function() {}).forMandatory().asFunction();
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow();
+    expect(call06).toThrow();
+    expect(call07).toThrow();
+    expect(call08).toThrow();
+    expect(call09).toThrow();
+    expect(call10).toThrow();
+    expect(call11).toThrow();
+
+    expect(any01).toBeDefined();
+  });
+
+  //endregion
+
+  //region Type
+
+  it('asType (optional) method works', function () {
+    function call01() { return Argument.check(false).forOptional().asType(Boolean); }
+    function call02() { return Argument.check(1).forOptional().asType(Number); }
+    function call03() { return Argument.check(-100.99).forOptional().asType(Number); }
+    function call04() { return Argument.check('').forOptional().asType(String); }
+    function call05() { return Argument.check('Romeo and Juliet').forOptional().asType(String); }
+
+    var any01 = Argument.check(undefined).forOptional().asType(Object);
+    var any02 = Argument.check(null).forOptional().asType(Object);
+    var any03 = Argument.check([]).forOptional().asType(Array);
+    var any04 = Argument.check({}).forOptional().asType(Object);
+    var any05 = Argument.check(new Date()).forOptional().asType(Date);
+    var any06 = Argument.check(new RegExp('[0-9]+')).forOptional().asType(RegExp);
+    var any07 = Argument.check(function() {}).forOptional().asType(Function);
+    var any08 = Argument.check({ x: 0 }).forOptional().asType([ Function, Object ]);
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+    expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
+    expect(any07).toBeDefined();
+    expect(any08).toBeDefined();
+  });
+
+  it('asType (mandatory) method works', function () {
+    function call01() { return Argument.check(undefined).forMandatory().asType(Object); }
+    function call02() { return Argument.check(null).forMandatory().asType(Object); }
+    function call03() { return Argument.check(false).forMandatory().asType(Boolean); }
+    function call04() { return Argument.check(1).forMandatory().asType(Number); }
+    function call05() { return Argument.check(-100.99).forMandatory().asType(Number); }
+    function call06() { return Argument.check('').forMandatory().asType(String); }
+    function call07() { return Argument.check('Romeo and Juliet').forMandatory().asType(String); }
+
+    var any01 = Argument.check([]).forMandatory().asType(Array);
+    var any02 = Argument.check({}).forMandatory().asType(Object);
+    var any03 = Argument.check(new Date()).forMandatory().asType(Date);
+    var any04 = Argument.check(new RegExp('[0-9]+')).forMandatory().asType(RegExp);
+    var any05 = Argument.check(function() {}).forMandatory().asType(Function);
+    var any06 = Argument.check({ x: 0 }).forMandatory().asType([ Function, Object ]);
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow();
+    expect(call06).toThrow();
+    expect(call07).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+    expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
+  });
+
+  //endregion
+
+  //region Model
+
+  it('asModelType method works', function () {
+    var cmd = ClearScheduleCommand.create();
+
+    function call01() { return Argument.check(undefined).for().asModelType('CommandObjectSync'); }
+    function call02() { return Argument.check(null).for().asModelType('CommandObjectSync'); }
+    function call03() { return Argument.check({}).for().asModelType('CommandObjectSync'); }
+    function call04() { return Argument.check(cmd).for().asModelType('CommandObjectSync'); }
+    function call05() { return Argument.check(cmd).for().asModelType('CommandObjectSync', 'Invalid model type!'); }
+
+    var cmd01 = Argument.check(cmd).for().asModelType('CommandObjectSync');
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow('Invalid model type!');
+
+    expect(cmd01).toBe(cmd);
+  });
+
+  //endregion
 });
