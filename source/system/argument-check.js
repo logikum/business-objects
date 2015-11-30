@@ -69,11 +69,11 @@ function ArgumentCheck (value) {
  * Sets the name of the argument.
  *
  * @function bo.system.ArgumentCheck.for
- * @param {string} argumentName - The name of the argument.
+ * @param {string} [argumentName] - The name of the argument.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
 function forGeneric  (argumentName) {
-  this.argumentName = argumentName;
+  this.argumentName = argumentName || '';
   return this;
 }
 
@@ -81,11 +81,11 @@ function forGeneric  (argumentName) {
  * Sets the name of the optional argument.
  *
  * @function bo.system.ArgumentCheck.forOptional
- * @param {string} argumentName - The name of the optional argument.
+ * @param {string} [argumentName] - The name of the optional argument.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
 function forOptional (argumentName) {
-  this.argumentName = argumentName;
+  this.argumentName = argumentName || '';
   this.isMandatory = false;
   return this;
 }
@@ -94,11 +94,11 @@ function forOptional (argumentName) {
  * Sets the name of the mandatory argument.
  *
  * @function bo.system.ArgumentCheck.forMandatory
- * @param {string} argumentName - The name of the mandatory argument.
+ * @param {string} [argumentName] - The name of the mandatory argument.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
 function forMandatory (argumentName) {
-  this.argumentName = argumentName;
+  this.argumentName = argumentName || '';
   this.isMandatory = true;
   return this;
 }
@@ -137,7 +137,9 @@ function exception (defaultMessage, userArguments) {
   }
   args.push(this.argumentName);
   if (parameters.length)
-    args.push(parameters);
+    parameters.forEach(function (parameter) {
+      args.push(parameter);
+    });
 
   error = type.bind.apply(type, args);
   throw new error();
@@ -394,21 +396,24 @@ function asType () {
   var args = Array.prototype.slice.call(arguments);
   var type = args.shift();
   var types = type instanceof Array ? type : [ type ];
+  var self = this;
 
   if (this.isMandatory) {
     if (!(types.some(function (option) {
-          return this.value && (this.value instanceof option || this.value.super_ === option);
+          return self.value && (self.value instanceof option || self.value.super_ === option);
         }))) {
-      args.unshift(typeNames(types));
+      var msg = args.shift();
+      args.unshift(msg, typeNames(types));
       this.exception('manType', args);
     }
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && !(types.some(function (option) {
-          return this.value && (this.value instanceof option || this.value.super_ === option);
+          return self.value && (self.value instanceof option || self.value.super_ === option);
         }))) {
-      args.unshift(typeNames(types));
+      var msg = args.shift();
+      args.unshift(msg, typeNames(types));
       this.exception('manType', args);
     }
   }
@@ -434,11 +439,13 @@ function asModelType () {
   var args = Array.prototype.slice.call(arguments);
   var model = args.shift();
   var models = model instanceof Array ? model : [ model ];
+  var self = this;
 
   if (!(models.some(function (modelType) {
-        return this.value && this.value.constructor && this.value.constructor.modelType === modelType;
+        return self.value && self.value.constructor && self.value.constructor.modelType === modelType;
       }))) {
-    args.unshift(models.join(' | '));
+    var msg = args.shift();
+    args.unshift(msg, models.join(' | '));
     this.exception('manType', args);
   }
   return this.value;

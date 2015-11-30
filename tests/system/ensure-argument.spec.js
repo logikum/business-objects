@@ -61,7 +61,7 @@ describe('Argument checking object', function () {
     var any10 = EnsureArgument.isDefined(new Date());
     var any11 = EnsureArgument.isDefined(new RegExp('[0-9]+'));
 
-    expect(call1).toThrow('The argument must be supplied.');
+    expect(call1).toThrow('The {0} argument must be supplied.');
 
     expect(any01).toBeDefined();
     expect(any02).toBeDefined();
@@ -92,7 +92,7 @@ describe('Argument checking object', function () {
     var any10 = EnsureArgument.hasValue(new RegExp('[0-9]+'));
 
     expect(call1).toThrow();
-    expect(call2).toThrow('The argument is required.');
+    expect(call2).toThrow('The {0} argument is required.');
 
     expect(any01).toBeDefined();
     expect(any02).toBeDefined();

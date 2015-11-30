@@ -157,7 +157,7 @@ describe('Argument checking function', function () {
 
     expect(ex1).toEqual(jasmine.any(ArgumentError));
     expect(ex1.name).toBe('ArgumentError');
-    expect(ex1.message).toBe('The argument must be a string value.');
+    expect(ex1.message).toBe('The text argument must be a string value.');
 
     expect(ex2).toEqual(jasmine.any(ConstructorError));
     expect(ex2.name).toBe('ConstructorError');
@@ -191,7 +191,7 @@ describe('Argument checking function', function () {
     var any10 = Argument.check(new Date()).asDefined();
     var any11 = Argument.check(new RegExp('[0-9]+')).asDefined();
 
-    expect(call1).toThrow('The argument must be supplied.');
+    expect(call1).toThrow('The  argument must be supplied.');
 
     expect(any01).toBeDefined();
     expect(any02).toBeDefined();
@@ -222,7 +222,7 @@ describe('Argument checking function', function () {
     var any10 = Argument.check(new RegExp('[0-9]+')).hasValue();
 
     expect(call1).toThrow();
-    expect(call2).toThrow('The argument is required.');
+    expect(call2).toThrow('The  argument is required.');
 
     expect(any01).toBeDefined();
     expect(any02).toBeDefined();
@@ -728,8 +728,8 @@ describe('Argument checking function', function () {
     function call01() { return Argument.check(undefined).for().asModelType('CommandObjectSync'); }
     function call02() { return Argument.check(null).for().asModelType('CommandObjectSync'); }
     function call03() { return Argument.check({}).for().asModelType('CommandObjectSync'); }
-    function call04() { return Argument.check(cmd).for().asModelType('CommandObjectSync'); }
-    function call05() { return Argument.check(cmd).for().asModelType('CommandObjectSync', 'Invalid model type!'); }
+    function call04() { return Argument.check(cmd).for().asModelType('CommandObject'); }
+    function call05() { return Argument.check(cmd).for().asModelType('CommandObject', 'Invalid model type!'); }
 
     var cmd01 = Argument.check(cmd).for().asModelType('CommandObjectSync');
 
@@ -740,6 +740,128 @@ describe('Argument checking function', function () {
     expect(call05).toThrow('Invalid model type!');
 
     expect(cmd01).toBe(cmd);
+  });
+
+  //endregion
+
+  //region Enumeration
+
+  it('asEnumMember method works', function () {
+    function Numbers1() {
+      Enumeration.call(this);
+      this.one = 0;
+      this.two = 1;
+      this.three = 2;
+      Object.freeze(this);
+    }
+    util.inherits(Numbers1, Enumeration);
+    var Numbers = new Numbers1();
+
+    function call01() { return Argument.check(undefined).for().asEnumMember(Numbers); }
+    function call02() { return Argument.check(null).for().asEnumMember(Numbers); }
+    function call03() { return Argument.check(false).for().asEnumMember(Numbers); }
+    function call04() { return Argument.check(1).for().asEnumMember(Numbers); }
+    function call05() { return Argument.check(-100.99).for().asEnumMember(Numbers); }
+    function call06() { return Argument.check('').for().asEnumMember(Numbers); }
+    function call07() { return Argument.check('Romeo and Juliet').for().asEnumMember(Numbers); }
+    function call08() { return Argument.check([]).for().asEnumMember(Numbers); }
+    function call09() { return Argument.check({}).for().asEnumMember(Numbers); }
+    function call10() { return Argument.check(function() {}).for().asEnumMember(Numbers); }
+    function call11() { return Argument.check(new Date()).for().asEnumMember(Numbers); }
+    function call12() { return Argument.check(new RegExp('[0-9]+')).for().asEnumMember(Numbers); }
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).not.toThrow();
+    expect(call05).toThrow();
+    expect(call06).toThrow();
+    expect(call07).toThrow();
+    expect(call08).toThrow();
+    expect(call09).toThrow();
+    expect(call10).toThrow();
+    expect(call11).toThrow();
+    expect(call12).toThrow();
+  });
+
+  //endregion
+
+  //region Array
+
+  it('asArray (optional) method works', function () {
+    function call1() { return Argument.check(false).forOptional().asArray(String); }
+    function call2() { return Argument.check(1).forOptional().asArray(String); }
+    function call3() { return Argument.check(-100.99).forOptional().asArray(String); }
+    function call4() { return Argument.check({}).forOptional().asArray(String); }
+    function call5() { return Argument.check(function() {}).forOptional().asArray(String); }
+    function call6() { return Argument.check(new Date()).forOptional().asArray(String); }
+    function call7() { return Argument.check(new RegExp('[0-9]+')).forOptional().asArray(String); }
+    function call8() { return Argument.check(['first', 13]).forOptional().asArray(String); }
+
+    var any01 = Argument.check(undefined).forOptional().asArray(String);
+    var any02 = Argument.check(null).forOptional().asArray(String);
+    var any03 = Argument.check('').forOptional().asArray(String);
+    var any04 = Argument.check('Romeo and Juliet').forOptional().asArray(String);
+    var any05 = Argument.check(['one']).forOptional().asArray(String);
+    var any06 = Argument.check(['one', 'two', 'three']).forOptional().asArray(String);
+    var any07 = Argument.check(new ModelBase()).forOptional().asArray(ModelBase);
+    var any08 = Argument.check([new ModelBase(), new ModelBase()]).forOptional().asArray(ModelBase);
+
+    expect(call1).toThrow();
+    expect(call2).toThrow();
+    expect(call3).toThrow();
+    expect(call4).toThrow();
+    expect(call5).toThrow();
+    expect(call6).toThrow();
+    expect(call7).toThrow();
+    expect(call8).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+    expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
+    expect(any07).toBeDefined();
+    expect(any08).toBeDefined();
+  });
+
+  it('asArray (mandatory) method works', function () {
+    function call01() { return Argument.check(undefined).forMandatory().asArray(String); }
+    function call02() { return Argument.check(null).forMandatory().asArray(String); }
+    function call03() { return Argument.check(false).forMandatory().asArray(String); }
+    function call04() { return Argument.check(1).forMandatory().asArray(String); }
+    function call05() { return Argument.check(-100.99).forMandatory().asArray(String); }
+    function call06() { return Argument.check({}).forMandatory().asArray(String); }
+    function call07() { return Argument.check(function() {}).forMandatory().asArray(String); }
+    function call08() { return Argument.check(new Date()).forMandatory().asArray(String); }
+    function call09() { return Argument.check(new RegExp('[0-9]+')).forMandatory().asArray(String); }
+    function call10() { return Argument.check(['first', 13]).forMandatory().asArray(String); }
+
+    var any01 = Argument.check('').forMandatory().asArray(String);
+    var any02 = Argument.check('Romeo and Juliet').forMandatory().asArray(String);
+    var any03 = Argument.check(['one']).forMandatory().asArray(String);
+    var any04 = Argument.check(['one', 'two', 'three']).forMandatory().asArray(String);
+    var any05 = Argument.check(new ModelBase()).forMandatory().asArray(ModelBase);
+    var any06 = Argument.check([new ModelBase(), new ModelBase()]).forMandatory().asArray(ModelBase);
+
+    expect(call01).toThrow();
+    expect(call02).toThrow();
+    expect(call03).toThrow();
+    expect(call04).toThrow();
+    expect(call05).toThrow();
+    expect(call06).toThrow();
+    expect(call07).toThrow();
+    expect(call08).toThrow();
+    expect(call09).toThrow();
+    expect(call10).toThrow();
+
+    expect(any01).toBeDefined();
+    expect(any02).toBeDefined();
+    expect(any03).toBeDefined();
+    expect(any04).toBeDefined();
+    expect(any05).toBeDefined();
+    expect(any06).toBeDefined();
   });
 
   //endregion
