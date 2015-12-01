@@ -3,7 +3,7 @@
 var CLASS_NAME = 'DataPortalError';
 
 var util = require('util');
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var DataPortalAction = require('./data-portal-action.js');
 var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
@@ -27,6 +27,7 @@ var t = require('../locales/i18n-bo.js')(CLASS_NAME);
  */
 function DataPortalError (modeltype, modelName, action, interceptedError) {
   Error.call(this);
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * The name of the error type.
@@ -39,23 +40,20 @@ function DataPortalError (modeltype, modelName, action, interceptedError) {
    * The type of the model the intercepted error occurred in.
    * @type {string}
    */
-  this.modelType = EnsureArgument.isMandatoryString(modeltype,
-      'c_manString', CLASS_NAME, 'modeltype');
+  this.modelType = check(modeltype).forMandatory('modeltype').asString();
 
   /**
    * The name of the model the intercepted error occurred in.
    * @type {string}
    */
-  this.modelName = EnsureArgument.isMandatoryString(modelName,
-      'c_manString', CLASS_NAME, 'modelName');
+  this.modelName = check(modelName).forMandatory('modelName').asString();
 
   /**
    * The name of the action executing that the intercepted error occurred in.
    * @type {string}
    */
   this.action = DataPortalAction.getName(
-      EnsureArgument.isEnumMember(action, DataPortalAction, null,
-        'c_enumMember', CLASS_NAME, 'action')
+      check(action).for('action').asEnumMember(DataPortalAction, null)
   );
 
   /**

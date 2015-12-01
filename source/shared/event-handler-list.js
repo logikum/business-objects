@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'EventHandlerList';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var DataPortalEvent = require('./data-portal-event.js');
 var ModalBase = require('../model-base.js');
 var CollectionBase = require('../collection-base.js');
@@ -30,13 +30,11 @@ var EventHandlerList = function () {
    * @throws {@link bo.system.ArgumentError Argument error}: The handler must be a function.
    */
   this.add = function (modelName, event, handler) {
+    var check = Argument.inMethod(CLASS_NAME, 'add');
     items.push({
-      modelName: EnsureArgument.isMandatoryString(modelName,
-          'm_manString', CLASS_NAME, 'add', 'modelName'),
-      event: EnsureArgument.isEnumMember(event, DataPortalEvent, null,
-          'm_enumMember', CLASS_NAME, 'add', 'event'),
-      handler: EnsureArgument.isMandatoryFunction(handler,
-          'm_manFunction', CLASS_NAME, 'add', 'handler')
+      modelName: check(modelName).forMandatory('modelName').asString(),
+      event: check(event).for('event').asEnumMember(DataPortalEvent, null),
+      handler: check(handler).forMandatory('handler').asFunction()
     });
   };
 
@@ -51,8 +49,8 @@ var EventHandlerList = function () {
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
    */
   this.setup = function (target) {
-    target = EnsureArgument.isMandatoryType(target, [ ModalBase, CollectionBase ],
-        'm_manType', CLASS_NAME, 'setup', 'target');
+    target = Argument.inMethod(CLASS_NAME, 'setup')
+        .check(target).forMandatory('target').asType([ ModalBase, CollectionBase ]);
 
     items.filter(function (item) {
       return item.modelName === target.$modelName;

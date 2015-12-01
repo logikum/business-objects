@@ -3,10 +3,10 @@
 var CLASS_NAME = 'DataPortalContext';
 
 var config = require('./configuration-reader.js');
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
-var UserInfo = require('./../system/user-info.js');
+var UserInfo = require('../system/user-info.js');
 
 /**
  * @classdesc
@@ -35,26 +35,23 @@ function DataPortalContext (dao, properties, getValue, setValue) {
   var self = this;
   var isDirty = false;
   var daConnection = null;
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * The data access object of the current model.
    * @type {object}
    * @readonly
    */
-  this.dao = EnsureArgument.isMandatoryObject(dao || {},
-      'c_manObject', CLASS_NAME, 'dao');
+  this.dao = check(dao || {}).forMandatory('dao').asObject();
   /**
    * Array of property definitions that may appear on the data transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
-  this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
-      'c_optArray', CLASS_NAME, 'properties');
+  this.properties = check(properties).forOptional('properties').asArray(PropertyInfo);
 
-  getValue = EnsureArgument.isOptionalFunction(getValue,
-      'c_optFunction', CLASS_NAME, 'getValue');
-  setValue = EnsureArgument.isOptionalFunction(setValue,
-      'c_optFunction', CLASS_NAME, 'setValue');
+  getValue = check(getValue).forOptional('getValue').asFunction();
+  setValue = check(setValue).forOptional('setValue').asFunction();
 
   /**
    * The current user.
@@ -127,8 +124,8 @@ function DataPortalContext (dao, properties, getValue, setValue) {
    * @throws {@link bo.shared.ModelError Model error}: Cannot read the properties of a collection.
    */
   this.getValue = function (propertyName) {
-    propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', CLASS_NAME, 'getValue', 'propertyName');
+    propertyName = Argument.inMethod(CLASS_NAME, 'getValue')
+        .check(propertyName).forMandatory('propertyName').asString();
     if (getValue)
       return getValue(getByName(propertyName));
     else
@@ -146,8 +143,8 @@ function DataPortalContext (dao, properties, getValue, setValue) {
    * @throws {@link bo.shared.ModelError Model error}: Cannot write the properties of a collection.
    */
   this.setValue = function (propertyName, value) {
-    propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', CLASS_NAME, 'setValue', 'propertyName');
+    propertyName = Argument.inMethod(CLASS_NAME, 'setValue')
+        .check(propertyName).forMandatory('propertyName').asString();
     if (setValue) {
       if (value !== undefined) {
         setValue(getByName(propertyName), value);

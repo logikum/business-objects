@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'TransferContext';
 
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
 
@@ -29,18 +29,16 @@ var PropertyInfo = require('./property-info.js');
  */
 function TransferContext (properties, getValue, setValue) {
   var self = this;
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * Array of property definitions that may appear on the transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
-  this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
-      'c_optArray', CLASS_NAME, 'properties');
-  getValue = EnsureArgument.isOptionalFunction(getValue,
-      'c_optFunction', CLASS_NAME, 'getValue');
-  setValue = EnsureArgument.isOptionalFunction(setValue,
-      'c_optFunction', CLASS_NAME, 'setValue');
+  this.properties = check(properties).forOptional('properties').asArray(PropertyInfo);
+  getValue = check(getValue).forOptional('getValue').asFunction();
+  setValue = check(setValue).forOptional('setValue').asFunction();
 
   function getByName (name) {
     for (var i = 0; i < self.properties.length; i++) {
@@ -61,8 +59,8 @@ function TransferContext (properties, getValue, setValue) {
    */
   this.getValue = function (propertyName) {
     if (getValue) {
-      propertyName = EnsureArgument.isMandatoryString(propertyName,
-          'm_manString', CLASS_NAME, 'getValue', 'propertyName');
+      propertyName = Argument.inMethod(CLASS_NAME, 'getValue')
+          .check(propertyName).forMandatory('propertyName').asString();
       return getValue(getByName(propertyName));
     } else
       throw new ModelError('getValue');
@@ -79,8 +77,8 @@ function TransferContext (properties, getValue, setValue) {
    */
   this.setValue = function (propertyName, value) {
     if (setValue) {
-      propertyName = EnsureArgument.isMandatoryString(propertyName,
-          'm_manString', CLASS_NAME, 'setValue', 'propertyName');
+      propertyName = Argument.inMethod(CLASS_NAME, 'setValue')
+          .check(propertyName).forMandatory('propertyName').asString();
       if (value !== undefined) {
         setValue(getByName(propertyName), value);
       }

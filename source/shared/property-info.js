@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'PropertyInfo';
 
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var DataType = require('../data-types/data-type.js');
 var PropertyFlag = require('../shared/property-flag.js');
 var ModelBase = require('../model-base.js');
@@ -36,14 +36,14 @@ var CollectionBase = require('../collection-base.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The flags must be PropertyFlag items.
  */
 function PropertyInfo (name, type, flags, getter, setter) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * The name of the property.
    * @type {string}
    * @readonly
    */
-  this.name = EnsureArgument.isMandatoryString(name,
-      'c_manString', CLASS_NAME, 'name');
+  this.name = check(name).forMandatory('name').asString();
 
   /**
    * The data type of the property.
@@ -58,29 +58,25 @@ function PropertyInfo (name, type, flags, getter, setter) {
    * @type {*}
    * @readonly
    */
-  this.type = EnsureArgument.isMandatoryType(type, [ DataType, ModelBase, CollectionBase ],
-      'c_manType', CLASS_NAME, 'type');
+  this.type = check(type).forMandatory('type').asType([ DataType, ModelBase, CollectionBase ]);
 
   /**
    * The custom getter function of the property.
    * @type {external.propertyGetter}
    * @readonly
    */
-  this.getter = EnsureArgument.isOptionalFunction(getter,
-      'c_optFunction', CLASS_NAME, 'getter');
+  this.getter = check(getter).forOptional('getter').asFunction();
 
   /**
    * The custom setter function of the property.
    * @type {external.propertySetter}
    * @readonly
    */
-  this.setter = EnsureArgument.isOptionalFunction(setter,
-      'c_optFunction', CLASS_NAME, 'setter');
+  this.setter = check(setter).forOptional('setter').asFunction();
 
   flags = type instanceof DataType ?
-    EnsureArgument.isMandatoryInteger(flags || PropertyFlag.none,
-        'c_optInteger', CLASS_NAME, 'flags') :
-    PropertyFlag.readOnly | PropertyFlag.notOnDto | PropertyFlag.notOnCto;
+      check(flags || PropertyFlag.none).forMandatory('flags').asInteger() :
+      PropertyFlag.readOnly | PropertyFlag.notOnDto | PropertyFlag.notOnCto;
 
   /**
    * Indicates whether the value of the property can be modified.

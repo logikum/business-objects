@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'PropertyManager';
 
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ArgumentError = require('./../system/argument-error.js');
 var PropertyInfo = require('./property-info.js');
 var DataType = require('../data-types/data-type.js');
@@ -26,18 +26,18 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
   var changed = false;  // for children
   var children = [];
   var isFrozen = false;
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * The name of the business object model.
    * @type {string}
    * @readonly
    */
-  this.name = EnsureArgument.isMandatoryString(name,
-      'c_manString', CLASS_NAME, 'name');
+  this.name = check(name).forMandatory('name').asString();
 
-  Array.prototype.slice.call(arguments, 1)
+   Array.prototype.slice.call(arguments, 1)
       .forEach(function (arg) {
-        items.push(EnsureArgument.isMandatoryType(arg, PropertyInfo, 'c_pm'));
+        items.push(check(arg).forMandatory().asType(PropertyInfo, 'c_pm'));
         changed = true;
       });
 
@@ -55,8 +55,8 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
     if (isFrozen)
       throw new ModelError('frozen', this.name);
 
-    items.push(EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'add', 'property'));
+    items.push(Argument.inMethod(CLASS_NAME, 'add')
+        .check(property).forMandatory('property').asType(PropertyInfo));
     changed = true;
   };
 
@@ -101,8 +101,8 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
    */
   this.contains = function (property) {
-    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'contains', 'property');
+    property = Argument.inMethod(CLASS_NAME, 'contains')
+        .check(property).forMandatory('property').asType(PropertyInfo);
 
     return items.some(function (item) {
       return item.name === property.name;
@@ -120,8 +120,8 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    */
   this.getByName = function (name, message) {
-    name = EnsureArgument.isMandatoryString(name,
-        'm_manString', CLASS_NAME, 'getByName', 'name');
+    name = Argument.inMethod(CLASS_NAME, 'getByName')
+        .check(name).forMandatory('name').asString();
 
     for (var i = 0; i < items.length; i++) {
       if (items[i].name === name)
@@ -225,10 +225,10 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    *      should be an allowed type.
    */
   this.verifyChildTypes = function (allowedTypes) {
-    allowedTypes = EnsureArgument.isMandatoryArray(allowedTypes, String,
-        'm_manArrayPrim', CLASS_NAME, 'verifyChildTypes', 'allowedTypes');
+    allowedTypes = Argument.inMethod(CLASS_NAME, 'verifyChildTypes')
+        .check(allowedTypes).forMandatory('allowedTypes').asArray(String);
 
-    checkChildren();
+        checkChildren();
     var child;
 
     for (var i = 0; i < children.length; i++) {
@@ -268,8 +268,8 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    */
   this.getKey = function (getPropertyValue) {
 
-    getPropertyValue = EnsureArgument.isMandatoryFunction(getPropertyValue,
-        'm_manFunction', CLASS_NAME, 'getKey', 'getPropertyValue');
+    getPropertyValue = Argument.inMethod(CLASS_NAME, 'getKey')
+        .check(getPropertyValue).forMandatory('getPropertyValue').asFunction();
 
     // No properties - no keys.
     if (!items.length)
@@ -317,11 +317,10 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    * @throws {@link bo.system.ArgumentError Argument error}: The getPropertyValue argument must be a function.
    */
   this.keyEquals = function (data, getPropertyValue) {
+    var check = Argument.inMethod(CLASS_NAME, 'keyEquals');
 
-    data = EnsureArgument.isMandatoryObject(data,
-        'm_defined', CLASS_NAME, 'keyEquals', 'data');
-    getPropertyValue = EnsureArgument.isMandatoryFunction(getPropertyValue,
-        'm_manFunction', CLASS_NAME, 'keyEquals', 'getPropertyValue');
+    data = check(data).forMandatory('data').asObject();
+    getPropertyValue = check(getPropertyValue).forMandatory('getPropertyValue').asFunction();
 
     // Get key properties.
     var keys = items.filter(function (item) {

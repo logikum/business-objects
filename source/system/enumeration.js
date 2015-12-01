@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'Enumeration';
 
-var EnsureArgument = require('./ensure-argument.js');
+var Argument = require('./argument-check.js');
 var EnumerationError = require('./enumeration-error.js');
 
 /**
@@ -51,8 +51,7 @@ Enumeration.prototype.count = function () {
  * @throws {@link bo.system.EnumerationError Enumeration error}: The passed value is not an enumeration item.
  */
 Enumeration.prototype.getName = function (value) {
-  value = EnsureArgument.isMandatoryNumber(value,
-      'm_manNumber', CLASS_NAME, 'getName', 'value');
+  value = Argument.inMethod(CLASS_NAME, 'getName').check(value).forMandatory('value').asNumber();
 
   for (var propertyName in this) {
     if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {
@@ -74,8 +73,7 @@ Enumeration.prototype.getName = function (value) {
  * @throws {@link bo.system.EnumerationError Enumeration error}: The passed name is not an enumeration item.
  */
 Enumeration.prototype.getValue = function (name) {
-  name = EnsureArgument.isMandatoryString(name,
-      'm_manString', CLASS_NAME, 'getValue', 'name');
+  name = Argument.inMethod(CLASS_NAME, 'getValue').check(name).forMandatory('name').asString();
 
   for (var propertyName in this) {
     if (this.hasOwnProperty(propertyName) && typeof this[propertyName] === 'number') {

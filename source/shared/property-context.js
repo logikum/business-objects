@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'PropertyContext';
 
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ModelError = require('./model-error.js');
 var PropertyInfo = require('./property-info.js');
 
@@ -30,6 +30,7 @@ var PropertyInfo = require('./property-info.js');
 function PropertyContext (properties, getValue, setValue) {
   var self = this;
   var primaryProperty = null;
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * The primary property of the custom function.
@@ -49,12 +50,9 @@ function PropertyContext (properties, getValue, setValue) {
    * @type {Array.<bo.shared.PropertyInfo>}
    * @readonly
    */
-  this.properties = EnsureArgument.isOptionalArray(properties, PropertyInfo,
-      'c_optArray', CLASS_NAME, 'properties');
-  getValue = EnsureArgument.isOptionalFunction(getValue,
-      'c_optFunction', CLASS_NAME, 'getValue');
-  setValue = EnsureArgument.isOptionalFunction(setValue,
-      'c_optFunction', CLASS_NAME, 'setValue');
+  this.properties = check(properties).forOptional('properties').asArray(PropertyInfo);
+  getValue = check(getValue).forOptional('getValue').asFunction();
+  setValue = check(setValue).forOptional('setValue').asFunction();
 
   /**
    * Sets the primary property of the custom function.
@@ -63,8 +61,8 @@ function PropertyContext (properties, getValue, setValue) {
    * @returns {bo.shared.PropertyContext} The property context object itself.
    */
   this.with = function (property) {
-    primaryProperty = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'with', 'property');
+    primaryProperty = Argument.inMethod(CLASS_NAME, 'with')
+        .check(property).forMandatory('property').asType(PropertyInfo);
     return this;
   };
 
@@ -87,8 +85,8 @@ function PropertyContext (properties, getValue, setValue) {
    * @throws {@link bo.shared.ModelError Model error}: The property cannot be read.
    */
   this.getValue = function (propertyName) {
-    propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', CLASS_NAME, 'getValue', 'propertyName');
+    propertyName = Argument.inMethod(CLASS_NAME, 'getValue')
+        .check(propertyName).forMandatory('propertyName').asString();
     if (getValue)
       return getValue(getByName(propertyName));
     else
@@ -106,8 +104,8 @@ function PropertyContext (properties, getValue, setValue) {
    * @throws {@link bo.shared.ModelError Model error}: The property cannot be written.
    */
   this.setValue = function (propertyName, value) {
-    propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', CLASS_NAME, 'setValue', 'propertyName');
+    propertyName = Argument.inMethod(CLASS_NAME, 'setValue')
+        .check(propertyName).forMandatory('propertyName').asString();
     if (setValue) {
       if (value !== undefined) {
         setValue(getByName(propertyName), value);

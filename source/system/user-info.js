@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'UserInfo';
 
-var EnsureArgument = require('./ensure-argument.js');
+var Argument = require('./argument-check.js');
 var NotImplementedError = require('./not-implemented-error.js');
 
 /**
@@ -17,7 +17,7 @@ var NotImplementedError = require('./not-implemented-error.js');
  */
 function UserInfo (userCode) {
 
-  userCode = EnsureArgument.isOptionalString(userCode, 'c_optString', CLASS_NAME, 'userCode');
+  userCode = Argument.inConstructor(CLASS_NAME).check(userCode).forOptional('userCode').asString();
 
   /**
    * The identifier of the user.
@@ -29,7 +29,7 @@ function UserInfo (userCode) {
       return userCode;
     },
     set: function (value) {
-      userCode = EnsureArgument.isMandatoryString(value, 'p_optString', CLASS_NAME, 'userCode');
+      userCode = Argument.inProperty(CLASS_NAME, 'userCode').check(value).forMandatory('value').asString();
     },
     enumeration: true
   });

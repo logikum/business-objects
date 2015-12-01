@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'DataStore';
 
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var PropertyInfo = require('./property-info.js');
 var CollectionBase = require('../collection-base.js');
 var ModelBase = require('../model-base.js');
@@ -29,11 +29,10 @@ function DataStore () {
    * @throws {@link bo.system.ArgumentError Argument error}: The value must be null, a model or a collection.
    */
   this.initValue = function (property, value) {
+    var check = Argument.inMethod(CLASS_NAME, 'initValue');
 
-    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'initValue', 'property');
-    value = EnsureArgument.isOptionalType(value, [ CollectionBase, ModelBase ],
-        'm_optType', CLASS_NAME, 'initValue', 'value');
+    property = check(property).forMandatory('property').asType(PropertyInfo);
+    value = check(value).forOptional('value').asType([ CollectionBase, ModelBase ]);
 
     data[property.name] = value;
     status[property.name] = true;
@@ -49,8 +48,8 @@ function DataStore () {
    */
   this.getValue = function (property) {
 
-    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'getValue', 'property');
+    property = Argument.inMethod(CLASS_NAME, 'getValue')
+        .check(property).forMandatory('property').asType(PropertyInfo);
 
     return data[property.name];
   };
@@ -66,11 +65,10 @@ function DataStore () {
    * @throws {@link bo.system.ArgumentError Argument error}: The value must be defined.
    */
   this.setValue = function (property, value) {
+    var check = Argument.inMethod(CLASS_NAME, 'setValue');
 
-    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'setValue', 'property');
-    value = EnsureArgument.isDefined(value,
-        'm_defined', CLASS_NAME, 'setValue', 'value');
+    property = check(property).forMandatory('property').asType(PropertyInfo);
+    value = check(value).for('value').asDefined();
 
     // Check value.
     var parsed = property.type.parse(value);
@@ -101,8 +99,8 @@ function DataStore () {
    */
   this.hasValidValue = function (property) {
 
-    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'hasValidValue', 'property');
+    property = Argument.inMethod(CLASS_NAME, 'hasValidValue')
+        .check(property).forMandatory('property').asType(PropertyInfo);
 
     return status[property.name];
   };

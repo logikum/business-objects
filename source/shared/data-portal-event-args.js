@@ -3,7 +3,7 @@
 var CLASS_NAME = 'DataPortalEventArgs';
 
 var config = require('./configuration-reader.js');
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var DataPortalAction = require('./data-portal-action.js');
 var DataPortalEvent = require('./data-portal-event.js');
 var DataPortalError = require('./data-portal-error.js');
@@ -32,9 +32,9 @@ var DataPortalError = require('./data-portal-error.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The error must be a DataPortalError object.
  */
 function DataPortalEventArgs (event, modelName, action, methodName, error) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  event = EnsureArgument.isEnumMember(event, DataPortalEvent, null,
-      'c_enumMember', CLASS_NAME, 'event');
+  event = check(event).for('event').asEnumMember(DataPortalEvent, null);
 
   /**
    * The name of the data portal event.
@@ -47,15 +47,13 @@ function DataPortalEventArgs (event, modelName, action, methodName, error) {
    * @type {string}
    * @readonly
    */
-  this.modelName = EnsureArgument.isMandatoryString(modelName,
-      'c_manString', CLASS_NAME, 'modelName');
+  this.modelName = check(modelName).forMandatory('modelName').asString();
   /**
    * The type of the data portal operation.
    * @type {bo.shared.DataPortalAction}
    * @readonly
    */
-  this.action = EnsureArgument.isEnumMember(action, DataPortalAction, eventToAction(event),
-      'c_enumMember', CLASS_NAME, 'action');
+  this.action = check(action).for('action').asEnumMember(DataPortalAction, eventToAction(event));
   /**
    * The name of the data access object method called.
    * @type {string}
@@ -67,8 +65,7 @@ function DataPortalEventArgs (event, modelName, action, methodName, error) {
    * @type {bo.shared.DataPortalError}
    * @readonly
    */
-  this.error = EnsureArgument.isOptionalType(error, DataPortalError,
-      'c_optType', CLASS_NAME, 'error');
+  this.error = check(error).forOptional('error').asType(DataPortalError);
 
   /**
    * The current user.

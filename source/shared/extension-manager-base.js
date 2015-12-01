@@ -3,7 +3,7 @@
 var CLASS_NAME = 'ExtensionManager';
 
 var config = require('./configuration-reader.js');
-var EnsureArgument = require('./../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ModelError = require('./model-error.js');
 
 /**
@@ -23,23 +23,21 @@ var ModelError = require('./model-error.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The additional argument count must be an integer.
  */
 function ExtensionManagerBase(dataSource, modelPath, addArgs) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * The name of the data source.
    * @type {string}
    * @readonly
    */
-  this.dataSource = EnsureArgument.isMandatoryString(dataSource,
-      'c_manString', CLASS_NAME, 'dataSource');
+  this.dataSource = check(dataSource).forMandatory('dataSource').asString();
   /**
    * The path of the model definition.
    * @type {string}
    * @readonly
    */
-  this.modelPath = EnsureArgument.isMandatoryString(modelPath,
-      'c_manString', CLASS_NAME, 'modelPath');
-  addArgs = EnsureArgument.isMandatoryInteger(addArgs,
-      'c_manInteger', CLASS_NAME, 'addArgs');
+  this.modelPath = check(modelPath).forMandatory('modelPath').asString();
+  addArgs = check(addArgs).forMandatory('addArgs').asInteger();
 
   var self = this;
   var methods = {};
@@ -160,8 +158,8 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
    * @param {string} methodName - The name of the method on the data access object to be called.
    */
   this.addOtherMethod = function (methodName) {
-    otherMethods.push(EnsureArgument.isMandatoryString(methodName,
-        'm_manString', CLASS_NAME, 'addOtherMethod', 'methodName'));
+    otherMethods.push(Argument.inMethod(CLASS_NAME, 'addOtherMethod')
+        .check(methodName).forMandatory('methodName').asString());
   };
 
   /**
