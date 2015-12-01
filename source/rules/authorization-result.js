@@ -3,7 +3,7 @@
 var CLASS_NAME = 'AuthorizationResult';
 
 var util = require('util');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ResultBase = require('./result-base.js');
 
 /**
@@ -24,8 +24,7 @@ var ResultBase = require('./result-base.js');
  */
 function AuthorizationResult (ruleName, targetName, message) {
 
-  targetName = EnsureArgument.isString(targetName || '',
-      'c_string', CLASS_NAME, 'targetName');
+  targetName = Argument.inConstructor(CLASS_NAME).check(targetName || '').for('targetName').asString();
 
   ResultBase.call(this, ruleName, targetName, message);
 }

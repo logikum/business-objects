@@ -29,7 +29,7 @@ function UserInfo (userCode) {
       return userCode;
     },
     set: function (value) {
-      userCode = Argument.inProperty(CLASS_NAME, 'userCode').check(value).forMandatory('value').asString();
+      userCode = Argument.inProperty(CLASS_NAME, 'userCode').check(value).forMandatory().asString();
     },
     enumeration: true
   });

@@ -3,7 +3,7 @@
 var CLASS_NAME = 'AuthorizationRule';
 
 var util = require('util');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ArgumentError = require('../system/argument-error.js');
 var PropertyInfo = require('../shared/property-info.js');
 var RuleBase = require('./rule-base.js');
@@ -55,8 +55,8 @@ function AuthorizationRule (ruleName) {
       return noAccessBehavior;
     },
     set: function (value) {
-      noAccessBehavior = EnsureArgument.isEnumMember(value, NoAccessBehavior, null,
-          'p_enumMember', CLASS_NAME, 'noAccessBehavior');
+      noAccessBehavior = Argument.inProperty(CLASS_NAME, 'noAccessBehavior')
+          .check(value).for().asEnumMember(NoAccessBehavior, null);
     },
     enumeration: true
   });
@@ -77,20 +77,18 @@ function AuthorizationRule (ruleName) {
    * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
   this.initialize = function (action, target, message, priority, stopsProcessing) {
+    var check = Argument.inMethod(CLASS_NAME, 'initialize');
 
-    action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
-        'm_enumMember', CLASS_NAME, 'initialize', 'action');
+    action = check(action).for('action').asEnumMember(AuthorizationAction, null);
     this.ruleId = AuthorizationAction.getName(action);
 
     if (action === AuthorizationAction.readProperty || action === AuthorizationAction.writeProperty) {
-      target = EnsureArgument.isMandatoryType(target, PropertyInfo,
-          'm_manType', CLASS_NAME, 'initialize', 'target');
+      target = check(target).forMandatory('target').asType(PropertyInfo);
       propertyName = target.name;
       this.ruleId += '.' + target.name;
 
     } else if (action === AuthorizationAction.executeMethod) {
-      target = EnsureArgument.isMandatoryString(target,
-          'm_manString', CLASS_NAME, 'initialize', 'target');
+      target = check(target).forMandatory('target').asString();
       this.ruleId += '.' + target;
 
     } else {

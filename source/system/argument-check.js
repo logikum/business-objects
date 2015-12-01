@@ -74,6 +74,7 @@ function ArgumentCheck (value) {
  */
 function forGeneric  (argumentName) {
   this.argumentName = argumentName || '';
+  this.isMandatory = undefined;
   return this;
 }
 

@@ -3,7 +3,7 @@
 var CLASS_NAME = 'AuthorizationContext';
 
 var config = require('../shared/configuration-reader.js');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var UserInfo = require('../system/user-info.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 var AuthorizationAction = require('./authorization-action.js');
@@ -29,18 +29,17 @@ var AuthorizationAction = require('./authorization-action.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
 function AuthorizationContext (action, targetName, brokenRules) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  action = EnsureArgument.isEnumMember(action, AuthorizationAction, null,
-      'c_enumMember', CLASS_NAME, 'action');
-  targetName = EnsureArgument.isString(targetName,
-      'c_string', CLASS_NAME, 'targetName');
+  action = check(action).for('action').asEnumMember(AuthorizationAction, null);
+  targetName = check(targetName).for('targetName').asString();
+
   /**
    * The list of the broken rules.
    * @type {bo.rules.BrokenRuleList}
    * @readonly
    */
-  this.brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRuleList,
-      'c_manType', CLASS_NAME, 'brokenRules');
+  this.brokenRules = check(brokenRules).forMandatory('brokenRules').asType(BrokenRuleList);
 
   /**
    * The identifier of the authorization action. Generally it is the action value,

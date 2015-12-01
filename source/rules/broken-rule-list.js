@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'BrokenRuleList';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var PropertyInfo = require('../shared/property-info.js');
 var BrokenRule = require('./broken-rule.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
@@ -21,8 +21,7 @@ var RuleSeverity = require('./rule-severity.js');
  */
 var BrokenRuleList = function (modelName) {
 
-  modelName = EnsureArgument.isMandatoryString(modelName,
-      'c_manString', CLASS_NAME, 'modelName');
+  modelName = Argument.inConstructor(CLASS_NAME).check(modelName).forMandatory('modelName').asString();
 
   var items = {};
   var length = 0;
@@ -35,8 +34,8 @@ var BrokenRuleList = function (modelName) {
    * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a BrokenRule object.
    */
   this.add = function (brokenRule) {
-    brokenRule = EnsureArgument.isMandatoryType(brokenRule, BrokenRule,
-        'm_manType', CLASS_NAME, 'add', 'brokenRule');
+    brokenRule = Argument.inMethod(CLASS_NAME, 'add')
+        .check(brokenRule).forMandatory('brokenRule').asType(BrokenRule);
 
     if (items[brokenRule.propertyName])
       items[brokenRule.propertyName].push(brokenRule);
@@ -127,8 +126,8 @@ var BrokenRuleList = function (modelName) {
    */
   this.output = function (namespace) {
 
-    namespace = EnsureArgument.isOptionalString(namespace,
-        'm_optString', CLASS_NAME, 'output', 'namespace');
+    namespace = Argument.inMethod(CLASS_NAME, 'output')
+        .check(namespace).forOptional('namespace').asString();
 
     var data = new BrokenRulesOutput();
     if (length) {

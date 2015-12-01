@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'BrokenRule';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var RuleSeverity = require('./rule-severity.js');
 
 /**
@@ -25,37 +25,37 @@ var RuleSeverity = require('./rule-severity.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a RuleSeverity item.
  */
 function BrokenRule (ruleName, isPreserved, propertyName, message, severity) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * The name of the failed rule.
    * @type {string}
    */
-  this.ruleName = EnsureArgument.isMandatoryString(ruleName,
-      'c_manString', CLASS_NAME, 'ruleName');
+  this.ruleName = check(ruleName).forMandatory('ruleName').asString();
+
   /**
    * Indicates whether the broken rule is preserved when a new verification starts.
    * @type {boolean}
    */
-  this.isPreserved = EnsureArgument.isMandatoryBoolean(isPreserved || false,
-      'c_manBoolean', CLASS_NAME , 'isPreserved');
+  this.isPreserved = check(isPreserved || false).forMandatory('isPreserved').asBoolean();
+
   /**
    * The name of the property the failed rule belongs to.
    * @type {string}
    */
-  this.propertyName = EnsureArgument.isString(propertyName || '',
-      'c_string', CLASS_NAME, 'propertyName');
+  this.propertyName = check(propertyName || '').for('propertyName').asString();
+
   /**
    * Human-readable description of the reason of the failure.
    * @type {string}
    */
-  this.message = EnsureArgument.isMandatoryString(message,
-      'c_manString', CLASS_NAME, 'message');
+  this.message = check(message).forMandatory('message').asString();
+
   /**
    * The severity of the rule failure.
    * @type {bo.rules.RuleSeverity}
    */
-  this.severity = EnsureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
-      'c_enumMember', CLASS_NAME, 'severity');
+  this.severity = check(severity).for('severity').asEnumMember(RuleSeverity, RuleSeverity.error);
 }
 
 module.exports = BrokenRule;

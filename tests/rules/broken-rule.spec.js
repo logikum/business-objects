@@ -14,7 +14,9 @@ describe('Broken rule', function () {
     var build06 = function () { return new BrokenRule('name', false, 'property', 'message', RuleSeverity.error); };
     var build07 = function () { return new BrokenRule('name', false, 'property', 'message', RuleSeverity.success); };
     var build08 = function () { return new BrokenRule(1, 2, 3, 4, 5); };
-    var build09 = function () { return new BrokenRule('name', null, null, 'message'); };
+    var build09 = function () {
+      return new BrokenRule('name', null, null, 'message');
+    };
 
     expect(build01).toThrow();
     expect(build02).toThrow();
