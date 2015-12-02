@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'RuleList';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var AuthorizationRule = require('./authorization-rule.js');
 var ValidationRule = require('./validation-rule.js');
 
@@ -26,11 +26,10 @@ function RuleList () {
    * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a ValidationRule or AuthorizationRule object.
    */
   this.add = function (id, rule) {
+    var check = Argument.inMethod(CLASS_NAME, 'add');
 
-    id = EnsureArgument.isMandatoryString(id,
-        'm_manString', CLASS_NAME, 'add', 'id');
-    rule = EnsureArgument.isMandatoryType(rule, [ValidationRule, AuthorizationRule],
-        'm_manType', CLASS_NAME, 'add', 'rule');
+    id = check(id).forMandatory('id').asString();
+    rule = check(rule).forMandatory('rule').asType([ ValidationRule, AuthorizationRule ]);
 
     if (this[id])
       this[id].push(rule);

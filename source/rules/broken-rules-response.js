@@ -3,7 +3,7 @@
 var CLASS_NAME = 'BrokenRulesResponse';
 
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var BrokenRulesOutput = require('./broken-rules-output.js');
 
 /**
@@ -36,9 +36,9 @@ var BrokenRulesOutput = require('./broken-rules-output.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a string value.
  */
 function BrokenRulesResponse (brokenRules, message) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRulesOutput,
-      'c_manType', CLASS_NAME, 'brokenRules');
+  brokenRules = check(brokenRules).forMandatory('brokenRules').asType(BrokenRulesOutput);
 
   /**
    * The name of the response object.
@@ -47,6 +47,7 @@ function BrokenRulesResponse (brokenRules, message) {
    * @readonly
    */
   this.name = 'BrokenRules';
+
   /**
    * The status code of the HTTP response.
    * @type {number}
@@ -54,19 +55,21 @@ function BrokenRulesResponse (brokenRules, message) {
    * @readonly
    */
   this.status = 422;
+
   /**
    * Human-readable description of the reason of the failure.
    * @type {string}
    * @readonly
    */
-  this.message = EnsureArgument.isString(message || t('invalid'),
-      'c_string', CLASS_NAME, 'message');
+  this.message = check(message || t('invalid')).for('message').asString();
+
   /**
    * The object of the broken rules.
    * @type {object}
    * @readonly
    */
   this.data = brokenRules;
+
   /**
    * The count of the broken rules.
    * @type {number}

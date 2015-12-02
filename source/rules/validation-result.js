@@ -3,7 +3,7 @@
 var CLASS_NAME = 'ValidationResult';
 
 var util = require('util');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ResultBase = require('./result-base.js');
 
 /**
@@ -24,8 +24,8 @@ var ResultBase = require('./result-base.js');
  */
 function ValidationResult (ruleName, propertyName, message) {
 
-  propertyName = EnsureArgument.isMandatoryString(propertyName,
-      'c_manString', CLASS_NAME, 'propertyName');
+  propertyName = Argument.inConstructor(CLASS_NAME)
+      .check(propertyName).forMandatory('propertyName').asString();
 
   ResultBase.call(this, ruleName, propertyName, message);
 

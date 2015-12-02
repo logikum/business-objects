@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'RuleManager';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ArgumentError = require('../system/argument-error.js');
 var RuleList = require('./rule-list.js');
 var ValidationRule = require('./validation-rule.js');
@@ -38,8 +38,8 @@ var RuleManager = function () {
       return noAccessBehavior;
     },
     set: function (value) {
-      noAccessBehavior = EnsureArgument.isEnumMember(value, NoAccessBehavior, NoAccessBehavior.throwError,
-          'p_enumMember', CLASS_NAME, 'noAccessBehavior');
+      noAccessBehavior = Argument.inProperty(CLASS_NAME, 'noAccessBehavior')
+          .check(value).for().asEnumMember(NoAccessBehavior, NoAccessBehavior.throwError);
     },
     enumeration: true
   });
@@ -100,10 +100,10 @@ var RuleManager = function () {
    * @throws {@link bo.system.ArgumentError Argument error}: The context must be a ValidationContext object.
    */
   this.validate = function (property, context) {
-    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'validate', 'property');
-    context = EnsureArgument.isMandatoryType(context, ValidationContext,
-        'm_manType', CLASS_NAME, 'validate', 'context');
+    var check = Argument.inMethod(CLASS_NAME, 'validate');
+
+    property = check(property).forMandatory('property').asType(PropertyInfo);
+    context = check(context).forMandatory('context').asType(ValidationContext);
 
     context.brokenRules.clear(property);
 
@@ -139,8 +139,9 @@ var RuleManager = function () {
    * @throws {@link bo.rules.AuthorizationError Authorization error}: The user has no permission to execute the action.
    */
   this.hasPermission = function (context) {
-    context = EnsureArgument.isMandatoryType(context, AuthorizationContext,
-        'm_manType', CLASS_NAME, 'hasPermission', 'context');
+
+    context = Argument.inMethod(CLASS_NAME, 'hasPermission')
+        .check(context).forMandatory('context').asType(AuthorizationContext);
     var isAllowed = true;
 
     var rules = authorizationRules[context.ruleId];

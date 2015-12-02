@@ -3,7 +3,7 @@
 var CLASS_NAME = 'ValidationRule';
 
 var util = require('util');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var RuleBase = require('./rule-base.js');
 var RuleSeverity = require('./rule-severity.js');
 var ValidationResult = require('./validation-result.js');
@@ -48,8 +48,8 @@ function ValidationRule (ruleName) {
    */
   this.initialize = function (primaryProperty, message, priority, stopsProcessing) {
 
-    this.primaryProperty = EnsureArgument.isMandatoryType(primaryProperty, PropertyInfo,
-        'm_manType', CLASS_NAME, 'initialize', 'primaryProperty');
+    this.primaryProperty = Argument.inMethod(CLASS_NAME, 'initialize')
+        .check(primaryProperty).forMandatory('primaryProperty').asType(PropertyInfo);
 
     // Initialize base properties.
     RuleBase.prototype.initialize.call(this, message, priority, stopsProcessing);
@@ -66,8 +66,9 @@ function ValidationRule (ruleName) {
    * @throws {@link bo.system.ArgumentError Argument error}: The input property must be a PropertyInfo object.
    */
   this.addInputProperty = function (property) {
-    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'addInputProperty', 'property');
+
+    property = Argument.inMethod(CLASS_NAME, 'addInputProperty')
+        .check(property).forMandatory('property').asType(PropertyInfo);
 
     if (inputProperties.indexOf(property) < 0)
       inputProperties.push(property);
@@ -81,8 +82,9 @@ function ValidationRule (ruleName) {
    * @throws {@link bo.system.ArgumentError Argument error}: The affected property must be a PropertyInfo object.
    */
   this.addAffectedProperty = function (property) {
-    property = EnsureArgument.isMandatoryType(property, PropertyInfo,
-        'm_manType', CLASS_NAME, 'addAffectedProperty', 'property');
+
+    property = Argument.inMethod(CLASS_NAME, 'addAffectedProperty')
+        .check(property).forMandatory('property').asType(PropertyInfo);
 
     if (affectedProperties.indexOf(property) < 0)
       affectedProperties.push(property);
@@ -100,8 +102,9 @@ function ValidationRule (ruleName) {
    * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function..
    */
   this.getInputValues = function (getValue) {
-    getValue = EnsureArgument.isMandatoryFunction(getValue,
-        'm_manFunction', CLASS_NAME, 'getInputValues', 'getValue');
+
+    getValue = Argument.inMethod(CLASS_NAME, 'getInputValues')
+        .check(getValue).forMandatory('getValue').asFunction();
 
     var inputValues = {};
     var combined = new Array(this.primaryProperty).concat(inputProperties);
@@ -122,8 +125,9 @@ function ValidationRule (ruleName) {
   this.result = function (message, severity) {
 
     var result = new ValidationResult(this.ruleName, this.primaryProperty.name, message || this.message);
-    result.severity = EnsureArgument.isEnumMember(severity, RuleSeverity, RuleSeverity.error,
-        'm_manFunction', CLASS_NAME, 'result', 'severity');
+
+    result.severity = Argument.inMethod(CLASS_NAME, 'result')
+        .check(severity).for('severity').asEnumMember(RuleSeverity, RuleSeverity.error);
     result.stopsProcessing = this.stopsProcessing;
     result.isPreserved = false;
     result.affectedProperties = affectedProperties;

@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'Rule';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ArgumentError = require('../system/argument-error.js');
 var NotImplementedError = require('../system/not-implemented-error.js');
 
@@ -20,7 +20,7 @@ var NotImplementedError = require('../system/not-implemented-error.js');
  */
 var RuleBase = function (ruleName) {
 
-  ruleName = EnsureArgument.isMandatoryString(ruleName, 'c_manString', CLASS_NAME, 'ruleName');
+  ruleName = Argument.inConstructor(CLASS_NAME).check(ruleName).forMandatory('ruleName').asString();
   /**
    * The name of the rule type.
    * The default value usually the name of the constructor, without the Rule suffix.
@@ -67,7 +67,7 @@ var RuleBase = function (ruleName) {
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-RuleBase.prototype.initialize = function () {
+RuleBase.prototype.initialize = function (message, priority, stopsProcessing) {
 
   // Remove null and undefined arguments.
   var args = Array.prototype.slice.call(arguments).filter(function(arg) {
@@ -91,7 +91,7 @@ RuleBase.prototype.initialize = function () {
       }
     }
   }
-  EnsureArgument.isMandatoryString(this.message, 'm_manString', CLASS_NAME, 'method', 'message');
+  Argument.inMethod(CLASS_NAME, 'initialize').check(this.message).forMandatory('message').asString();
 };
 
 /**

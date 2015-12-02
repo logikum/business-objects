@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'ValidationContext';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var DataStore = require('../shared/data-store.js');
 var BrokenRuleList = require('./broken-rule-list.js');
 
@@ -25,9 +25,9 @@ var BrokenRuleList = require('./broken-rule-list.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
 function ValidationContext (dataStore, brokenRules) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  dataStore = EnsureArgument.isMandatoryType(dataStore, DataStore,
-      'c_manType', CLASS_NAME, 'dataStore');
+  dataStore = check(dataStore).forMandatory('dataStore').asType(DataStore);
 
   /**
    * Returns the value of a model property.
@@ -43,8 +43,7 @@ function ValidationContext (dataStore, brokenRules) {
    * @type {bo.rules.BrokenRuleList}
    * @readonly
    */
-  this.brokenRules = EnsureArgument.isMandatoryType(brokenRules, BrokenRuleList,
-      'c_manType', CLASS_NAME, 'brokenRules');
+  this.brokenRules = check(brokenRules).forMandatory('brokenRules').asType(BrokenRuleList);
 
   // Immutable object.
   Object.freeze(this);

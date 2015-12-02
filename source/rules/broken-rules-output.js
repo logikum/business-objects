@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'BrokenRulesOutput';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var RuleNotice = require('./rule-notice.js');
 var RuleSeverity = require('./rule-severity.js');
 
@@ -88,11 +88,10 @@ function BrokenRulesOutput () {
    * @throws {@link bo.system.ArgumentError Argument error}: The notice must be a RuleNotice object.
    */
   this.add = function (propertyName, notice) {
+    var check = Argument.inMethod(CLASS_NAME, 'add');
 
-    propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', CLASS_NAME, 'add', 'propertyName');
-    notice = EnsureArgument.isMandatoryType(notice, RuleNotice,
-        'm_manType', CLASS_NAME, 'add', 'notice');
+    propertyName = check(propertyName).forMandatory('propertyName').asString();
+    notice = check(notice).forMandatory('notice').asType(RuleNotice);
 
     if (this[propertyName])
       this[propertyName].push(notice);
@@ -113,11 +112,10 @@ function BrokenRulesOutput () {
    * @throws {@link bo.system.ArgumentError Argument error}: The output must be a BrokenRulesOutput object.
    */
   this.addChild = function (propertyName, output) {
+    var check = Argument.inMethod(CLASS_NAME, 'addChild');
 
-    propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', CLASS_NAME, 'addChild', 'propertyName');
-    output = EnsureArgument.isMandatoryType(output, BrokenRulesOutput,
-        'm_manType', CLASS_NAME, 'addChild', 'output');
+    propertyName = check(propertyName).forMandatory('propertyName').asString();
+    output = check(output).forMandatory('output').asType(BrokenRulesOutput);
 
     this[propertyName] = output;
     childObjects.push(propertyName);
@@ -135,11 +133,10 @@ function BrokenRulesOutput () {
    *    The outputs must be an array of BrokenRulesOutput objects or a single BrokenRulesOutput object.
    */
   this.addChildren = function (propertyName, outputs) {
+    var check = Argument.inMethod(CLASS_NAME, 'addChildren');
 
-    propertyName = EnsureArgument.isMandatoryString(propertyName,
-        'm_manString', CLASS_NAME, 'addChildren', 'propertyName');
-    outputs = EnsureArgument.isMandatoryArray(outputs, BrokenRulesOutput,
-        'm_manArray', CLASS_NAME, 'addChildren', 'outputs');
+    propertyName = check(propertyName).forMandatory('propertyName').asString();
+    outputs = check(outputs).forMandatory('outputs').asArray(BrokenRulesOutput);
 
     var list = {};
 

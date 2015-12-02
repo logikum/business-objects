@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'RuleResult';
 
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var BrokenRule = require('./broken-rule.js');
 var RuleSeverity = require('./rule-severity.js');
 
@@ -20,39 +20,43 @@ var RuleSeverity = require('./rule-severity.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
 var ResultBase = function (ruleName, propertyName, message) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
   /**
    * The name of the rule.
    * @type {string}
    * @readonly
    */
-  this.ruleName = EnsureArgument.isMandatoryString(ruleName,
-      'c_manString', CLASS_NAME, 'ruleName');
+  this.ruleName = check(ruleName).forMandatory('ruleName').asString();
+
   /**
    * The name of the property the rule belongs to.
    * @type {string}
    * @readonly
    */
   this.propertyName = propertyName || '';
+
   /**
    * Human-readable description of the reason of the failure.
    * @type {string}
    * @readonly
    */
-  this.message = EnsureArgument.isMandatoryString(message,
-      'c_manString', CLASS_NAME, 'message');
+  this.message = check(message).forMandatory('message').asString();
+
   /**
    * The severity of the rule failure.
    * @type {bo.rules.RuleSeverity}
    * @readonly
    */
   this.severity = RuleSeverity.error;
+
   /**
    * Indicates whether processing the rules of the property should stop.
    * @type {boolean}
    * @readonly
    */
   this.stopsProcessing = false;
+
   /**
    * Indicates whether the broken rule of this failure is preserved when a new verification starts.
    * Typically the broken rules of authorization rules are retained.
