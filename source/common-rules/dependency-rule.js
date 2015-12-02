@@ -4,7 +4,7 @@ var CLASS_NAME = 'DependencyRule';
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ValidationRule = require('../rules/validation-rule.js');
 var RuleSeverity = require('../rules/rule-severity.js');
 var PropertyInfo = require('../shared/property-info.js');
@@ -37,8 +37,8 @@ function DependencyRule (primaryProperty, dependencies, message, priority, stops
 
   var self = this;
 
-  dependencies = EnsureArgument.isMandatoryArray(dependencies, PropertyInfo,
-    'c_manArray', CLASS_NAME, 'dependencies');
+  dependencies = Argument.inConstructor(CLASS_NAME)
+      .check(dependencies).forMandatory('dependencies').asArray(PropertyInfo);
 
   // Initialize base properties.
   this.initialize(

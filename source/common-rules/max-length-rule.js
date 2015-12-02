@@ -4,7 +4,7 @@ var CLASS_NAME = 'MaxLengthRule';
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
@@ -35,7 +35,7 @@ function MaxLengthRule (primaryProperty, maxLength, message, priority, stopsProc
    * @type {number}
    * @readonly
    */
-  this.maxLength = EnsureArgument.isMandatoryInteger(maxLength, 'c_manInteger', CLASS_NAME, 'maxLength');
+  this.maxLength = Argument.inConstructor(CLASS_NAME).check(maxLength).forMandatory('maxLength').asInteger();
 
   // Initialize base properties.
   this.initialize(

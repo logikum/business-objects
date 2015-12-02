@@ -4,7 +4,7 @@ var CLASS_NAME = 'LengthIsRule';
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
@@ -35,7 +35,7 @@ function LengthIsRule (primaryProperty, length, message, priority, stopsProcessi
    * @type {number}
    * @readonly
    */
-  this.length = EnsureArgument.isMandatoryInteger(length, 'c_manInteger', CLASS_NAME, 'length');
+  this.length = Argument.inConstructor(CLASS_NAME).check(length).forMandatory('length').asInteger();
 
   // Initialize base properties.
   this.initialize(

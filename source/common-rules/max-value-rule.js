@@ -4,7 +4,7 @@ var CLASS_NAME = 'MaxValueRule';
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
@@ -35,7 +35,7 @@ function MaxValueRule (primaryProperty, maxValue, message, priority, stopsProces
    * @type {number}
    * @readonly
    */
-  this.maxValue = EnsureArgument.hasValue(maxValue, 'c_required', CLASS_NAME, 'maxValue');
+  this.maxValue = Argument.inConstructor(CLASS_NAME).check(maxValue).for('maxValue').hasValue();
 
   // Initialize base properties.
   this.initialize(

@@ -108,7 +108,7 @@ function forMandatory (argumentName) {
 
 //region Exception
 
-function exception (defaultMessage, userArguments) {
+function exception (defaultMessage, typeArgument, userArguments) {
   var error, type;
   var message = defaultMessage;
   var parameters = [];
@@ -137,6 +137,8 @@ function exception (defaultMessage, userArguments) {
       break;
   }
   args.push(this.argumentName);
+  if (typeArgument)
+    args.push(typeArgument);
   if (parameters.length)
     parameters.forEach(function (parameter) {
       args.push(parameter);
@@ -162,7 +164,7 @@ function exception (defaultMessage, userArguments) {
  */
 function asDefined () {
   if (this.value === undefined)
-    this.exception('defined', arguments);
+    this.exception('defined', null, arguments);
   return this.value;
 }
 
@@ -178,7 +180,7 @@ function asDefined () {
  */
 function hasValue () {
   if (this.value === null || this.value === undefined)
-    this.exception('required', arguments);
+    this.exception('required', null, arguments);
   return this.value;
 }
 
@@ -204,17 +206,17 @@ function asString () {
   switch (this.isMandatory) {
     case true:
       if (typeof this.value !== 'string' && !(this.value instanceof String) || this.value.trim().length === 0)
-        this.exception('manString', arguments);
+        this.exception('manString', null, arguments);
       break;
     case false:
       if (this.value === undefined)
         this.value = null;
       if (this.value !== null && typeof this.value !== 'string' && !(this.value instanceof String))
-        this.exception('optString', arguments);
+        this.exception('optString', null, arguments);
       break;
     default:
       if (typeof this.value !== 'string' && !(this.value instanceof String))
-        this.exception('string', arguments);
+        this.exception('string', null, arguments);
       break;
   }
   return this.value;
@@ -239,12 +241,12 @@ function asString () {
 function asNumber () {
   if (this.isMandatory) {
     if (typeof this.value !== 'number' && !(this.value instanceof Number))
-      this.exception('manNumber', arguments);
+      this.exception('manNumber', null, arguments);
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && typeof this.value !== 'number' && !(this.value instanceof Number))
-      this.exception('optNumber', arguments);
+      this.exception('optNumber', null, arguments);
   }
   return this.value;
 }
@@ -268,13 +270,13 @@ function asNumber () {
 function asInteger () {
   if (this.isMandatory) {
     if (typeof this.value !== 'number' && !(this.value instanceof Number) || this.value % 1 !== 0)
-      this.exception('manInteger', arguments);
+      this.exception('manInteger', null, arguments);
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && (typeof this.value !== 'number' &&
         !(this.value instanceof Number) || this.value % 1 !== 0))
-      this.exception('optInteger', arguments);
+      this.exception('optInteger', null, arguments);
   }
   return this.value;
 }
@@ -298,12 +300,12 @@ function asInteger () {
 function asBoolean () {
   if (this.isMandatory) {
     if (typeof this.value !== 'boolean' && !(this.value instanceof Boolean))
-      this.exception('manBoolean', arguments);
+      this.exception('manBoolean', null, arguments);
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && typeof this.value !== 'boolean' && !(this.value instanceof Boolean))
-      this.exception('optBoolean', arguments);
+      this.exception('optBoolean', null, arguments);
   }
   return this.value;
 }
@@ -327,12 +329,12 @@ function asBoolean () {
 function asObject () {
   if (this.isMandatory) {
     if (typeof this.value !== 'object' || this.value === null)
-      this.exception('manObject', arguments);
+      this.exception('manObject', null, arguments);
   } else {
     if (this.value === undefined)
       this.value = null;
     if (typeof this.value !== 'object')
-      this.exception('optObject', arguments);
+      this.exception('optObject', null, arguments);
   }
   return this.value;
 }
@@ -356,12 +358,12 @@ function asObject () {
 function asFunction () {
   if (this.isMandatory) {
     if (typeof this.value !== 'function')
-      this.exception('manFunction', arguments);
+      this.exception('manFunction', null, arguments);
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && typeof this.value !== 'function')
-      this.exception('optFunction', arguments);
+      this.exception('optFunction', null, arguments);
   }
   return this.value;
 }
@@ -402,21 +404,15 @@ function asType () {
   if (this.isMandatory) {
     if (!(types.some(function (option) {
           return self.value && (self.value instanceof option || self.value.super_ === option);
-        }))) {
-      var msg = args.shift();
-      args.unshift(msg, typeNames(types));
-      this.exception('manType', args);
-    }
+        })))
+      this.exception('manType', typeNames(types), args);
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && !(types.some(function (option) {
           return self.value && (self.value instanceof option || self.value.super_ === option);
-        }))) {
-      var msg = args.shift();
-      args.unshift(msg, typeNames(types));
-      this.exception('manType', args);
-    }
+        })))
+      this.exception('manType', typeNames(types), args);
   }
   return this.value;
 }
@@ -444,11 +440,8 @@ function asModelType () {
 
   if (!(models.some(function (modelType) {
         return self.value && self.value.constructor && self.value.constructor.modelType === modelType;
-      }))) {
-    var msg = args.shift();
-    args.unshift(msg, models.join(' | '));
-    this.exception('manType', args);
-  }
+      })))
+    this.exception('manType', models.join(' | '), args);
   return this.value;
 }
 
@@ -476,11 +469,11 @@ function asEnumMember () {
 
   if (!(type && type.hasMember && type.constructor &&
       type.constructor.super_ && type.constructor.super_.name === 'Enumeration'))
-    this.exception('enumType', arguments);
+    this.exception('enumType', type, args);
   if ((this.value === null || this.value === undefined) && typeof defaultValue === 'number')
     this.value = defaultValue;
   if (!type.hasMember(this.value))
-    this.exception('enumMember', arguments);
+    this.exception('enumMember', type.$name, args);
 
   return this.value;
 }
@@ -514,7 +507,8 @@ function asArray () {
       return [];
   }
   var msgKey;
-  var type = Array.prototype.slice.call(arguments).shift();
+  var args = Array.prototype.slice.call(arguments);
+  var type = args.shift();
 
   if (type === String || type === Number || type === Boolean) {
     msgKey = this.isMandatory ? 'manArrayPrim' : 'optArrayPrim';
@@ -536,7 +530,7 @@ function asArray () {
         })))
       return this.value;
   }
-  this.exception(msgKey, arguments);
+  this.exception(msgKey, type, args);
 }
 
 //endregion

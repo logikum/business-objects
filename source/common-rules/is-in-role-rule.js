@@ -4,7 +4,7 @@ var CLASS_NAME = 'IsInRoleRule';
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var AuthorizationRule = require('../rules/authorization-rule.js');
 var UserInfo = require('../system/user-info.js');
 
@@ -40,7 +40,7 @@ function IsInRoleRule (action, target, role, message, priority, stopsProcessing)
    * @type {string}
    * @readonly
    */
-  this.role = EnsureArgument.isMandatoryString(role, 'c_manString', CLASS_NAME, 'role');
+  this.role = Argument.inConstructor(CLASS_NAME).check(role).forMandatory('role').asString();
 
   // Initialize base properties.
   this.initialize(
@@ -66,8 +66,8 @@ util.inherits(IsInRoleRule, AuthorizationRule);
  */
 IsInRoleRule.prototype.execute = function (userInfo) {
 
-  userInfo = EnsureArgument.isOptionalType(userInfo, UserInfo,
-    'm_optType', CLASS_NAME, 'execute', 'userInfo', 'UserInfo');
+  userInfo = Argument.inMethod(CLASS_NAME, 'execute')
+      .check(userInfo).forOptional('userInfo').asType(UserInfo);
 
   var hasPermission = userInfo.isInRole(this.role);
 

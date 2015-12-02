@@ -4,7 +4,7 @@ var CLASS_NAME = 'MinLengthRule';
 
 var util = require('util');
 var t = require('../locales/i18n-bo.js')('Rules');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ValidationRule = require('../rules/validation-rule.js');
 
 /**
@@ -35,7 +35,7 @@ function MinLengthRule (primaryProperty, minLength, message, priority, stopsProc
    * @type {number}
    * @readonly
    */
-  this.minLength = EnsureArgument.isMandatoryInteger(minLength, 'c_manInteger', CLASS_NAME, 'minLength');
+  this.minLength = Argument.inConstructor(CLASS_NAME).check(minLength).forMandatory('minLength').asInteger();
 
   // Initialize base properties.
   this.initialize(

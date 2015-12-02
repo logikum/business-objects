@@ -1,6 +1,5 @@
 'use strict';
 
-var EnsureArgument = require('../system/ensure-argument.js');
 var DaoError = require('./dao-error.js');
 
 /**

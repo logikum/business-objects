@@ -3,7 +3,7 @@
 var fs = require('fs');
 var path = require('path');
 var DaoBase = require('../source/data-access/dao-base.js');
-var ensureArgument = require('../source/system/ensure-argument.js');
+var Argument = require('../source/system/argument-check.js');
 
 var daoBuilder = function (dataSource, modelPath, modelName) {
 
@@ -31,8 +31,8 @@ var daoBuilder = function (dataSource, modelPath, modelName) {
   if (typeof daoCtor !== 'function')
     throw new Error('The data access file must return a constructor: ' + daoPath);
 
-  return ensureArgument.isMandatoryType(new daoCtor(), DaoBase,
-      daoPath + ' must inherit DaoBase type.');
+  return Argument.check(new daoCtor()).forMandatory()
+      .asType(DaoBase, daoPath + ' must inherit DaoBase type.');
 };
 
 module.exports = daoBuilder;

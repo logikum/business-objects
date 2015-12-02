@@ -5,7 +5,7 @@ var CLASS_NAME = 'Enum';
 var util = require('util');
 var DataType = require('./data-type.js');
 var Enumeration = require('../system/enumeration.js');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 
 /**
  * @classdesc Provide methods to work with enumeration data.
@@ -24,8 +24,8 @@ function Enum (enumType) {
    * @type {bo.system.Enumeration}
    * @readonly
    */
-  this.type = EnsureArgument.isMandatoryType(enumType, Enumeration,
-      'c_manType', CLASS_NAME, 'enumType');
+  this.type = Argument.inConstructor(CLASS_NAME)
+      .check(enumType).forMandatory('enumType').asType(Enumeration);
 
   // Immutable object with overwritten name.
   DataType.call(this, enumType.$name);

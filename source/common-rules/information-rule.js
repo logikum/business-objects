@@ -3,7 +3,7 @@
 var CLASS_NAME = 'InformationRule';
 
 var util = require('util');
-var EnsureArgument = require('../system/ensure-argument.js');
+var Argument = require('../system/argument-check.js');
 var ValidationRule = require('../rules/validation-rule.js');
 var RuleSeverity = require('../rules/rule-severity.js');
 
@@ -28,7 +28,7 @@ var RuleSeverity = require('../rules/rule-severity.js');
 function InformationRule (primaryProperty, message, priority, stopsProcessing) {
   ValidationRule.call(this, 'Information');
 
-  EnsureArgument.isMandatoryString(message, 'c_manString', CLASS_NAME, 'message');
+  Argument.inConstructor(CLASS_NAME).check(message).forMandatory('message').asString();
 
   // Initialize base properties.
   this.initialize(
