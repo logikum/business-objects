@@ -4,7 +4,7 @@
 
 var util = require('util');
 var config = require('./shared/configuration-reader.js');
-var EnsureArgument = require('./system/ensure-argument.js');
+var Argument = require('./system/argument-check.js');
 var Enumeration = require('./system/enumeration.js');
 
 var ModelBase = require('./model-base.js');
@@ -62,13 +62,11 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  *    The child objects must be ReadOnlyChildModelSync or ReadOnlyChildCollectionSync instances.
  */
 var CommandObjectSyncFactory = function (properties, rules, extensions) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', CLASS_NAME, 'properties');
-  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', CLASS_NAME, 'rules');
-  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', CLASS_NAME, 'extensions');
+  properties = check(properties).forMandatory('properties').asType(PropertyManager);
+  rules = check(rules).forMandatory('rules').asType(RuleManager);
+  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildModelSync', 'ReadOnlyChildCollectionSync' ]);
@@ -100,8 +98,8 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
   var CommandObjectSync = function (eventHandlers) {
     ModelBase.call(this);
 
-    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', properties.name, 'eventHandlers');
+    eventHandlers = Argument.inConstructor(properties.name)
+        .check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var store = new DataStore();
@@ -340,16 +338,15 @@ var CommandObjectSyncFactory = function (properties, rules, extensions) {
      *      Executing the command object has failed.
      */
     this.execute = function(method, isTransaction) {
+      var check = Argument.inMethod(properties.name, 'execute');
 
       if (typeof method === 'boolean' || method instanceof Boolean) {
         isTransaction = method;
         method = M_EXECUTE;
       }
 
-      method = EnsureArgument.isOptionalString(method,
-          'm_optString', CLASS_NAME, 'execute', 'method');
-      isTransaction = EnsureArgument.isOptionalBoolean(isTransaction,
-          'm_optBoolean', CLASS_NAME, 'execute', 'isTransaction');
+      method = check(method).forOptional('method').asString();
+      isTransaction = check(isTransaction).forOptional('isTransaction').asBoolean();
 
       data_execute(method || M_EXECUTE, isTransaction);
     };

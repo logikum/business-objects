@@ -4,7 +4,7 @@
 
 var util = require('util');
 var config = require('./shared/configuration-reader.js');
-var EnsureArgument = require('./system/ensure-argument.js');
+var Argument = require('./system/argument-check.js');
 var Enumeration = require('./system/enumeration.js');
 
 var ModelBase = require('./model-base.js');
@@ -62,13 +62,11 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  *    The child objects must be ReadOnlyChildModel or ReadOnlyChildCollection instances.
  */
 var CommandObjectFactory = function (properties, rules, extensions) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', CLASS_NAME, 'properties');
-  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', CLASS_NAME, 'rules');
-  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', CLASS_NAME, 'extensions');
+  properties = check(properties).forMandatory('properties').asType(PropertyManager);
+  rules = check(rules).forMandatory('rules').asType(RuleManager);
+  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
 
   // Verify the model types of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildModel', 'ReadOnlyChildCollection' ]);
@@ -100,8 +98,8 @@ var CommandObjectFactory = function (properties, rules, extensions) {
   var CommandObject = function (eventHandlers) {
     ModelBase.call(this);
 
-    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', properties.name, 'eventHandlers');
+    eventHandlers = Argument.inConstructor(properties.name)
+        .check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var store = new DataStore();
@@ -425,6 +423,7 @@ var CommandObjectFactory = function (properties, rules, extensions) {
      *      The user has no permission to execute the action.
      */
     this.execute = function(method, isTransaction, callback) {
+      var check = Argument.inMethod(properties.name, 'execute');
 
       if (!callback) {
         if (isTransaction) {
@@ -440,12 +439,9 @@ var CommandObjectFactory = function (properties, rules, extensions) {
         method = M_EXECUTE;
       }
 
-      method = EnsureArgument.isOptionalString(method,
-          'm_optString', CLASS_NAME, 'execute', 'method');
-      isTransaction = EnsureArgument.isOptionalBoolean(isTransaction,
-          'm_optBoolean', CLASS_NAME, 'execute', 'isTransaction');
-      callback = EnsureArgument.isOptionalFunction(callback,
-          'm_manFunction', CLASS_NAME, 'execute', 'callback');
+      method = check(method).forOptional('method').asString();
+      isTransaction = check(isTransaction).forOptional('isTransaction').asBoolean();
+      callback = check(callback).forMandatory('callback').asFunction();
 
       data_execute(method || M_EXECUTE, isTransaction, callback);
     };
@@ -636,8 +632,13 @@ var CommandObjectFactory = function (properties, rules, extensions) {
    */
   CommandObject.create = function(eventHandlers, callback) {
 
-    callback = EnsureArgument.isOptionalFunction(callback,
-        'm_manFunction', CLASS_NAME, 'create', 'callback');
+    if (!callback) {
+      callback = eventHandlers;
+      eventHandlers = undefined;
+    }
+
+    callback = Argument.inMethod(properties.name, 'create')
+        .check(callback).forMandatory('callback').asFunction();
 
     var instance = new CommandObject(eventHandlers);
     callback(null, instance);
