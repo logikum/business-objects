@@ -4,7 +4,7 @@
 
 var util = require('util');
 var config = require('./shared/configuration-reader.js');
-var EnsureArgument = require('./system/ensure-argument.js');
+var Argument = require('./system/argument-check.js');
 
 var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
@@ -51,13 +51,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}: The item type must be a ReadOnlyChildModelSync.
  */
 var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensions) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  name = EnsureArgument.isMandatoryString(name,
-      'c_manString', CLASS_NAME, 'name');
-  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', CLASS_NAME, 'rules');
-  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', CLASS_NAME, 'extensions');
+  name = check(name).forMandatory('name').asString();
+  rules = check(rules).forMandatory('rules').asType(RuleManager);
+  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
   // Verify the model type of the item type.
   if (itemType.modelType !== 'ReadOnlyChildModelSync')
@@ -92,8 +90,8 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
   var ReadOnlyRootCollectionSync = function (eventHandlers) {
     CollectionBase.call(this);
 
-    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', name, 'eventHandlers');
+    eventHandlers = Argument.inConstructor(name)
+        .check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var items = [];
@@ -305,8 +303,8 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
      */
     this.fetch = function(filter, method) {
 
-      method = EnsureArgument.isOptionalString(method,
-          'm_optString', CLASS_NAME, 'fetch', 'method');
+      method = Argument.inMethod(name, 'fetch')
+          .check(method).forOptional('method').asString();
 
       data_fetch(filter, method || M_FETCH);
     };

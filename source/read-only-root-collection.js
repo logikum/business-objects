@@ -4,7 +4,7 @@
 
 var util = require('util');
 var config = require('./shared/configuration-reader.js');
-var EnsureArgument = require('./system/ensure-argument.js');
+var Argument = require('./system/argument-check.js');
 
 var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
@@ -51,13 +51,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModel.
  */
 var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  name = EnsureArgument.isMandatoryString(name,
-      'c_manString', CLASS_NAME, 'name');
-  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', CLASS_NAME, 'rules');
-  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', CLASS_NAME, 'extensions');
+  name = check(name).forMandatory('name').asString();
+  rules = check(rules).forMandatory('rules').asType(RuleManager);
+  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
 
   // Verify the model type of the item type.
   if (itemType.modelType !== 'ReadOnlyChildModel')
@@ -92,8 +90,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
   var ReadOnlyRootCollection = function (eventHandlers) {
     CollectionBase.call(this);
 
-    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', name, 'eventHandlers');
+    eventHandlers = Argument.inConstructor(name)
+        .check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var items = [];
@@ -360,11 +358,10 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      *      Fetching the business object has failed.
      */
     this.fetch = function(filter, method, callback) {
+      var check = Argument.inMethod(name, 'fetch');
 
-      method = EnsureArgument.isOptionalString(method,
-          'm_optString', CLASS_NAME, 'fetch', 'method');
-      callback = EnsureArgument.isOptionalFunction(callback,
-          'm_manFunction', CLASS_NAME, 'fetch', 'callback');
+      method = check(method).forOptional('method').asString();
+      callback = check(callback).forMandatory('callback').asFunction();
 
       data_fetch(filter, method || M_FETCH, callback);
     };

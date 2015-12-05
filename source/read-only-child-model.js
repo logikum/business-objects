@@ -4,7 +4,7 @@
 
 var util = require('util');
 var config = require('./shared/configuration-reader.js');
-var EnsureArgument = require('./system/ensure-argument.js');
+var Argument = require('./system/argument-check.js');
 var Enumeration = require('./system/enumeration.js');
 
 var ModelBase = require('./model-base.js');
@@ -60,13 +60,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *    The child objects must be ReadOnlyChildCollection or ReadOnlyChildModel instances.
  */
 var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', CLASS_NAME, 'properties');
-  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', CLASS_NAME, 'rules');
-  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManager,
-      'c_manType', CLASS_NAME, 'extensions');
+  properties = check(properties).forMandatory('properties').asType(PropertyManager);
+  rules = check(rules).forMandatory('rules').asType(RuleManager);
+  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
 
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollection', 'ReadOnlyChildModel' ]);
@@ -106,20 +104,18 @@ var ReadOnlyChildModelFactory = function (properties, rules, extensions) {
    */
   var ReadOnlyChildModel = function (parent, eventHandlers) {
     ModelBase.call(this);
+    var check = Argument.inConstructor(properties.name);
 
     // Verify the model type of the parent model.
-    parent = EnsureArgument.isModelType(parent,
-        [
-          'ReadOnlyRootCollection',
-          'ReadOnlyChildCollection',
-          'ReadOnlyRootModel',
-          'ReadOnlyChildModel',
-          'CommandObject'
-        ],
-        'c_modelType', properties.name, 'parent');
+    parent = check(parent).for('parent').asModelType([
+      'ReadOnlyRootCollection',
+      'ReadOnlyChildCollection',
+      'ReadOnlyRootModel',
+      'ReadOnlyChildModel',
+      'CommandObject'
+    ]);
 
-    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', properties.name, 'eventHandlers');
+    eventHandlers = check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var store = new DataStore();

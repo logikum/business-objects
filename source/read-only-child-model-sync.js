@@ -4,7 +4,7 @@
 
 var util = require('util');
 var config = require('./shared/configuration-reader.js');
-var EnsureArgument = require('./system/ensure-argument.js');
+var Argument = require('./system/argument-check.js');
 var Enumeration = require('./system/enumeration.js');
 
 var ModelBase = require('./model-base.js');
@@ -60,13 +60,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *    The child objects must be ReadOnlyChildCollectionSync or ReadOnlyChildModelSync instances.
  */
 var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', CLASS_NAME, 'properties');
-  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', CLASS_NAME, 'rules');
-  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', CLASS_NAME, 'extensions');
+  properties = check(properties).forMandatory('properties').asType(PropertyManager);
+  rules = check(rules).forMandatory('rules').asType(RuleManager);
+  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync' ]);
@@ -106,20 +104,18 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
    */
   var ReadOnlyChildModelSync = function (parent, eventHandlers) {
     ModelBase.call(this);
+    var check = Argument.inConstructor(properties.name);
 
     // Verify the model type of the parent model.
-    parent = EnsureArgument.isModelType(parent,
-        [
-          'ReadOnlyRootCollectionSync',
-          'ReadOnlyChildCollectionSync',
-          'ReadOnlyRootModelSync',
-          'ReadOnlyChildModelSync',
-          'CommandObjectSync'
-        ],
-        'c_modelType', properties.name, 'parent');
+    parent = check(parent).for('parent').asModelType([
+      'ReadOnlyRootCollectionSync',
+      'ReadOnlyChildCollectionSync',
+      'ReadOnlyRootModelSync',
+      'ReadOnlyChildModelSync',
+      'CommandObjectSync'
+    ]);
 
-    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', properties.name, 'eventHandlers');
+    eventHandlers = check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var store = new DataStore();

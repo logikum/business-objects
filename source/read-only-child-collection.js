@@ -3,7 +3,7 @@
 //region Imports
 
 var util = require('util');
-var EnsureArgument = require('./system/ensure-argument.js');
+var Argument = require('./system/argument-check.js');
 
 var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
@@ -29,8 +29,8 @@ var CLASS_NAME = 'ReadOnlyChildCollection';
  */
 var ReadOnlyChildCollectionFactory = function (name, itemType) {
 
-  name = EnsureArgument.isMandatoryString(name,
-      'c_manString', CLASS_NAME, 'name');
+  name = Argument.inConstructor(CLASS_NAME)
+      .check(name).forMandatory('name').asString();
 
   // Check tree reference.
   if (typeof itemType !== 'string') {
@@ -71,13 +71,11 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
     CollectionBase.call(this);
 
     // Verify the model type of the parent model.
-    parent = EnsureArgument.isModelType(parent,
-        [
-          'ReadOnlyRootModel',
-          'ReadOnlyChildModel',
-          'CommandObject'
-        ],
-        'c_modelType', name, 'parent');
+    parent = Argument.inConstructor(name).check(parent).for('parent').asModelType([
+      'ReadOnlyRootModel',
+      'ReadOnlyChildModel',
+      'CommandObject'
+    ]);
 
     // Resolve tree reference.
     if (typeof itemType === 'string') {

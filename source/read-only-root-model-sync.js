@@ -4,7 +4,7 @@
 
 var util = require('util');
 var config = require('./shared/configuration-reader.js');
-var EnsureArgument = require('./system/ensure-argument.js');
+var Argument = require('./system/argument-check.js');
 var Enumeration = require('./system/enumeration.js');
 
 var ModelBase = require('./model-base.js');
@@ -62,13 +62,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *    The child objects must be ReadOnlyChildCollectionSync or ReadOnlyChildModelSync instances.
  */
 var ReadOnlyRootModelSyncFactory = function (properties, rules, extensions) {
+  var check = Argument.inConstructor(CLASS_NAME);
 
-  properties = EnsureArgument.isMandatoryType(properties, PropertyManager,
-      'c_manType', CLASS_NAME, 'properties');
-  rules = EnsureArgument.isMandatoryType(rules, RuleManager,
-      'c_manType', CLASS_NAME, 'rules');
-  extensions = EnsureArgument.isMandatoryType(extensions, ExtensionManagerSync,
-      'c_manType', CLASS_NAME, 'extensions');
+  properties = check(properties).forMandatory('properties').asType(PropertyManager);
+  rules = check(rules).forMandatory('rules').asType(RuleManager);
+  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
   // Verify the model type of child models.
   properties.verifyChildTypes([ 'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync' ]);
@@ -100,8 +98,8 @@ var ReadOnlyRootModelSyncFactory = function (properties, rules, extensions) {
   var ReadOnlyRootModelSync = function (eventHandlers) {
     ModelBase.call(this);
 
-    eventHandlers = EnsureArgument.isOptionalType(eventHandlers, EventHandlerList,
-        'c_optType', properties.name, 'eventHandlers');
+    eventHandlers = Argument.inConstructor(properties.name)
+        .check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var store = new DataStore();
@@ -341,8 +339,8 @@ var ReadOnlyRootModelSyncFactory = function (properties, rules, extensions) {
      */
     this.fetch = function(filter, method) {
 
-      method = EnsureArgument.isOptionalString(method,
-          'm_optString', CLASS_NAME, 'fetch', 'method');
+      method = Argument.inMethod(properties.name, 'fetch')
+          .check(method).forOptional('method').asString();
 
       data_fetch(filter, method || M_FETCH);
     };
