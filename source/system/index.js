@@ -1,12 +1,12 @@
 'use strict';
 
-var ArgumentError = require('./../system/argument-error.js');
-var EnumerationError = require('./../system/enumeration-error.js');
+var ArgumentError = require('./argument-error.js');
+var EnumerationError = require('./enumeration-error.js');
 var NotImplementedError = require('./not-implemented-error.js');
 
-var Enumeration = require('./../system/enumeration.js');
-var EnsureArgument = require('./../system/ensure-argument.js');
-var UserInfo = require('./../system/user-info.js');
+var Enumeration = require('./enumeration.js');
+var Argument = require('./argument-check.js');
+var UserInfo = require('./user-info.js');
 var Utility = require('./utility.js');
 
 /**
@@ -23,7 +23,7 @@ var Utility = require('./utility.js');
  *
  * @property {function} Enumeration - {@link bo.system.Enumeration Enumeration}
  *      constructor to create new enumeration.
- * @property {object} EnsureArgument - {@link bo.system.EnsureArgument Argument verification}
+ * @property {object} Argument - {@link bo.system.Argument Argument verification}
  *      namespace provides methods to check arguments.
  * @property {function} UserInfo - {@link bo.system.UserInfo User data}
  *      constructor to create new base object for user information.
@@ -36,7 +36,7 @@ var index = {
   NotImplementedError: NotImplementedError,
 
   Enumeration: Enumeration,
-  EnsureArgument: EnsureArgument,
+  Argument: Argument,
   UserInfo: UserInfo,
   Utility: Utility
 };

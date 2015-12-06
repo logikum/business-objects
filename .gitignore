@@ -1,4 +1,5 @@
 /.idea
+/api
 /doc-baseline
 /doc-docstrap
 /node_modules

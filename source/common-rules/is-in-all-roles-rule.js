@@ -40,7 +40,6 @@ function IsInAllRolesRule (action, target, roles, message, priority, stopsProces
    * @type {Array.<string>}
    * @readonly
    */
-  //this.roles = EnsureArgument.isMandatoryArray(roles, String, 'c_manArrayPrim', CLASS_NAME, 'roles');
   this.roles = Argument.inConstructor(CLASS_NAME).check(roles).forMandatory('roles').asArray(String);
 
   // Initialize base properties.
