@@ -1,6 +1,9 @@
 'use strict';
 
 var ArgumentError = require('./argument-error.js');
+var ConstructorError = require('./constructor-error.js');
+var MethodError = require('./method-error.js');
+var PropertyError = require('./property-error.js');
 var EnumerationError = require('./enumeration-error.js');
 var NotImplementedError = require('./not-implemented-error.js');
 
@@ -16,6 +19,12 @@ var Utility = require('./utility.js');
  *
  * @property {function} ArgumentError - {@link bo.system.ArgumentError Argument error}
  *      constructor to create a new error related to an argument.
+ * @property {function} ConstructorError - {@link bo.system.ConstructorError Constructor error}
+ *      constructor to create a new error related to a constructor argument.
+ * @property {function} MethodError - {@link bo.system.MethodError Method error}
+ *      constructor to create a new error related to a method argument.
+ * @property {function} PropertyError - {@link bo.system.PropertyError Property error}
+ *      constructor to create a new error related to a property argument.
  * @property {function} EnumerationError - {@link bo.system.EnumerationError Enumeration error}
  *      constructor to create a new error related to an enumeration.
  * @property {function} NotImplementedError - {@link bo.system.NotImplementedError Not implemented error}
@@ -32,6 +41,9 @@ var Utility = require('./utility.js');
  */
 var index = {
   ArgumentError: ArgumentError,
+  ConstructorError: ConstructorError,
+  MethodError: MethodError,
+  PropertyError: PropertyError,
   EnumerationError: EnumerationError,
   NotImplementedError: NotImplementedError,
 

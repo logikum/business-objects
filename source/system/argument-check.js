@@ -50,8 +50,9 @@ var ArgumentGroup = {
 /**
  * Creates an argument check instance for the given value.
  *
+ * @memberof bo.system
  * @constructor
- * @param {*} value - The value to check.
+ * @param {*} [value] - The value to check.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
 function ArgumentCheck (value) {
@@ -580,22 +581,53 @@ function ArgumentCheckBuilder (argumentGroup, className, methodName, propertyNam
 
 //region Argument check factory
 
+/**
+ * Creates a general argument check object.
+ * @function bo.system.Argument
+ */
 function ArgumentCheckFactory() {
   return ArgumentCheckBuilder(ArgumentGroup.General, '', '', '');
 }
 
+/**
+ * Creates a general argument check object.
+ * @function bo.system.Argument.check
+ * @param {*} value - The value to check.
+ * @returns {bo.system.ArgumentCheck} - Argument check object.
+ */
 ArgumentCheckFactory.check = function(value) {
   return ArgumentCheckBuilder(ArgumentGroup.General, '', '', '')(value);
 };
 
+/**
+ * Creates a constructor argument check object.
+ * @function bo.system.Argument.inConstructor
+ * @param {string} className - The name of the class of the constructor.
+ * @returns {bo.system.ArgumentCheck} - Argument check object.
+ */
 ArgumentCheckFactory.inConstructor = function (className) {
   return ArgumentCheckBuilder(ArgumentGroup.Constructor, className, '', '');
 };
 
+/**
+ * Creates a method argument check object.
+ * @function bo.system.Argument.inMethod
+ * @param {string} className - The name of the class of the method.
+ * @param {string} methodName - The name of the method.
+ * @returns {bo.system.ArgumentCheck} - Argument check object.
+ */
 ArgumentCheckFactory.inMethod = function (className, methodName) {
   return ArgumentCheckBuilder(ArgumentGroup.Method, className, methodName, '');
 };
 
+/**
+ * Creates a property argument check object.
+ * @function bo.system.Argument.inProperty
+ * @param {string} className - The name of the class of the property.
+ * @param {string} propertyName - The name of the property.
+ * @param propertyName
+ * @returns {bo.system.ArgumentCheck} - Argument check object.
+ */
 ArgumentCheckFactory.inProperty = function (className, propertyName) {
   return ArgumentCheckBuilder(ArgumentGroup.Property, className, '', propertyName);
 };

@@ -41,6 +41,7 @@ $ grunt baseline
 Asynchronous models:
 
 * [Editable root model](https://logikum.github.io/business-objects/EditableRootModel.html)
+* [Editable root collection](https://logikum.github.io/business-objects/EditableRootCollection.html)
 * [Editable child model](https://logikum.github.io/business-objects/EditableChildModel.html)
 * [Editable child collection](https://logikum.github.io/business-objects/EditableChildCollection.html)
 * [Read-only root model](https://logikum.github.io/business-objects/ReadOnlyRootModel.html)
@@ -52,6 +53,7 @@ Asynchronous models:
 Synchronous models:
 
 * [Editable root model](https://logikum.github.io/business-objects/EditableRootModelSync.html)
+* [Editable root collection](https://logikum.github.io/business-objects/EditableRootCollectionSync.html)
 * [Editable child model](https://logikum.github.io/business-objects/EditableChildModelSync.html)
 * [Editable child collection](https://logikum.github.io/business-objects/EditableChildCollectionSync.html)
 * [Read-only root model](https://logikum.github.io/business-objects/ReadOnlyRootModelSync.html)
