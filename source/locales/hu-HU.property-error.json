@@ -19,6 +19,7 @@
     "optType": "A {0}.{1} tulajdonság értékének {2} objektumnak vagy nullnak kell lennie.",
     "manType": "A {0}.{1} tulajdonság értékének {2} objektumnak kell lennie.",
     "modelType": "A {0}.{1} tulajdonság értékének {2} típusnak kell lennie.",
+    "enumType": "A {0}.{1} tulajdonság értékének felsorolás típusnak kell lennie.",
     "enumMember": "A {0}.{1} tulajdonság értékének egy {2} elemnek kell lennie.",
     "optArray": "A {0}.{1} tulajdonság értékének {2} objektumtömbnek, egy {2} objektumnak vagy nullnak kell lennie.",
     "manArray": "A {0}.{1} tulajdonság értékének {2} objektumtömbnek vagy egy {2} objektumnak kell lennie.",

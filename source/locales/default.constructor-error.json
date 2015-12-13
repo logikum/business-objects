@@ -19,6 +19,7 @@
     "optType": "The {1} argument of {0} constructor must be a {2} object or null.",
     "manType": "The {1} argument of {0} constructor must be a {2} object.",
     "modelType": "The {1} argument of {0} constructor must be {2} type.",
+    "enumType": "The {1} argument of {0} constructor must be an enumeration type.",
     "enumMember": "The {1} argument of {0} constructor must be a {2} item.",
     "optArray": "The {1} argument of {0} constructor must be an array of {2} objects, or a single {2} object or null.",
     "manArray": "The {1} argument of {0} constructor must be an array of {2} objects or a single {2} object.",

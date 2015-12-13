@@ -19,6 +19,7 @@
     "optType": "The {2} argument of {0}.{1} method must be a {3} object or null.",
     "manType": "The {2} argument of {0}.{1} method must be a {3} object.",
     "modelType": "The {2} argument of {0}.{1} method must be {3} type.",
+    "enumType": "The {2} argument of {0}.{1} method must be an enumeration type.",
     "enumMember": "The {2} argument of {0}.{1} method must be a {3} item.",
     "optArray": "The {2} argument of {0}.{1} method must be an array of {3} objects, or a single {3} object or null.",
     "manArray": "The {2} argument of {0}.{1} method must be an array of {3} objects or a single {3} object.",

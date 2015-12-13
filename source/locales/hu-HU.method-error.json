@@ -19,6 +19,7 @@
     "optType": "A {0}.{1} eljárás {2} paraméterének {3} objektumnak vagy nullnak kell lennie.",
     "manType": "A {0}.{1} eljárás {2} paraméterének {3} objektumnak kell lennie.",
     "modelType": "A {0}.{1} eljárás {2} paraméterének {3} típusnak kell lennie.",
+    "enumType": "A {0}.{1} eljárás {2} paraméterének felsorolás típusnak kell lennie.",
     "enumMember": "A {0}.{1} eljárás {2} paraméterének egy {3} elemnek kell lennie.",
     "optArray": "A {0}.{1} eljárás {2} paraméterének {3} objektumtömbnek, egy {3} objektumnak vagy nullnak kell lennie.",
     "manArray": "A {0}.{1} eljárás {2} paraméterének {3} objektumtömbnek vagy egy {3} objektumnak kell lennie.",
