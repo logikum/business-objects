@@ -1,4 +1,4 @@
-console.log('Testing shared/enumeration.js...');
+console.log('Testing system/enumeration.js...');
 
 var util = require('util');
 var Enumeration = require('../../source/system/enumeration.js');

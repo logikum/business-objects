@@ -221,7 +221,7 @@ describe('Argument checking function', function () {
     var any09 = Argument.check(new Date()).hasValue();
     var any10 = Argument.check(new RegExp('[0-9]+')).hasValue();
 
-    expect(call1).toThrow();
+    expect(call1).toThrow('The  argument is required.');
     expect(call2).toThrow('The  argument is required.');
 
     expect(any01).toBeDefined();
@@ -255,19 +255,20 @@ describe('Argument checking function', function () {
     var any01 = Argument.check('').asString();
     var any02 = Argument.check('Romeo and Juliet').asString();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
-    expect(call10).toThrow();
+    var message = 'The  argument must be a string value.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
+    expect(call10).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
+    expect(any01).toBe('');
+    expect(any02).toBe('Romeo and Juliet');
   });
 
   it('asString (optional) method works', function () {
@@ -285,19 +286,20 @@ describe('Argument checking function', function () {
     var any03 = Argument.check('').forOptional().asString();
     var any04 = Argument.check('Romeo and Juliet').forOptional().asString();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
+    var message = 'The  argument must be a string value or null.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
-    expect(any04).toBeDefined();
+    expect(any01).toBe(null);
+    expect(any02).toBe(null);
+    expect(any03).toBe('');
+    expect(any04).toBe('Romeo and Juliet');
   });
 
   it('asString (mandatory) method works', function () {
@@ -315,19 +317,20 @@ describe('Argument checking function', function () {
 
     var any01 = Argument.check('Romeo and Juliet').forMandatory().asString();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
-    expect(call10).toThrow();
-    expect(call11).toThrow();
+    var message = 'The  argument must be a non-empty string.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
+    expect(call10).toThrow(message);
+    expect(call11).toThrow(message);
 
-    expect(any01).toBeDefined();
+    expect(any01).toBeDefined('Romeo and Juliet');
   });
 
   //endregion
@@ -349,19 +352,20 @@ describe('Argument checking function', function () {
     var any03 = Argument.check(1).forOptional().asNumber();
     var any04 = Argument.check(-100.99).forOptional().asNumber();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
+    var message = 'The  argument must be a number value or null.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
-    expect(any04).toBeDefined();
+    expect(any01).toBe(null);
+    expect(any02).toBe(null);
+    expect(any03).toBe(1);
+    expect(any04).toBe(-100.99);
   });
 
   it('asNumber (mandatory) method works', function () {
@@ -379,19 +383,20 @@ describe('Argument checking function', function () {
     var any01 = Argument.check(1).forMandatory().asNumber();
     var any02 = Argument.check(-100.99).forMandatory().asNumber();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
-    expect(call10).toThrow();
+    var message = 'The  argument must be a number value.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
+    expect(call10).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
+    expect(any01).toBe(1);
+    expect(any02).toBe(-100.99);
   });
 
   //endregion
@@ -413,19 +418,20 @@ describe('Argument checking function', function () {
     var any02 = Argument.check(null).forOptional().asInteger();
     var any03 = Argument.check(1).forOptional().asInteger();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
+    var message = 'The  argument must be an integer value or null.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
+    expect(any01).toBe(null);
+    expect(any02).toBe(null);
+    expect(any03).toBe(1);
   });
 
   it('asInteger (mandatory) method works', function () {
@@ -443,19 +449,20 @@ describe('Argument checking function', function () {
 
     var any01 = Argument.check(1).forMandatory().asInteger();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
-    expect(call10).toThrow();
-    expect(call11).toThrow();
+    var message = 'The  argument must be an integer value.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
+    expect(call10).toThrow(message);
+    expect(call11).toThrow(message);
 
-    expect(any01).toBeDefined();
+    expect(any01).toBe(1);
   });
 
   //endregion
@@ -477,19 +484,20 @@ describe('Argument checking function', function () {
     var any02 = Argument.check(null).forOptional().asBoolean();
     var any03 = Argument.check(true).forOptional().asBoolean();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
+    var message = 'The  argument must be a Boolean value or null.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
+    expect(any01).toBe(null);
+    expect(any02).toBe(null);
+    expect(any03).toBe(true);
   });
 
   it('asBoolean (mandatory) method works', function () {
@@ -507,24 +515,30 @@ describe('Argument checking function', function () {
 
     var any01 = Argument.check(true).forMandatory().asBoolean();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
-    expect(call10).toThrow();
-    expect(call11).toThrow();
+    var message = 'The  argument must be a Boolean value.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
+    expect(call10).toThrow(message);
+    expect(call11).toThrow(message);
 
-    expect(any01).toBeDefined();
+    expect(any01).toBeDefined(true);
   });
 
   //endregion
 
   //region Object
+
+  var objBase = {};
+  var objArray = [];
+  var objDate = new Date();
+  var objRegExp = new RegExp('[0-9]+');
 
   it('asObject (optional) method works', function () {
     function call01() { return Argument.check(false).forOptional().asObject(); }
@@ -536,24 +550,25 @@ describe('Argument checking function', function () {
 
     var any01 = Argument.check().forOptional().asObject();
     var any02 = Argument.check(null).forOptional().asObject();
-    var any03 = Argument.check({}).forOptional().asObject();
-    var any04 = Argument.check([]).forOptional().asObject();
-    var any05 = Argument.check(new Date()).forOptional().asObject();
-    var any06 = Argument.check(new RegExp('[0-9]+')).forOptional().asObject();
+    var any03 = Argument.check(objBase).forOptional().asObject();
+    var any04 = Argument.check(objArray).forOptional().asObject();
+    var any05 = Argument.check(objDate).forOptional().asObject();
+    var any06 = Argument.check(objRegExp).forOptional().asObject();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
+    var message = 'The  argument must be an object or null.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
-    expect(any04).toBeDefined();
-    expect(any05).toBeDefined();
-    expect(any06).toBeDefined();
+    expect(any01).toBe(null);
+    expect(any02).toBe(null);
+    expect(any03).toBe(objBase);
+    expect(any04).toBe(objArray);
+    expect(any05).toBe(objDate);
+    expect(any06).toBe(objRegExp);
   });
 
   it('asObject (mandatory) method works', function () {
@@ -566,29 +581,32 @@ describe('Argument checking function', function () {
     function call07() { return Argument.check('Romeo and Juliet').forMandatory().asObject(); }
     function call08() { return Argument.check(function() {}).forMandatory().asObject(); }
 
-    var any01 = Argument.check({}).forMandatory().asObject();
-    var any02 = Argument.check([]).forMandatory().asObject();
-    var any03 = Argument.check(new Date()).forMandatory().asObject();
-    var any04 = Argument.check(new RegExp('[0-9]+')).forMandatory().asObject();
+    var any01 = Argument.check(objBase).forMandatory().asObject();
+    var any02 = Argument.check(objArray).forMandatory().asObject();
+    var any03 = Argument.check(objDate).forMandatory().asObject();
+    var any04 = Argument.check(objRegExp).forMandatory().asObject();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
+    var message = 'The  argument must be an object.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
-    expect(any04).toBeDefined();
+    expect(any01).toBe(objBase);
+    expect(any02).toBe(objArray);
+    expect(any03).toBe(objDate);
+    expect(any04).toBe(objRegExp);
   });
 
   //endregion
 
   //region Function
+
+  var fnEmpty = function() {};
 
   it('asFunction (optional) method works', function () {
     function call01() { return Argument.check(false).forOptional().asFunction(); }
@@ -603,21 +621,22 @@ describe('Argument checking function', function () {
 
     var any01 = Argument.check().forOptional().asFunction();
     var any02 = Argument.check(null).forOptional().asFunction();
-    var any03 = Argument.check(function() {}).forOptional().asFunction();
+    var any03 = Argument.check(fnEmpty).forOptional().asFunction();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
+    var message = 'The  argument must be a function or null.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
+    expect(any01).toBe(null);
+    expect(any02).toBe(null);
+    expect(any03).toBe(fnEmpty);
   });
 
   it('isMandatoryFunction method works', function () {
@@ -633,21 +652,22 @@ describe('Argument checking function', function () {
     function call10() { return Argument.check(new Date()).forMandatory().asFunction(); }
     function call11() { return Argument.check(new RegExp('[0-9]+')).forMandatory().asFunction(); }
 
-    var any01 = Argument.check(function() {}).forMandatory().asFunction();
+    var any01 = Argument.check(fnEmpty).forMandatory().asFunction();
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
-    expect(call10).toThrow();
-    expect(call11).toThrow();
+    var message = 'The  argument must be a function.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
+    expect(call10).toThrow(message);
+    expect(call11).toThrow(message);
 
-    expect(any01).toBeDefined();
+    expect(any01).toBe(fnEmpty);
   });
 
   //endregion
@@ -663,27 +683,27 @@ describe('Argument checking function', function () {
 
     var any01 = Argument.check(undefined).forOptional().asType(Object);
     var any02 = Argument.check(null).forOptional().asType(Object);
-    var any03 = Argument.check([]).forOptional().asType(Array);
-    var any04 = Argument.check({}).forOptional().asType(Object);
-    var any05 = Argument.check(new Date()).forOptional().asType(Date);
-    var any06 = Argument.check(new RegExp('[0-9]+')).forOptional().asType(RegExp);
-    var any07 = Argument.check(function() {}).forOptional().asType(Function);
+    var any03 = Argument.check(objArray).forOptional().asType(Array);
+    var any04 = Argument.check(objBase).forOptional().asType(Object);
+    var any05 = Argument.check(objDate).forOptional().asType(Date);
+    var any06 = Argument.check(objRegExp).forOptional().asType(RegExp);
+    var any07 = Argument.check(fnEmpty).forOptional().asType(Function);
     var any08 = Argument.check({ x: 0 }).forOptional().asType([ Function, Object ]);
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
+    expect(call01).toThrow('The  argument must be a Boolean object or null.');
+    expect(call02).toThrow('The  argument must be a Number object or null.');
+    expect(call03).toThrow('The  argument must be a Number object or null.');
+    expect(call04).toThrow('The  argument must be a String object or null.');
+    expect(call05).toThrow('The  argument must be a String object or null.');
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
-    expect(any04).toBeDefined();
-    expect(any05).toBeDefined();
-    expect(any06).toBeDefined();
-    expect(any07).toBeDefined();
-    expect(any08).toBeDefined();
+    expect(any01).toBe(null);
+    expect(any02).toBe(null);
+    expect(any03).toBe(objArray);
+    expect(any04).toBe(objBase);
+    expect(any05).toBe(objDate);
+    expect(any06).toBe(objRegExp);
+    expect(any07).toBe(fnEmpty);
+    expect(any08.x).toBe(0);
   });
 
   it('asType (mandatory) method works', function () {
@@ -695,27 +715,27 @@ describe('Argument checking function', function () {
     function call06() { return Argument.check('').forMandatory().asType(String); }
     function call07() { return Argument.check('Romeo and Juliet').forMandatory().asType(String); }
 
-    var any01 = Argument.check([]).forMandatory().asType(Array);
-    var any02 = Argument.check({}).forMandatory().asType(Object);
-    var any03 = Argument.check(new Date()).forMandatory().asType(Date);
-    var any04 = Argument.check(new RegExp('[0-9]+')).forMandatory().asType(RegExp);
-    var any05 = Argument.check(function() {}).forMandatory().asType(Function);
+    var any01 = Argument.check(objArray).forMandatory().asType(Array);
+    var any02 = Argument.check(objBase).forMandatory().asType(Object);
+    var any03 = Argument.check(objDate).forMandatory().asType(Date);
+    var any04 = Argument.check(objRegExp).forMandatory().asType(RegExp);
+    var any05 = Argument.check(fnEmpty).forMandatory().asType(Function);
     var any06 = Argument.check({ x: 0 }).forMandatory().asType([ Function, Object ]);
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
+    expect(call01).toThrow('The  argument must be a Object object.');
+    expect(call02).toThrow('The  argument must be a Object object.');
+    expect(call03).toThrow('The  argument must be a Boolean object.');
+    expect(call04).toThrow('The  argument must be a Number object.');
+    expect(call05).toThrow('The  argument must be a Number object.');
+    expect(call06).toThrow('The  argument must be a String object.');
+    expect(call07).toThrow('The  argument must be a String object.');
 
-    expect(any01).toBeDefined();
-    expect(any02).toBeDefined();
-    expect(any03).toBeDefined();
-    expect(any04).toBeDefined();
-    expect(any05).toBeDefined();
-    expect(any06).toBeDefined();
+    expect(any01).toBe(objArray);
+    expect(any02).toBe(objBase);
+    expect(any03).toBe(objDate);
+    expect(any04).toBe(objRegExp);
+    expect(any05).toBe(fnEmpty);
+    expect(any06.x).toBe(0);
   });
 
   //endregion
@@ -733,10 +753,10 @@ describe('Argument checking function', function () {
 
     var cmd01 = Argument.check(cmd).for().asModelType('CommandObjectSync');
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
+    expect(call01).toThrow('The  argument must be CommandObjectSync type.');
+    expect(call02).toThrow('The  argument must be CommandObjectSync type.');
+    expect(call03).toThrow('The  argument must be CommandObjectSync type.');
+    expect(call04).toThrow('The  argument must be CommandObject type.');
     expect(call05).toThrow('Invalid model type!');
 
     expect(cmd01).toBe(cmd);
@@ -760,28 +780,31 @@ describe('Argument checking function', function () {
     function call01() { return Argument.check(undefined).for().asEnumMember(Numbers); }
     function call02() { return Argument.check(null).for().asEnumMember(Numbers); }
     function call03() { return Argument.check(false).for().asEnumMember(Numbers); }
-    function call04() { return Argument.check(1).for().asEnumMember(Numbers); }
-    function call05() { return Argument.check(-100.99).for().asEnumMember(Numbers); }
-    function call06() { return Argument.check('').for().asEnumMember(Numbers); }
-    function call07() { return Argument.check('Romeo and Juliet').for().asEnumMember(Numbers); }
-    function call08() { return Argument.check([]).for().asEnumMember(Numbers); }
-    function call09() { return Argument.check({}).for().asEnumMember(Numbers); }
-    function call10() { return Argument.check(function() {}).for().asEnumMember(Numbers); }
-    function call11() { return Argument.check(new Date()).for().asEnumMember(Numbers); }
-    function call12() { return Argument.check(new RegExp('[0-9]+')).for().asEnumMember(Numbers); }
+    function call04() { return Argument.check(-100.99).for().asEnumMember(Numbers); }
+    function call05() { return Argument.check('').for().asEnumMember(Numbers); }
+    function call06() { return Argument.check('Romeo and Juliet').for().asEnumMember(Numbers); }
+    function call07() { return Argument.check([]).for().asEnumMember(Numbers); }
+    function call08() { return Argument.check({}).for().asEnumMember(Numbers); }
+    function call09() { return Argument.check(function() {}).for().asEnumMember(Numbers); }
+    function call10() { return Argument.check(new Date()).for().asEnumMember(Numbers); }
+    function call11() { return Argument.check(new RegExp('[0-9]+')).for().asEnumMember(Numbers); }
 
+    var enum1 = Argument.check(1).for().asEnumMember(Numbers);
+
+    var message = 'The  argument must be a Numbers1 item.';
     expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).not.toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
-    expect(call10).toThrow();
-    expect(call11).toThrow();
-    expect(call12).toThrow();
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
+    expect(call10).toThrow(message);
+    expect(call11).toThrow(message);
+
+    expect(enum1).toEqual(Numbers.two);
   });
 
   //endregion
@@ -807,14 +830,15 @@ describe('Argument checking function', function () {
     var any07 = Argument.check(new ModelBase()).forOptional().asArray(ModelBase);
     var any08 = Argument.check([new ModelBase(), new ModelBase()]).forOptional().asArray(ModelBase);
 
-    expect(call1).toThrow();
-    expect(call2).toThrow();
-    expect(call3).toThrow();
-    expect(call4).toThrow();
-    expect(call5).toThrow();
-    expect(call6).toThrow();
-    expect(call7).toThrow();
-    expect(call8).toThrow();
+    var message = 'The  argument must be an array of String values, or a single String value or null.';
+    expect(call1).toThrow(message);
+    expect(call2).toThrow(message);
+    expect(call3).toThrow(message);
+    expect(call4).toThrow(message);
+    expect(call5).toThrow(message);
+    expect(call6).toThrow(message);
+    expect(call7).toThrow(message);
+    expect(call8).toThrow(message);
 
     expect(any01).toBeDefined();
     expect(any02).toBeDefined();
@@ -845,16 +869,17 @@ describe('Argument checking function', function () {
     var any05 = Argument.check(new ModelBase()).forMandatory().asArray(ModelBase);
     var any06 = Argument.check([new ModelBase(), new ModelBase()]).forMandatory().asArray(ModelBase);
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(call04).toThrow();
-    expect(call05).toThrow();
-    expect(call06).toThrow();
-    expect(call07).toThrow();
-    expect(call08).toThrow();
-    expect(call09).toThrow();
-    expect(call10).toThrow();
+    var message = 'The  argument must be an array of String values or a single String value.';
+    expect(call01).toThrow(message);
+    expect(call02).toThrow(message);
+    expect(call03).toThrow(message);
+    expect(call04).toThrow(message);
+    expect(call05).toThrow(message);
+    expect(call06).toThrow(message);
+    expect(call07).toThrow(message);
+    expect(call08).toThrow(message);
+    expect(call09).toThrow(message);
+    expect(call10).toThrow(message);
 
     expect(any01).toBeDefined();
     expect(any02).toBeDefined();

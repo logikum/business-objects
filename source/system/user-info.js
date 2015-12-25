@@ -40,7 +40,7 @@ function UserInfo (userCode) {
  *
  * @abstract
  * @function bo.system.UserInfo#isInRole
- * @param {strng} role - The name of the role.
+ * @param {string} role - The name of the role.
  * @returns {boolean} True if the user is a member of the role, otherwise false.
  *
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The UserInfo.isInRole method is not implemented.

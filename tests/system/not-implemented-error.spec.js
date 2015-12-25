@@ -1,4 +1,4 @@
-console.log('Testing shared/not-implemented-error.js...');
+console.log('Testing system/not-implemented-error.js...');
 
 var NotImplementedError = require('../../source/system/not-implemented-error.js');
 

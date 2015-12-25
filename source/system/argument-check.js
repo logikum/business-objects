@@ -413,7 +413,7 @@ function asType () {
     if (this.value !== null && !(types.some(function (option) {
           return self.value && (self.value instanceof option || self.value.super_ === option);
         })))
-      this.exception('manType', typeNames(types), args);
+      this.exception('optType', typeNames(types), args);
   }
   return this.value;
 }
@@ -442,7 +442,7 @@ function asModelType () {
   if (!(models.some(function (modelType) {
         return self.value && self.value.constructor && self.value.constructor.modelType === modelType;
       })))
-    this.exception('manType', models.join(' | '), args);
+    this.exception('modelType', models.join(' | '), args);
   return this.value;
 }
 
