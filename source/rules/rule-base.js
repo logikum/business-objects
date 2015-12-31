@@ -1,9 +1,10 @@
 'use strict';
 
-var CLASS_NAME = 'Rule';
+var CLASS_NAME = 'RuleBase';
 
 var Argument = require('../system/argument-check.js');
 var ArgumentError = require('../system/argument-error.js');
+var ConstructorError = require('../system/constructor-error.js');
 var NotImplementedError = require('../system/not-implemented-error.js');
 
 /**
@@ -21,6 +22,7 @@ var NotImplementedError = require('../system/not-implemented-error.js');
 var RuleBase = function (ruleName) {
 
   ruleName = Argument.inConstructor(CLASS_NAME).check(ruleName).forMandatory('ruleName').asString();
+
   /**
    * The name of the rule type.
    * The default value usually the name of the constructor, without the Rule suffix.
@@ -66,6 +68,8 @@ var RuleBase = function (ruleName) {
  * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
+ * @throws {@link bo.system.ArgumentError Argument error}: The last 3 arguments can be:
+ *    a string as the message, an integer as the priority and a Boolean as the stopsProcessing argument.
  */
 RuleBase.prototype.initialize = function (message, priority, stopsProcessing) {
 
@@ -87,11 +91,11 @@ RuleBase.prototype.initialize = function (message, priority, stopsProcessing) {
           this.stopsProcessing = args[i];
           break;
         default:
-          throw new ArgumentError('rule');
+          throw new ConstructorError('rule', this.constructor.name);
       }
     }
   }
-  Argument.inMethod(CLASS_NAME, 'initialize').check(this.message).forMandatory('message').asString();
+  Argument.inConstructor(this.constructor.name).check(this.message).forMandatory('message').asString();
 };
 
 /**
@@ -104,7 +108,7 @@ RuleBase.prototype.initialize = function (message, priority, stopsProcessing) {
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The Rule.execute method is not implemented.
  */
 RuleBase.prototype.execute = function (inputs) {
-  throw new NotImplementedError('method', CLASS_NAME, 'execute');
+  throw new NotImplementedError('method', this.constructor.name, 'execute');
 };
 
 /**
@@ -119,7 +123,7 @@ RuleBase.prototype.execute = function (inputs) {
  * @throws {@link bo.system.NotImplementedError Not implemented error}: The Rule.result method is not implemented.
  */
 RuleBase.prototype.result = function (message, severity) {
-  throw new NotImplementedError('method', CLASS_NAME, 'result');
+  throw new NotImplementedError('method', this.constructor.name, 'result');
 };
 
 module.exports = RuleBase;

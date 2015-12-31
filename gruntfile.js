@@ -2,18 +2,19 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
     clean: {
       united: {
-        src: 'doc-docstrap/*.html'
+        src: 'api/v<%= pkg.version %>/doc-docstrap/*.html'
       },
       baseline: {
-        src: 'doc-baseline/*.html'
+        src: 'api/v<%= pkg.version %>/doc-baseline/*.html'
       }
     },
     jsdoc : {
       united: {
         src: ['source', 'README.md'],
-        dest: 'doc-docstrap',
+        dest: 'api/v<%= pkg.version %>/doc-docstrap',
         options: {
           template: 'node_modules/grunt-jsdoc/node_modules/ink-docstrap/template',
           configure: 'jsdoc.conf.json',
@@ -24,10 +25,10 @@ module.exports = function(grunt) {
     },
     exec: {
       united: {
-        command: 'node_modules\\.bin\\jsdoc -d doc-docstrap -c jsdoc.conf.json -t node_modules/ink-docstrap/template -u tutorials -r source README.md'
+        command: 'node_modules\\.bin\\jsdoc -d api/v<%= pkg.version %>/doc-docstrap -c jsdoc.conf.json -t node_modules/ink-docstrap/template -u tutorials -r source README.md'
       },
       baseline: {
-        command: 'node_modules\\.bin\\jsdoc -d doc-baseline -t node_modules/jsdoc-baseline -r source'
+        command: 'node_modules\\.bin\\jsdoc -d api/v<%= pkg.version %>/doc-baseline -t node_modules/jsdoc-baseline -r source'
       }
     }
   });

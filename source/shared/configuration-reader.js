@@ -6,8 +6,8 @@ var ConfigurationError = require('./configuration-error.js');
 var ConnectionManagerBase = require('../data-access/connection-manager-base.js');
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
-var UserInfo = require('./../system/user-info.js');
-var Utility = require('./../system/utility.js');
+var UserInfo = require('../system/user-info.js');
+var Utility = require('../system/utility.js');
 
 var isInitialized = false;
 var fnUserReader = null;

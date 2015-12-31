@@ -3,7 +3,7 @@
 var CLASS_NAME = 'PropertyManager';
 
 var Argument = require('../system/argument-check.js');
-var ArgumentError = require('./../system/argument-error.js');
+var MethodError = require('../system/method-error.js');
 var PropertyInfo = require('./property-info.js');
 var DataType = require('../data-types/data-type.js');
 var ModelError = require('./model-error.js');
@@ -37,7 +37,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
 
    Array.prototype.slice.call(arguments, 1)
       .forEach(function (arg) {
-        items.push(check(arg).forMandatory().asType(PropertyInfo, 'c_pm'));
+        items.push(check(arg).forMandatory().asType(PropertyInfo, 'properties'));
         changed = true;
       });
 
@@ -118,6 +118,8 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    * @returns {bo.shared.PropertyInfo} The requested property definition.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The business object has no property
+   *    with the given name.
    */
   this.getByName = function (name, message) {
     name = Argument.inMethod(CLASS_NAME, 'getByName')
@@ -127,7 +129,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
       if (items[i].name === name)
         return items[i];
     }
-    throw new ArgumentError(message || 'm_property', this.name, name);
+    throw new MethodError(message || 'noProperty', CLASS_NAME, 'getByName', 'name', this.name, name);
   };
 
   /**

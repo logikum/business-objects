@@ -26,10 +26,6 @@
     "optArrayPrim": "The {0} argument must be an array of {1} values, or a single {1} value or null.",
     "manArrayPrim": "The {0} argument must be an array of {1} values or a single {1} value.",
 
-    "rule": "A Rule constructor can accept three kind of argument: a string as the message, an integer as the priority and a Boolean as the stopsProcessing argument.",
-    "c_pm": "All arguments of PropertyManager constructor but the first must be a PropertyInfo object.",
-    "m_property": "The {0} object has no property named {1}.",
-    "m_notInit": "The {2} argument of {0}.{1} method is not initialized.",
     "m_null": "The {2} argument of {0}.{1} method must be null."
   }
 }

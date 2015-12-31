@@ -3,7 +3,7 @@
 var CLASS_NAME = 'RuleManager';
 
 var Argument = require('../system/argument-check.js');
-var ArgumentError = require('../system/argument-error.js');
+var MethodError = require('../system/method-error.js');
 var RuleList = require('./rule-list.js');
 var ValidationRule = require('./validation-rule.js');
 var ValidationContext = require('./validation-context.js');
@@ -78,16 +78,16 @@ var RuleManager = function () {
 
     if (rule instanceof ValidationRule) {
       if (!rule.primaryProperty)
-        throw new ArgumentError('m_notInit', CLASS_NAME, 'add', 'rule');
+        throw new ArgumentError('notInitRule', CLASS_NAME, 'add', 'rule');
       validationRules.add(rule.primaryProperty.name, rule);
 
     } else if (rule instanceof AuthorizationRule) {
       if (!rule.ruleId)
-        throw new ArgumentError('m_notInit', CLASS_NAME, 'add', 'rule');
+        throw new ArgumentError('notInitRule', CLASS_NAME, 'add', 'rule');
       authorizationRules.add(rule.ruleId, rule);
 
     } else
-      throw new ArgumentError('m_manType', CLASS_NAME, 'add', 'rule', 'Rule');
+      throw new MethodError('manType', CLASS_NAME, 'add', 'rule', 'Rule');
   };
 
   /**

@@ -24,6 +24,9 @@
     "optArray": "The {1} argument of {0} constructor must be an array of {2} objects, or a single {2} object or null.",
     "manArray": "The {1} argument of {0} constructor must be an array of {2} objects or a single {2} object.",
     "optArrayPrim": "The {1} argument of {0} constructor must be an array of {2} values, or a single {2} values or null.",
-    "manArrayPrim": "The {1} argument of {0} constructor must be an array of {2} values or a single {2} values."
+    "manArrayPrim": "The {1} argument of {0} constructor must be an array of {2} values or a single {2} values.",
+
+    "properties": "All arguments of {0} constructor but the first must be a PropertyInfo object.",
+    "rule": "The last 3 arguments of {0} constructor can be: a string as the message, an integer as the priority and a Boolean as the stopsProcessing argument."
   }
 }

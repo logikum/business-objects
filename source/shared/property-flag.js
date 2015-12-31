@@ -1,7 +1,7 @@
 'use strict';
 
 var util = require('util');
-var Enumeration = require('./../system/enumeration.js');
+var Enumeration = require('../system/enumeration.js');
 
 /**
  * @classdesc Represents the eligible attributes of

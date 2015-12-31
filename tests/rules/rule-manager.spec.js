@@ -88,7 +88,7 @@ describe('Rule manager', function () {
 
     var validate01 = function () { rm.validate(property, context); };
 
-    expect(validate01).toThrow('The Rule.execute method is not implemented.');
+    expect(validate01).toThrow('The ValidationRule.execute method is not implemented.');
   });
 
   it('hasPermission method works', function() {
@@ -102,6 +102,6 @@ describe('Rule manager', function () {
       rm.hasPermission(context);
     };
 
-    expect(hasPermission01).toThrow('The Rule.execute method is not implemented.');
+    expect(hasPermission01).toThrow('The AuthorizationRule.execute method is not implemented.');
   });
 });

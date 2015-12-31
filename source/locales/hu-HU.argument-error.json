@@ -26,10 +26,6 @@
     "optArrayPrim": "A {0} paraméternek {1} értékek tömbjének, egy {1} értéknek vagy nullnak kell lennie.",
     "manArrayPrim": "A {0} paraméternek {1} értékek tömbjének vagy egy {1} értéknek kell lennie.",
 
-    "rule": "Egy Rule konstruktor háromféle paramétert fogad el: egy szöveget az üzenetnej, egy egész számot prioritásnak és egy logikai értéket mint a stopsProcessing paramétert.",
-    "c_pm": "Az első kivételével a PropertyManager konstruktor összes paraméterének PropertyInfo objektumnak kell lennie.",
-    "m_property": "A {0} objektumnak nincs {1} nevű tulajdonsága.",
-    "m_notInit": "A {0}.{1} eljárás {2} paramétere nincs inicializálva.",
     "m_null": "A {0}.{1} eljárás {2} paraméterének nullnak kell lennie."
   }
 }

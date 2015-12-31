@@ -24,6 +24,9 @@
     "optArray": "The {2} argument of {0}.{1} method must be an array of {3} objects, or a single {3} object or null.",
     "manArray": "The {2} argument of {0}.{1} method must be an array of {3} objects or a single {3} object.",
     "optArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values, or a single {3} value or null.",
-    "manArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values or a single {3} value."
+    "manArrayPrim": "The {2} argument of {0}.{1} method must be an array of {3} values or a single {3} value.",
+
+    "noProperty": "The {2} argument of {0}.{1} method is wrong: The {3} object has no property named {4}.",
+    "notInitRule": "The {2} argument of {0}.{1} method is wrong: The rule is not initialized."
   }
 }
