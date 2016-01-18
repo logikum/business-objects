@@ -12,7 +12,7 @@
   
 * __v1.0.17__  
   2015.09.26.  
-  Improving validation.
+  Improving validation.  
   Renaming Hungarian locales.  
   Improving tests and documentation.
   
