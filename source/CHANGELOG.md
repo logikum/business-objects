@@ -1,5 +1,8 @@
 # Release History
 
+* __v1.1.1__  
+  Incrementing version number for npm publish fault.
+  
 * __v1.1.0__  
   2016.01.18.  
   Adding editable collections.  
