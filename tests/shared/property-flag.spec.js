@@ -10,8 +10,6 @@ describe('Property flag', function () {
     expect(PropertyFlag.readOnly).toBe(1);
     expect(PropertyFlag.key).toBe(2);
     expect(PropertyFlag.parentKey).toBe(4);
-    expect(PropertyFlag.notOnDto).toBe(8);
-    expect(PropertyFlag.notOnCto).toBe(16);
     expect(PropertyFlag.onCtoOnly).toBe(8);
     expect(PropertyFlag.onDtoOnly).toBe(16);
   });
@@ -21,8 +19,6 @@ describe('Property flag', function () {
     PropertyFlag.readOnly = 9;
     PropertyFlag.key = 10;
     PropertyFlag.parentKey = 11;
-    PropertyFlag.notOnDto = 12;
-    PropertyFlag.notOnCto = 13;
     PropertyFlag.onCtoOnly = 112;
     PropertyFlag.onDtoOnly = 113;
 
@@ -30,8 +26,6 @@ describe('Property flag', function () {
     expect(PropertyFlag.readOnly).toBe(1);
     expect(PropertyFlag.key).toBe(2);
     expect(PropertyFlag.parentKey).toBe(4);
-    expect(PropertyFlag.notOnDto).toBe(8);
-    expect(PropertyFlag.notOnCto).toBe(16);
     expect(PropertyFlag.onCtoOnly).toBe(8);
     expect(PropertyFlag.onDtoOnly).toBe(16);
   });

@@ -46,24 +46,7 @@ function PropertyFlag () {
    */
   this.parentKey = 4;
   /**
-   * The value of the model property will not be used on the data transfer object.
-   * Equivalent with PropertyFlag.onCtoOnly.
-   * @constant
-   * @default
-   * @readonly
-   */
-  this.notOnDto = 8;
-  /**
-   * The value of the model property will not be used on the client transfer object.
-   * Equivalent with PropertyFlag.onDtoOnly.
-   * @constant
-   * @default
-   * @readonly
-   */
-  this.notOnCto = 16;
-  /**
    * The value of the model property will be used on the client transfer object only.
-   * Equivalent with PropertyFlag.notOnDto.
    * @constant
    * @default
    * @readonly
@@ -71,7 +54,6 @@ function PropertyFlag () {
   this.onCtoOnly = 8;
   /**
    * The value of the model property will be used on the data transfer object only.
-   * Equivalent with PropertyFlag.notOnCto.
    * @constant
    * @default
    * @readonly

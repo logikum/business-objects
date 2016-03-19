@@ -76,7 +76,7 @@ function PropertyInfo (name, type, flags, getter, setter) {
 
   flags = type instanceof DataType ?
       check(flags || PropertyFlag.none).forMandatory('flags').asInteger() :
-      PropertyFlag.readOnly | PropertyFlag.notOnDto | PropertyFlag.notOnCto;
+      PropertyFlag.readOnly | PropertyFlag.onDtoOnly | PropertyFlag.onCtoOnly;
 
   /**
    * Indicates whether the value of the property can be modified.
@@ -102,14 +102,14 @@ function PropertyInfo (name, type, flags, getter, setter) {
    * @type {string}
    * @readonly
    */
-  this.isOnDto = (flags & PropertyFlag.notOnDto) === PropertyFlag.none;
+  this.isOnDto = (flags & PropertyFlag.onCtoOnly) === PropertyFlag.none;
   /**
    * Indicates whether the value of the property would be passed to the client
    * or would be received from the client, respectively.
    * @type {string}
    * @readonly
    */
-  this.isOnCto = (flags & PropertyFlag.notOnCto) === PropertyFlag.none;
+  this.isOnCto = (flags & PropertyFlag.onDtoOnly) === PropertyFlag.none;
 
   /**
    * Checks if value has the appropriate type and it is not null,
