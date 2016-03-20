@@ -1,7 +1,6 @@
 'use strict';
 
-//var ModelBase = require('./model-base.js');
-//var CollectionBase = require('./collection-base.js');
+//region Imports
 
 var EditableRootModel = require('./editable-root-model.js');
 var EditableChildModel = require('./editable-child-model.js');
@@ -32,6 +31,8 @@ var system = require('./system/index.js');
 
 var configuration = require('./shared/configuration-reader.js');
 var i18n = require('./locales/i18n.js');
+
+//endregion
 
 /**
  * List of models and helper namespaces.
