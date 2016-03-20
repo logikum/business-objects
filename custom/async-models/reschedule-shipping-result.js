@@ -18,20 +18,19 @@ var shipTo = new Property('shipTo', dt.Text);
 var shipDate = new Property('shipDate', dt.DateTime);
 
 var properties = new Properties(
-  'RescheduleShippingResult',
-  quantity,
-  totalMass,
-  required,
-  shipTo,
-  shipDate
+    quantity,
+    totalMass,
+    required,
+    shipTo,
+    shipDate
 );
 
 var rules = new Rules(
-  cr.required(quantity),
-  cr.required(totalMass),
-  cr.required(required),
-  cr.required(shipTo),
-  cr.required(shipDate)
+    cr.required(quantity),
+    cr.required(totalMass),
+    cr.required(required),
+    cr.required(shipTo),
+    cr.required(shipDate)
 );
 
 //region Data portal methods
@@ -51,6 +50,6 @@ var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.dataFetch = dataFetch;
 
-var RescheduleShippingResult = bo.ReadOnlyChildModel(properties, rules, extensions);
+var RescheduleShippingResult = bo.ReadOnlyChildModel('RescheduleShippingResult', properties, rules, extensions);
 
 module.exports = RescheduleShippingResult;

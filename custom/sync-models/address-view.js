@@ -26,16 +26,15 @@ var line2 = new Property('line2', dt.Text);
 var postalCode = new Property('postalCode', dt.Text);
 
 var properties = new Properties(
-  'AddressView',
-  addressKey,
-  addressCode,
-  orderKey,
-  country,
-  state,
-  city,
-  line1,
-  line2,
-  postalCode
+    addressKey,
+    addressCode,
+    orderKey,
+    country,
+    state,
+    city,
+    line1,
+    line2,
+    postalCode
 );
 
 var rules = new Rules(
@@ -90,6 +89,6 @@ extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-var AddressView = bo.ReadOnlyChildModelSync(properties, rules, extensions);
+var AddressView = bo.ReadOnlyChildModelSync('AddressView', properties, rules, extensions);
 
 module.exports = AddressView;

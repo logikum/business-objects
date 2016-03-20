@@ -16,7 +16,6 @@ var orderScheduleKey = new Property('orderScheduleKey', dt.Integer);
 var result = new Property('result', dt.Boolean);
 
 var properties = new Properties(
-    'ClearScheduleCommand',
     orderKey,
     orderItemKey,
     orderScheduleKey,
@@ -31,7 +30,7 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var ClearScheduleCommand = bo.CommandObjectSync(properties, rules, extensions);
+var ClearScheduleCommand = bo.CommandObjectSync('ClearScheduleCommand', properties, rules, extensions);
 
 var ClearScheduleCommandFactory = {
   create: function (eventHandlers) {

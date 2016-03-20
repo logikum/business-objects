@@ -32,30 +32,29 @@ var createdDate = new Property('createdDate', dt.DateTime, F.readOnly);
 var modifiedDate = new Property('modifiedDate', dt.DateTime, F.readOnly);
 
 var properties = new Properties(
-  'BlanketOrder',
-  orderKey,
-  orderCode,
-  vendorName,
-  contractDate,
-  totalPrice,
-  schedules,
-  enabled,
-  address,
-  items,
-  createdDate,
-  modifiedDate
+    orderKey,
+    orderCode,
+    vendorName,
+    contractDate,
+    totalPrice,
+    schedules,
+    enabled,
+    address,
+    items,
+    createdDate,
+    modifiedDate
 );
 
 var rules = new Rules(
-  cr.required(vendorName),
-  cr.required(contractDate),
-  cr.required(totalPrice),
-  cr.required(schedules),
-  cr.required(enabled),
-  cr.isInRole(Action.fetchObject, null, 'developers', 'You are not authorized to retrieve blanket order.'),
-  cr.isInRole(Action.createObject, null, 'developers', 'You are not authorized to create blanket order.'),
-  cr.isInRole(Action.updateObject, null, 'developers', 'You are not authorized to modify blanket order.'),
-  cr.isInRole(Action.removeObject, null, 'developers', 'You are not authorized to delete blanket order.')
+    cr.required(vendorName),
+    cr.required(contractDate),
+    cr.required(totalPrice),
+    cr.required(schedules),
+    cr.required(enabled),
+    cr.isInRole(Action.fetchObject, null, 'developers', 'You are not authorized to retrieve blanket order.'),
+    cr.isInRole(Action.createObject, null, 'developers', 'You are not authorized to create blanket order.'),
+    cr.isInRole(Action.updateObject, null, 'developers', 'You are not authorized to modify blanket order.'),
+    cr.isInRole(Action.removeObject, null, 'developers', 'You are not authorized to delete blanket order.')
 );
 
 //region Transfer object methods
@@ -190,7 +189,7 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var BlanketOrder = bo.EditableRootModelSync(properties, rules, extensions);
+var BlanketOrder = bo.EditableRootModelSync('BlanketOrder', properties, rules, extensions);
 
 var BlanketOrderFactory = {
   create: function (eventHandlers) {

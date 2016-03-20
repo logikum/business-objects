@@ -20,7 +20,6 @@ var line2 = new Property('line2', dt.Text);
 var postalCode = new Property('postalCode', dt.Text);
 
 var properties = new Properties(
-    'Address',
     addressKey,
     orderKey,
     country,
@@ -40,6 +39,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var Address = bo.EditableChildModelSync(properties, rules, extensions);
+var Address = bo.EditableChildModelSync('Address', properties, rules, extensions);
 
 module.exports = Address;

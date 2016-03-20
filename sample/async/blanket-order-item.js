@@ -22,7 +22,6 @@ var unitPrice = new Property('unitPrice', dt.Decimal);
 var schedules = new Property('schedules', BlanketOrderSchedules);
 
 var properties = new Properties(
-    'BlanketOrderItem',
     orderItemKey,
     orderKey,
     productName,
@@ -43,6 +42,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderItem = bo.EditableChildModel(properties, rules, extensions);
+var BlanketOrderItem = bo.EditableChildModel('BlanketOrderItem', properties, rules, extensions);
 
 module.exports = BlanketOrderItem;

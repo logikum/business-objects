@@ -14,10 +14,10 @@ var rules = new Rules(
 var extensions = new Extensions('dao', __filename);
 
 var BlanketOrderList = bo.ReadOnlyRootCollectionSync(
-  'BlanketOrderList',
-  BlanketOrderListItem,
-  rules,
-  extensions
+    'BlanketOrderList',
+    BlanketOrderListItem,
+    rules,
+    extensions
 );
 
 var BlanketOrderListFactory = {

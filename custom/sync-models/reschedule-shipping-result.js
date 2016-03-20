@@ -18,7 +18,6 @@ var shipTo = new Property('shipTo', dt.Text);
 var shipDate = new Property('shipDate', dt.DateTime);
 
 var properties = new Properties(
-    'RescheduleShippingResult',
     quantity,
     totalMass,
     required,
@@ -51,6 +50,6 @@ var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.dataFetch = dataFetch;
 
-var RescheduleShippingResult = bo.ReadOnlyChildModelSync(properties, rules, extensions);
+var RescheduleShippingResult = bo.ReadOnlyChildModelSync('RescheduleShippingResult', properties, rules, extensions);
 
 module.exports = RescheduleShippingResult;

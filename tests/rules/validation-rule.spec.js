@@ -104,7 +104,7 @@ describe('Validation rule', function () {
   it('getInputValues method works', function() {
     var primary = new PropertyInfo('primary', new Text());
     var secondary = new PropertyInfo('secondary', new Text());
-    var pm = new PropertyManager('sample');
+    var pm = new PropertyManager();
     var rule = new ValidationRule('ruleName');
     var store = new DataStore();
 

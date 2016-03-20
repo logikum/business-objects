@@ -26,7 +26,7 @@
     "optArrayPrim": "A {0} konstruktor {1} paraméterének {2} értékek tömbjének, egy {2} értéknek vagy nullnak kell lennie.",
     "manArrayPrim": "A {0} konstruktor {1} paraméterének {2} értékek tömbjének vay egy {2} értéknek kell lennie.",
 
-    "properties": "Az első kivételével a {0} konstruktor összes paraméterének PropertyInfo objektumnak kell lennie.",
+    "properties": "A {0} konstruktor összes paraméterének PropertyInfo objektumnak kell lennie.",
     "rule": "A {0} konstruktor utolsó 3 paramétere lehet: egy szöveg üzenetként, egy egész szám prioritásként és egy logikai érték mint a stopsProcessing paraméter."
   }
 }

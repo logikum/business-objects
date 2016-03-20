@@ -73,7 +73,7 @@ function ArgumentCheck (value) {
  * @param {string} [argumentName] - The name of the argument.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
-function forGeneric  (argumentName) {
+function forGeneric (argumentName) {
   this.argumentName = argumentName || '';
   this.isMandatory = undefined;
   return this;

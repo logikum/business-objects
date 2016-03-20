@@ -48,8 +48,8 @@ describe('Shared component index', function () {
 
     expect(new shared.PropertyInfo('property', text)).toEqual(jasmine.any(PropertyInfo));
     expect(shared.PropertyFlag).toBe(PropertyFlag);
-    expect(new shared.PropertyManager('list')).toEqual(jasmine.any(PropertyManager));
-    expect(new shared.PropertyContext([], getValue, setValue)).toEqual(jasmine.any(PropertyContext));
+    expect(new shared.PropertyManager()).toEqual(jasmine.any(PropertyManager));
+    expect(new shared.PropertyContext('model', [], getValue, setValue)).toEqual(jasmine.any(PropertyContext));
     expect(new shared.TransferContext([], getValue, setValue)).toEqual(jasmine.any(TransferContext));
 
     expect(shared.DataPortalAction).toBe(DataPortalAction);

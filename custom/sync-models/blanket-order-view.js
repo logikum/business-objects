@@ -32,24 +32,23 @@ var createdDate = new Property('createdDate', dt.DateTime);
 var modifiedDate = new Property('modifiedDate', dt.DateTime);
 
 var properties = new Properties(
-  'BlanketOrderView',
-  orderKey,
-  orderCode,
-  vendorName,
-  contractDate,
-  totalPrice,
-  schedules,
-  enabled,
-  address,
-  items,
-  createdDate,
-  modifiedDate
+    orderKey,
+    orderCode,
+    vendorName,
+    contractDate,
+    totalPrice,
+    schedules,
+    enabled,
+    address,
+    items,
+    createdDate,
+    modifiedDate
 );
 
 var rules = new Rules(
-  cr.isInRole(Action.fetchObject, null, 'designers', 'You are not authorized to retrieve blanket order.'),
-  cr.isInAnyRole(Action.readProperty, totalPrice, ['salesmen', 'administrators'],
-      'You are not authorized to view the totalPrice of the blanket order.')
+    cr.isInRole(Action.fetchObject, null, 'designers', 'You are not authorized to retrieve blanket order.'),
+    cr.isInAnyRole(Action.readProperty, totalPrice, ['salesmen', 'administrators'],
+        'You are not authorized to view the totalPrice of the blanket order.')
 );
 
 //region Transfer object methods
@@ -111,7 +110,7 @@ extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-var BlanketOrderView = bo.ReadOnlyRootModelSync(properties, rules, extensions);
+var BlanketOrderView = bo.ReadOnlyRootModelSync('BlanketOrderView', properties, rules, extensions);
 
 var BlanketOrderViewFactory = {
   get: function (key, eventHandlers) {

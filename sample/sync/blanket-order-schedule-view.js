@@ -19,7 +19,6 @@ var shipTo = new Property('shipTo', dt.Text);
 var shipDate = new Property('shipDate', dt.DateTime);
 
 var properties = new Properties(
-  'BlanketOrderScheduleView',
   orderScheduleKey,
   orderItemKey,
   quantity,
@@ -34,6 +33,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderScheduleView = bo.ReadOnlyChildModelSync(properties, rules, extensions);
+var BlanketOrderScheduleView = bo.ReadOnlyChildModelSync('BlanketOrderScheduleView', properties, rules, extensions);
 
 module.exports = BlanketOrderScheduleView;

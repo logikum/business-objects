@@ -23,23 +23,22 @@ var unitPrice = new Property('unitPrice', dt.Decimal);
 var schedules = new Property('schedules', BlanketOrderSchedules);
 
 var properties = new Properties(
-  'BlanketOrderItem',
-  orderItemKey,
-  orderKey,
-  productName,
-  obsolete,
-  expiry,
-  quantity,
-  unitPrice,
-  schedules
+    orderItemKey,
+    orderKey,
+    productName,
+    obsolete,
+    expiry,
+    quantity,
+    unitPrice,
+    schedules
 );
 
 var rules = new Rules(
-  cr.required(productName),
-  cr.required(obsolete),
-  cr.required(expiry),
-  cr.required(quantity),
-  cr.required(unitPrice)
+    cr.required(productName),
+    cr.required(obsolete),
+    cr.required(expiry),
+    cr.required(quantity),
+    cr.required(unitPrice)
 );
 
 //region Transfer object methods
@@ -180,6 +179,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var BlanketOrderItem = bo.EditableChildModel(properties, rules, extensions);
+var BlanketOrderItem = bo.EditableChildModel('BlanketOrderItem', properties, rules, extensions);
 
 module.exports = BlanketOrderItem;

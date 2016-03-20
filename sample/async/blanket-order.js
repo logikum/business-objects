@@ -26,7 +26,6 @@ var createdDate = new Property('createdDate', dt.DateTime, F.readOnly);
 var modifiedDate = new Property('modifiedDate', dt.DateTime, F.readOnly);
 
 var properties = new Properties(
-    'BlanketOrder',
     orderKey,
     vendorName,
     contractDate,
@@ -53,7 +52,7 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrder = bo.EditableRootModel(properties, rules, extensions);
+var BlanketOrder = bo.EditableRootModel('BlanketOrder', properties, rules, extensions);
 
 var BlanketOrderFactory = {
   create: function (eventHandlers, callback) {

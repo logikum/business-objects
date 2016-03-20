@@ -14,32 +14,40 @@ var ModelError = require('./model-error.js');
  *
  * @memberof bo.shared
  * @constructor
- * @param {string} name - The name of the business object model.
  * @param {...bo.shared.PropertyInfo} [property] - Description of a model property.
  *
- * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
  */
-function PropertyManager (name /*, property1, property2 [, ...] */) {
+function PropertyManager (/*, property1, property2 [, ...] */) {
 
   var items = [];
   var changed = false;  // for children
   var children = [];
   var isFrozen = false;
+  var modelName = CLASS_NAME;
   var check = Argument.inConstructor(CLASS_NAME);
 
-  /**
-   * The name of the business object model.
-   * @type {string}
-   * @readonly
-   */
-  this.name = check(name).forMandatory('name').asString();
-
-   Array.prototype.slice.call(arguments, 1)
+  Array.prototype.slice.call(arguments)
       .forEach(function (arg) {
         items.push(check(arg).forMandatory().asType(PropertyInfo, 'properties'));
         changed = true;
       });
+
+  /**
+   * The name of the business object model.
+   * @type {string}
+   * @default 'PropertyManager'
+   */
+  Object.defineProperty(this, 'modelName', {
+    get: function () {
+      return modelName;
+    },
+    set: function (value) {
+      modelName = Argument.inProperty(CLASS_NAME, 'modelName')
+          .check(value).forMandatory().asString();
+    },
+    enumeration: true
+  });
 
   //region Item management
 
@@ -53,7 +61,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    */
   this.add = function (property) {
     if (isFrozen)
-      throw new ModelError('frozen', this.name);
+      throw new ModelError('frozen', this.modelName);
 
     items.push(Argument.inMethod(CLASS_NAME, 'add')
         .check(property).forMandatory('property').asType(PropertyInfo));
@@ -84,7 +92,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
    */
   this.create = function (name, type, flags) {
     if (isFrozen)
-      throw new ModelError('frozen', this.name);
+      throw new ModelError('frozen', this.modelName);
 
     var property = new PropertyInfo(name, type, flags);
     items.push(property);
@@ -129,7 +137,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
       if (items[i].name === name)
         return items[i];
     }
-    throw new MethodError(message || 'noProperty', CLASS_NAME, 'getByName', 'name', this.name, name);
+    throw new MethodError(message || 'noProperty', CLASS_NAME, 'getByName', 'name', this.modelName, name);
   };
 
   /**
@@ -141,7 +149,6 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
     var array = items.filter(function (item) {
       return item.type instanceof DataType;
     });
-    array.name = this.name;
     return array;
   };
 
@@ -230,7 +237,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
     allowedTypes = Argument.inMethod(CLASS_NAME, 'verifyChildTypes')
         .check(allowedTypes).forMandatory('allowedTypes').asArray(String);
 
-        checkChildren();
+    checkChildren();
     var child;
 
     for (var i = 0; i < children.length; i++) {
@@ -244,7 +251,7 @@ function PropertyManager (name /*, property1, property2 [, ...] */) {
       }
       if (!matches)
         throw new ModelError('invalidChild',
-            this.name, child.name, child.type.modelType, allowedTypes.join(' | '));
+            this.modelName, child.name, child.type.modelType, allowedTypes.join(' | '));
     }
     isFrozen = true;
   };

@@ -50,11 +50,13 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *      * EditableChildModel
  *
  * @function bo.EditableRootModel
+ * @param {string} name - The name of the model.
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
  * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
  * @returns {EditableRootModel} The constructor of an asynchronous editable root model.
  *
+ * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
@@ -62,18 +64,20 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be EditableChildCollection or EditableChildModel instances.
  */
-var EditableRootModelFactory = function (properties, rules, extensions) {
+var EditableRootModelFactory = function (name, properties, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
 
+  name = check(name).forMandatory('name').asString();
   properties = check(properties).forMandatory('properties').asType(PropertyManager);
   rules = check(rules).forMandatory('rules').asType(RuleManager);
   extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
 
   // Verify the model types of child models.
+  properties.modelName = name;
   properties.verifyChildTypes([ 'EditableChildCollection', 'EditableChildModel' ]);
 
   // Get data access object.
-  var dao = extensions.getDataAccessObject(properties.name);
+  var dao = extensions.getDataAccessObject(name);
 
   /**
    * @classdesc
@@ -109,14 +113,14 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
   var EditableRootModel = function (eventHandlers) {
     ModelBase.call(this);
 
-    eventHandlers = Argument.inConstructor(properties.name)
+    eventHandlers = Argument.inConstructor(name)
         .check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var state = null;
     var isDirty = false;
     var store = new DataStore();
-    var brokenRules = new BrokenRuleList(properties.name);
+    var brokenRules = new BrokenRuleList(name);
     var isValidated = false;
     var propertyContext = null;
     var dataContext = null;
@@ -562,19 +566,19 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
     function raiseEvent (event, methodName, error) {
       self.emit(
           DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, properties.name, null, methodName, error)
+          new DataPortalEventArgs(event, name, null, methodName, error)
       );
     }
 
     function raiseSave (event, action, error) {
       self.emit(
           DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, properties.name, action, null, error)
+          new DataPortalEventArgs(event, name, action, null, error)
       );
     }
 
     function wrapError (action, error) {
-      return new DataPortalError(MODEL_DESC, properties.name, action, error);
+      return new DataPortalError(MODEL_DESC, name, action, error);
     }
 
     function runStatements (main, action, callback) {
@@ -1027,7 +1031,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      */
     this.create = function(callback) {
 
-      callback = Argument.inMethod(properties.name, 'create')
+      callback = Argument.inMethod(name, 'create')
           .check(callback).forMandatory('callback').asFunction();
 
       data_create(callback);
@@ -1053,7 +1057,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      *      Fetching the business object has failed.
      */
     this.fetch = function(filter, method, callback) {
-      var check = Argument.inMethod(properties.name, 'fetch');
+      var check = Argument.inMethod(name, 'fetch');
 
       method = check(method).forOptional('method').asString();
       callback = check(callback).forMandatory('callback').asFunction();
@@ -1081,7 +1085,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
      */
     this.save = function(callback) {
 
-      callback = Argument.inMethod(properties.name, 'save')
+      callback = Argument.inMethod(name, 'save')
           .check(callback).forMandatory('callback').asFunction();
 
       if (this.isValid()) {
@@ -1224,7 +1228,8 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
 
     function getPropertyContext(primaryProperty) {
       if (!propertyContext)
-        propertyContext = new PropertyContext(properties.toArray(), readPropertyValue, writePropertyValue);
+        propertyContext = new PropertyContext(
+            name, properties.toArray(), readPropertyValue, writePropertyValue);
       return propertyContext.with(primaryProperty);
     }
 
@@ -1240,7 +1245,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
           },
           set: function (value) {
             if (property.isReadOnly)
-              throw new ModelError('readOnly', properties.name, property.name);
+              throw new ModelError('readOnly', name, property.name);
             writePropertyValue(property, value);
           },
           enumerable: true
@@ -1262,7 +1267,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new ModelError('readOnly', properties.name , property.name);
+            throw new ModelError('readOnly', name , property.name);
           },
           enumerable: false
         });
@@ -1286,6 +1291,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
   Object.defineProperty(EditableRootModel, 'modelType', {
     get: function () { return CLASS_NAME; }
   });
+
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.
    *
@@ -1293,7 +1299,7 @@ var EditableRootModelFactory = function (properties, rules, extensions) {
    * @type {string}
    * @readonly
    */
-  EditableRootModel.prototype.$modelName = properties.name;
+  EditableRootModel.prototype.$modelName = name;
 
   //region Factory methods
 

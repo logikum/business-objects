@@ -47,11 +47,13 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *      * ReadOnlyChildModelSync
  *
  * @function bo.ReadOnlyChildModelSync
+ * @param {string} name - The name of the model.
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
  * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
  * @returns {ReadOnlyChildModelSync} The constructor of a synchronous read-only child model.
  *
+ * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
@@ -59,14 +61,16 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.shared.ModelError Model error}:
  *    The child objects must be ReadOnlyChildCollectionSync or ReadOnlyChildModelSync instances.
  */
-var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
+var ReadOnlyChildModelSyncFactory = function (name, properties, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
 
+  name = check(name).forMandatory('name').asString();
   properties = check(properties).forMandatory('properties').asType(PropertyManager);
   rules = check(rules).forMandatory('rules').asType(RuleManager);
   extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
   // Verify the model type of child models.
+  properties.modelName = name;
   properties.verifyChildTypes([ 'ReadOnlyChildCollectionSync', 'ReadOnlyChildModelSync' ]);
 
   /**
@@ -104,7 +108,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
    */
   var ReadOnlyChildModelSync = function (parent, eventHandlers) {
     ModelBase.call(this);
-    var check = Argument.inConstructor(properties.name);
+    var check = Argument.inConstructor(name);
 
     // Verify the model type of the parent model.
     parent = check(parent).for('parent').asModelType([
@@ -119,7 +123,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
 
     var self = this;
     var store = new DataStore();
-    var brokenRules = new BrokenRuleList(properties.name);
+    var brokenRules = new BrokenRuleList(name);
     var isValidated = false;
     var propertyContext = null;
     var dataContext = null;
@@ -269,12 +273,12 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
     function raiseEvent (event, methodName, error) {
       self.emit(
           DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, properties.name, null, methodName, error)
+          new DataPortalEventArgs(event, name, null, methodName, error)
       );
     }
 
     function wrapError (error) {
-      return new DataPortalError(MODEL_DESC, properties.name, DataPortalAction.fetch, error);
+      return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
     }
 
     //endregion
@@ -433,7 +437,8 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
 
     function getPropertyContext(primaryProperty) {
       if (!propertyContext)
-        propertyContext = new PropertyContext(properties.toArray(), readPropertyValue);
+        propertyContext = new PropertyContext(
+            name, properties.toArray(), readPropertyValue);
       return propertyContext.with(primaryProperty);
     }
 
@@ -448,7 +453,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new ModelError('readOnly', properties.name, property.name);
+            throw new ModelError('readOnly', name, property.name);
           },
           enumerable: true
         });
@@ -467,7 +472,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
             return readPropertyValue(property);
           },
           set: function (value) {
-            throw new ModelError('readOnly', properties.name, property.name);
+            throw new ModelError('readOnly', name, property.name);
           },
           enumerable: false
         });
@@ -488,6 +493,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
    * @default ReadOnlyChildModelSync
    * @readonly
    */
+
   Object.defineProperty(ReadOnlyChildModelSync, 'modelType', {
     get: function () { return CLASS_NAME; }
   });
@@ -498,7 +504,7 @@ var ReadOnlyChildModelSyncFactory = function (properties, rules, extensions) {
    * @type {string}
    * @readonly
    */
-  ReadOnlyChildModelSync.prototype.$modelName = properties.name;
+  ReadOnlyChildModelSync.prototype.$modelName = name;
 
   //region Factory methods
 

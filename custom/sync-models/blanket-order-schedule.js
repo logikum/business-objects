@@ -25,23 +25,22 @@ var shipTo = new Property('shipTo', dt.Text);
 var shipDate = new Property('shipDate', dt.DateTime);
 
 var properties = new Properties(
-  'BlanketOrderSchedule',
-  orderScheduleKey,
-  orderScheduleCode,
-  orderItemKey,
-  quantity,
-  totalMass,
-  required,
-  shipTo,
-  shipDate
+    orderScheduleKey,
+    orderScheduleCode,
+    orderItemKey,
+    quantity,
+    totalMass,
+    required,
+    shipTo,
+    shipDate
 );
 
 var rules = new Rules(
-  cr.required(quantity),
-  cr.required(totalMass),
-  cr.required(required),
-  cr.required(shipTo),
-  cr.required(shipDate)
+    cr.required(quantity),
+    cr.required(totalMass),
+    cr.required(required),
+    cr.required(shipTo),
+    cr.required(shipDate)
 );
 
 //region Transfer object methods
@@ -160,6 +159,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var BlanketOrderSchedule = bo.EditableChildModelSync(properties, rules, extensions);
+var BlanketOrderSchedule = bo.EditableChildModelSync('BlanketOrderSchedule', properties, rules, extensions);
 
 module.exports = BlanketOrderSchedule;

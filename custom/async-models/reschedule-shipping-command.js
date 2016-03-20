@@ -20,18 +20,17 @@ var success = new Property('success', dt.Boolean);
 var result = new Property('result', RescheduleShippingResult);
 
 var properties = new Properties(
-  'ClearScheduleCommand',
-  orderKey,
-  orderItemKey,
-  orderScheduleKey,
-  success,
-  result
+    orderKey,
+    orderItemKey,
+    orderScheduleKey,
+    success,
+    result
 );
 
 var rules = new Rules(
-  cr.required(orderKey),
-  cr.required(orderItemKey),
-  cr.required(orderScheduleKey)
+    cr.required(orderKey),
+    cr.required(orderItemKey),
+    cr.required(orderScheduleKey)
 );
 
 //region Data portal methods
@@ -65,7 +64,7 @@ extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
 extensions.addOtherMethod('reschedule');
 
-var RescheduleShippingCommand = bo.CommandObject(properties, rules, extensions);
+var RescheduleShippingCommand = bo.CommandObject('ClearScheduleCommand', properties, rules, extensions);
 
 var RescheduleShippingCommandFactory = {
   create: function (eventHandlers, callback) {

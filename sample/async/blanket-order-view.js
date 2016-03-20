@@ -26,28 +26,27 @@ var createdDate = new Property('createdDate', dt.DateTime);
 var modifiedDate = new Property('modifiedDate', dt.DateTime);
 
 var properties = new Properties(
-  'BlanketOrderView',
-  orderKey,
-  vendorName,
-  contractDate,
-  totalPrice,
-  schedules,
-  enabled,
-  address,
-  items,
-  createdDate,
-  modifiedDate
+    orderKey,
+    vendorName,
+    contractDate,
+    totalPrice,
+    schedules,
+    enabled,
+    address,
+    items,
+    createdDate,
+    modifiedDate
 );
 
 var rules = new Rules(
-  cr.isInRole(Action.fetchObject, null, 'designers', 'You are not authorized to retrieve blanket order.'),
-  cr.isInAnyRole(Action.readProperty, totalPrice, ['salesmen', 'administrators'],
-      'You are not authorized to view the totalPrice of the blanket order.')
+    cr.isInRole(Action.fetchObject, null, 'designers', 'You are not authorized to retrieve blanket order.'),
+    cr.isInAnyRole(Action.readProperty, totalPrice, ['salesmen', 'administrators'],
+        'You are not authorized to view the totalPrice of the blanket order.')
 );
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderView = bo.ReadOnlyRootModel(properties, rules, extensions);
+var BlanketOrderView = bo.ReadOnlyRootModel('BlanketOrderView', properties, rules, extensions);
 
 var BlanketOrderViewFactory = {
   get: function (key, eventHandlers, callback) {

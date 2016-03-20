@@ -22,15 +22,14 @@ var unitPrice = new Property('unitPrice', dt.Decimal);
 var schedules = new Property('schedules', BlanketOrderSchedulesView);
 
 var properties = new Properties(
-  'BlanketOrderItemView',
-  orderItemKey,
-  orderKey,
-  productName,
-  obsolete,
-  expiry,
-  quantity,
-  unitPrice,
-  schedules
+    orderItemKey,
+    orderKey,
+    productName,
+    obsolete,
+    expiry,
+    quantity,
+    unitPrice,
+    schedules
 );
 
 var rules = new Rules(
@@ -38,6 +37,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderItemView = bo.ReadOnlyChildModelSync(properties, rules, extensions);
+var BlanketOrderItemView = bo.ReadOnlyChildModelSync('BlanketOrderItemView', properties, rules, extensions);
 
 module.exports = BlanketOrderItemView;

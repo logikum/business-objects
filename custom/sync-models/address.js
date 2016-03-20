@@ -26,23 +26,22 @@ var line2 = new Property('line2', dt.Text);
 var postalCode = new Property('postalCode', dt.Text);
 
 var properties = new Properties(
-  'Address',
-  addressKey,
-  addressCode,
-  orderKey,
-  country,
-  state,
-  city,
-  line1,
-  line2,
-  postalCode
+    addressKey,
+    addressCode,
+    orderKey,
+    country,
+    state,
+    city,
+    line1,
+    line2,
+    postalCode
 );
 
 var rules = new Rules(
-  cr.required(country),
-  cr.required(city),
-  cr.required(line1),
-  cr.required(postalCode)
+    cr.required(country),
+    cr.required(city),
+    cr.required(line1),
+    cr.required(postalCode)
 );
 
 //region Transfer object methods
@@ -169,6 +168,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var Address = bo.EditableChildModelSync(properties, rules, extensions);
+var Address = bo.EditableChildModelSync('Address', properties, rules, extensions);
 
 module.exports = Address;

@@ -20,7 +20,6 @@ var success = new Property('success', dt.Boolean);
 var result = new Property('result', RescheduleShippingResult);
 
 var properties = new Properties(
-    'ClearScheduleCommand',
     orderKey,
     orderItemKey,
     orderScheduleKey,
@@ -59,7 +58,7 @@ extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
 extensions.addOtherMethod('reschedule');
 
-var RescheduleShippingCommand = bo.CommandObjectSync(properties, rules, extensions);
+var RescheduleShippingCommand = bo.CommandObjectSync('ClearScheduleCommand', properties, rules, extensions);
 
 var RescheduleShippingCommandFactory = {
   create: function (eventHandlers) {

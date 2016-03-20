@@ -21,7 +21,6 @@ var line2 = new Property('line2', dt.Text);
 var postalCode = new Property('postalCode', dt.Text);
 
 var properties = new Properties(
-    'Address',
     addressKey,
     orderKey,
     country,
@@ -185,6 +184,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var Address = bo.EditableChildModel(properties, rules, extensions);
+var Address = bo.EditableChildModel('Address', properties, rules, extensions);
 
 module.exports = Address;

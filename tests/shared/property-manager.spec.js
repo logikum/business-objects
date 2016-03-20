@@ -25,36 +25,33 @@ describe('Property manager', function () {
     function create4() { return new PropertyManager('customer', 1024); }
     function create5() { return new PropertyManager('customer', property1, false); }
     function create6() { return new PropertyManager('', property1); }
+    function create7() { return new PropertyManager(property1); }
+    function create8() { return new PropertyManager(property1, property2); }
+    function create9() { return new PropertyManager(property1, property2, property3); }
 
-    var pm1 = new PropertyManager('customer-1');
-    var pm2 = new PropertyManager('customer-2', property1);
-    var pm3 = new PropertyManager('customer-3', property1, property2);
-    var pm4 = new PropertyManager('customer-4', property1, property2, property3);
-
-    expect(create1).toThrow();
+    expect(create1).not.toThrow();
     expect(create2).toThrow();
     expect(create3).toThrow();
     expect(create4).toThrow();
     expect(create5).toThrow();
     expect(create6).toThrow();
-
-    expect(pm1.name).toBe('customer-1');
-    expect(pm2.name).toBe('customer-2');
-    expect(pm3.name).toBe('customer-3');
-    expect(pm4.name).toBe('customer-4');
+    expect(create7).not.toThrow();
+    expect(create8).not.toThrow();
+    expect(create9).not.toThrow();
   });
 
-  it('has read-only name property', function() {
-    var pm = new PropertyManager('list');
-    pm.name = null;
+  it('has modelName property', function() {
+    var pm = new PropertyManager();
+    expect(pm.modelName).toBe('PropertyManager');
 
-    expect(pm.name).toBe('list');
+    pm.modelName = 'model';
+    expect(pm.modelName).toBe('model');
   });
 
   //region Item management
 
   it('add method works', function() {
-    var pm = new PropertyManager('list');
+    var pm = new PropertyManager();
 
     function add1() {
       var email = {
@@ -74,7 +71,7 @@ describe('Property manager', function () {
   });
 
   it('create method works', function() {
-    var pm = new PropertyManager('list');
+    var pm = new PropertyManager();
     var property = pm.create('name', new Text());
 
     expect(property).toEqual(jasmine.any(PropertyInfo));
@@ -83,7 +80,7 @@ describe('Property manager', function () {
   it('contains method works', function() {
     var propertyName = new PropertyInfo('name', new Text(), F.key | F.notOnCto);
     var propertyEmail = new PropertyInfo('email', new Text());
-    var pm = new PropertyManager('list', propertyName);
+    var pm = new PropertyManager(propertyName);
 
     function contains1() {
       var email = {
@@ -100,7 +97,7 @@ describe('Property manager', function () {
   });
 
   it('getByName method works', function() {
-    var pm = new PropertyManager('list');
+    var pm = new PropertyManager();
     var property = pm.create('name', new Text());
 
     function getByName1() { var p = pm.getByName(); }
@@ -124,7 +121,7 @@ describe('Property manager', function () {
   it('toArray method works', function() {
     var propertyName = new PropertyInfo('name', new Text(), F.key);
     var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
-    var pm = new PropertyManager('list', propertyName, propertyEmail);
+    var pm = new PropertyManager(propertyName, propertyEmail);
 
     var properties = pm.toArray();
 
@@ -141,7 +138,7 @@ describe('Property manager', function () {
   it('forEach method works', function() {
     var propertyName = new PropertyInfo('name', new Text(), F.key);
     var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
-    var pm = new PropertyManager('list', propertyName, propertyEmail);
+    var pm = new PropertyManager(propertyName, propertyEmail);
     var count = 0;
     var names = '';
 
@@ -157,7 +154,7 @@ describe('Property manager', function () {
   it('filter method works', function() {
     var propertyName = new PropertyInfo('name', new Text(), F.key);
     var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
-    var pm = new PropertyManager('list', propertyName, propertyEmail);
+    var pm = new PropertyManager(propertyName, propertyEmail);
 
     var names = pm.filter(function (item) {
       return item.isReadOnly;
@@ -170,7 +167,7 @@ describe('Property manager', function () {
   it('map method works', function() {
     var propertyName = new PropertyInfo('name', new Text(), F.key);
     var propertyEmail = new PropertyInfo('email', new Text(), F.readOnly);
-    var pm = new PropertyManager('list', propertyName, propertyEmail);
+    var pm = new PropertyManager(propertyName, propertyEmail);
 
     var names = pm.map(function (item) {
       return item.name;
@@ -190,7 +187,7 @@ describe('Property manager', function () {
     var name = new PropertyInfo('name', new Text());
     var orders = new PropertyInfo('orders', OrderList);
     var created = new PropertyInfo('created', new DateTime());
-    var pm = new PropertyManager('customer', name, orders, created);
+    var pm = new PropertyManager(name, orders, created);
 
     expect(pm.children()).toEqual(jasmine.any(Array));
     expect(pm.children().length).toBe(1);
@@ -232,7 +229,7 @@ describe('Property manager', function () {
     var two = new PropertyInfo('due', Figures);
     var three = new PropertyInfo('tre', new Text());
     var four = new PropertyInfo('quattro', new Text());
-    var pm = new PropertyManager('Numbers', one, two, three, four);
+    var pm = new PropertyManager(one, two, three, four);
 
     var object = {
       uno: 'uno',
@@ -251,7 +248,7 @@ describe('Property manager', function () {
     var two = new PropertyInfo('due', Figures);
     var three = new PropertyInfo('tre', new Text(), F.key);
     var four = new PropertyInfo('quattro', new Text());
-    var pm = new PropertyManager('Numbers', one, two, three, four);
+    var pm = new PropertyManager(one, two, three, four);
 
     var key = pm.getKey(getPropertyValue);
 
@@ -264,7 +261,7 @@ describe('Property manager', function () {
     var two = new PropertyInfo('due', Figures);
     var three = new PropertyInfo('tre', new Text());
     var four = new PropertyInfo('quattro', new Text(), F.key);
-    var pm = new PropertyManager('Numbers', one, two, three, four);
+    var pm = new PropertyManager(one, two, three, four);
 
     var object = {
       uno: 'uno',
@@ -277,7 +274,7 @@ describe('Property manager', function () {
   });
 
   it('getKey method works - no properties', function() {
-    var pm = new PropertyManager('Numbers');
+    var pm = new PropertyManager();
 
     var key = pm.getKey(getPropertyValue);
 

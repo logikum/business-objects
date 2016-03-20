@@ -18,19 +18,38 @@ var PropertyInfo = require('./property-info.js');
  *
  * @memberof bo.shared
  * @constructor
+ * @param {string} modelName - The name of the business object model.
  * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
  * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
  * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
  *
+ * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be an array
  *    of PropertyInfo objects, or a single PropertyInfo object or null.
  * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function.
  * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
  */
-function PropertyContext (properties, getValue, setValue) {
+function PropertyContext (modelName, properties, getValue, setValue) {
   var self = this;
   var primaryProperty = null;
   var check = Argument.inConstructor(CLASS_NAME);
+
+  /**
+   * The name of the business object model.
+   * @type {string}
+   * @readonly
+   */
+  this.modelName = check(modelName).forMandatory('modelName').asString();
+
+  /**
+   * Array of property definitions that may used by the custom function.
+   * @type {Array.<bo.shared.PropertyInfo>}
+   * @readonly
+   */
+  this.properties = check(properties).forOptional('properties').asArray(PropertyInfo);
+
+  getValue = check(getValue).forOptional('getValue').asFunction();
+  setValue = check(setValue).forOptional('setValue').asFunction();
 
   /**
    * The primary property of the custom function.
@@ -44,15 +63,6 @@ function PropertyContext (properties, getValue, setValue) {
     },
     enumerable: true
   });
-
-  /**
-   * Array of property definitions that may used by the custom function.
-   * @type {Array.<bo.shared.PropertyInfo>}
-   * @readonly
-   */
-  this.properties = check(properties).forOptional('properties').asArray(PropertyInfo);
-  getValue = check(getValue).forOptional('getValue').asFunction();
-  setValue = check(setValue).forOptional('setValue').asFunction();
 
   /**
    * Sets the primary property of the custom function.
@@ -71,7 +81,7 @@ function PropertyContext (properties, getValue, setValue) {
       if (self.properties[i].name === name)
         return self.properties[i];
     }
-    throw new ModelError('noProperty', properties.name, name);
+    throw new ModelError('noProperty', this.modelName, name);
   }
 
   /**
@@ -90,7 +100,7 @@ function PropertyContext (properties, getValue, setValue) {
     if (getValue)
       return getValue(getByName(propertyName));
     else
-      throw new ModelError('readProperty', properties.name, propertyName);
+      throw new ModelError('readProperty', this.modelName, propertyName);
   };
 
   /**
@@ -111,7 +121,7 @@ function PropertyContext (properties, getValue, setValue) {
         setValue(getByName(propertyName), value);
       }
     } else
-      throw new ModelError('writeProperty', properties.name, propertyName);
+      throw new ModelError('writeProperty', this.modelName, propertyName);
   };
 
   // Immutable object.

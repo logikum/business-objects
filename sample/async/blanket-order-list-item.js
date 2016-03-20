@@ -20,15 +20,14 @@ var createdDate = new Property('createdDate', dt.DateTime);
 var modifiedDate = new Property('modifiedDate', dt.DateTime);
 
 var properties = new Properties(
-  'BlanketOrderListItem',
-  orderKey,
-  vendorName,
-  contractDate,
-  totalPrice,
-  schedules,
-  enabled,
-  createdDate,
-  modifiedDate
+    orderKey,
+    vendorName,
+    contractDate,
+    totalPrice,
+    schedules,
+    enabled,
+    createdDate,
+    modifiedDate
 );
 
 var rules = new Rules(
@@ -36,6 +35,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderListItem = bo.ReadOnlyChildModel(properties, rules, extensions);
+var BlanketOrderListItem = bo.ReadOnlyChildModel('BlanketOrderListItem', properties, rules, extensions);
 
 module.exports = BlanketOrderListItem;

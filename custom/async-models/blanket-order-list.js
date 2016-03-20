@@ -55,10 +55,10 @@ extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
 var BlanketOrderList = bo.ReadOnlyRootCollection(
-  'BlanketOrderList',
-  BlanketOrderListItem,
-  rules,
-  extensions
+    'BlanketOrderList',
+    BlanketOrderListItem,
+    rules,
+    extensions
 );
 
 var BlanketOrderListFactory = {

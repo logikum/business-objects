@@ -26,7 +26,6 @@ var createdDate = new Property('createdDate', dt.DateTime, F.readOnly);
 var modifiedDate = new Property('modifiedDate', dt.DateTime, F.readOnly);
 
 var properties = new Properties(
-    'BlanketOrderChild',
     orderKey,
     vendorName,
     contractDate,
@@ -53,6 +52,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderChild = bo.EditableChildModel(properties, rules, extensions);
+var BlanketOrderChild = bo.EditableChildModel('BlanketOrderChild', properties, rules, extensions);
 
 module.exports = BlanketOrderChild;
