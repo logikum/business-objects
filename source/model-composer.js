@@ -27,6 +27,9 @@ var RuleManager = require('./rules/rule-manager.js');
 var ExtensionManager = require('./shared/extension-manager.js');
 //var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 
+var Action = require('./rules/authorization-action.js');
+var cr = require('./common-rules/index.js');
+
 var PropertyInfo = require('./shared/property-info.js');
 var dt = require('./data-types/index.js');
 
@@ -167,14 +170,59 @@ function ModelComposer (modelName) {
 
   //region Property rules
 
-  function addValidation () {
+  this.required = function (/* message, priority, stopsProcessing */) {
+    return addValidation(cr.required, arguments);
+  };
+
+  function addValidation (ruleFactory, parameters) {
     if (!currentProperty)
-      throw new Error('The current property is not determined.');
+      throw new Error('The current property is undefinable.');
+    var args = Array.prototype.slice.call(parameters);
+    args.unshift(currentProperty);
+    rules.add(ruleFactory.apply(args));
+    return this;
   }
 
   //endregion
 
   //region Object rules
+
+  this.canCreate = function (/* ruleFactory, [params], methodName, message, priority, stopsProcessing */) {
+    return addRule1(Action.createObject, arguments);
+  };
+
+  this.canUpdate = function (/* ruleFactory, [params], methodName, message, priority, stopsProcessing */) {
+    return addRule1(Action.updateObject, arguments);
+  };
+
+  this.canRemove = function (/* ruleFactory, [params], methodName, message, priority, stopsProcessing */) {
+    return addRule1(Action.removeObject, arguments);
+  };
+
+  function addRule1 (action, parameters) {
+    var args = Array.prototype.slice.call(parameters);
+    var ruleFactory = args.shift();
+    args.unshift(action, null);
+    rules.add(ruleFactory.apply(args));
+    return nonProperty();
+  }
+
+  this.canFetch = function (/* [methodName], ruleFactory, [params], message, priority, stopsProcessing */) {
+    return addRule2(Action.fetchObject, 'fetch', arguments);
+  };
+
+  this.canExecute = function (/* [methodName], ruleFactory, [params], message, priority, stopsProcessing */) {
+    return addRule2(Action.fetchObject, 'execute', arguments);
+  };
+
+  function addRule2 (action, defaultMethod, parameters) {
+    var args = Array.prototype.slice.call(parameters);
+    var methodName = typeof args[0] === 'string' ? args.shift() : defaultMethod;
+    var ruleFactory = args.shift();
+    args.unshift(action, methodName);
+    rules.add(ruleFactory.apply(args));
+    return nonProperty();
+  }
 
   //endregion
 
