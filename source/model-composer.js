@@ -2,11 +2,6 @@
 
 //region Imports
 
-var PropertyManager = require('./shared/property-manager.js');
-var RuleManager = require('./rules/rule-manager.js');
-var ExtensionManager = require('./shared/extension-manager.js');
-//var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
-
 var EditableRootModel = require('./editable-root-model.js');
 var EditableChildModel = require('./editable-child-model.js');
 var EditableRootCollection = require('./editable-root-collection.js');
@@ -26,6 +21,14 @@ var CommandObject = require('./command-object.js');
 //var ReadOnlyRootCollectionSync = require('./read-only-root-collection-sync.js');
 //var ReadOnlyChildCollectionSync = require('./read-only-child-collection-sync.js');
 //var CommandObjectSync = require('./command-object-sync.js');
+
+var PropertyManager = require('./shared/property-manager.js');
+var RuleManager = require('./rules/rule-manager.js');
+var ExtensionManager = require('./shared/extension-manager.js');
+//var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+
+var PropertyInfo = require('./shared/property-info.js');
+var dt = require('./data-types/index.js');
 
 //endregion
 
@@ -47,6 +50,7 @@ function ModelComposer (modelName) {
   var properties = null;
   var rules = null;
   var extensions = null;
+  var currentProperty = null;
 
   //region Model types
 
@@ -120,9 +124,53 @@ function ModelComposer (modelName) {
 
   //region Properties
 
+  this.boolean = function (propertyName, flags, getter, setter) {
+    return addProperty(propertyName, dt.Boolean, flags, getter, setter);
+  };
+
+  this.text = function (propertyName, flags, getter, setter) {
+    return addProperty(propertyName, dt.Text, flags, getter, setter);
+  };
+
+  this.email = function (propertyName, flags, getter, setter) {
+    return addProperty(propertyName, dt.Email, flags, getter, setter);
+  };
+
+  this.integer = function (propertyName, flags, getter, setter) {
+    return addProperty(propertyName, dt.Integer, flags, getter, setter);
+  };
+
+  this.decimal = function (propertyName, flags, getter, setter) {
+    return addProperty(propertyName, dt.Decimal, flags, getter, setter);
+  };
+
+  this.enum = function (propertyName, flags, getter, setter) {
+    return addProperty(propertyName, dt.Enum, flags, getter, setter);
+  };
+
+  this.dateTime = function (propertyName, flags, getter, setter) {
+    return addProperty(propertyName, dt.DateTime, flags, getter, setter);
+  };
+
+  this.property = function (propertyName, typeCtor, flags, getter, setter) {
+    return addProperty(propertyName, new typeCtor(), flags, getter, setter);
+  };
+
+  function addProperty (propertyName, propertyType, flags, getter, setter) {
+    var property = new PropertyInfo(propertyName, propertyType, flags, getter, setter);
+    properties.add(property);
+    currentProperty = property;
+    return this;
+  }
+
   //endregion
 
   //region Property rules
+
+  function addValidation () {
+    if (!currentProperty)
+      throw new Error('The current property is not determined.');
+  }
 
   //endregion
 
@@ -134,60 +182,65 @@ function ModelComposer (modelName) {
 
   this.daoBuilder = function (daoBuilder) {
     extensions.daoBuilder = daoBuilder;
-    return this;
+    return nonProperty();
   };
 
   this.toDto = function (toDto) {
     extensions.toDto = toDto;
-    return this;
+    return nonProperty();
   };
 
   this.fromDto = function (fromDto) {
     extensions.fromDto = fromDto;
-    return this;
+    return nonProperty();
   };
 
   this.toCto = function (toCto) {
     extensions.toCto = toCto;
-    return this;
+    return nonProperty();
   };
 
   this.fromCto = function (fromCto) {
     extensions.fromCto = fromCto;
-    return this;
+    return nonProperty();
   };
 
   this.dataCreate = function (dataCreate) {
     extensions.dataCreate = dataCreate;
-    return this;
+    return nonProperty();
   };
 
   this.dataFetch = function (dataFetch) {
     extensions.dataFetch = dataFetch;
-    return this;
+    return nonProperty();
   };
 
   this.dataInsert = function (dataInsert) {
     extensions.dataInsert = dataInsert;
-    return this;
+    return nonProperty();
   };
 
   this.dataUpdate = function (dataUpdate) {
     extensions.dataUpdate = dataUpdate;
-    return this;
+    return nonProperty();
   };
 
   this.dataRemove = function (dataRemove) {
     extensions.dataRemove = dataRemove;
-    return this;
+    return nonProperty();
   };
 
   this.dataExecute = function (dataExecute) {
     extensions.dataExecute = dataExecute;
-    return this;
+    return nonProperty();
   };
 
   //endregion
+
+  function nonProperty () {
+    currentProperty = null;
+    return this;
+  }
 
   this.compose = function () {
     switch (argsType) {
