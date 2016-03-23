@@ -87,10 +87,10 @@ function ModelComposer (modelName) {
     return initialize(dataSource, modelPath);
   };
 
-  this.editableChildCollection = function (dataSource, modelPath) {
+  this.editableChildCollection = function () {
     modelType = EditableChildCollection;
     argsType = ArgsType.childCollection;
-    return initialize(dataSource, modelPath);
+    return initialize();
   };
 
   this.readOnlyRootCollection = function (dataSource, modelPath) {
@@ -99,10 +99,10 @@ function ModelComposer (modelName) {
     return initialize(dataSource, modelPath);
   };
 
-  this.readOnlyChildCollection = function (dataSource, modelPath) {
+  this.readOnlyChildCollection = function () {
     modelType = ReadOnlyChildCollection;
     argsType = ArgsType.childCollection;
-    return initialize(dataSource, modelPath);
+    return initialize();
   };
 
   this.commandObject = function (dataSource, modelPath) {
@@ -112,9 +112,12 @@ function ModelComposer (modelName) {
   };
 
   function initialize (dataSource, modelPath) {
-    properties = new PropertyManager();
-    rules = new RuleManager();
-    extensions = new ExtensionManager(dataSource, modelPath);
+    if (argsType === ArgsType.businessObject)
+      properties = new PropertyManager();
+    if (argsType !== ArgsType.childCollection) {
+      rules = new RuleManager();
+      extensions = new ExtensionManager(dataSource, modelPath);
+    }
     return this;
   }
 
@@ -171,14 +174,74 @@ function ModelComposer (modelName) {
   //region Property rules
 
   this.required = function (/* message, priority, stopsProcessing */) {
-    return addValidation(cr.required, arguments);
+    return addValRule(cr.required, arguments);
   };
 
-  function addValidation (ruleFactory, parameters) {
+  this.maxLength = function (/* maxLength, message, priority, stopsProcessing */) {
+    return addValRule(cr.maxLength, arguments);
+  };
+
+  this.minLength = function (/* minLength, message, priority, stopsProcessing */) {
+    return addValRule(cr.minLength, arguments);
+  };
+
+  this.lengthIs = function (/* length, message, priority, stopsProcessing */) {
+    return addValRule(cr.lengthIs, arguments);
+  };
+
+  this.maxValue = function (/* maxValue, message, priority, stopsProcessing */) {
+    return addValRule(cr.maxValue, arguments);
+  };
+
+  this.minValue = function (/* minValue, message, priority, stopsProcessing */) {
+    return addValRule(cr.minValue, arguments);
+  };
+
+  this.expression = function (/* regex, option, message, priority, stopsProcessing */) {
+    return addValRule(cr.expression, arguments);
+  };
+
+  this.dependency = function (/* dependencies, message, priority, stopsProcessing */) {
+    return addValRule(cr.dependency, arguments);
+  };
+
+  this.information = function (/* message, priority, stopsProcessing */) {
+    return addValRule(cr.information, arguments);
+  };
+
+  function addValRule (ruleFactory, parameters) {
     if (!currentProperty)
       throw new Error('The current property is undefinable.');
     var args = Array.prototype.slice.call(parameters);
     args.unshift(currentProperty);
+    rules.add(ruleFactory.apply(args));
+    return this;
+  }
+
+  this.addValidation = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (!currentProperty)
+      throw new Error('The current property is undefinable.');
+    var args = Array.prototype.slice.call(parameters);
+    var ruleFactory = args.shift();
+    args.unshift(currentProperty);
+    rules.add(ruleFactory.apply(args));
+    return this;
+  };
+
+  this.canRead = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    return addAuthRule(Action.readProperty, arguments);
+  };
+
+  this.canWrite = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    return addAuthRule(Action.writeProperty, arguments);
+  };
+
+  function addAuthRule (action, parameters) {
+    if (!currentProperty)
+      throw new Error('The current property is undefinable.');
+    var args = Array.prototype.slice.call(parameters);
+    var ruleFactory = args.shift();
+    args.unshift(action, currentProperty);
     rules.add(ruleFactory.apply(args));
     return this;
   }
