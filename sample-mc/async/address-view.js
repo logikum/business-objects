@@ -6,8 +6,8 @@ var bo = require('../../source/index.js');
 var F = bo.shared.PropertyFlag;
 
 var AddressView = Model('AddressView').readOnlyChildModel('dao', __filename)
-    .integer('addressKey', F.key | F.readOnly)
-    .integer('orderKey', F.parentKey | F.readOnly)
+    .integer('addressKey', F.key)
+    .integer('orderKey', F.parentKey)
     .text('country')
     .text('state')
     .text('city')

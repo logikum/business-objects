@@ -6,8 +6,8 @@ var bo = require('../../source/index.js');
 var F = bo.shared.PropertyFlag;
 
 var BlanketOrderScheduleView = Model('BlanketOrderScheduleView').readOnlyChildModel('dao', __filename)
-    .integer('orderScheduleKey', F.key | F.readOnly)
-    .integer('orderItemKey', F.parentKey | F.readOnly)
+    .integer('orderScheduleKey', F.key)
+    .integer('orderItemKey', F.parentKey)
     .integer('quantity')
     .decimal('totalMass')
     .boolean('required')
