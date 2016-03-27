@@ -2,6 +2,9 @@
 
 //region Imports
 
+var ModelComposer = require('./model-composer.js');
+var ModelComposerSync = require('./model-composer-sync.js');
+
 var EditableRootModel = require('./editable-root-model.js');
 var EditableChildModel = require('./editable-child-model.js');
 var EditableRootCollection = require('./editable-root-collection.js');
@@ -58,6 +61,9 @@ var i18n = require('./locales/i18n.js');
  *      constructor to create new a message localizer object.
  */
 var index = {
+  ModelComposer: ModelComposer,
+  ModelComposerSync: ModelComposerSync,
+
   //ModelBase: ModelBase,
   //CollectionBase: CollectionBase,
 

@@ -2,19 +2,19 @@
 
 //region Imports
 
-var EditableRootModel = require('./editable-root-model.js');
-var EditableChildModel = require('./editable-child-model.js');
-var EditableRootCollection = require('./editable-root-collection.js');
-var EditableChildCollection = require('./editable-child-collection.js');
-var ReadOnlyRootModel = require('./read-only-root-model.js');
-var ReadOnlyChildModel = require('./read-only-child-model.js');
-var ReadOnlyRootCollection = require('./read-only-root-collection.js');
-var ReadOnlyChildCollection = require('./read-only-child-collection.js');
-var CommandObject = require('./command-object.js');
+var EditableRootModelSync = require('./editable-root-model-sync.js');
+var EditableChildModelSync = require('./editable-child-model-sync.js');
+var EditableRootCollectionSync = require('./editable-root-collection-sync.js');
+var EditableChildCollectionSync = require('./editable-child-collection-sync.js');
+var ReadOnlyRootModelSync = require('./read-only-root-model-sync.js');
+var ReadOnlyChildModelSync = require('./read-only-child-model-sync.js');
+var ReadOnlyRootCollectionSync = require('./read-only-root-collection-sync.js');
+var ReadOnlyChildCollectionSync = require('./read-only-child-collection-sync.js');
+var CommandObjectSync = require('./command-object-sync.js');
 
 var PropertyManager = require('./shared/property-manager.js');
 var RuleManager = require('./rules/rule-manager.js');
-var ExtensionManager = require('./shared/extension-manager.js');
+var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 
 var Action = require('./rules/authorization-action.js');
 var cr = require('./common-rules/index.js');
@@ -47,55 +47,55 @@ function ModelComposer (modelName) {
   //region Model types
 
   this.editableRootModel = function (dataSource, modelPath) {
-    modelType = EditableRootModel;
+    modelType = EditableRootModelSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
   this.editableChildModel = function (dataSource, modelPath) {
-    modelType = EditableChildModel;
+    modelType = EditableChildModelSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyRootModel = function (dataSource, modelPath) {
-    modelType = ReadOnlyRootModel;
+    modelType = ReadOnlyRootModelSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyChildModel = function (dataSource, modelPath) {
-    modelType = ReadOnlyChildModel;
+    modelType = ReadOnlyChildModelSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
   this.editableRootCollection = function (dataSource, modelPath) {
-    modelType = EditableRootCollection;
+    modelType = EditableRootCollectionSync;
     argsType = ArgsType.rootCollection;
     return initialize(dataSource, modelPath);
   };
 
   this.editableChildCollection = function () {
-    modelType = EditableChildCollection;
+    modelType = EditableChildCollectionSync;
     argsType = ArgsType.childCollection;
     return initialize();
   };
 
   this.readOnlyRootCollection = function (dataSource, modelPath) {
-    modelType = ReadOnlyRootCollection;
+    modelType = ReadOnlyRootCollectionSync;
     argsType = ArgsType.rootCollection;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyChildCollection = function () {
-    modelType = ReadOnlyChildCollection;
+    modelType = ReadOnlyChildCollectionSync;
     argsType = ArgsType.childCollection;
     return initialize();
   };
 
   this.commandObject = function (dataSource, modelPath) {
-    modelType = CommandObject;
+    modelType = CommandObjectSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
@@ -105,7 +105,7 @@ function ModelComposer (modelName) {
       properties = new PropertyManager();
     if (argsType !== ArgsType.childCollection) {
       rules = new RuleManager();
-      extensions = new ExtensionManager(dataSource, modelPath);
+      extensions = new ExtensionManagerSync(dataSource, modelPath);
     }
     return this;
   }
