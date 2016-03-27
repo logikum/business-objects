@@ -8,7 +8,7 @@ var ClearScheduleCommand = Model('ClearScheduleCommand').commandObject('dao', __
     .integer('orderItemKey')
     .integer('orderScheduleKey')
     .boolean('result')
-    .Compose();
+    .compose();
 
 var ClearScheduleCommandFactory = {
   create: function (eventHandlers, callback) {

@@ -7,6 +7,6 @@ var BlanketOrderSchedule = require('./blanket-order-schedule.js');
 
 var BlanketOrderSchedules = Model('BlanketOrderSchedules').editableChildCollection()
     .itemType(BlanketOrderSchedule)
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderSchedules;

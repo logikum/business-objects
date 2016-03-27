@@ -7,6 +7,6 @@ var BlanketOrderScheduleView = require('./blanket-order-schedule-view.js');
 
 var BlanketOrderSchedulesView = Model('BlanketOrderSchedulesView').readOnlyChildCollection()
     .itemType(BlanketOrderScheduleView)
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderSchedulesView;

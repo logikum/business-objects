@@ -20,6 +20,6 @@ var BlanketOrderItem = Model('BlanketOrderItem').editableChildModel('dao', __fil
     .decimal('unitPrice')
         .required()
     .property('schedules', BlanketOrderSchedules)
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderItem;

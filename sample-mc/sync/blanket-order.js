@@ -1,7 +1,7 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
 var cr = bo.commonRules;
 
@@ -28,7 +28,7 @@ var BlanketOrder = Model('BlanketOrder').editableRootModel('dao', __filename)
     .canCreate(cr.isInRole, 'developers', 'You are not authorized to create blanket order.')
     .canUpdate(cr.isInRole, 'developers', 'You are not authorized to modify blanket order.')
     .canRemove(cr.isInRole, 'developers', 'You are not authorized to delete blanket order.')
-    .Compose();
+    .compose();
 
 var BlanketOrderFactory = {
   create: function (eventHandlers) {

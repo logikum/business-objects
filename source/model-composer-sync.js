@@ -24,8 +24,8 @@ var dt = require('./data-types/index.js');
 
 //endregion
 
-function ModelComposerFactory (modelName) {
-  return new ModelComposer (modelName);
+function ModelComposerSyncFactory (modelName) {
+  return new ModelComposerSync (modelName);
 }
 
 var ArgsType = {
@@ -34,8 +34,9 @@ var ArgsType = {
   childCollection: 2
 };
 
-function ModelComposer (modelName) {
+function ModelComposerSync (modelName) {
 
+  var self = this;
   var modelType = null;
   var itemsType = null;
   var argsType = null;
@@ -107,7 +108,7 @@ function ModelComposer (modelName) {
       rules = new RuleManager();
       extensions = new ExtensionManagerSync(dataSource, modelPath);
     }
-    return this;
+    return self;
   }
 
   //endregion
@@ -148,14 +149,14 @@ function ModelComposer (modelName) {
   };
 
   this.property = function (propertyName, typeCtor, flags, getter, setter) {
-    return addProperty(propertyName, new typeCtor(), flags, getter, setter);
+    return addProperty(propertyName, typeCtor, flags, getter, setter);
   };
 
   function addProperty (propertyName, propertyType, flags, getter, setter) {
     var property = new PropertyInfo(propertyName, propertyType, flags, getter, setter);
     properties.add(property);
     currentProperty = property;
-    return this;
+    return self;
   }
 
   //endregion
@@ -203,8 +204,8 @@ function ModelComposer (modelName) {
       throw new Error('The current property is undefinable.');
     var args = Array.prototype.slice.call(parameters);
     args.unshift(currentProperty);
-    rules.add(ruleFactory.apply(args));
-    return this;
+    rules.add(ruleFactory.apply(null, args));
+    return self;
   }
 
   this.addValidation = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
@@ -213,7 +214,7 @@ function ModelComposer (modelName) {
     var args = Array.prototype.slice.call(parameters);
     var ruleFactory = args.shift();
     args.unshift(currentProperty);
-    rules.add(ruleFactory.apply(args));
+    rules.add(ruleFactory.apply(null, args));
     return this;
   };
 
@@ -231,8 +232,8 @@ function ModelComposer (modelName) {
     var args = Array.prototype.slice.call(parameters);
     var ruleFactory = args.shift();
     args.unshift(action, currentProperty);
-    rules.add(ruleFactory.apply(args));
-    return this;
+    rules.add(ruleFactory.apply(null, args));
+    return self;
   }
 
   //endregion
@@ -240,39 +241,30 @@ function ModelComposer (modelName) {
   //region Object rules
 
   this.canCreate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    return addRule1(Action.createObject, arguments);
+    return addObjRule(Action.createObject, arguments);
+  };
+
+  this.canFetch = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    return addObjRule(Action.fetchObject, arguments);
   };
 
   this.canUpdate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    return addRule1(Action.updateObject, arguments);
+    return addObjRule(Action.updateObject, arguments);
   };
 
   this.canRemove = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    return addRule1(Action.removeObject, arguments);
+    return addObjRule(Action.removeObject, arguments);
   };
 
-  function addRule1 (action, parameters) {
+  this.canExecute = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    return addObjRule(Action.fetchObject, arguments);
+  };
+
+  function addObjRule (action, parameters) {
     var args = Array.prototype.slice.call(parameters);
     var ruleFactory = args.shift();
     args.unshift(action, null);
-    rules.add(ruleFactory.apply(args));
-    return nonProperty();
-  }
-
-  this.canFetch = function (/* [methodName], ruleFactory, [params], message, priority, stopsProcessing */) {
-    return addRule2(Action.fetchObject, 'fetch', arguments);
-  };
-
-  this.canExecute = function (/* [methodName], ruleFactory, [params], message, priority, stopsProcessing */) {
-    return addRule2(Action.fetchObject, 'execute', arguments);
-  };
-
-  function addRule2 (action, defaultMethod, parameters) {
-    var args = Array.prototype.slice.call(parameters);
-    var methodName = typeof args[0] === 'string' ? args.shift() : defaultMethod;
-    var ruleFactory = args.shift();
-    args.unshift(action, methodName);
-    rules.add(ruleFactory.apply(args));
+    rules.add(ruleFactory.apply(null, args));
     return nonProperty();
   }
 
@@ -339,7 +331,7 @@ function ModelComposer (modelName) {
 
   function nonProperty () {
     currentProperty = null;
-    return this;
+    return self;
   }
 
   this.compose = function () {
@@ -353,6 +345,5 @@ function ModelComposer (modelName) {
     }
   };
 }
-//util.inherits(ModelComposer, ComposerBase);
 
-module.exports = ModelBase;
+module.exports = ModelComposerSyncFactory;

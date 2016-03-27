@@ -12,6 +12,6 @@ var BlanketOrderScheduleView = Model('BlanketOrderScheduleView').readOnlyChildMo
     .boolean('required')
     .text('shipTo')
     .dateTime('shipDate')
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderScheduleView;

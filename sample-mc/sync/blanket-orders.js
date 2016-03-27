@@ -1,13 +1,13 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 
 var BlanketOrderChild = require('./blanket-order-child.js');
 
 var BlanketOrders = Model('BlanketOrders').editableRootCollection('dao', __filename)
     .itemType(BlanketOrderChild)
-    .Compose();
+    .compose();
 
 var BlanketOrdersFactory = {
   create: function (eventHandlers) {

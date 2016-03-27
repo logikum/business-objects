@@ -1,7 +1,7 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
 
 var AddressView = Model('AddressView').readOnlyChildModel('dao', __filename)
@@ -13,6 +13,6 @@ var AddressView = Model('AddressView').readOnlyChildModel('dao', __filename)
     .text('line1')
     .text('line2')
     .text('postalCode')
-    .Compose();
+    .compose();
 
 module.exports = AddressView;

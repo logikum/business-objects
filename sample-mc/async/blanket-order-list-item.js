@@ -15,6 +15,6 @@ var BlanketOrderListItem = Model('BlanketOrderListItem').readOnlyChildModel('dao
     .boolean('enabled')
     .dateTime('createdDate')
     .dateTime('modifiedDate')
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderListItem;

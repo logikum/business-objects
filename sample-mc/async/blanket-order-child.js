@@ -27,6 +27,6 @@ var BlanketOrderChild = Model('BlanketOrderChild').editableChildModel('dao', __f
     .canCreate(cr.isInRole, 'developers', 'You are not authorized to create blanket order.')
     .canUpdate(cr.isInRole, 'developers', 'You are not authorized to modify blanket order.')
     .canRemove(cr.isInRole, 'developers', 'You are not authorized to delete blanket order.')
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderChild;

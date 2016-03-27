@@ -1,12 +1,12 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
 var cr = bo.commonRules;
 
-var AddressView = require('./address.js');
-var BlanketOrderItemsView = require('./blanket-order-items.js');
+var AddressView = require('./address-view.js');
+var BlanketOrderItemsView = require('./blanket-order-items-view.js');
 
 var BlanketOrderView = Model('BlanketOrderView').readOnlyRootModel('dao', __filename)
     .integer('orderKey', F.key)
@@ -21,7 +21,7 @@ var BlanketOrderView = Model('BlanketOrderView').readOnlyRootModel('dao', __file
     .dateTime('createdDate')
     .dateTime('modifiedDate')
     .canFetch(cr.isInRole, 'designers', 'You are not authorized to retrieve blanket order.')
-    .Compose();
+    .compose();
 
 var BlanketOrderViewFactory = {
   get: function (key, eventHandlers) {

@@ -1,12 +1,12 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 
 var BlanketOrderSchedule = require('./blanket-order-schedule.js');
 
 var BlanketOrderSchedules = Model('BlanketOrderSchedules').editableChildCollection()
     .itemType(BlanketOrderSchedule)
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderSchedules;

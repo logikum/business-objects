@@ -15,6 +15,6 @@ var BlanketOrderItemView = Model('BlanketOrderItemView').readOnlyChildModel('dao
     .integer('quantity')
     .decimal('unitPrice')
     .property('schedules', BlanketOrderSchedulesView)
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderItemView;

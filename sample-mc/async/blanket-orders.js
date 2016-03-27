@@ -7,7 +7,7 @@ var BlanketOrderChild = require('./blanket-order-child.js');
 
 var BlanketOrders = Model('BlanketOrders').editableRootCollection('dao', __filename)
     .itemType(BlanketOrderChild)
-    .Compose();
+    .compose();
 
 var BlanketOrdersFactory = {
   create: function (eventHandlers, callback) {

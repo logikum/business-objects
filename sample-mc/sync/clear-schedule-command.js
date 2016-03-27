@@ -1,14 +1,14 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 
 var ClearScheduleCommand = Model('ClearScheduleCommand').commandObject('dao', __filename)
     .integer('orderKey')
     .integer('orderItemKey')
     .integer('orderScheduleKey')
     .boolean('result')
-    .Compose();
+    .compose();
 
 var ClearScheduleCommandFactory = {
   create: function (eventHandlers) {

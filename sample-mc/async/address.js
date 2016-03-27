@@ -17,6 +17,6 @@ var Address = Model('Address').editableChildModel('dao', __filename)
     .text('line2')
     .text('postalCode')
         .required()
-    .Compose();
+    .compose();
 
 module.exports = Address;

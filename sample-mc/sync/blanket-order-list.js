@@ -1,13 +1,13 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 
 var BlanketOrderListItem = require('./blanket-order-list-item.js');
 
 var BlanketOrderList = Model('BlanketOrderList').readOnlyRootCollection('dao', __filename)
     .itemType(BlanketOrderListItem)
-    .Compose();
+    .compose();
 
 var BlanketOrderListFactory = {
   getAll: function (eventHandlers) {

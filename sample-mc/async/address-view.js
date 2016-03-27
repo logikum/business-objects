@@ -13,6 +13,6 @@ var AddressView = Model('AddressView').readOnlyChildModel('dao', __filename)
     .text('line1')
     .text('line2')
     .text('postalCode')
-    .Compose();
+    .compose();
 
 module.exports = AddressView;

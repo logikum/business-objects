@@ -7,6 +7,6 @@ var BlanketOrderItem = require('./blanket-order-item.js');
 
 var BlanketOrderItems = Model('BlanketOrderItems').editableChildCollection()
     .itemType(BlanketOrderItem)
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderItems;

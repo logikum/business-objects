@@ -7,7 +7,7 @@ var BlanketOrderListItem = require('./blanket-order-list-item.js');
 
 var BlanketOrderList = Model('BlanketOrderList').readOnlyRootCollection('dao', __filename)
     .itemType(BlanketOrderListItem)
-    .Compose();
+    .compose();
 
 var BlanketOrderListFactory = {
   getAll: function (eventHandlers, callback) {

@@ -1,7 +1,7 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 
 var bo = require('../../source/index.js');
 var F = bo.shared.PropertyFlag;
@@ -15,6 +15,6 @@ var BlanketOrderListItem = Model('BlanketOrderListItem').readOnlyChildModel('dao
     .boolean('enabled')
     .dateTime('createdDate')
     .dateTime('modifiedDate')
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderListItem;

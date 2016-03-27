@@ -17,6 +17,6 @@ var BlanketOrderSchedule = Model('BlanketOrderSchedule').editableChildModel('dao
         .required()
     .dateTime('shipDate')
         .required()
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderSchedule;

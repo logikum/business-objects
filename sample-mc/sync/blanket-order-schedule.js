@@ -1,7 +1,7 @@
 'use strict';
 
 var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
 
 var BlanketOrderSchedule = Model('BlanketOrderSchedule').editableChildModel('dao', __filename)
@@ -17,6 +17,6 @@ var BlanketOrderSchedule = Model('BlanketOrderSchedule').editableChildModel('dao
         .required()
     .dateTime('shipDate')
         .required()
-    .Compose();
+    .compose();
 
 module.exports = BlanketOrderSchedule;
