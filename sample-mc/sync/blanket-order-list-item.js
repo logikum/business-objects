@@ -2,8 +2,6 @@
 
 var bo = require('../../source/index.js');
 var Model = bo.ModelComposerSync;
-
-var bo = require('../../source/index.js');
 var F = bo.shared.PropertyFlag;
 
 var BlanketOrderListItem = Model('BlanketOrderListItem').readOnlyChildModel('dao', __filename)

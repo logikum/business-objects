@@ -15,9 +15,9 @@ function getScheduleCode (ctx) {
   return ctx.getValue('orderScheduleKey').toString(2);
 }
 
-var orderScheduleKey = new Property('orderScheduleKey', dt.Integer, F.key | F.readOnly | F.notOnCto);
-var orderScheduleCode = new Property('orderScheduleCode', dt.Integer, F.readOnly | F.notOnDto, getScheduleCode);
-var orderItemKey = new Property('orderItemKey', dt.Integer, F.parentKey | F.readOnly | F.notOnCto);
+var orderScheduleKey = new Property('orderScheduleKey', dt.Integer, F.key | F.readOnly | F.onDtoOnly);
+var orderScheduleCode = new Property('orderScheduleCode', dt.Integer, F.readOnly | F.onCtoOnly, getScheduleCode);
+var orderItemKey = new Property('orderItemKey', dt.Integer, F.parentKey | F.readOnly | F.onDtoOnly);
 var quantity = new Property('quantity', dt.Integer);
 var totalMass = new Property('totalMass', dt.Decimal);
 var required = new Property('required', dt.Boolean);

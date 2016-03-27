@@ -2,60 +2,20 @@
 
 var bo = require('../../source/index.js');
 var daoBuilder = require('../dao-builder.js');
-
-var Properties = bo.shared.PropertyManager;
-var Rules = bo.rules.RuleManager;
-var Action = bo.rules.AuthorizationAction;
-var Extensions = bo.shared.ExtensionManagerSync;
-var Property = bo.shared.PropertyInfo;
+var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
-var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
 var Address = require('./address.js');
 var BlanketOrderItems = require('./blanket-order-items.js');
 
+//region Property methods
+
 function getOrderCode (ctx) {
   return ctx.getValue('orderKey').toString(2);
 }
 
-var orderKey = new Property('orderKey', dt.Integer, F.key | F.readOnly | F.onDtoOnly);
-var orderCode = new Property('orderCode', dt.Text, F.readOnly | F.onCtoOnly, getOrderCode);
-var vendorName = new Property('vendorName', dt.Text);
-var contractDate = new Property('contractDate', dt.DateTime);
-var totalPrice = new Property('totalPrice', dt.Decimal);
-var schedules = new Property('schedules', dt.Integer);
-var enabled = new Property('enabled', dt.Boolean);
-var address = new Property('address', Address);
-var items = new Property('items', BlanketOrderItems);
-var createdDate = new Property('createdDate', dt.DateTime, F.readOnly);
-var modifiedDate = new Property('modifiedDate', dt.DateTime, F.readOnly);
-
-var properties = new Properties(
-    orderKey,
-    orderCode,
-    vendorName,
-    contractDate,
-    totalPrice,
-    schedules,
-    enabled,
-    address,
-    items,
-    createdDate,
-    modifiedDate
-);
-
-var rules = new Rules(
-    cr.required(vendorName),
-    cr.required(contractDate),
-    cr.required(totalPrice),
-    cr.required(schedules),
-    cr.required(enabled),
-    cr.isInRole(Action.fetchObject, null, 'developers', 'You are not authorized to retrieve blanket order.'),
-    cr.isInRole(Action.createObject, null, 'developers', 'You are not authorized to create blanket order.'),
-    cr.isInRole(Action.updateObject, null, 'developers', 'You are not authorized to modify blanket order.'),
-    cr.isInRole(Action.removeObject, null, 'developers', 'You are not authorized to delete blanket order.')
-);
+//endregion
 
 //region Transfer object methods
 
@@ -124,10 +84,10 @@ function dataCreate (ctx) {
 function dataFetch (ctx, filter, method) {
   var dto;
   if (method === 'fetchByName')
-    // filter: vendorName
+  // filter: vendorName
     dto = ctx.dao.fetchByName(ctx.connection, filter);
   else
-    // filter: primaryKey encoded
+  // filter: primaryKey encoded
     dto = ctx.dao.fetch(ctx.connection, filter);
   // or:
   // var dto = ctx.dao[method](ctx.connection, filter);
@@ -177,19 +137,38 @@ function dataRemove (ctx) {
 
 //endregion
 
-var extensions = new Extensions('sync-dal', __filename);
-extensions.daoBuilder = daoBuilder;
-extensions.toDto = toDto;
-extensions.fromDto = fromDto;
-extensions.toCto = toCto;
-extensions.fromCto = fromCto;
-extensions.dataCreate = dataCreate;
-extensions.dataFetch = dataFetch;
-extensions.dataInsert = dataInsert;
-extensions.dataUpdate = dataUpdate;
-extensions.dataRemove = dataRemove;
-
-var BlanketOrder = bo.EditableRootModelSync('BlanketOrder', properties, rules, extensions);
+var BlanketOrder = Model('BlanketOrder').editableRootModel('sync-dal', __filename)
+    .integer('orderKey', F.key | F.readOnly | F.onDtoOnly)
+    .text('orderCode', F.readOnly | F.onCtoOnly, getOrderCode)
+    .text('vendorName')
+        .required()
+    .dateTime('contractDate')
+        .required()
+    .decimal('totalPrice')
+        .required()
+    .integer('schedules')
+        .required()
+    .boolean('enabled')
+        .required()
+    .property('address', Address)
+    .property('items', BlanketOrderItems)
+    .dateTime('createdDate', F.readOnly)
+    .dateTime('modifiedDate', F.readOnly)
+    .canFetch(cr.isInRole, 'developers', 'You are not authorized to retrieve blanket order.')
+    .canCreate(cr.isInRole, 'developers', 'You are not authorized to create blanket order.')
+    .canUpdate(cr.isInRole, 'developers', 'You are not authorized to modify blanket order.')
+    .canRemove(cr.isInRole, 'developers', 'You are not authorized to delete blanket order.')
+    .daoBuilder(daoBuilder)
+    .toDto(toDto)
+    .fromDto(fromDto)
+    .toCto(toCto)
+    .fromCto(fromCto)
+    .dataCreate(dataCreate)
+    .dataFetch(dataFetch)
+    .dataInsert(dataInsert)
+    .dataUpdate(dataUpdate)
+    .dataRemove(dataRemove)
+    .compose();
 
 var BlanketOrderFactory = {
   create: function (eventHandlers) {

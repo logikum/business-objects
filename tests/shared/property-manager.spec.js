@@ -78,7 +78,7 @@ describe('Property manager', function () {
   });
 
   it('contains method works', function() {
-    var propertyName = new PropertyInfo('name', new Text(), F.key | F.notOnCto);
+    var propertyName = new PropertyInfo('name', new Text(), F.key | F.onDtoOnly);
     var propertyEmail = new PropertyInfo('email', new Text());
     var pm = new PropertyManager(propertyName);
 

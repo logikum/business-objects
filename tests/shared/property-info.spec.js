@@ -19,7 +19,7 @@ describe('Property description', function() {
     var pi1 = new PropertyInfo('property', items);
     var pi2 = new PropertyInfo('property', new Text());
     var pi3 = new PropertyInfo('property', items, F.readOnly);
-    var pi4 = new PropertyInfo('property', new Text(), F.key | F.notOnCto);
+    var pi4 = new PropertyInfo('property', new Text(), F.key | F.onDtoOnly);
 
     expect(create1).toThrow();
     expect(create2).toThrow();

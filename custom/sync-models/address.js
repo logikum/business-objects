@@ -15,9 +15,9 @@ function getAddressCode (ctx) {
   return ctx.getValue('addressKey').toString(2);
 }
 
-var addressKey = new Property('addressKey', dt.Integer, F.key | F.readOnly | F.notOnCto);
-var addressCode = new Property('addressCode', dt.Text, F.readOnly | F.notOnDto, getAddressCode);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly | F.notOnCto);
+var addressKey = new Property('addressKey', dt.Integer, F.key | F.readOnly | F.onDtoOnly);
+var addressCode = new Property('addressCode', dt.Text, F.readOnly | F.onCtoOnly, getAddressCode);
+var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly | F.onDtoOnly);
 var country = new Property('country', dt.Text);
 var state = new Property('state', dt.Text);
 var city = new Property('city', dt.Text);

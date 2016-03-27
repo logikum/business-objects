@@ -15,8 +15,8 @@ function getOrderCode (ctx) {
   return ctx.getValue('orderKey').toString(2);
 }
 
-var orderKey = new Property('orderKey', dt.Integer, F.key | F.notOnCto);
-var orderCode = new Property('orderCode', dt.Text, F.notOnDto, getOrderCode);
+var orderKey = new Property('orderKey', dt.Integer, F.key | F.onDtoOnly);
+var orderCode = new Property('orderCode', dt.Text, F.onCtoOnly, getOrderCode);
 var vendorName = new Property('vendorName', dt.Text);
 var contractDate = new Property('contractDate', dt.DateTime);
 var totalPrice = new Property('totalPrice', dt.Decimal);

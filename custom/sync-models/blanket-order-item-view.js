@@ -17,9 +17,9 @@ function getItemCode (ctx) {
   return ctx.getValue('orderItemKey').toString(2);
 }
 
-var orderItemKey = new Property('orderItemKey', dt.Integer, F.key | F.notOnCto);
-var orderItemCode = new Property('orderItemCode', dt.Integer, F.notOnDto, getItemCode);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.notOnCto);
+var orderItemKey = new Property('orderItemKey', dt.Integer, F.key | F.onDtoOnly);
+var orderItemCode = new Property('orderItemCode', dt.Integer, F.onCtoOnly, getItemCode);
+var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.onDtoOnly);
 var productName = new Property('productName', dt.Text);
 var obsolete = new Property('obsolete', dt.Boolean);
 var expiry = new Property('expiry', dt.DateTime);

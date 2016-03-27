@@ -58,7 +58,7 @@ extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
 extensions.addOtherMethod('reschedule');
 
-var RescheduleShippingCommand = bo.CommandObjectSync('ClearScheduleCommand', properties, rules, extensions);
+var RescheduleShippingCommand = bo.CommandObjectSync('RescheduleShippingCommand', properties, rules, extensions);
 
 var RescheduleShippingCommandFactory = {
   create: function (eventHandlers) {
