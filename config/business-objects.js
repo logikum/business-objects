@@ -1,10 +1,10 @@
 'use strict';
 
 module.exports = {
-  connectionManager: '/sample/connection-manager.js',
+  connectionManager: '/data/connection-manager.js',
   daoBuilder: '/source/data-access/dao-builder.js',
-  userReader: '/sample/get-user.js',
-  localeReader: '/sample/get-locale.js',
+  userReader: '/data/get-user.js',
+  localeReader: '/data/get-locale.js',
   pathOfLocales: '/locales',
   noAccessBehavior: 'throwError'
 };
