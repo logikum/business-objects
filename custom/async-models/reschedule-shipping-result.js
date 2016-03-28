@@ -46,7 +46,7 @@ function dataFetch (ctx, dto, method, callback) {
 
 //endregion
 
-var extensions = new Extensions('sync-dal', __filename);
+var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.dataFetch = dataFetch;
 
