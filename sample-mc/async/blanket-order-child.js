@@ -3,6 +3,7 @@
 var bo = require('../../source/index.js');
 var Model = bo.ModelComposer;
 var F = bo.shared.PropertyFlag;
+var cr = bo.commonRules;
 
 var Address = require('./address.js');
 var BlanketOrderItems = require('./blanket-order-items.js');

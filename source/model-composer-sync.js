@@ -327,6 +327,11 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  this.addOtherMethod = function (methodName) {
+    extensions.addOtherMethod(methodName);
+    return nonProperty();
+  };
+
   //endregion
 
   function nonProperty () {
