@@ -49,7 +49,7 @@ function dataFetch (ctx, dto, method, callback) {
 //endregion
 
 var BlanketOrderItemView = Model('BlanketOrderItemView')
-    .readOnlyChildModel('async-dal', __filename)
+    .readOnlyChildObject('async-dal', __filename)
     // --- Properties
     .integer('orderItemKey', F.key)
     .integer('orderKey', F.parentKey)

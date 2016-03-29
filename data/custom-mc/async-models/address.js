@@ -140,7 +140,7 @@ function dataRemove (ctx, callback) {
 //endregion
 
 var Address = Model('Address')
-    .editableChildModel('async-dal', __filename)
+    .editableChildObject('async-dal', __filename)
     // --- Properties
     .integer('addressKey', F.key | F.readOnly)
     .integer('orderKey', F.parentKey | F.readOnly)

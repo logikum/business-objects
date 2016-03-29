@@ -83,6 +83,6 @@ extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-var BlanketOrderItemView = bo.ReadOnlyChildModel('BlanketOrderItemView', properties, rules, extensions);
+var BlanketOrderItemView = bo.ReadOnlyChildObject('BlanketOrderItemView', properties, rules, extensions);
 
 module.exports = BlanketOrderItemView;

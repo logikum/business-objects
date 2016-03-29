@@ -55,7 +55,7 @@
 
 * __v1.0.9__  
   2015.03.09.  
-  Adding getResponse() method to root models.
+  Adding getResponse() method to root objects.
 
 * __v1.0.8__  
   2015.03.05.  

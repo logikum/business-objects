@@ -50,6 +50,6 @@ var extensions = new Extensions('sync-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.dataFetch = dataFetch;
 
-var RescheduleShippingResult = bo.ReadOnlyChildModelSync('RescheduleShippingResult', properties, rules, extensions);
+var RescheduleShippingResult = bo.ReadOnlyChildObjectSync('RescheduleShippingResult', properties, rules, extensions);
 
 module.exports = RescheduleShippingResult;

@@ -17,15 +17,15 @@ var CLASS_NAME = 'ReadOnlyChildCollectionSync';
  *
  *    Valid collection item types are:
  *
- *      * ReadOnlyChildModelSync
+ *      * ReadOnlyChildObjectSync
  *
  * @function bo.ReadOnlyChildCollectionSync
  * @param {string} name - The name of the collection.
- * @param {ReadOnlyChildModelSync} itemType - The model type of the collection items.
+ * @param {ReadOnlyChildObjectSync} itemType - The model type of the collection items.
  * @returns {ReadOnlyChildCollectionSync} The constructor of a asynchronous read-only child collection.
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
- * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModelSync.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildObjectSync.
  */
 var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
 
@@ -35,10 +35,10 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
   // Check tree reference.
   if (typeof itemType !== 'string') {
     // Verify the model type of the item type.
-    if (itemType.modelType !== 'ReadOnlyChildModelSync')
+    if (itemType.modelType !== 'ReadOnlyChildObjectSync')
       throw new ModelError('invalidItem',
           itemType.prototype.name, itemType.modelType,
-          CLASS_NAME, 'ReadOnlyChildModelSync');
+          CLASS_NAME, 'ReadOnlyChildObjectSync');
   }
 
   /**
@@ -52,8 +52,8 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
    *
    *    Valid parent model types are:
    *
-   *      * ReadOnlyRootModelSync
-   *      * ReadOnlyChildModelSync
+   *      * ReadOnlyRootObjectSync
+   *      * ReadOnlyChildObjectSync
    *      * CommandObjectSync
    *
    * @name ReadOnlyChildCollectionSync
@@ -64,7 +64,7 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
    * @extends CollectionBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
-   *    The parent object must be an ReadOnlyRootModelSync, ReadOnlyChildModelSync or
+   *    The parent object must be an ReadOnlyRootObjectSync, ReadOnlyChildObjectSync or
    *    CommandObjectSync instance.
    */
   var ReadOnlyChildCollectionSync = function (parent, eventHandlers) {
@@ -72,8 +72,8 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
 
     // Verify the model type of the parent model.
     parent = Argument.inConstructor(name).check(parent).for('parent').asModelType([
-      'ReadOnlyRootModelSync',
-      'ReadOnlyChildModelSync',
+      'ReadOnlyRootObjectSync',
+      'ReadOnlyChildObjectSync',
       'CommandObjectSync'
     ]);
 
@@ -208,7 +208,7 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
      *
      * @function ReadOnlyChildCollectionSync#at
      * @param {number} index - The index of the required item in the collection.
-     * @returns {ReadOnlyChildModelSync} The required collection item.
+     * @returns {ReadOnlyChildObjectSync} The required collection item.
      */
     this.at = function (index) {
       return items[index];
@@ -252,7 +252,7 @@ var ReadOnlyChildCollectionSyncFactory = function (name, itemType) {
      *
      * @function ReadOnlyChildCollectionSync#filter
      * @param {external.cbCollectionItem} callback - Function to test for each collection item.
-     * @returns {Array.<ReadOnlyChildModelSync>} The new array of collection items.
+     * @returns {Array.<ReadOnlyChildObjectSync>} The new array of collection items.
      */
     this.filter = function (callback) {
       return items.filter(callback);

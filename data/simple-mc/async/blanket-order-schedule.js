@@ -5,7 +5,7 @@ var Model = bo.ModelComposer;
 var F = bo.shared.PropertyFlag;
 
 var BlanketOrderSchedule = Model('BlanketOrderSchedule')
-    .editableChildModel('dao', __filename)
+    .editableChildObject('dao', __filename)
     // --- Properties
     .integer('orderScheduleKey', F.key | F.readOnly)
     .integer('orderItemKey', F.parentKey | F.readOnly)

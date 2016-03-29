@@ -9,7 +9,7 @@ var Enumeration = require('./system/enumeration.js');
 
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
-var ExtensionManager = require('./shared/extension-manager.js');
+var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
 var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');
@@ -26,7 +26,6 @@ var BrokenRuleList = require('./rules/broken-rule-list.js');
 var RuleSeverity = require('./rules/rule-severity.js');
 var AuthorizationAction = require('./rules/authorization-action.js');
 var AuthorizationContext = require('./rules/authorization-context.js');
-var BrokenRulesResponse = require('./rules/broken-rules-response.js');
 
 var DataPortalAction = require('./shared/data-portal-action.js');
 var DataPortalContext = require('./shared/data-portal-context.js');
@@ -34,76 +33,93 @@ var DataPortalEvent = require('./shared/data-portal-event.js');
 var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
-var CLASS_NAME = 'ReadOnlyRootModel';
-var MODEL_DESC = 'Read-only root model';
+var CLASS_NAME = 'ReadOnlyChildObjectSync';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 //endregion
 
 /**
- * Factory method to create definitions of asynchronous read-only root models.
+ * Factory method to create definitions of synchronous read-only child objects.
  *
  *    Valid child model types are:
  *
- *      * ReadOnlyChildCollection
- *      * ReadOnlyChildModel
+ *      * ReadOnlyChildCollectionSync
+ *      * ReadOnlyChildObjectSync
  *
- * @function bo.ReadOnlyRootModel
+ * @function bo.ReadOnlyChildObjectSync
  * @param {string} name - The name of the model.
  * @param {bo.shared.PropertyManager} properties - The property definitions.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
  * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
- * @returns {ReadOnlyRootModel} The constructor of an asynchronous read-only root model.
+ * @returns {ReadOnlyChildObjectSync} The constructor of a synchronous read-only child object.
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The properties must be a PropertyManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
- * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
+ * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
  *
  * @throws {@link bo.shared.ModelError Model error}:
- *    The child objects must be ReadOnlyChildCollection or ReadOnlyChildModel instances.
+ *    The child objects must be ReadOnlyChildCollectionSync or ReadOnlyChildObjectSync instances.
  */
-var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
+var ReadOnlyChildObjectSyncFactory = function (name, properties, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
 
   name = check(name).forMandatory('name').asString();
   properties = check(properties).forMandatory('properties').asType(PropertyManager);
   rules = check(rules).forMandatory('rules').asType(RuleManager);
-  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
+  extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
-  // Verify the model type of child models.
+  // Verify the model type of child objects.
   properties.modelName = name;
-  properties.verifyChildTypes([ 'ReadOnlyChildCollection', 'ReadOnlyChildModel' ]);
-
-  // Get data access object.
-  var dao = extensions.getDataAccessObject(name);
+  properties.verifyChildTypes([ 'ReadOnlyChildCollectionSync', 'ReadOnlyChildObjectSync' ]);
 
   /**
    * @classdesc
-   *    Represents the definition of an asynchronous read-only root model.
+   *    Represents the definition of a synchronous read-only child object.
    * @description
-   *    Creates a new asynchronous read-only root model instance.
+   *    Creates a new synchronous read-only child object instance.
    *
    *    _The name of the model type available as:
-   *    __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyRootModel'._
+   *    __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyChildObjectSync'._
    *
-   * @name ReadOnlyRootModel
+   *    Valid parent model types are:
+   *
+   *      * ReadOnlyRootCollectionSync
+   *      * ReadOnlyChildCollectionSync
+   *      * ReadOnlyRootObjectSync
+   *      * ReadOnlyChildObjectSync
+   *      * CommandObjectSync
+   *
+   * @name ReadOnlyChildObjectSync
    * @constructor
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @extends ModelBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The parent object must be a ReadOnlyRootCollectionSync, ReadOnlyChildCollectionSync,
+   *    ReadOnlyRootObjectSync, ReadOnlyChildObjectSync or CommandObjectSync instance.
+   * @throws {@link bo.system.ArgumentError Argument error}:
    *    The event handlers must be an EventHandlerList object or null.
    *
-   * @fires ReadOnlyRootModel#preFetch
-   * @fires ReadOnlyRootModel#postFetch
+   * @fires ReadOnlyChildObjectSync#preFetch
+   * @fires ReadOnlyChildObjectSync#postFetch
    */
-  var ReadOnlyRootModel = function (eventHandlers) {
+  var ReadOnlyChildObjectSync = function (parent, eventHandlers) {
     ModelBase.call(this);
+    var check = Argument.inConstructor(name);
 
-    eventHandlers = Argument.inConstructor(name)
-        .check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
+    // Verify the model type of the parent model.
+    parent = check(parent).for('parent').asModelType([
+      'ReadOnlyRootCollectionSync',
+      'ReadOnlyChildCollectionSync',
+      'ReadOnlyRootObjectSync',
+      'ReadOnlyChildObjectSync',
+      'CommandObjectSync'
+    ]);
+
+    eventHandlers = check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
 
     var self = this;
     var store = new DataStore();
@@ -156,8 +172,9 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
 
     /**
      * Transforms the business object to a plain object to send to the client.
+     * <br/>_This method is usually called by the parent object._
      *
-     * @function ReadOnlyRootModel#toCto
+     * @function ReadOnlyChildObjectSync#toCto
      * @returns {object} The client transfer object.
      */
     this.toCto = function () {
@@ -184,19 +201,19 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
 
     function canBeRead (property) {
       return rules.hasPermission(
-        getAuthorizationContext(AuthorizationAction.readProperty, property.name)
+          getAuthorizationContext(AuthorizationAction.readProperty, property.name)
       );
     }
 
     function canDo (action) {
       return rules.hasPermission(
-        getAuthorizationContext(action)
+          getAuthorizationContext(action)
       );
     }
 
     function canExecute (methodName) {
       return rules.hasPermission(
-        getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
+          getAuthorizationContext(AuthorizationAction.executeMethod, methodName)
       );
     }
 
@@ -204,27 +221,11 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
 
     //region Child methods
 
-    function fetchChildren(dto, callback) {
-      var count = 0;
-      var error = null;
-
-      function finish (err) {
-        error = error || err;
-        // Check if all children are done.
-        if (++count === properties.childCount()) {
-          callback(error);
-        }
-      }
-      if (properties.childCount()) {
-        properties.children().forEach(function(property) {
-          var child = getPropertyValue(property);
-          if (child instanceof ModelBase)
-            child.fetch(dto[property.name], undefined, finish);
-          else
-            child.fetch(dto[property.name], finish);
-        });
-      } else
-        callback(null);
+    function fetchChildren(dto) {
+      properties.children().forEach(function(property) {
+        var child = getPropertyValue(property);
+        child.fetch(dto[property.name]);
+      });
     }
 
     function childrenAreValid() {
@@ -261,12 +262,12 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
 
     //region Helper
 
-    function getDataContext (connection) {
+    function getDataContext () {
       if (!dataContext)
         dataContext = new DataPortalContext(
-          dao, properties.toArray(), getPropertyValue, setPropertyValue
+            null, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setState(connection, false);
+      return dataContext.setState(null, false);
     }
 
     function raiseEvent (event, methodName, error) {
@@ -280,101 +281,52 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
       return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
     }
 
-    function runStatements (main, callback) {
-      // Open connection.
-      config.connectionManager.openConnection(
-          extensions.dataSource, function (errOpen, connection) {
-            if (errOpen)
-              callback(wrapError(errOpen));
-            else
-              main(connection, function (err, result) {
-                // Close connection.
-                config.connectionManager.closeConnection(
-                    extensions.dataSource, connection, function (errClose, connClosed) {
-                      connection = connClosed;
-                      if (err)
-                        callback(wrapError(err));
-                      else if (errClose)
-                        callback(wrapError(errClose));
-                      else
-                        callback(null, result);
-                    });
-              });
-          });
-    }
-
     //endregion
 
     //region Fetch
 
-    function data_fetch (filter, method, callback) {
-      var hasConnection = false;
-      // Helper function for post-fetch actions.
-      function finish (dto, cb) {
-        // Fetch children as well.
-        fetchChildren(dto, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            // Launch finish event.
-            /**
-             * The event arises after the business object instance has been retrieved from the repository.
-             * @event ReadOnlyRootModel#postFetch
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {ReadOnlyRootModel} newObject - The instance of the model after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postFetch, method);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(err);
-          raiseEvent(DataPortalEvent.postFetch, method, dpError);
-        }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        /**
-         * The event arises before the business object instance will be retrieved from the repository.
-         * @event ReadOnlyRootModel#preFetch
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {ReadOnlyRootModel} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preFetch, method);
-        // Execute fetch.
-        if (extensions.dataFetch) {
-          // *** Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(connection), filter, method, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else
-              finish(dto, cb);
-          });
-        } else {
-          // *** Standard fetch.
-          // Root element fetches data from repository.
-          dao.$runMethod(method, connection, filter, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else {
-              fromDto.call(self, dto);
-              finish(dto, cb);
-            }
-          });
-        }
-      }
+    function data_fetch (data, method) {
       // Check permissions.
-      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method))
-        runStatements(main, callback);
-      else
-        callback(null, self);
+      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
+        try {
+          // Launch start event.
+          /**
+           * The event arises before the business object instance will be retrieved from the repository.
+           * @event ReadOnlyChildObjectSync#preFetch
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {ReadOnlyChildObjectSync} oldObject - The instance of the model before the data portal action.
+           */
+          raiseEvent(DataPortalEvent.preFetch, method);
+          // Execute fetch.
+          var dto = null;
+          if (extensions.dataFetch) {
+            // *** Custom fetch.
+            dto = extensions.dataFetch.call(self, getDataContext(), data, method);
+          } else {
+            // *** Standard fetch.
+            // Child element gets data from parent.
+            dto = data;
+            fromDto.call(self, dto);
+          }
+          // Fetch children as well.
+          fetchChildren(dto);
+          // Launch finish event.
+          /**
+           * The event arises after the business object instance has been retrieved from the repository.
+           * @event ReadOnlyChildObjectSync#postFetch
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {ReadOnlyChildObjectSync} newObject - The instance of the model after the data portal action.
+           */
+          raiseEvent(DataPortalEvent.postFetch, method);
+        } catch (e) {
+          // Wrap the intercepted error.
+          var dpError = wrapError(e);
+          // Launch finish event.
+          raiseEvent(DataPortalEvent.postFetch, method, dpError);
+          // Rethrow the original error.
+          throw e;
+        }
+      }
     }
 
     //endregion
@@ -384,31 +336,16 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
     //region Actions
 
     /**
-     * Initializes a business object to be retrieved from the repository.
-     * <br/>_This method is called by a factory method with the same name._
+     * Initializes a business object with data retrieved from the repository.
+     * <br/>_This method is called by the parent object._
      *
-     * @function ReadOnlyRootModel#fetch
+     * @function ReadOnlyChildObjectSync#fetch
      * @protected
-     * @param {*} [filter] - The filter criteria.
-     * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {external.cbDataPortal} callback - Returns the required read-only business object.
-     *
-     * @throws {@link bo.system.ArgumentError Argument error}:
-     *      The method must be a string or null.
-     * @throws {@link bo.system.ArgumentError Argument error}:
-     *      The callback must be a function.
-     * @throws {@link bo.rules.AuthorizationError Authorization error}:
-     *      The user has no permission to execute the action.
-     * @throws {@link bo.shared.DataPortalError Data portal error}:
-     *      Fetching the business object has failed.
+     * @param {object} [data] - The data to load into the business object.
+     * @param {string} [method] - An alternative fetch method to check for permission.
      */
-    this.fetch = function(filter, method, callback) {
-      var check = Argument.inMethod(name, 'fetch');
-
-      method = check(method).forOptional('method').asString();
-      callback = check(callback).forMandatory('callback').asFunction();
-
-      data_fetch(filter, method || M_FETCH, callback);
+    this.fetch = function(data, method) {
+      data_fetch(data, method || M_FETCH);
     };
 
     //endregion
@@ -420,9 +357,12 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
      * the ones of its child objects, succeeds. A valid business object may have
      * broken rules with severity of success, information and warning.
      *
+     * _This method is called by the parent object._
+     *
      * _By default read-only business objects are supposed to be valid._
      *
-     * @function ReadOnlyRootModel#isValid
+     * @function ReadOnlyChildObjectSync#isValid
+     * @protected
      * @returns {boolean} True when the business object is valid, otherwise false.
      */
     this.isValid = function() {
@@ -436,9 +376,12 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
      * Executes all the validation rules of the business object, including the ones
      * of its child objects.
      *
+     * _This method is called by the parent object._
+     *
      * _By default read-only business objects are supposed to be valid._
      *
-     * @function ReadOnlyRootModel#checkRules
+     * @function ReadOnlyChildObjectSync#checkRules
+     * @protected
      */
     this.checkRules = function() {
       brokenRules.clear();
@@ -455,9 +398,12 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
     /**
      * Gets the broken rules of the business object.
      *
+     * _This method is called by the parent object._
+     *
      * _By default read-only business objects are supposed to be valid._
      *
-     * @function ReadOnlyRootModel#getBrokenRules
+     * @function ReadOnlyChildObjectSync#getBrokenRules
+     * @protected
      * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
      * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
      */
@@ -465,21 +411,6 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
       var bro = brokenRules.output(namespace);
       bro = getChildBrokenRules(namespace, bro);
       return bro.$length ? bro : null;
-    };
-
-    /**
-     * Gets the response to send to the client in case of broken rules.
-     *
-     * _By default read-only business objects are supposed to be valid._
-     *
-     * @function ReadOnlyRootModel#getResponse
-     * @param {string} [message] - Human-readable description of the reason of the failure.
-     * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
-     * @returns {bo.rules.BrokenRulesResponse} The broken rules response to send to the client.
-     */
-    this.getResponse = function (message, namespace) {
-      var output = this.getBrokenRules(namespace);
-      return output ? new BrokenRulesResponse(output, message) : null;
     };
 
     //endregion
@@ -492,8 +423,6 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
 
     function setPropertyValue(property, value) {
       store.setValue(property, value);
-      //if (store.setValue(property, value))
-      //  markAsChanged(true);
     }
 
     function readPropertyValue(property) {
@@ -534,9 +463,7 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, eventHandlers, function (err, item) {
-            store.initValue(property, item);
-          });
+          store.initValue(property, property.type.create(self, eventHandlers));
         else                      // Collection
           store.initValue(property, new property.type(self, eventHandlers));
 
@@ -557,63 +484,68 @@ var ReadOnlyRootModelFactory = function (name, properties, rules, extensions) {
     // Immutable object.
     Object.freeze(this);
   };
-  util.inherits(ReadOnlyRootModel, ModelBase);
+  util.inherits(ReadOnlyChildObjectSync, ModelBase);
 
   /**
    * The name of the model type.
    *
-   * @property {string} ReadOnlyRootModel.constructor.modelType
-   * @default ReadOnlyRootModel
+   * @property {string} ReadOnlyChildObjectSync.constructor.modelType
+   * @default ReadOnlyChildObjectSync
    * @readonly
    */
-  Object.defineProperty(ReadOnlyRootModel, 'modelType', {
+
+  Object.defineProperty(ReadOnlyChildObjectSync, 'modelType', {
     get: function () { return CLASS_NAME; }
   });
-
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.
    *
-   * @name ReadOnlyRootModel#$modelName
+   * @name ReadOnlyChildObjectSync#$modelName
    * @type {string}
    * @readonly
    */
-  ReadOnlyRootModel.prototype.$modelName = name;
+  ReadOnlyChildObjectSync.prototype.$modelName = name;
 
   //region Factory methods
 
   /**
-   * Retrieves a read-only business object from the repository.
+   * Creates a new read-only business object instance.
+   * <br/>_This method is called by the parent object._
    *
-   * @function ReadOnlyRootModel.fetch
-   * @param {*} [filter] - The filter criteria.
-   * @param {string} [method] - An alternative fetch method of the data access object.
+   * @function ReadOnlyChildObjectSync.create
+   * @protected
+   * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns the required read-only business object.
+   * @returns {ReadOnlyChildObjectSync} A new read-only business object.
+   */
+  ReadOnlyChildObjectSync.create = function(parent, eventHandlers) {
+    var instance = new ReadOnlyChildObjectSync(parent, eventHandlers);
+    return instance;
+  };
+
+  /**
+   * Initializes a read-only business object width data retrieved from the repository.
+   * <br/>_This method is called by the parent object._
    *
-   * @throws {@link bo.system.ArgumentError Argument error}:
-   *      The method must be a string or null.
-   * @throws {@link bo.system.ArgumentError Argument error}:
-   *      The event handlers must be an EventHandlerList object or null.
-   * @throws {@link bo.system.ArgumentError Argument error}:
-   *      The callback must be a function.
+   * @function ReadOnlyChildObjectSync.load
+   * @protected
+   * @param {object} parent - The parent business object.
+   * @param {object} data - The data to load into the business object.
+   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @returns {ReadOnlyChildObjectSync} The required read-only business object.
+   *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
-   *      Fetching the business object has failed.
    */
-  ReadOnlyRootModel.fetch = function(filter, method, eventHandlers, callback) {
-    var instance = new ReadOnlyRootModel(eventHandlers);
-    instance.fetch(filter, method, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  ReadOnlyChildObjectSync.load = function(parent, data, eventHandlers) {
+    var instance = new ReadOnlyChildObjectSync(parent, eventHandlers);
+    instance.fetch(data);
+    return instance;
   };
 
   //endregion
 
-  return ReadOnlyRootModel;
+  return ReadOnlyChildObjectSync;
 };
 
-module.exports = ReadOnlyRootModelFactory;
+module.exports = ReadOnlyChildObjectSyncFactory;

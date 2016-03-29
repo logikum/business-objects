@@ -71,7 +71,7 @@ function dataFetch (ctx, filter, method) {
 //endregion
 
 var BlanketOrderView = Model('BlanketOrderView')
-    .readOnlyRootModel('sync-dal', __filename)
+    .readOnlyRootObject('sync-dal', __filename)
     // --- Properties
     .integer('orderKey', F.key | F.onDtoOnly)
     .text('orderCode', F.onCtoOnly, getOrderCode)

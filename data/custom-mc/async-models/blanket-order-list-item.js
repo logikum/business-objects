@@ -60,7 +60,7 @@ function dataFetch (ctx, dto, method, callback) {
 //endregion
 
 var BlanketOrderListItem = Model('BlanketOrderListItem')
-    .readOnlyChildModel('async-dal', __filename)
+    .readOnlyChildObject('async-dal', __filename)
     // --- Properties
     .integer('orderKey', F.key | F.onDtoOnly)
     .text('orderCode', F.onCtoOnly, getOrderCode)

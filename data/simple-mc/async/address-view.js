@@ -5,7 +5,7 @@ var Model = bo.ModelComposer;
 var F = bo.shared.PropertyFlag;
 
 var AddressView = Model('AddressView')
-    .readOnlyChildModel('dao', __filename)
+    .readOnlyChildObject('dao', __filename)
     // --- Properties
     .integer('addressKey', F.key)
     .integer('orderKey', F.parentKey)

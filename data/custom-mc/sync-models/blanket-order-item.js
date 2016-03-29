@@ -120,7 +120,7 @@ function dataRemove (ctx) {
 //endregion
 
 var BlanketOrderItem = Model('BlanketOrderItem')
-    .editableChildModel('sync-dal', __filename)
+    .editableChildObject('sync-dal', __filename)
     // --- Properties
     .integer('orderItemKey', F.key | F.readOnly | F.onDtoOnly)
     .text('orderItemCode', F.readOnly | F.onCtoOnly, getItemCode)

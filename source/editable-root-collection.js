@@ -38,11 +38,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *
  *    Valid collection item types are:
  *
- *      * EditableChildModel
+ *      * EditableChildObject
  *
  * @function bo.EditableRootCollection
  * @param {string} name - The name of the collection.
- * @param {EditableChildModel} itemType - The model type of the collection items.
+ * @param {EditableChildObject} itemType - The model type of the collection items.
  * @param {bo.shared.RuleManager} rules - The authorization rules.
  * @param {bo.shared.ExtensionManager} extensions - The customization of the collection.
  * @returns {EditableRootCollection} The constructor of an asynchronous editable root collection.
@@ -50,7 +50,7 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
- * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModel.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildObject.
  */
 var EditableRootCollectionFactory = function (name, itemType, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
@@ -60,10 +60,10 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
   extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
 
   // Verify the model type of the item type.
-  if (itemType.modelType !== 'EditableChildModel')
+  if (itemType.modelType !== 'EditableChildObject')
     throw new ModelError('invalidItem',
         itemType.prototype.name, itemType.modelType,
-        CLASS_NAME, 'EditableChildModel');
+        CLASS_NAME, 'EditableChildObject');
 
   // Get data access object.
   var dao = extensions.getDataAccessObject(name);
@@ -1145,7 +1145,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#at
      * @param {number} index - The index of the required item in the collection.
-     * @returns {EditableChildModel} The required collection item.
+     * @returns {EditableChildObject} The required collection item.
      */
     this.at = function (index) {
       return items[index];
@@ -1189,7 +1189,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#filter
      * @param {external.cbCollectionItem} callback - Function to test for each collection item.
-     * @returns {Array.<EditableChildModel>} The new array of collection items.
+     * @returns {Array.<EditableChildObject>} The new array of collection items.
      */
     this.filter = function (callback) {
       return items.filter(callback);
@@ -1214,7 +1214,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @param {external.cbCompare} [fnCompare] - Function that defines the sort order.
      *      If omitted, the collection is sorted according to each character's Unicode
      *      code point value, according to the string conversion of each item.
-     * @returns {Array.<EditableChildModel>} The sorted collection.
+     * @returns {Array.<EditableChildObject>} The sorted collection.
      */
     this.sort = function (fnCompare) {
       return items.sort(fnCompare);

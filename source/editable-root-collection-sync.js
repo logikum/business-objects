@@ -38,11 +38,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *
  *    Valid collection item types are:
  *
- *      * EditableChildModelSync
+ *      * EditableChildObjectSync
  *
  * @function bo.EditableRootCollectionSync
  * @param {string} name - The name of the collection.
- * @param {EditableChildModelSync} itemType - The model type of the collection items.
+ * @param {EditableChildObjectSync} itemType - The model type of the collection items.
  * @param {bo.shared.RuleManager} rules - The authorization rules.
  * @param {bo.shared.ExtensionManagerSync} extensions - The customization of the collection.
  * @returns {EditableRootCollectionSync} The constructor of a synchronous editable root collection.
@@ -50,7 +50,7 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
- * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModelSync.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildObjectSync.
  */
 var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
@@ -60,10 +60,10 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
   extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
   // Verify the model type of the item type.
-  if (itemType.modelType !== 'EditableChildModelSync')
+  if (itemType.modelType !== 'EditableChildObjectSync')
     throw new ModelError('invalidItem',
         itemType.prototype.name, itemType.modelType,
-        CLASS_NAME, 'EditableChildModelSync');
+        CLASS_NAME, 'EditableChildObjectSync');
 
   // Get data access object.
   var dao = extensions.getDataAccessObject(name);
@@ -768,7 +768,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
      *
      * @function EditableRootCollectionSync#create
      * @param {number} index - The index of the new item.
-     * @returns {EditableChildModelSync} The newly created business object.
+     * @returns {EditableChildObjectSync} The newly created business object.
      */
     this.createItem = function (index) {
       var item = itemType.create(self, eventHandlers);
@@ -941,7 +941,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
      *
      * @function EditableRootCollectionSync#at
      * @param {number} index - The index of the required item in the collection.
-     * @returns {EditableChildModelSync} The required collection item.
+     * @returns {EditableChildObjectSync} The required collection item.
      */
     this.at = function (index) {
       return items[index];
@@ -985,7 +985,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
      *
      * @function EditableRootCollectionSync#filter
      * @param {external.cbCollectionItem} callback - Function to test for each collection item.
-     * @returns {Array.<EditableChildModelSync>} The new array of collection items.
+     * @returns {Array.<EditableChildObjectSync>} The new array of collection items.
      */
     this.filter = function (callback) {
       return items.filter(callback);
@@ -1010,7 +1010,7 @@ var EditableRootCollectionSyncFactory = function (name, itemType, rules, extensi
      * @param {external.cbCompare} [fnCompare] - Function that defines the sort order.
      *      If omitted, the collection is sorted according to each character's Unicode
      *      code point value, according to the string conversion of each item.
-     * @returns {Array.<EditableChildModelSync>} The sorted collection.
+     * @returns {Array.<EditableChildObjectSync>} The sorted collection.
      */
     this.sort = function (fnCompare) {
       return items.sort(fnCompare);

@@ -36,11 +36,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *
  *    Valid collection item types are:
  *
- *      * ReadOnlyChildModelSync
+ *      * ReadOnlyChildObjectSync
  *
  * @function bo.ReadOnlyRootCollectionSync
  * @param {string} name - The name of the collection.
- * @param {ReadOnlyChildModelSync} itemType - The model type of the collection items.
+ * @param {ReadOnlyChildObjectSync} itemType - The model type of the collection items.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
  * @param {bo.shared.ExtensionManagerSync} extensions - The customization of the collection.
  * @returns {ReadOnlyRootCollectionSync} The constructor of a synchronous read-only root collection.
@@ -48,7 +48,7 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
- * @throws {@link bo.shared.ModelError Model error}: The item type must be a ReadOnlyChildModelSync.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be a ReadOnlyChildObjectSync.
  */
 var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
@@ -58,10 +58,10 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
   extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
   // Verify the model type of the item type.
-  if (itemType.modelType !== 'ReadOnlyChildModelSync')
+  if (itemType.modelType !== 'ReadOnlyChildObjectSync')
     throw new ModelError('invalidItem',
         itemType.prototype.name, itemType.modelType,
-        CLASS_NAME, 'ReadOnlyChildModelSync');
+        CLASS_NAME, 'ReadOnlyChildObjectSync');
 
   // Get data access object.
   var dao = extensions.getDataAccessObject(name);
@@ -392,7 +392,7 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
      *
      * @function ReadOnlyRootCollectionSync#at
      * @param {number} index - The index of the required item in the collection.
-     * @returns {ReadOnlyChildModelSync} The required collection item.
+     * @returns {ReadOnlyChildObjectSync} The required collection item.
      */
     this.at = function (index) {
       return items[index];
@@ -436,7 +436,7 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
      *
      * @function ReadOnlyRootCollectionSync#filter
      * @param {external.cbCollectionItem} callback - Function to test for each collection item.
-     * @returns {Array.<ReadOnlyChildModelSync>} The new array of collection items.
+     * @returns {Array.<ReadOnlyChildObjectSync>} The new array of collection items.
      */
     this.filter = function (callback) {
       return items.filter(callback);
@@ -461,7 +461,7 @@ var ReadOnlyRootCollectionSyncFactory = function (name, itemType, rules, extensi
      * @param {external.cbCompare} [fnCompare] - Function that defines the sort order.
      *      If omitted, the collection is sorted according to each character's Unicode
      *      code point value, according to the string conversion of each item.
-     * @returns {Array.<ReadOnlyChildModelSync>} The sorted collection.
+     * @returns {Array.<ReadOnlyChildObjectSync>} The sorted collection.
      */
     this.sort = function (fnCompare) {
       return items.sort(fnCompare);

@@ -23,7 +23,7 @@ function DataStore () {
    * Initializes the value of a property in the store.
    *
    * @param {bo.shared.PropertyInfo} property - The definition of the model property.
-   * @param {*} value - The default value of the property (null or a child model).
+   * @param {*} value - The default value of the property (null or a child object).
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
    * @throws {@link bo.system.ArgumentError Argument error}: The value must be null, a model or a collection.

@@ -18,7 +18,7 @@ function dataFetch (ctx, dto, method, callback) {
 //endregion
 
 var RescheduleShippingResult = Model('RescheduleShippingResult')
-    .readOnlyChildModel('async-dal', __filename)
+    .readOnlyChildObject('async-dal', __filename)
     // --- Properties
     .integer('quantity')
         .required()

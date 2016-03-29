@@ -17,15 +17,15 @@ var CLASS_NAME = 'ReadOnlyChildCollection';
  *
  *    Valid collection item types are:
  *
- *      * ReadOnlyChildModel
+ *      * ReadOnlyChildObject
  *
  * @function bo.ReadOnlyChildCollection
  * @param {string} name - The name of the collection.
- * @param {ReadOnlyChildModel} itemType - The model type of the collection items.
+ * @param {ReadOnlyChildObject} itemType - The model type of the collection items.
  * @returns {ReadOnlyChildCollection} The constructor of an asynchronous read-only child collection.
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
- * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModel.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildObject.
  */
 var ReadOnlyChildCollectionFactory = function (name, itemType) {
 
@@ -35,10 +35,10 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
   // Check tree reference.
   if (typeof itemType !== 'string') {
     // Verify the model type of the item type.
-    if (itemType.modelType !== 'ReadOnlyChildModel')
+    if (itemType.modelType !== 'ReadOnlyChildObject')
       throw new ModelError('invalidItem',
           itemType.prototype.name, itemType.modelType,
-          CLASS_NAME, 'ReadOnlyChildModel');
+          CLASS_NAME, 'ReadOnlyChildObject');
   }
 
   /**
@@ -52,8 +52,8 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
    *
    *    Valid parent model types are:
    *
-   *      * ReadOnlyRootModel
-   *      * ReadOnlyChildModel
+   *      * ReadOnlyRootObject
+   *      * ReadOnlyChildObject
    *      * CommandObject
    *
    * @name ReadOnlyChildCollection
@@ -64,7 +64,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
    * @extends CollectionBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
-   *    The parent object must be an ReadOnlyRootModel, ReadOnlyChildModel
+   *    The parent object must be an ReadOnlyRootObject, ReadOnlyChildObject
    *    or CommandObject instance.
    */
   var ReadOnlyChildCollection = function (parent, eventHandlers) {
@@ -72,8 +72,8 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
 
     // Verify the model type of the parent model.
     parent = Argument.inConstructor(name).check(parent).for('parent').asModelType([
-      'ReadOnlyRootModel',
-      'ReadOnlyChildModel',
+      'ReadOnlyRootObject',
+      'ReadOnlyChildObject',
       'CommandObject'
     ]);
 
@@ -220,7 +220,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      *
      * @function ReadOnlyChildCollection#at
      * @param {number} index - The index of the required item in the collection.
-     * @returns {ReadOnlyChildModel} The required collection item.
+     * @returns {ReadOnlyChildObject} The required collection item.
      */
     this.at = function (index) {
       return items[index];
@@ -264,7 +264,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      *
      * @function ReadOnlyChildCollection#filter
      * @param {external.cbCollectionItem} callback - Function to test for each collection item.
-     * @returns {Array.<ReadOnlyChildModel>} The new array of collection items.
+     * @returns {Array.<ReadOnlyChildObject>} The new array of collection items.
      */
     this.filter = function (callback) {
       return items.filter(callback);

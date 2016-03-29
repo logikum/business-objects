@@ -7,7 +7,7 @@ var bo = require('../../../source/index.js');
 var F = bo.shared.PropertyFlag;
 
 var BlanketOrderListItem = Model('BlanketOrderListItem')
-    .readOnlyChildModel('dao', __filename)
+    .readOnlyChildObject('dao', __filename)
     // --- Properties
     .integer('orderKey', F.key)
     .text('vendorName')

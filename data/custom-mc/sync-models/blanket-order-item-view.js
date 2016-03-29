@@ -56,7 +56,7 @@ function dataFetch (ctx, dto, method) {
 //endregion
 
 var BlanketOrderItemView = Model('BlanketOrderItemView')
-    .readOnlyChildModel('sync-dal', __filename)
+    .readOnlyChildObject('sync-dal', __filename)
     // --- Properties
     .integer('orderItemKey', F.key | F.onDtoOnly)
     .text('orderItemCode', F.onCtoOnly, getItemCode)

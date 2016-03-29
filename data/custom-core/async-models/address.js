@@ -184,6 +184,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var Address = bo.EditableChildModel('Address', properties, rules, extensions);
+var Address = bo.EditableChildObject('Address', properties, rules, extensions);
 
 module.exports = Address;

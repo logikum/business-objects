@@ -126,7 +126,7 @@ function dataRemove (ctx) {
 //endregion
 
 var Address = Model('Address')
-    .editableChildModel('sync-dal', __filename)
+    .editableChildObject('sync-dal', __filename)
     // --- Properties
     .integer('addressKey', F.key | F.readOnly | F.onDtoOnly)
     .text('addressCode', F.readOnly | F.onCtoOnly, getAddressCode)

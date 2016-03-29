@@ -45,7 +45,7 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  *
  *    Valid child model types are:
  *
- *      * ReadOnlyChildModel
+ *      * ReadOnlyChildObject
  *      * ReadOnlyChildCollection
  *
  * @function bo.CommandObject
@@ -61,7 +61,7 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
  *
  * @throws {@link bo.shared.ModelError Model error}:
- *    The child objects must be ReadOnlyChildModel or ReadOnlyChildCollection instances.
+ *    The child objects must be ReadOnlyChildObject or ReadOnlyChildCollection instances.
  */
 var CommandObjectFactory = function (name, properties, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
@@ -71,9 +71,9 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
   rules = check(rules).forMandatory('rules').asType(RuleManager);
   extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
 
-  // Verify the model types of child models.
+  // Verify the model types of child objects.
   properties.modelName = name;
-  properties.verifyChildTypes([ 'ReadOnlyChildModel', 'ReadOnlyChildCollection' ]);
+  properties.verifyChildTypes([ 'ReadOnlyChildObject', 'ReadOnlyChildCollection' ]);
 
   // Get data access object.
   var dao = extensions.getDataAccessObject(name);

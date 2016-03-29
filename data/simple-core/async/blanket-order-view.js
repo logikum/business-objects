@@ -46,7 +46,7 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderView = bo.ReadOnlyRootModel('BlanketOrderView', properties, rules, extensions);
+var BlanketOrderView = bo.ReadOnlyRootObject('BlanketOrderView', properties, rules, extensions);
 
 var BlanketOrderViewFactory = {
   get: function (key, eventHandlers, callback) {

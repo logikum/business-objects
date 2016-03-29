@@ -69,7 +69,7 @@ function dataFetch (ctx, filter, method, callback) {
 //endregion
 
 var BlanketOrderView = Model('BlanketOrderView')
-    .readOnlyRootModel('async-dal', __filename)
+    .readOnlyRootObject('async-dal', __filename)
     // --- Properties
     .integer('orderKey', F.key)
     .text('vendorName')

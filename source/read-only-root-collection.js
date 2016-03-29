@@ -36,11 +36,11 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  *
  *    Valid collection item types are:
  *
- *      * ReadOnlyChildModel
+ *      * ReadOnlyChildObject
  *
  * @function bo.ReadOnlyRootCollection
  * @param {string} name - The name of the collection.
- * @param {ReadOnlyChildModel} itemType - The model type of the collection items.
+ * @param {ReadOnlyChildObject} itemType - The model type of the collection items.
  * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
  * @param {bo.shared.ExtensionManager} extensions - The customization of the collection.
  * @returns {ReadOnlyRootCollection} The constructor of an asynchronous read-only root collection.
@@ -48,7 +48,7 @@ var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
  * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
- * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildModel.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildObject.
  */
 var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
@@ -58,10 +58,10 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
   extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
 
   // Verify the model type of the item type.
-  if (itemType.modelType !== 'ReadOnlyChildModel')
+  if (itemType.modelType !== 'ReadOnlyChildObject')
     throw new ModelError('invalidItem',
         itemType.prototype.name, itemType.modelType,
-        CLASS_NAME, 'ReadOnlyChildModel');
+        CLASS_NAME, 'ReadOnlyChildObject');
 
   // Get data access object.
   var dao = extensions.getDataAccessObject(name);
@@ -449,7 +449,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function ReadOnlyRootCollection#at
      * @param {number} index - The index of the required item in the collection.
-     * @returns {ReadOnlyChildModel} The required collection item.
+     * @returns {ReadOnlyChildObject} The required collection item.
      */
     this.at = function (index) {
       return items[index];
@@ -493,7 +493,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function ReadOnlyRootCollection#filter
      * @param {external.cbCollectionItem} callback - Function to test for each collection item.
-     * @returns {Array.<ReadOnlyChildModel>} The new array of collection items.
+     * @returns {Array.<ReadOnlyChildObject>} The new array of collection items.
      */
     this.filter = function (callback) {
       return items.filter(callback);

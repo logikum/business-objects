@@ -118,7 +118,7 @@ function dataRemove (ctx) {
 //endregion
 
 var BlanketOrderSchedule = Model('BlanketOrderSchedule')
-    .editableChildModel('sync-dal', __filename)
+    .editableChildObject('sync-dal', __filename)
     // --- Properties
     .integer('orderScheduleKey', F.key | F.readOnly | F.onDtoOnly)
     .text('orderScheduleCode', F.readOnly | F.onCtoOnly, getScheduleCode)

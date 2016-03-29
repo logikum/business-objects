@@ -133,7 +133,7 @@ function dataRemove (ctx, callback) {
 //endregion
 
 var BlanketOrderSchedule = Model('BlanketOrderSchedule')
-    .editableChildModel('async-dal', __filename)
+    .editableChildObject('async-dal', __filename)
     // --- Properties
     .integer('orderScheduleKey', F.key | F.readOnly)
     .integer('orderItemKey', F.parentKey | F.readOnly)

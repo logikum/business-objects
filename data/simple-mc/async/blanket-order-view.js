@@ -9,7 +9,7 @@ var AddressView = require('./address-view.js');
 var BlanketOrderItemsView = require('./blanket-order-items-view.js');
 
 var BlanketOrderView = Model('BlanketOrderView')
-    .readOnlyRootModel('dao', __filename)
+    .readOnlyRootObject('dao', __filename)
     // --- Properties
     .integer('orderKey', F.key)
     .text('vendorName')

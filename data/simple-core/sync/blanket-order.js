@@ -52,7 +52,7 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrder = bo.EditableRootModelSync('BlanketOrder', properties, rules, extensions);
+var BlanketOrder = bo.EditableRootObjectSync('BlanketOrder', properties, rules, extensions);
 
 var BlanketOrderFactory = {
   create: function (eventHandlers) {

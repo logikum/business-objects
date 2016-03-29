@@ -35,6 +35,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderListItem = bo.ReadOnlyChildModelSync('BlanketOrderListItem', properties, rules, extensions);
+var BlanketOrderListItem = bo.ReadOnlyChildObjectSync('BlanketOrderListItem', properties, rules, extensions);
 
 module.exports = BlanketOrderListItem;

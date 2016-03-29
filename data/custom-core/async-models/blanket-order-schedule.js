@@ -176,6 +176,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var BlanketOrderSchedule = bo.EditableChildModel('BlanketOrderSchedule', properties, rules, extensions);
+var BlanketOrderSchedule = bo.EditableChildObject('BlanketOrderSchedule', properties, rules, extensions);
 
 module.exports = BlanketOrderSchedule;

@@ -52,6 +52,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderChild = bo.EditableChildModelSync('BlanketOrderChild', properties, rules, extensions);
+var BlanketOrderChild = bo.EditableChildObjectSync('BlanketOrderChild', properties, rules, extensions);
 
 module.exports = BlanketOrderChild;

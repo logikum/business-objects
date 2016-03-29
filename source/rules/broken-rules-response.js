@@ -16,7 +16,7 @@ var BrokenRulesOutput = require('./broken-rules-output.js');
  *      is an array. The array elements are objects with a message and a
  *      severity property, that represent the broken rules.
  *
- *      If the model property is a child model, then the output property
+ *      If the model property is a child object, then the output property
  *      is an object as well, whose properties represents model properties
  *      with broken rules, as described above.
  *

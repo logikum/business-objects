@@ -50,6 +50,6 @@ var extensions = new Extensions('async-dal', __filename);
 extensions.daoBuilder = daoBuilder;
 extensions.dataFetch = dataFetch;
 
-var RescheduleShippingResult = bo.ReadOnlyChildModel('RescheduleShippingResult', properties, rules, extensions);
+var RescheduleShippingResult = bo.ReadOnlyChildObject('RescheduleShippingResult', properties, rules, extensions);
 
 module.exports = RescheduleShippingResult;

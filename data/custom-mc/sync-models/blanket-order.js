@@ -138,7 +138,7 @@ function dataRemove (ctx) {
 //endregion
 
 var BlanketOrder = Model('BlanketOrder')
-    .editableRootModel('sync-dal', __filename)
+    .editableRootObject('sync-dal', __filename)
     // --- Properties
     .integer('orderKey', F.key | F.readOnly | F.onDtoOnly)
     .text('orderCode', F.readOnly | F.onCtoOnly, getOrderCode)

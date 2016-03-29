@@ -45,7 +45,7 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  *
  *    Valid child model types are:
  *
- *      * ReadOnlyChildModelSync
+ *      * ReadOnlyChildObjectSync
  *      * ReadOnlyChildCollectionSync
  *
  * @function bo.CommandObjectSync
@@ -61,7 +61,7 @@ var M_EXECUTE = DataPortalAction.getName(DataPortalAction.execute);
  * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManagerSync object.
  *
  * @throws {@link bo.shared.ModelError Model error}:
- *    The child objects must be ReadOnlyChildModelSync or ReadOnlyChildCollectionSync instances.
+ *    The child objects must be ReadOnlyChildObjectSync or ReadOnlyChildCollectionSync instances.
  */
 var CommandObjectSyncFactory = function (name, properties, rules, extensions) {
   var check = Argument.inConstructor(CLASS_NAME);
@@ -71,9 +71,9 @@ var CommandObjectSyncFactory = function (name, properties, rules, extensions) {
   rules = check(rules).forMandatory('rules').asType(RuleManager);
   extensions = check(extensions).forMandatory('extensions').asType(ExtensionManagerSync);
 
-  // Verify the model types of child models.
+  // Verify the model types of child objects.
   properties.modelName = name;
-  properties.verifyChildTypes([ 'ReadOnlyChildModelSync', 'ReadOnlyChildCollectionSync' ]);
+  properties.verifyChildTypes([ 'ReadOnlyChildObjectSync', 'ReadOnlyChildCollectionSync' ]);
 
   // Get data access object.
   var dao = extensions.getDataAccessObject(name);

@@ -5,22 +5,22 @@
 var ModelComposer = require('./model-composer.js');
 var ModelComposerSync = require('./model-composer-sync.js');
 
-var EditableRootModel = require('./editable-root-model.js');
-var EditableChildModel = require('./editable-child-model.js');
+var EditableRootObject = require('./editable-root-object.js');
+var EditableChildObject = require('./editable-child-object.js');
 var EditableRootCollection = require('./editable-root-collection.js');
 var EditableChildCollection = require('./editable-child-collection.js');
-var ReadOnlyRootModel = require('./read-only-root-model.js');
-var ReadOnlyChildModel = require('./read-only-child-model.js');
+var ReadOnlyRootObject = require('./read-only-root-object.js');
+var ReadOnlyChildObject = require('./read-only-child-object.js');
 var ReadOnlyRootCollection = require('./read-only-root-collection.js');
 var ReadOnlyChildCollection = require('./read-only-child-collection.js');
 var CommandObject = require('./command-object.js');
 
-var EditableRootModelSync = require('./editable-root-model-sync.js');
-var EditableChildModelSync = require('./editable-child-model-sync.js');
+var EditableRootObjectSync = require('./editable-root-object-sync.js');
+var EditableChildObjectSync = require('./editable-child-object-sync.js');
 var EditableRootCollectionSync = require('./editable-root-collection-sync.js');
 var EditableChildCollectionSync = require('./editable-child-collection-sync.js');
-var ReadOnlyRootModelSync = require('./read-only-root-model-sync.js');
-var ReadOnlyChildModelSync = require('./read-only-child-model-sync.js');
+var ReadOnlyRootObjectSync = require('./read-only-root-object-sync.js');
+var ReadOnlyChildObjectSync = require('./read-only-child-object-sync.js');
 var ReadOnlyRootCollectionSync = require('./read-only-root-collection-sync.js');
 var ReadOnlyChildCollectionSync = require('./read-only-child-collection-sync.js');
 var CommandObjectSync = require('./command-object-sync.js');
@@ -67,22 +67,22 @@ var index = {
   //ModelBase: ModelBase,
   //CollectionBase: CollectionBase,
 
-  EditableRootModel: EditableRootModel,
-  EditableChildModel: EditableChildModel,
+  EditableRootObject: EditableRootObject,
+  EditableChildObject: EditableChildObject,
   EditableRootCollection: EditableRootCollection,
   EditableChildCollection: EditableChildCollection,
-  ReadOnlyRootModel: ReadOnlyRootModel,
-  ReadOnlyChildModel: ReadOnlyChildModel,
+  ReadOnlyRootObject: ReadOnlyRootObject,
+  ReadOnlyChildObject: ReadOnlyChildObject,
   ReadOnlyRootCollection: ReadOnlyRootCollection,
   ReadOnlyChildCollection: ReadOnlyChildCollection,
   CommandObject: CommandObject,
 
-  EditableRootModelSync: EditableRootModelSync,
-  EditableChildModelSync: EditableChildModelSync,
+  EditableRootObjectSync: EditableRootObjectSync,
+  EditableChildObjectSync: EditableChildObjectSync,
   EditableRootCollectionSync: EditableRootCollectionSync,
   EditableChildCollectionSync: EditableChildCollectionSync,
-  ReadOnlyRootModelSync: ReadOnlyRootModelSync,
-  ReadOnlyChildModelSync: ReadOnlyChildModelSync,
+  ReadOnlyRootObjectSync: ReadOnlyRootObjectSync,
+  ReadOnlyChildObjectSync: ReadOnlyChildObjectSync,
   ReadOnlyRootCollectionSync: ReadOnlyRootCollectionSync,
   ReadOnlyChildCollectionSync: ReadOnlyChildCollectionSync,
   CommandObjectSync: CommandObjectSync,

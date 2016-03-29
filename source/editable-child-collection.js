@@ -18,15 +18,15 @@ var CLASS_NAME = 'EditableChildCollection';
  *
  *    Valid collection item types are:
  *
- *      * EditableChildModel
+ *      * EditableChildObject
  *
  * @function bo.EditableChildCollection
  * @param {string} name - The name of the collection.
- * @param {EditableChildModel} itemType - The model type of the collection items.
+ * @param {EditableChildObject} itemType - The model type of the collection items.
  * @returns {EditableChildCollection} The constructor of an asynchronous editable child collection.
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
- * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModel.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildObject.
  */
 var EditableChildCollectionFactory = function (name, itemType) {
 
@@ -36,10 +36,10 @@ var EditableChildCollectionFactory = function (name, itemType) {
   // Check tree reference.
   if (typeof itemType !== 'string') {
     // Verify the model type of the item type.
-    if (itemType.modelType !== 'EditableChildModel')
+    if (itemType.modelType !== 'EditableChildObject')
       throw new ModelError('invalidItem',
           itemType.prototype.name, itemType.modelType,
-          CLASS_NAME, 'EditableChildModel');
+          CLASS_NAME, 'EditableChildObject');
   }
 
   /**
@@ -53,8 +53,8 @@ var EditableChildCollectionFactory = function (name, itemType) {
    *
    *    Valid parent model types are:
    *
-   *      * EditableRootModel
-   *      * EditableChildModel
+   *      * EditableRootObject
+   *      * EditableChildObject
    *
    * @name EditableChildCollection
    * @constructor
@@ -64,15 +64,15 @@ var EditableChildCollectionFactory = function (name, itemType) {
    * @extends CollectionBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
-   *    The parent object must be an EditableRootModel or EditableChildModel instance.
+   *    The parent object must be an EditableRootObject or EditableChildObject instance.
    */
   var EditableChildCollection = function (parent, eventHandlers) {
     CollectionBase.call(this);
 
     // Verify the model type of the parent model.
     parent = Argument.inConstructor(name).check(parent).for('parent').asModelType([
-      'EditableRootModel',
-      'EditableChildModel'
+      'EditableRootObject',
+      'EditableChildObject'
     ]);
 
     // Resolve tree reference.
@@ -366,7 +366,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#at
      * @param {number} index - The index of the required item in the collection.
-     * @returns {EditableChildModel} The required collection item.
+     * @returns {EditableChildObject} The required collection item.
      */
     this.at = function (index) {
       return items[index];
@@ -410,7 +410,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#filter
      * @param {external.cbCollectionItem} callback - Function to test for each collection item.
-     * @returns {Array.<EditableChildModel>} The new array of collection items.
+     * @returns {Array.<EditableChildObject>} The new array of collection items.
      */
     this.filter = function (callback) {
       return items.filter(callback);

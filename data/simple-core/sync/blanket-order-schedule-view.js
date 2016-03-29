@@ -33,6 +33,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var BlanketOrderScheduleView = bo.ReadOnlyChildModelSync('BlanketOrderScheduleView', properties, rules, extensions);
+var BlanketOrderScheduleView = bo.ReadOnlyChildObjectSync('BlanketOrderScheduleView', properties, rules, extensions);
 
 module.exports = BlanketOrderScheduleView;

@@ -5,7 +5,7 @@ var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
 
 var Address = Model('Address')
-    .editableChildModel('dao', __filename)
+    .editableChildObject('dao', __filename)
     // --- Properties
     .integer('addressKey', F.key | F.readOnly)
     .integer('orderKey', F.parentKey | F.readOnly)

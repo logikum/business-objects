@@ -168,6 +168,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var Address = bo.EditableChildModelSync('Address', properties, rules, extensions);
+var Address = bo.EditableChildObjectSync('Address', properties, rules, extensions);
 
 module.exports = Address;

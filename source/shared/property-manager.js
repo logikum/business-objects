@@ -204,7 +204,7 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
   }
 
   /**
-   * Gets the child models and collections of the current model.
+   * Gets the child objects and collections of the current model.
    *
    * @returns {Array.<bo.shared.PropertyInfo>} - The array of the child properties.
    */
@@ -214,7 +214,7 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
   };
 
   /**
-   * Gets the count of the child models and collections of the current model.
+   * Gets the count of the child objects and collections of the current model.
    *
    * @returns {Number} The count of the child properties.
    */
@@ -224,9 +224,9 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
   };
 
   /**
-   * Verifies the model types of child models and freezes properties of the model.
+   * Verifies the model types of child objects and freezes properties of the model.
    *
-   * @param {Array.<string>} allowedTypes - The names of the model types of the allowed child models.
+   * @param {Array.<string>} allowedTypes - The names of the model types of the allowed child objects.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The allowed types must be
    *      an array of string values or a single string value.

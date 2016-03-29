@@ -39,6 +39,6 @@ var rules = new Rules(
 
 var extensions = new Extensions('dao', __filename);
 
-var Address = bo.EditableChildModel('Address', properties, rules, extensions);
+var Address = bo.EditableChildObject('Address', properties, rules, extensions);
 
 module.exports = Address;

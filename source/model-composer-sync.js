@@ -2,12 +2,12 @@
 
 //region Imports
 
-var EditableRootModelSync = require('./editable-root-model-sync.js');
-var EditableChildModelSync = require('./editable-child-model-sync.js');
+var EditableRootObjectSync = require('./editable-root-object-sync.js');
+var EditableChildObjectSync = require('./editable-child-object-sync.js');
 var EditableRootCollectionSync = require('./editable-root-collection-sync.js');
 var EditableChildCollectionSync = require('./editable-child-collection-sync.js');
-var ReadOnlyRootModelSync = require('./read-only-root-model-sync.js');
-var ReadOnlyChildModelSync = require('./read-only-child-model-sync.js');
+var ReadOnlyRootObjectSync = require('./read-only-root-object-sync.js');
+var ReadOnlyChildObjectSync = require('./read-only-child-object-sync.js');
 var ReadOnlyRootCollectionSync = require('./read-only-root-collection-sync.js');
 var ReadOnlyChildCollectionSync = require('./read-only-child-collection-sync.js');
 var CommandObjectSync = require('./command-object-sync.js');
@@ -47,26 +47,26 @@ function ModelComposerSync (modelName) {
 
   //region Model types
 
-  this.editableRootModel = function (dataSource, modelPath) {
-    modelType = EditableRootModelSync;
+  this.editableRootObject = function (dataSource, modelPath) {
+    modelType = EditableRootObjectSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
-  this.editableChildModel = function (dataSource, modelPath) {
-    modelType = EditableChildModelSync;
+  this.editableChildObject = function (dataSource, modelPath) {
+    modelType = EditableChildObjectSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
-  this.readOnlyRootModel = function (dataSource, modelPath) {
-    modelType = ReadOnlyRootModelSync;
+  this.readOnlyRootObject = function (dataSource, modelPath) {
+    modelType = ReadOnlyRootObjectSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
-  this.readOnlyChildModel = function (dataSource, modelPath) {
-    modelType = ReadOnlyChildModelSync;
+  this.readOnlyChildObject = function (dataSource, modelPath) {
+    modelType = ReadOnlyChildObjectSync;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };

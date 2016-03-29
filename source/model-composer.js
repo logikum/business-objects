@@ -2,12 +2,12 @@
 
 //region Imports
 
-var EditableRootModel = require('./editable-root-model.js');
-var EditableChildModel = require('./editable-child-model.js');
+var EditableRootObject = require('./editable-root-object.js');
+var EditableChildObject = require('./editable-child-object.js');
 var EditableRootCollection = require('./editable-root-collection.js');
 var EditableChildCollection = require('./editable-child-collection.js');
-var ReadOnlyRootModel = require('./read-only-root-model.js');
-var ReadOnlyChildModel = require('./read-only-child-model.js');
+var ReadOnlyRootObject = require('./read-only-root-object.js');
+var ReadOnlyChildObject = require('./read-only-child-object.js');
 var ReadOnlyRootCollection = require('./read-only-root-collection.js');
 var ReadOnlyChildCollection = require('./read-only-child-collection.js');
 var CommandObject = require('./command-object.js');
@@ -47,26 +47,26 @@ function ModelComposer (modelName) {
 
   //region Model types
 
-  this.editableRootModel = function (dataSource, modelPath) {
-    modelType = EditableRootModel;
+  this.editableRootObject = function (dataSource, modelPath) {
+    modelType = EditableRootObject;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
-  this.editableChildModel = function (dataSource, modelPath) {
-    modelType = EditableChildModel;
+  this.editableChildObject = function (dataSource, modelPath) {
+    modelType = EditableChildObject;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
-  this.readOnlyRootModel = function (dataSource, modelPath) {
-    modelType = ReadOnlyRootModel;
+  this.readOnlyRootObject = function (dataSource, modelPath) {
+    modelType = ReadOnlyRootObject;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };
 
-  this.readOnlyChildModel = function (dataSource, modelPath) {
-    modelType = ReadOnlyChildModel;
+  this.readOnlyChildObject = function (dataSource, modelPath) {
+    modelType = ReadOnlyChildObject;
     argsType = ArgsType.businessObject;
     return initialize(dataSource, modelPath);
   };

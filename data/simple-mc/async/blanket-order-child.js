@@ -9,7 +9,7 @@ var Address = require('./address.js');
 var BlanketOrderItems = require('./blanket-order-items.js');
 
 var BlanketOrderChild = Model('BlanketOrderChild')
-    .editableChildModel('dao', __filename)
+    .editableChildObject('dao', __filename)
     // --- Properties
     .integer('orderKey', F.key | F.readOnly)
     .text('vendorName')

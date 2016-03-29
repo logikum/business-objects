@@ -6,20 +6,20 @@ describe('Business object index', function() {
 
   it('returns correct data types', function() {
 
-    expect(bo.EditableRootModel).toEqual(jasmine.any(Function));
-    expect(bo.EditableChildModel).toEqual(jasmine.any(Function));
+    expect(bo.EditableRootObject).toEqual(jasmine.any(Function));
+    expect(bo.EditableChildObject).toEqual(jasmine.any(Function));
     expect(bo.EditableChildCollection).toEqual(jasmine.any(Function));
-    expect(bo.ReadOnlyRootModel).toEqual(jasmine.any(Function));
-    expect(bo.ReadOnlyChildModel).toEqual(jasmine.any(Function));
+    expect(bo.ReadOnlyRootObject).toEqual(jasmine.any(Function));
+    expect(bo.ReadOnlyChildObject).toEqual(jasmine.any(Function));
     expect(bo.ReadOnlyRootCollection).toEqual(jasmine.any(Function));
     expect(bo.ReadOnlyChildCollection).toEqual(jasmine.any(Function));
     expect(bo.CommandObject).toEqual(jasmine.any(Function));
 
-    expect(bo.EditableRootModelSync).toEqual(jasmine.any(Function));
-    expect(bo.EditableChildModelSync).toEqual(jasmine.any(Function));
+    expect(bo.EditableRootObjectSync).toEqual(jasmine.any(Function));
+    expect(bo.EditableChildObjectSync).toEqual(jasmine.any(Function));
     expect(bo.EditableChildCollectionSync).toEqual(jasmine.any(Function));
-    expect(bo.ReadOnlyRootModelSync).toEqual(jasmine.any(Function));
-    expect(bo.ReadOnlyChildModelSync).toEqual(jasmine.any(Function));
+    expect(bo.ReadOnlyRootObjectSync).toEqual(jasmine.any(Function));
+    expect(bo.ReadOnlyChildObjectSync).toEqual(jasmine.any(Function));
     expect(bo.ReadOnlyRootCollectionSync).toEqual(jasmine.any(Function));
     expect(bo.ReadOnlyChildCollectionSync).toEqual(jasmine.any(Function));
     expect(bo.CommandObjectSync).toEqual(jasmine.any(Function));

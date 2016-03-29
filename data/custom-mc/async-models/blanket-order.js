@@ -158,7 +158,7 @@ function dataRemove (ctx, callback) {
 //endregion
 
 var BlanketOrder = Model('BlanketOrder')
-    .editableRootModel('async-dal', __filename)
+    .editableRootObject('async-dal', __filename)
     // --- Properties
     .integer('orderKey', F.key | F.readOnly)
     .text('vendorName')

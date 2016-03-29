@@ -189,7 +189,7 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var BlanketOrder = bo.EditableRootModelSync('BlanketOrder', properties, rules, extensions);
+var BlanketOrder = bo.EditableRootObjectSync('BlanketOrder', properties, rules, extensions);
 
 var BlanketOrderFactory = {
   create: function (eventHandlers) {

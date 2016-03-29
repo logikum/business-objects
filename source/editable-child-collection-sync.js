@@ -18,15 +18,15 @@ var CLASS_NAME = 'EditableChildCollectionSync';
  *
  *    Valid collection item types are:
  *
- *      * EditableChildModelSync
+ *      * EditableChildObjectSync
  *
  * @function bo.EditableChildCollectionSync
  * @param {string} name - The name of the collection.
- * @param {EditableChildModelSync} itemType - The model type of the collection items.
+ * @param {EditableChildObjectSync} itemType - The model type of the collection items.
  * @returns {EditableChildCollectionSync} The constructor of a synchronous editable child collection.
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
- * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildModelSync.
+ * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildObjectSync.
  */
 var EditableChildCollectionSyncFactory = function (name, itemType) {
 
@@ -36,10 +36,10 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
   // Check tree reference.
   if (typeof itemType !== 'string') {
     // Verify the model type of the item type.
-    if (itemType.modelType !== 'EditableChildModelSync')
+    if (itemType.modelType !== 'EditableChildObjectSync')
       throw new ModelError('invalidItem',
           itemType.prototype.name, itemType.modelType,
-          CLASS_NAME, 'EditableChildModelSync');
+          CLASS_NAME, 'EditableChildObjectSync');
   }
 
   /**
@@ -53,8 +53,8 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
    *
    *    Valid parent model types are:
    *
-   *      * EditableRootModelSync
-   *      * EditableChildModelSync
+   *      * EditableRootObjectSync
+   *      * EditableChildObjectSync
    *
    * @name EditableChildCollectionSync
    * @constructor
@@ -64,15 +64,15 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
    * @extends CollectionBase
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
-   *    The parent object must be an EditableRootModelSync or EditableChildModelSync instance.
+   *    The parent object must be an EditableRootObjectSync or EditableChildObjectSync instance.
    */
   var EditableChildCollectionSync = function (parent, eventHandlers) {
     CollectionBase.call(this);
 
     // Verify the model type of the parent model.
     parent = Argument.inConstructor(name).check(parent).for('parent').asModelType([
-      'EditableRootModelSync',
-      'EditableChildModelSync'
+      'EditableRootObjectSync',
+      'EditableChildObjectSync'
     ]);
 
     // Resolve tree reference.
@@ -179,7 +179,7 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
      *
      * @function EditableChildCollectionSync#create
      * @param {number} index - The index of the new item.
-     * @returns {EditableChildModelSync} The newly created business object.
+     * @returns {EditableChildObjectSync} The newly created business object.
      */
     this.createItem = function (index) {
       var item = itemType.create(parent, eventHandlers);
@@ -295,7 +295,7 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
      *
      * @function EditableChildCollectionSync#at
      * @param {number} index - The index of the required item in the collection.
-     * @returns {EditableChildModelSync} The required collection item.
+     * @returns {EditableChildObjectSync} The required collection item.
      */
     this.at = function (index) {
       return items[index];
@@ -339,7 +339,7 @@ var EditableChildCollectionSyncFactory = function (name, itemType) {
      *
      * @function EditableChildCollectionSync#filter
      * @param {external.cbCollectionItem} callback - Function to test for each collection item.
-     * @returns {Array.<EditableChildModelSync>} The new array of collection items.
+     * @returns {Array.<EditableChildObjectSync>} The new array of collection items.
      */
     this.filter = function (callback) {
       return items.filter(callback);

@@ -50,7 +50,7 @@ function dataFetch (ctx, dto, method, callback) {
 //endregion
 
 var AddressView = Model('AddressView')
-    .readOnlyChildModel('async-dal', __filename)
+    .readOnlyChildObject('async-dal', __filename)
     // --- Properties
     .integer('addressKey', F.key)
     .integer('orderKey', F.parentKey)

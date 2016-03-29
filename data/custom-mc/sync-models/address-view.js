@@ -57,7 +57,7 @@ function dataFetch (ctx, dto, method) {
 //endregion
 
 var AddressView = Model('AddressView')
-    .readOnlyChildModel('sync-dal', __filename)
+    .readOnlyChildObject('sync-dal', __filename)
     // --- Properties
     .integer('addressKey', F.key | F.onDtoOnly)
     .text('addressCode', F.onCtoOnly, getAddressCode)
