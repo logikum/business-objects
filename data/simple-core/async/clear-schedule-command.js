@@ -4,6 +4,7 @@ var bo = require('../../../source/index.js');
 
 var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
+var Action = bo.rules.AuthorizationAction;
 var Extensions = bo.shared.ExtensionManager;
 var Property = bo.shared.PropertyInfo;
 //var F = bo.shared.PropertyFlag;
@@ -25,7 +26,8 @@ var properties = new Properties(
 var rules = new Rules(
     cr.required(orderKey),
     cr.required(orderItemKey),
-    cr.required(orderScheduleKey)
+    cr.required(orderScheduleKey),
+    cr.isInRole(Action.executeCommand, null, 'administrators', 'You are not authorized to execute the command.')
 );
 
 var extensions = new Extensions('dao', __filename);

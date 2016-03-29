@@ -3,6 +3,7 @@
 var bo = require('../../../source/index.js');
 var daoBuilder = require('../dao-builder.js');
 var Model = bo.ModelComposerSync;
+var cr = bo.commonRules;
 
 var RescheduleShippingResult = require('./reschedule-shipping-result.js');
 
@@ -34,10 +35,12 @@ var RescheduleShippingCommand = Model('RescheduleShippingCommand')
     .integer('orderScheduleKey')
     .boolean('success')
     .property('result', RescheduleShippingResult)
+    // --- Permissions
+    .canCall('reschedule', cr.isInRole, 'developers', 'You are not authorized to execute the command.')
     // --- Customization
     .daoBuilder(daoBuilder)
     .dataExecute(dataExecute)
-    .addOtherMethod('reschedule')
+    .addMethod('reschedule')
     // --- Build model class
     .compose();
 

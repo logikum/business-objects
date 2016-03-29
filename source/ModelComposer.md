@@ -32,40 +32,41 @@ co = command object
 | property |  x  |     |  x  |     |  x  |     |  x  |     |  x  |
 
 | <i class="group">Property rules</i> | ero | erc | eco | ecc | rro | rrc | rco | rcc | co&nbsp;&nbsp;|
-|:-------- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| required      |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| maxLength     |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| minLength     |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| lengthIs      |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| maxValue      |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| minValue      |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| expression    |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| dependency    |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| information   |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
-| addValidation |  x  |     |  x  |     |  *  |     |  *  |     |  x  |
+|:------------- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| required      |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| maxLength     |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| minLength     |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| lengthIs      |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| maxValue      |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| minValue      |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| expression    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| dependency    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| information   |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| addValidation |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
 | canRead       |  x  |     |  x  |     |  x  |     |  x  |     |  x  |
 | canWrite      |  x  |     |  x  |     |     |     |     |     |  x  |
-_\* allowed but rarely used_
+_o = allowed but rarely used_
 
 | <i class="group">Object rules</i> | ero | erc | eco | ecc | rro | rrc | rco | rcc | co&nbsp;&nbsp;|
-|:-------- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| canCreate  |     |     |     |     |     |     |     |     |     |
-| canFetch   |     |     |     |     |     |     |     |     |     |
-| canUpdate  |     |     |     |     |     |     |     |     |     |
-| canRemove  |     |     |     |     |     |     |     |     |     |
-| canExecute |     |     |     |     |     |     |     |     |     |
+|:---------- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| canCreate  |  x  |  x  |  x  |     |     |     |     |     |     |
+| canFetch   |  x  |  x  |  x  |     |  x  |  x  |  x  |     |     |
+| canUpdate  |  x  |  x  |  x  |     |     |     |     |     |     |
+| canRemove  |  x  |  x  |  x  |     |     |     |     |     |     |
+| canExecute |     |     |     |     |     |     |     |     |  x  |
+| canCall    |  x  |  x  |  x  |     |  x  |  x  |  x  |     |  x  |
 
 | <i class="group">Extensions</i> | ero | erc | eco | ecc | rro | rrc | rco | rcc | co&nbsp;&nbsp;|
-|:-------- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| daoBuilder     |     |     |     |     |     |     |     |     |     |
-| toDto          |     |     |     |     |     |     |     |     |     |
-| fromDto        |     |     |     |     |     |     |     |     |     |
-| toCto          |     |     |     |     |     |     |     |     |     |
-| fromCto        |     |     |     |     |     |     |     |     |     |
-| dataCreate     |     |     |     |     |     |     |     |     |     |
-| dataFetch      |     |     |     |     |     |     |     |     |     |
-| dataInsert     |     |     |     |     |     |     |     |     |     |
-| dataUpdate     |     |     |     |     |     |     |     |     |     |
-| dataRemove     |     |     |     |     |     |     |     |     |     |
-| dataExecute    |     |     |     |     |     |     |     |     |     |
-| addOtherMethod |     |     |     |     |     |     |     |     |     |
+|:----------- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| daoBuilder  |  x  |  x  |  x  |     |  x  |  x  |     |     |  x  |
+| toDto       |  x  |     |  x  |     |     |     |     |     |  x  |
+| fromDto     |  x  |     |  x  |     |  x  |     |  x  |     |  x  |
+| toCto       |  x  |  x  |  x  |     |  x  |  x  |  x  |     |     |
+| fromCto     |  x  |  x  |  x  |     |     |     |     |     |     |
+| dataCreate  |  x  |     |  x  |     |     |     |     |     |     |
+| dataFetch   |  x  |  x  |  x  |     |  x  |  x  |  x  |     |     |
+| dataInsert  |  x  |     |  x  |     |     |     |     |     |     |
+| dataUpdate  |  x  |     |  x  |     |     |     |     |     |     |
+| dataRemove  |  x  |     |  x  |     |     |     |     |     |     |
+| dataExecute |     |     |     |     |     |     |     |     |  x  |
+| addMethod   |     |     |     |     |     |     |     |     |  x  |

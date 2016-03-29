@@ -257,7 +257,7 @@ function ModelComposerSync (modelName) {
   };
 
   this.canExecute = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    return addObjRule(Action.fetchObject, arguments);
+    return addObjRule(Action.executeCommand, arguments);
   };
 
   function addObjRule (action, parameters) {
@@ -267,6 +267,15 @@ function ModelComposerSync (modelName) {
     rules.add(ruleFactory.apply(null, args));
     return nonProperty();
   }
+
+  this.canCall = function (/* methodName, ruleFactory, [params], message, priority, stopsProcessing */) {
+    var args = Array.prototype.slice.call(arguments);
+    var methodName = args.shift();
+    var ruleFactory = args.shift();
+    args.unshift(Action.executeMethod, methodName);
+    rules.add(ruleFactory.apply(null, args));
+    return nonProperty();
+  };
 
   //endregion
 
@@ -327,7 +336,7 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
-  this.addOtherMethod = function (methodName) {
+  this.addMethod = function (methodName) {
     extensions.addOtherMethod(methodName);
     return nonProperty();
   };

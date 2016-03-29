@@ -2,6 +2,7 @@
 
 var bo = require('../../../source/index.js');
 var Model = bo.ModelComposerSync;
+var cr = bo.commonRules;
 
 var ClearScheduleCommand = Model('ClearScheduleCommand')
     .commandObject('dao', __filename)
@@ -10,6 +11,8 @@ var ClearScheduleCommand = Model('ClearScheduleCommand')
     .integer('orderItemKey')
     .integer('orderScheduleKey')
     .boolean('result')
+    // --- Permissions
+    .canExecute(cr.isInRole, 'administrators', 'You are not authorized to execute the command.')
     // --- Build model class
     .compose();
 
