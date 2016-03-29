@@ -4,7 +4,9 @@ var bo = require('../../../source/index.js');
 var Model = bo.ModelComposer;
 var F = bo.shared.PropertyFlag;
 
-var BlanketOrderSchedule = Model('BlanketOrderSchedule').editableChildModel('dao', __filename)
+var BlanketOrderSchedule = Model('BlanketOrderSchedule')
+    .editableChildModel('dao', __filename)
+    // --- Properties
     .integer('orderScheduleKey', F.key | F.readOnly)
     .integer('orderItemKey', F.parentKey | F.readOnly)
     .integer('quantity')
@@ -17,6 +19,7 @@ var BlanketOrderSchedule = Model('BlanketOrderSchedule').editableChildModel('dao
         .required()
     .dateTime('shipDate')
         .required()
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderSchedule;

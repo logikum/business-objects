@@ -132,7 +132,9 @@ function dataRemove (ctx, callback) {
 
 //endregion
 
-var BlanketOrderSchedule = Model('BlanketOrderSchedule').editableChildModel('async-dal', __filename)
+var BlanketOrderSchedule = Model('BlanketOrderSchedule')
+    .editableChildModel('async-dal', __filename)
+    // --- Properties
     .integer('orderScheduleKey', F.key | F.readOnly)
     .integer('orderItemKey', F.parentKey | F.readOnly)
     .integer('quantity')
@@ -145,6 +147,7 @@ var BlanketOrderSchedule = Model('BlanketOrderSchedule').editableChildModel('asy
         .required()
     .dateTime('shipDate')
         .required()
+    // --- Customization
     .daoBuilder(daoBuilder)
     .toDto(toDto)
     .fromDto(fromDto)
@@ -155,6 +158,7 @@ var BlanketOrderSchedule = Model('BlanketOrderSchedule').editableChildModel('asy
     .dataInsert(dataInsert)
     .dataUpdate(dataUpdate)
     .dataRemove(dataRemove)
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderSchedule;

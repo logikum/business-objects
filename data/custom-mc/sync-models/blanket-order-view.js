@@ -70,7 +70,9 @@ function dataFetch (ctx, filter, method) {
 
 //endregion
 
-var BlanketOrderView = Model('BlanketOrderView').readOnlyRootModel('sync-dal', __filename)
+var BlanketOrderView = Model('BlanketOrderView')
+    .readOnlyRootModel('sync-dal', __filename)
+    // --- Properties
     .integer('orderKey', F.key | F.onDtoOnly)
     .text('orderCode', F.onCtoOnly, getOrderCode)
     .text('vendorName')
@@ -83,11 +85,14 @@ var BlanketOrderView = Model('BlanketOrderView').readOnlyRootModel('sync-dal', _
     .property('items', BlanketOrderItemsView)
     .dateTime('createdDate')
     .dateTime('modifiedDate')
+    // --- Permissions
     .canFetch(cr.isInRole, 'designers', 'You are not authorized to retrieve blanket order.')
+    // --- Customization
     .daoBuilder(daoBuilder)
     .fromDto(fromDto)
     .toCto(toCto)
     .dataFetch(dataFetch)
+    // --- Build model class
     .compose();
 
 var BlanketOrderViewFactory = {

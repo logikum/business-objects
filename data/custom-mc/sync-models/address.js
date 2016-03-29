@@ -125,7 +125,9 @@ function dataRemove (ctx) {
 
 //endregion
 
-var Address = Model('Address').editableChildModel('sync-dal', __filename)
+var Address = Model('Address')
+    .editableChildModel('sync-dal', __filename)
+    // --- Properties
     .integer('addressKey', F.key | F.readOnly | F.onDtoOnly)
     .text('addressCode', F.readOnly | F.onCtoOnly, getAddressCode)
     .integer('orderKey', F.parentKey | F.readOnly | F.onDtoOnly)
@@ -139,6 +141,7 @@ var Address = Model('Address').editableChildModel('sync-dal', __filename)
     .text('line2')
     .text('postalCode')
         .required()
+    // --- Customization
     .daoBuilder(daoBuilder)
     .toDto(toDto)
     .fromDto(fromDto)
@@ -149,6 +152,7 @@ var Address = Model('Address').editableChildModel('sync-dal', __filename)
     .dataInsert(dataInsert)
     .dataUpdate(dataUpdate)
     .dataRemove(dataRemove)
+    // --- Build model class
     .compose();
 
 module.exports = Address;

@@ -119,7 +119,9 @@ function dataRemove (ctx) {
 
 //endregion
 
-var BlanketOrderItem = Model('BlanketOrderItem').editableChildModel('sync-dal', __filename)
+var BlanketOrderItem = Model('BlanketOrderItem')
+    .editableChildModel('sync-dal', __filename)
+    // --- Properties
     .integer('orderItemKey', F.key | F.readOnly | F.onDtoOnly)
     .text('orderItemCode', F.readOnly | F.onCtoOnly, getItemCode)
     .integer('orderKey', F.parentKey | F.readOnly | F.onDtoOnly)
@@ -134,6 +136,7 @@ var BlanketOrderItem = Model('BlanketOrderItem').editableChildModel('sync-dal', 
     .decimal('unitPrice')
         .required()
     .property('schedules', BlanketOrderSchedules)
+    // --- Customization
     .daoBuilder(daoBuilder)
     .toDto(toDto)
     .fromDto(fromDto)
@@ -144,6 +147,7 @@ var BlanketOrderItem = Model('BlanketOrderItem').editableChildModel('sync-dal', 
     .dataInsert(dataInsert)
     .dataUpdate(dataUpdate)
     .dataRemove(dataRemove)
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderItem;

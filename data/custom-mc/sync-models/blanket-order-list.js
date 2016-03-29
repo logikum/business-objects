@@ -38,11 +38,15 @@ function dataFetch (ctx, filter, method) {
 
 //endregion
 
-var BlanketOrderList = Model('BlanketOrderList').readOnlyRootCollection('sync-dal', __filename)
+var BlanketOrderList = Model('BlanketOrderList')
+    .readOnlyRootCollection('sync-dal', __filename)
+    // --- Collection elements
     .itemType(BlanketOrderListItem)
+    // -- Customization
     .daoBuilder(daoBuilder)
     .toCto(toCto)
     .dataFetch(dataFetch)
+    // --- Build model class
     .compose();
 
 var BlanketOrderListFactory = {

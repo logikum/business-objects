@@ -5,8 +5,11 @@ var Model = bo.ModelComposerSync;
 
 var BlanketOrderListItem = require('./blanket-order-list-item.js');
 
-var BlanketOrderList = Model('BlanketOrderList').readOnlyRootCollection('dao', __filename)
+var BlanketOrderList = Model('BlanketOrderList')
+    .readOnlyRootCollection('dao', __filename)
+    // --- Collection elements
     .itemType(BlanketOrderListItem)
+    // --- Build model class
     .compose();
 
 var BlanketOrderListFactory = {

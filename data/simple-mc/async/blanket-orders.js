@@ -5,8 +5,11 @@ var Model = bo.ModelComposer;
 
 var BlanketOrderChild = require('./blanket-order-child.js');
 
-var BlanketOrders = Model('BlanketOrders').editableRootCollection('dao', __filename)
+var BlanketOrders = Model('BlanketOrders')
+    .editableRootCollection('dao', __filename)
+    // --- Collection elements
     .itemType(BlanketOrderChild)
+    // --- Build model class
     .compose();
 
 var BlanketOrdersFactory = {

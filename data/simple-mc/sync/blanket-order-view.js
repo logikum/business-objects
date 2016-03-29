@@ -8,7 +8,9 @@ var cr = bo.commonRules;
 var AddressView = require('./address-view.js');
 var BlanketOrderItemsView = require('./blanket-order-items-view.js');
 
-var BlanketOrderView = Model('BlanketOrderView').readOnlyRootModel('dao', __filename)
+var BlanketOrderView = Model('BlanketOrderView')
+    .readOnlyRootModel('dao', __filename)
+    // --- Properties
     .integer('orderKey', F.key)
     .text('vendorName')
     .dateTime('contractDate')
@@ -20,7 +22,9 @@ var BlanketOrderView = Model('BlanketOrderView').readOnlyRootModel('dao', __file
     .property('items', BlanketOrderItemsView)
     .dateTime('createdDate')
     .dateTime('modifiedDate')
+    // --- Permissions
     .canFetch(cr.isInRole, 'designers', 'You are not authorized to retrieve blanket order.')
+    // --- Build model class
     .compose();
 
 var BlanketOrderViewFactory = {

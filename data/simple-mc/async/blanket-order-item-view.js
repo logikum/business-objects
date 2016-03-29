@@ -6,7 +6,9 @@ var F = bo.shared.PropertyFlag;
 
 var BlanketOrderSchedulesView = require('./blanket-order-schedules-view.js');
 
-var BlanketOrderItemView = Model('BlanketOrderItemView').readOnlyChildModel('dao', __filename)
+var BlanketOrderItemView = Model('BlanketOrderItemView')
+    .readOnlyChildModel('dao', __filename)
+    // --- Properties
     .integer('orderItemKey', F.key)
     .integer('orderKey', F.parentKey)
     .text('productName')
@@ -15,6 +17,7 @@ var BlanketOrderItemView = Model('BlanketOrderItemView').readOnlyChildModel('dao
     .integer('quantity')
     .decimal('unitPrice')
     .property('schedules', BlanketOrderSchedulesView)
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderItemView;

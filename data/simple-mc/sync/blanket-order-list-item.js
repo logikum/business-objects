@@ -4,7 +4,9 @@ var bo = require('../../../source/index.js');
 var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
 
-var BlanketOrderListItem = Model('BlanketOrderListItem').readOnlyChildModel('dao', __filename)
+var BlanketOrderListItem = Model('BlanketOrderListItem')
+    .readOnlyChildModel('dao', __filename)
+    // --- Properties
     .integer('orderKey', F.key)
     .text('vendorName')
     .dateTime('contractDate')
@@ -13,6 +15,7 @@ var BlanketOrderListItem = Model('BlanketOrderListItem').readOnlyChildModel('dao
     .boolean('enabled')
     .dateTime('createdDate')
     .dateTime('modifiedDate')
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderListItem;

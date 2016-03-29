@@ -32,7 +32,9 @@ function dataExecute (ctx, method, callback) {
 
 //endregion
 
-var RescheduleShippingCommand = Model('RescheduleShippingCommand').commandObject('async-dal', __filename)
+var RescheduleShippingCommand = Model('RescheduleShippingCommand')
+    .commandObject('async-dal', __filename)
+    // --- Properties
     .integer('orderKey')
         .required()
     .integer('orderItemKey')
@@ -41,9 +43,11 @@ var RescheduleShippingCommand = Model('RescheduleShippingCommand').commandObject
         .required()
     .boolean('success')
     .property('result', RescheduleShippingResult)
+    // --- Customization
     .daoBuilder(daoBuilder)
     .dataExecute(dataExecute)
     .addOtherMethod('reschedule')
+    // --- Build model class
     .compose();
 
 var RescheduleShippingCommandFactory = {

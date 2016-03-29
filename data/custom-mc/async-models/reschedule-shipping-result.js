@@ -17,7 +17,9 @@ function dataFetch (ctx, dto, method, callback) {
 
 //endregion
 
-var RescheduleShippingResult = Model('RescheduleShippingResult').readOnlyChildModel('async-dal', __filename)
+var RescheduleShippingResult = Model('RescheduleShippingResult')
+    .readOnlyChildModel('async-dal', __filename)
+    // --- Properties
     .integer('quantity')
         .required()
     .decimal('totalMass')
@@ -28,8 +30,10 @@ var RescheduleShippingResult = Model('RescheduleShippingResult').readOnlyChildMo
         .required()
     .dateTime('shipDate')
         .required()
+    // --- Customization
     .daoBuilder(daoBuilder)
     .dataFetch(dataFetch)
+    // --- Build model class
     .compose();
 
 module.exports = RescheduleShippingResult;

@@ -157,7 +157,9 @@ function dataRemove (ctx, callback) {
 
 //endregion
 
-var BlanketOrder = Model('BlanketOrder').editableRootModel('async-dal', __filename)
+var BlanketOrder = Model('BlanketOrder')
+    .editableRootModel('async-dal', __filename)
+    // --- Properties
     .integer('orderKey', F.key | F.readOnly)
     .text('vendorName')
         .required()
@@ -173,10 +175,12 @@ var BlanketOrder = Model('BlanketOrder').editableRootModel('async-dal', __filena
     .property('items', BlanketOrderItems)
     .dateTime('createdDate', F.readOnly)
     .dateTime('modifiedDate', F.readOnly)
+    // --- Permissions
     .canFetch(cr.isInRole, 'developers', 'You are not authorized to retrieve blanket order.')
     .canCreate(cr.isInRole, 'developers', 'You are not authorized to create blanket order.')
     .canUpdate(cr.isInRole, 'developers', 'You are not authorized to modify blanket order.')
     .canRemove(cr.isInRole, 'developers', 'You are not authorized to delete blanket order.')
+    // --- Customization
     .daoBuilder(daoBuilder)
     .toDto(toDto)
     .fromDto(fromDto)
@@ -187,6 +191,7 @@ var BlanketOrder = Model('BlanketOrder').editableRootModel('async-dal', __filena
     .dataInsert(dataInsert)
     .dataUpdate(dataUpdate)
     .dataRemove(dataRemove)
+    // --- Build model class
     .compose();
 
 var BlanketOrderFactory = {

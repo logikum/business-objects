@@ -53,7 +53,9 @@ function dataFetch (ctx, dto, method) {
 
 //endregion
 
-var BlanketOrderScheduleView = Model('BlanketOrderScheduleView').readOnlyChildModel('sync-dal', __filename)
+var BlanketOrderScheduleView = Model('BlanketOrderScheduleView')
+    .readOnlyChildModel('sync-dal', __filename)
+    // --- Properties
     .integer('orderScheduleKey', F.key | F.onDtoOnly)
     .text('orderScheduleCode', F.onCtoOnly, getScheduleCode)
     .integer('orderItemKey', F.parentKey | F.onDtoOnly)
@@ -62,10 +64,12 @@ var BlanketOrderScheduleView = Model('BlanketOrderScheduleView').readOnlyChildMo
     .boolean('required')
     .text('shipTo')
     .dateTime('shipDate')
+    // --- Customization
     .daoBuilder(daoBuilder)
     .fromDto(fromDto)
     .toCto(toCto)
     .dataFetch(dataFetch)
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderScheduleView;

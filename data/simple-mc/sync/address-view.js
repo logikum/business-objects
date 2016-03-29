@@ -4,7 +4,9 @@ var bo = require('../../../source/index.js');
 var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
 
-var AddressView = Model('AddressView').readOnlyChildModel('dao', __filename)
+var AddressView = Model('AddressView')
+    .readOnlyChildModel('dao', __filename)
+    // --- Properties
     .integer('addressKey', F.key)
     .integer('orderKey', F.parentKey)
     .text('country')
@@ -13,6 +15,7 @@ var AddressView = Model('AddressView').readOnlyChildModel('dao', __filename)
     .text('line1')
     .text('line2')
     .text('postalCode')
+    // --- Build model class
     .compose();
 
 module.exports = AddressView;

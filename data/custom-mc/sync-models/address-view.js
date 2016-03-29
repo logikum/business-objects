@@ -56,7 +56,9 @@ function dataFetch (ctx, dto, method) {
 
 //endregion
 
-var AddressView = Model('AddressView').readOnlyChildModel('sync-dal', __filename)
+var AddressView = Model('AddressView')
+    .readOnlyChildModel('sync-dal', __filename)
+    // --- Properties
     .integer('addressKey', F.key | F.onDtoOnly)
     .text('addressCode', F.onCtoOnly, getAddressCode)
     .integer('orderKey', F.parentKey | F.onDtoOnly)
@@ -66,10 +68,12 @@ var AddressView = Model('AddressView').readOnlyChildModel('sync-dal', __filename
     .text('line1')
     .text('line2')
     .text('postalCode')
+    // --- Customization
     .daoBuilder(daoBuilder)
     .fromDto(fromDto)
     .toCto(toCto)
     .dataFetch(dataFetch)
+    // --- Build model class
     .compose();
 
 module.exports = AddressView;

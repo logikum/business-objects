@@ -8,7 +8,9 @@ var cr = bo.commonRules;
 var Address = require('./address.js');
 var BlanketOrderItems = require('./blanket-order-items.js');
 
-var BlanketOrderChild = Model('BlanketOrderChild').editableChildModel('dao', __filename)
+var BlanketOrderChild = Model('BlanketOrderChild')
+    .editableChildModel('dao', __filename)
+    // --- Properties
     .integer('orderKey', F.key | F.readOnly)
     .text('vendorName')
         .required()
@@ -24,10 +26,12 @@ var BlanketOrderChild = Model('BlanketOrderChild').editableChildModel('dao', __f
     .property('items', BlanketOrderItems)
     .dateTime('createdDate', F.readOnly)
     .dateTime('modifiedDate', F.readOnly)
+    // --- Permissions
     .canFetch(cr.isInRole, 'developers', 'You are not authorized to retrieve blanket order.')
     .canCreate(cr.isInRole, 'developers', 'You are not authorized to create blanket order.')
     .canUpdate(cr.isInRole, 'developers', 'You are not authorized to modify blanket order.')
     .canRemove(cr.isInRole, 'developers', 'You are not authorized to delete blanket order.')
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderChild;

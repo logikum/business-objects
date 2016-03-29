@@ -3,11 +3,14 @@
 var bo = require('../../../source/index.js');
 var Model = bo.ModelComposerSync;
 
-var ClearScheduleCommand = Model('ClearScheduleCommand').commandObject('dao', __filename)
+var ClearScheduleCommand = Model('ClearScheduleCommand')
+    .commandObject('dao', __filename)
+    // --- Properties
     .integer('orderKey')
     .integer('orderItemKey')
     .integer('orderScheduleKey')
     .boolean('result')
+    // --- Build model class
     .compose();
 
 var ClearScheduleCommandFactory = {

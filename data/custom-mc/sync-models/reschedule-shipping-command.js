@@ -26,15 +26,19 @@ function dataExecute (ctx, method) {
 
 //endregion
 
-var RescheduleShippingCommand = Model('RescheduleShippingCommand').commandObject('sync-dal', __filename)
+var RescheduleShippingCommand = Model('RescheduleShippingCommand')
+    .commandObject('sync-dal', __filename)
+    // --- Properties
     .integer('orderKey')
     .integer('orderItemKey')
     .integer('orderScheduleKey')
     .boolean('success')
     .property('result', RescheduleShippingResult)
+    // --- Customization
     .daoBuilder(daoBuilder)
     .dataExecute(dataExecute)
     .addOtherMethod('reschedule')
+    // --- Build model class
     .compose();
 
 var RescheduleShippingCommandFactory = {

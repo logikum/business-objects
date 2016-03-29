@@ -5,8 +5,11 @@ var Model = bo.ModelComposer;
 
 var BlanketOrderSchedule = require('./blanket-order-schedule.js');
 
-var BlanketOrderSchedules = Model('BlanketOrderSchedules').editableChildCollection()
+var BlanketOrderSchedules = Model('BlanketOrderSchedules')
+    .editableChildCollection()
+    // --- Collection elements
     .itemType(BlanketOrderSchedule)
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderSchedules;

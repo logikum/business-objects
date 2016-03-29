@@ -5,8 +5,11 @@ var Model = bo.ModelComposerSync;
 
 var BlanketOrderItem = require('./blanket-order-item.js');
 
-var BlanketOrderItems = Model('BlanketOrderItems').editableChildCollection()
+var BlanketOrderItems = Model('BlanketOrderItems')
+    .editableChildCollection()
+    // --- Collection elements
     .itemType(BlanketOrderItem)
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderItems;

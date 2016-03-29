@@ -57,7 +57,9 @@ function dataFetch (ctx, dto, method) {
 
 //endregion
 
-var BlanketOrderListItem = Model('BlanketOrderListItem').readOnlyChildModel('sync-dal', __filename)
+var BlanketOrderListItem = Model('BlanketOrderListItem')
+    .readOnlyChildModel('sync-dal', __filename)
+    // --- Properties
     .integer('orderKey', F.key | F.onDtoOnly)
     .text('orderCode', F.onCtoOnly, getOrderCode)
     .text('vendorName')
@@ -67,10 +69,12 @@ var BlanketOrderListItem = Model('BlanketOrderListItem').readOnlyChildModel('syn
     .boolean('enabled')
     .dateTime('createdDate')
     .dateTime('modifiedDate')
+    // --- Customization
     .daoBuilder(daoBuilder)
     .fromDto(fromDto)
     .toCto(toCto)
     .dataFetch(dataFetch)
+    // --- Build model class
     .compose();
 
 module.exports = BlanketOrderListItem;
