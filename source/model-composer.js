@@ -37,9 +37,15 @@ var ArgsType = {
 function ModelComposer (modelName) {
 
   var self = this;
-  var modelType = null;
-  var itemsType = null;
+
+  var modelFactory = null;
+  var modelTypeName = null;
+  var memberType = null;
   var argsType = null;
+  var isCollection = null;
+  var isRoot = null;
+  var isEditable = null;
+
   var properties = null;
   var rules = null;
   var extensions = null;
@@ -48,56 +54,92 @@ function ModelComposer (modelName) {
   //region Model types
 
   this.editableRootObject = function (dataSource, modelPath) {
-    modelType = EditableRootObject;
+    modelFactory = EditableRootObject;
+    modelTypeName = 'EditableRootObject';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = true;
+    isEditable = true;
     return initialize(dataSource, modelPath);
   };
 
   this.editableChildObject = function (dataSource, modelPath) {
-    modelType = EditableChildObject;
+    modelFactory = EditableChildObject;
+    modelTypeName = 'EditableChildObject';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = false;
+    isEditable = true;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyRootObject = function (dataSource, modelPath) {
-    modelType = ReadOnlyRootObject;
+    modelFactory = ReadOnlyRootObject;
+    modelTypeName = 'ReadOnlyRootObject';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = true;
+    isEditable = false;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyChildObject = function (dataSource, modelPath) {
-    modelType = ReadOnlyChildObject;
+    modelFactory = ReadOnlyChildObject;
+    modelTypeName = 'ReadOnlyChildObject';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = false;
+    isEditable = false;
     return initialize(dataSource, modelPath);
   };
 
   this.editableRootCollection = function (dataSource, modelPath) {
-    modelType = EditableRootCollection;
+    modelFactory = EditableRootCollection;
+    modelTypeName = 'EditableRootCollection';
     argsType = ArgsType.rootCollection;
+    isCollection = true;
+    isRoot = true;
+    isEditable = true;
     return initialize(dataSource, modelPath);
   };
 
   this.editableChildCollection = function () {
-    modelType = EditableChildCollection;
+    modelFactory = EditableChildCollection;
+    modelTypeName = 'EditableChildCollection';
     argsType = ArgsType.childCollection;
+    isCollection = true;
+    isRoot = false;
+    isEditable = true;
     return initialize();
   };
 
   this.readOnlyRootCollection = function (dataSource, modelPath) {
-    modelType = ReadOnlyRootCollection;
+    modelFactory = ReadOnlyRootCollection;
+    modelTypeName = 'ReadOnlyRootCollection';
     argsType = ArgsType.rootCollection;
+    isCollection = true;
+    isRoot = true;
+    isEditable = false;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyChildCollection = function () {
-    modelType = ReadOnlyChildCollection;
+    modelFactory = ReadOnlyChildCollection;
+    modelTypeName = 'ReadOnlyChildCollection';
     argsType = ArgsType.childCollection;
+    isCollection = true;
+    isRoot = false;
+    isEditable = false;
     return initialize();
   };
 
   this.commandObject = function (dataSource, modelPath) {
-    modelType = CommandObject;
+    modelFactory = CommandObject;
+    modelTypeName = 'CommandObject';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = true;
+    isEditable = true;
     return initialize(dataSource, modelPath);
   };
 
@@ -114,41 +156,59 @@ function ModelComposer (modelName) {
   //endregion
 
   this.itemType = function (itemType) {
-    itemsType = itemType;
+    if (!isCollection)
+      invalid('itemType');
+    memberType = itemType;
     return this;
   };
 
   //region Properties
 
   this.boolean = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('boolean');
     return addProperty(propertyName, dt.Boolean, flags, getter, setter);
   };
 
   this.text = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('text');
     return addProperty(propertyName, dt.Text, flags, getter, setter);
   };
 
   this.email = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('email');
     return addProperty(propertyName, dt.Email, flags, getter, setter);
   };
 
   this.integer = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('integer');
     return addProperty(propertyName, dt.Integer, flags, getter, setter);
   };
 
   this.decimal = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('decimal');
     return addProperty(propertyName, dt.Decimal, flags, getter, setter);
   };
 
   this.enum = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('enum');
     return addProperty(propertyName, dt.Enum, flags, getter, setter);
   };
 
   this.dateTime = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('dateTime');
     return addProperty(propertyName, dt.DateTime, flags, getter, setter);
   };
 
   this.property = function (propertyName, typeCtor, flags, getter, setter) {
+    if (isCollection)
+      invalid('property');
     return addProperty(propertyName, typeCtor, flags, getter, setter);
   };
 
@@ -164,38 +224,56 @@ function ModelComposer (modelName) {
   //region Property rules
 
   this.required = function (/* message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('required');
     return addValRule(cr.required, arguments);
   };
 
   this.maxLength = function (/* maxLength, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('maxLength');
     return addValRule(cr.maxLength, arguments);
   };
 
   this.minLength = function (/* minLength, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('minLength');
     return addValRule(cr.minLength, arguments);
   };
 
   this.lengthIs = function (/* length, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('lengthIs');
     return addValRule(cr.lengthIs, arguments);
   };
 
   this.maxValue = function (/* maxValue, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('maxValue');
     return addValRule(cr.maxValue, arguments);
   };
 
   this.minValue = function (/* minValue, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('minValue');
     return addValRule(cr.minValue, arguments);
   };
 
   this.expression = function (/* regex, option, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('expression');
     return addValRule(cr.expression, arguments);
   };
 
   this.dependency = function (/* dependencies, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('dependency');
     return addValRule(cr.dependency, arguments);
   };
 
   this.information = function (/* message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('information');
     return addValRule(cr.information, arguments);
   };
 
@@ -208,7 +286,9 @@ function ModelComposer (modelName) {
     return self;
   }
 
-  this.addValidation = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+  this.validate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('validate');
     if (!currentProperty)
       throw new Error('The current property is undefinable.');
     var args = Array.prototype.slice.call(parameters);
@@ -219,10 +299,14 @@ function ModelComposer (modelName) {
   };
 
   this.canRead = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('canRead');
     return addAuthRule(Action.readProperty, arguments);
   };
 
   this.canWrite = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (isCollection || !isEditable)
+      invalid('canWrite');
     return addAuthRule(Action.writeProperty, arguments);
   };
 
@@ -241,6 +325,8 @@ function ModelComposer (modelName) {
   //region Object rules
 
   this.canCreate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    //if (isCollection)
+    //  invalid('maxLength');
     return addObjRule(Action.createObject, arguments);
   };
 
@@ -351,13 +437,19 @@ function ModelComposer (modelName) {
   this.compose = function () {
     switch (argsType) {
       case ArgsType.businessObject:
-        return new modelType(modelName, properties, rules, extensions);
+        return new modelFactory(modelName, properties, rules, extensions);
       case ArgsType.rootCollection:
-        return new modelType(modelName, itemsType, rules, extensions);
+        return new modelFactory(modelName, memberType, rules, extensions);
       case ArgsType.childCollection:
-        return new modelType(modelName, itemsType);
+        return new modelFactory(modelName, memberType);
     }
   };
+
+  function invalid(functionName) {
+    var message = 'Definition of ' + modelName + ' class: ModelComposer.' + functionName +
+        '() is not applicable for ' + modelTypeName + ' models.';
+    throw new Error(message);
+  }
 }
 
 module.exports = ModelComposerFactory;

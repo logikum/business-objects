@@ -1,4 +1,4 @@
-# Model Composer's functions 
+# ModelComposer's functions 
 
 ero = editable root object
 erc = editable root collection
@@ -32,19 +32,19 @@ co = command object
 | property |  x  |     |  x  |     |  x  |     |  x  |     |  x  |
 
 | <i class="group">Property rules</i> | ero | erc | eco | ecc | rro | rrc | rco | rcc | co&nbsp;&nbsp;|
-|:------------- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| required      |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| maxLength     |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| minLength     |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| lengthIs      |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| maxValue      |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| minValue      |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| expression    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| dependency    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| information   |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| addValidation |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
-| canRead       |  x  |     |  x  |     |  x  |     |  x  |     |  x  |
-| canWrite      |  x  |     |  x  |     |     |     |     |     |  x  |
+|:----------- |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| required    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| maxLength   |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| minLength   |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| lengthIs    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| maxValue    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| minValue    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| expression  |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| dependency  |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| information |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| validate    |  x  |     |  x  |     |  o  |     |  o  |     |  x  |
+| canRead     |  x  |     |  x  |     |  x  |     |  x  |     |  x  |
+| canWrite    |  x  |     |  x  |     |     |     |     |     |  x  |
 _o = allowed but rarely used_
 
 | <i class="group">Object rules</i> | ero | erc | eco | ecc | rro | rrc | rco | rcc | co&nbsp;&nbsp;|

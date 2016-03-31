@@ -208,7 +208,7 @@ function ModelComposerSync (modelName) {
     return self;
   }
 
-  this.addValidation = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+  this.validate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (!currentProperty)
       throw new Error('The current property is undefinable.');
     var args = Array.prototype.slice.call(parameters);
