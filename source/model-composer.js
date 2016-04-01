@@ -36,6 +36,8 @@ var ArgsType = {
 
 function ModelComposer (modelName) {
 
+  //region Variables
+
   var self = this;
 
   var modelFactory = null;
@@ -50,6 +52,8 @@ function ModelComposer (modelName) {
   var rules = null;
   var extensions = null;
   var currentProperty = null;
+
+  //endregion
 
   //region Model types
 
@@ -155,12 +159,16 @@ function ModelComposer (modelName) {
 
   //endregion
 
+  //region Collections
+
   this.itemType = function (itemType) {
     if (!isCollection)
       invalid('itemType');
     memberType = itemType;
     return this;
   };
+
+  //endregion
 
   //region Properties
 
@@ -325,24 +333,32 @@ function ModelComposer (modelName) {
   //region Object rules
 
   this.canCreate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    //if (isCollection)
-    //  invalid('maxLength');
+    if (!inGroup1())
+      invalid('canCreate');
     return addObjRule(Action.createObject, arguments);
   };
 
   this.canFetch = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (inGroup2())
+      invalid('canFetch');
     return addObjRule(Action.fetchObject, arguments);
   };
 
   this.canUpdate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (!inGroup1())
+      invalid('canUpdate');
     return addObjRule(Action.updateObject, arguments);
   };
 
   this.canRemove = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (!inGroup1())
+      invalid('canRemove');
     return addObjRule(Action.removeObject, arguments);
   };
 
   this.canExecute = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (modelFactory !== CommandObject)
+      invalid('canExecute');
     return addObjRule(Action.executeCommand, arguments);
   };
 
@@ -355,6 +371,8 @@ function ModelComposer (modelName) {
   }
 
   this.canCall = function (/* methodName, ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (isCollection && !isRoot)
+      invalid('canCall');
     var args = Array.prototype.slice.call(arguments);
     var methodName = args.shift();
     var ruleFactory = args.shift();
@@ -368,71 +386,119 @@ function ModelComposer (modelName) {
   //region Extensions
 
   this.daoBuilder = function (daoBuilder) {
+    if (!isRoot && modelFactory !== EditableChildObject)
+      invalid('daoBuilder');
     extensions.daoBuilder = daoBuilder;
     return nonProperty();
   };
 
   this.toDto = function (toDto) {
+    if (!isEditable || isCollection)
+      invalid('toDto');
     extensions.toDto = toDto;
     return nonProperty();
   };
 
   this.fromDto = function (fromDto) {
+    if (isCollection)
+      invalid('fromDto');
     extensions.fromDto = fromDto;
     return nonProperty();
   };
 
   this.toCto = function (toCto) {
+    if (inGroup2())
+      invalid('toCto');
     extensions.toCto = toCto;
     return nonProperty();
   };
 
   this.fromCto = function (fromCto) {
+    if (!inGroup1())
+      invalid('fromCto');
     extensions.fromCto = fromCto;
     return nonProperty();
   };
 
   this.dataCreate = function (dataCreate) {
+    if (!inGroup3())
+      invalid('dataCreate');
     extensions.dataCreate = dataCreate;
     return nonProperty();
   };
 
   this.dataFetch = function (dataFetch) {
+    if (inGroup2())
+      invalid('dataFetch');
     extensions.dataFetch = dataFetch;
     return nonProperty();
   };
 
   this.dataInsert = function (dataInsert) {
+    if (!inGroup3())
+      invalid('dataInsert');
     extensions.dataInsert = dataInsert;
     return nonProperty();
   };
 
   this.dataUpdate = function (dataUpdate) {
+    if (!inGroup3())
+      invalid('dataUpdate');
     extensions.dataUpdate = dataUpdate;
     return nonProperty();
   };
 
   this.dataRemove = function (dataRemove) {
+    if (!inGroup3())
+      invalid('dataRemove');
     extensions.dataRemove = dataRemove;
     return nonProperty();
   };
 
   this.dataExecute = function (dataExecute) {
+    if (modelFactory !== CommandObject)
+      invalid('dataExecute');
     extensions.dataExecute = dataExecute;
     return nonProperty();
   };
 
   this.addMethod = function (methodName) {
+    if (modelFactory !== CommandObject)
+      invalid('addMethod');
     extensions.addOtherMethod(methodName);
     return nonProperty();
   };
 
   //endregion
 
+  //region Helper
+
   function nonProperty () {
     currentProperty = null;
     return self;
   }
+
+  function inGroup1() {
+    return [EditableRootObject, EditableChildObject, EditableRootCollection].some(function (element) {
+      return element === modelFactory;
+    });
+  }
+
+  function inGroup2() {
+    return isCollection && !isRoot || modelFactory === CommandObject;
+  }
+
+  function inGroup3() {
+    return modelFactory === EditableRootObject || modelFactory === EditableChildObject;
+  }
+
+  function invalid(functionName) {
+    var message = 'Definition of ' + modelName + ' class: ModelComposer.' + functionName +
+        '() is not applicable for ' + modelTypeName + ' models.';
+    throw new Error(message);
+  }
+
+  //endregion
 
   this.compose = function () {
     switch (argsType) {
@@ -444,12 +510,6 @@ function ModelComposer (modelName) {
         return new modelFactory(modelName, memberType);
     }
   };
-
-  function invalid(functionName) {
-    var message = 'Definition of ' + modelName + ' class: ModelComposer.' + functionName +
-        '() is not applicable for ' + modelTypeName + ' models.';
-    throw new Error(message);
-  }
 }
 
 module.exports = ModelComposerFactory;

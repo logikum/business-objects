@@ -1,7 +1,6 @@
 'use strict';
 
 var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
 
 var Properties = bo.shared.PropertyManager;
 var Rules = bo.rules.RuleManager;
@@ -85,7 +84,6 @@ function dataFetch (ctx, dto, method) {
 //endregion
 
 var extensions = new Extensions('sync-dal', __filename);
-extensions.daoBuilder = daoBuilder;
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;

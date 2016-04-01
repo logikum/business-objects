@@ -36,68 +36,114 @@ var ArgsType = {
 
 function ModelComposerSync (modelName) {
 
+  //region Variables
+
   var self = this;
-  var modelType = null;
-  var itemsType = null;
+
+  var modelFactory = null;
+  var modelTypeName = null;
+  var memberType = null;
   var argsType = null;
+  var isCollection = null;
+  var isRoot = null;
+  var isEditable = null;
+
   var properties = null;
   var rules = null;
   var extensions = null;
   var currentProperty = null;
 
+  //endregion
+
   //region Model types
 
   this.editableRootObject = function (dataSource, modelPath) {
-    modelType = EditableRootObjectSync;
+    modelFactory = EditableRootObjectSync;
+    modelTypeName = 'EditableRootObjectSync';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = true;
+    isEditable = true;
     return initialize(dataSource, modelPath);
   };
 
   this.editableChildObject = function (dataSource, modelPath) {
-    modelType = EditableChildObjectSync;
+    modelFactory = EditableChildObjectSync;
+    modelTypeName = 'EditableChildObjectSync';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = false;
+    isEditable = true;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyRootObject = function (dataSource, modelPath) {
-    modelType = ReadOnlyRootObjectSync;
+    modelFactory = ReadOnlyRootObjectSync;
+    modelTypeName = 'ReadOnlyRootObjectSync';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = true;
+    isEditable = false;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyChildObject = function (dataSource, modelPath) {
-    modelType = ReadOnlyChildObjectSync;
+    modelFactory = ReadOnlyChildObjectSync;
+    modelTypeName = 'ReadOnlyChildObjectSync';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = false;
+    isEditable = false;
     return initialize(dataSource, modelPath);
   };
 
   this.editableRootCollection = function (dataSource, modelPath) {
-    modelType = EditableRootCollectionSync;
+    modelFactory = EditableRootCollectionSync;
+    modelTypeName = 'EditableRootCollectionSync';
     argsType = ArgsType.rootCollection;
+    isCollection = true;
+    isRoot = true;
+    isEditable = true;
     return initialize(dataSource, modelPath);
   };
 
   this.editableChildCollection = function () {
-    modelType = EditableChildCollectionSync;
+    modelFactory = EditableChildCollectionSync;
+    modelTypeName = 'EditableChildCollectionSync';
     argsType = ArgsType.childCollection;
+    isCollection = true;
+    isRoot = false;
+    isEditable = true;
     return initialize();
   };
 
   this.readOnlyRootCollection = function (dataSource, modelPath) {
-    modelType = ReadOnlyRootCollectionSync;
+    modelFactory = ReadOnlyRootCollectionSync;
+    modelTypeName = 'ReadOnlyRootCollectionSync';
     argsType = ArgsType.rootCollection;
+    isCollection = true;
+    isRoot = true;
+    isEditable = false;
     return initialize(dataSource, modelPath);
   };
 
   this.readOnlyChildCollection = function () {
-    modelType = ReadOnlyChildCollectionSync;
+    modelFactory = ReadOnlyChildCollectionSync;
+    modelTypeName = 'ReadOnlyChildCollectionSync';
     argsType = ArgsType.childCollection;
+    isCollection = true;
+    isRoot = false;
+    isEditable = false;
     return initialize();
   };
 
   this.commandObject = function (dataSource, modelPath) {
-    modelType = CommandObjectSync;
+    modelFactory = CommandObjectSync;
+    modelTypeName = 'CommandObjectSync';
     argsType = ArgsType.businessObject;
+    isCollection = false;
+    isRoot = true;
+    isEditable = true;
     return initialize(dataSource, modelPath);
   };
 
@@ -113,42 +159,64 @@ function ModelComposerSync (modelName) {
 
   //endregion
 
+  //region Collections
+
   this.itemType = function (itemType) {
-    itemsType = itemType;
+    if (!isCollection)
+      invalid('itemType');
+    memberType = itemType;
     return this;
   };
+
+  //endregion
 
   //region Properties
 
   this.boolean = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('boolean');
     return addProperty(propertyName, dt.Boolean, flags, getter, setter);
   };
 
   this.text = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('text');
     return addProperty(propertyName, dt.Text, flags, getter, setter);
   };
 
   this.email = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('email');
     return addProperty(propertyName, dt.Email, flags, getter, setter);
   };
 
   this.integer = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('integer');
     return addProperty(propertyName, dt.Integer, flags, getter, setter);
   };
 
   this.decimal = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('decimal');
     return addProperty(propertyName, dt.Decimal, flags, getter, setter);
   };
 
   this.enum = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('enum');
     return addProperty(propertyName, dt.Enum, flags, getter, setter);
   };
 
   this.dateTime = function (propertyName, flags, getter, setter) {
+    if (isCollection)
+      invalid('dateTime');
     return addProperty(propertyName, dt.DateTime, flags, getter, setter);
   };
 
   this.property = function (propertyName, typeCtor, flags, getter, setter) {
+    if (isCollection)
+      invalid('property');
     return addProperty(propertyName, typeCtor, flags, getter, setter);
   };
 
@@ -164,38 +232,56 @@ function ModelComposerSync (modelName) {
   //region Property rules
 
   this.required = function (/* message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('required');
     return addValRule(cr.required, arguments);
   };
 
   this.maxLength = function (/* maxLength, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('maxLength');
     return addValRule(cr.maxLength, arguments);
   };
 
   this.minLength = function (/* minLength, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('minLength');
     return addValRule(cr.minLength, arguments);
   };
 
   this.lengthIs = function (/* length, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('lengthIs');
     return addValRule(cr.lengthIs, arguments);
   };
 
   this.maxValue = function (/* maxValue, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('maxValue');
     return addValRule(cr.maxValue, arguments);
   };
 
   this.minValue = function (/* minValue, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('minValue');
     return addValRule(cr.minValue, arguments);
   };
 
   this.expression = function (/* regex, option, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('expression');
     return addValRule(cr.expression, arguments);
   };
 
   this.dependency = function (/* dependencies, message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('dependency');
     return addValRule(cr.dependency, arguments);
   };
 
   this.information = function (/* message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('information');
     return addValRule(cr.information, arguments);
   };
 
@@ -209,6 +295,8 @@ function ModelComposerSync (modelName) {
   }
 
   this.validate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('validate');
     if (!currentProperty)
       throw new Error('The current property is undefinable.');
     var args = Array.prototype.slice.call(parameters);
@@ -219,10 +307,14 @@ function ModelComposerSync (modelName) {
   };
 
   this.canRead = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (isCollection)
+      invalid('canRead');
     return addAuthRule(Action.readProperty, arguments);
   };
 
   this.canWrite = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (isCollection || !isEditable)
+      invalid('canWrite');
     return addAuthRule(Action.writeProperty, arguments);
   };
 
@@ -241,22 +333,32 @@ function ModelComposerSync (modelName) {
   //region Object rules
 
   this.canCreate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (!inGroup1())
+      invalid('canCreate');
     return addObjRule(Action.createObject, arguments);
   };
 
   this.canFetch = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (inGroup2())
+      invalid('canFetch');
     return addObjRule(Action.fetchObject, arguments);
   };
 
   this.canUpdate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (!inGroup1())
+      invalid('canUpdate');
     return addObjRule(Action.updateObject, arguments);
   };
 
   this.canRemove = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (!inGroup1())
+      invalid('canRemove');
     return addObjRule(Action.removeObject, arguments);
   };
 
   this.canExecute = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (modelFactory !== CommandObjectSync)
+      invalid('canExecute');
     return addObjRule(Action.executeCommand, arguments);
   };
 
@@ -269,6 +371,8 @@ function ModelComposerSync (modelName) {
   }
 
   this.canCall = function (/* methodName, ruleFactory, [params], message, priority, stopsProcessing */) {
+    if (isCollection && !isRoot)
+      invalid('canCall');
     var args = Array.prototype.slice.call(arguments);
     var methodName = args.shift();
     var ruleFactory = args.shift();
@@ -282,80 +386,128 @@ function ModelComposerSync (modelName) {
   //region Extensions
 
   this.daoBuilder = function (daoBuilder) {
+    if (!isRoot && modelFactory !== EditableChildObjectSync)
+      invalid('daoBuilder');
     extensions.daoBuilder = daoBuilder;
     return nonProperty();
   };
 
   this.toDto = function (toDto) {
+    if (!isEditable || isCollection)
+      invalid('toDto');
     extensions.toDto = toDto;
     return nonProperty();
   };
 
   this.fromDto = function (fromDto) {
+    if (isCollection)
+      invalid('fromDto');
     extensions.fromDto = fromDto;
     return nonProperty();
   };
 
   this.toCto = function (toCto) {
+    if (inGroup2())
+      invalid('toCto');
     extensions.toCto = toCto;
     return nonProperty();
   };
 
   this.fromCto = function (fromCto) {
+    if (!inGroup1())
+      invalid('fromCto');
     extensions.fromCto = fromCto;
     return nonProperty();
   };
 
   this.dataCreate = function (dataCreate) {
+    if (!inGroup3())
+      invalid('dataCreate');
     extensions.dataCreate = dataCreate;
     return nonProperty();
   };
 
   this.dataFetch = function (dataFetch) {
+    if (inGroup2())
+      invalid('dataFetch');
     extensions.dataFetch = dataFetch;
     return nonProperty();
   };
 
   this.dataInsert = function (dataInsert) {
+    if (!inGroup3())
+      invalid('dataInsert');
     extensions.dataInsert = dataInsert;
     return nonProperty();
   };
 
   this.dataUpdate = function (dataUpdate) {
+    if (!inGroup3())
+      invalid('dataUpdate');
     extensions.dataUpdate = dataUpdate;
     return nonProperty();
   };
 
   this.dataRemove = function (dataRemove) {
+    if (!inGroup3())
+      invalid('dataRemove');
     extensions.dataRemove = dataRemove;
     return nonProperty();
   };
 
   this.dataExecute = function (dataExecute) {
+    if (modelFactory !== CommandObjectSync)
+      invalid('dataExecute');
     extensions.dataExecute = dataExecute;
     return nonProperty();
   };
 
   this.addMethod = function (methodName) {
+    if (modelFactory !== CommandObjectSync)
+      invalid('addMethod');
     extensions.addOtherMethod(methodName);
     return nonProperty();
   };
 
   //endregion
 
+  //region Helper
+
   function nonProperty () {
     currentProperty = null;
     return self;
   }
 
+  function inGroup1() {
+    return [EditableRootObjectSync, EditableChildObjectSync, EditableRootCollectionSync].some(function (element) {
+      return element === modelFactory;
+    });
+  }
+
+  function inGroup2() {
+    return isCollection && !isRoot || modelFactory === CommandObjectSync;
+  }
+
+  function inGroup3() {
+    return modelFactory === EditableRootObjectSync || modelFactory === EditableChildObjectSync;
+  }
+
+  function invalid(functionName) {
+    var message = 'Definition of ' + modelName + ' class: ModelComposer.' + functionName +
+        '() is not applicable for ' + modelTypeName + ' models.';
+    throw new Error(message);
+  }
+
+  //endregion
+
   this.compose = function () {
     switch (argsType) {
       case ArgsType.businessObject:
-        return new modelType(modelName, properties, rules, extensions);
+        return new modelFactory(modelName, properties, rules, extensions);
       case ArgsType.rootCollection:
-        return new modelType(modelName, itemsType, rules, extensions);
+        return new modelFactory(modelName, memberType, rules, extensions);
       case ArgsType.childCollection:
-        return new modelType(modelName, itemsType);
+        return new modelFactory(modelName, memberType);
     }
   };
 }

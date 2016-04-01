@@ -1,7 +1,6 @@
 'use strict';
 
 var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
 var Model = bo.ModelComposerSync;
 
 //region Data portal methods
@@ -31,7 +30,6 @@ var RescheduleShippingResult = Model('RescheduleShippingResult')
     .dateTime('shipDate')
         .required()
     // --- Customization
-    .daoBuilder(daoBuilder)
     .dataFetch(dataFetch)
     // --- Build model class
     .compose();

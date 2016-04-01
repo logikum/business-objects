@@ -1,7 +1,6 @@
 'use strict';
 
 var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
 var Model = bo.ModelComposer;
 
 var bo = require('../../../source/index.js');
@@ -72,7 +71,6 @@ var BlanketOrderListItem = Model('BlanketOrderListItem')
     .dateTime('createdDate')
     .dateTime('modifiedDate')
     // --- Customization
-    .daoBuilder(daoBuilder)
     .fromDto(fromDto)
     .toCto(toCto)
     .dataFetch(dataFetch)

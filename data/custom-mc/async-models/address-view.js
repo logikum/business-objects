@@ -1,7 +1,6 @@
 'use strict';
 
 var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
 var Model = bo.ModelComposer;
 var F = bo.shared.PropertyFlag;
 
@@ -61,7 +60,6 @@ var AddressView = Model('AddressView')
     .text('line2')
     .text('postalCode')
     // --- Customization
-    .daoBuilder(daoBuilder)
     .fromDto(fromDto)
     .toCto(toCto)
     .dataFetch(dataFetch)

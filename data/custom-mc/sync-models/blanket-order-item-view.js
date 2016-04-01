@@ -1,7 +1,6 @@
 'use strict';
 
 var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
 var Model = bo.ModelComposerSync;
 var F = bo.shared.PropertyFlag;
 
@@ -68,7 +67,6 @@ var BlanketOrderItemView = Model('BlanketOrderItemView')
     .decimal('unitPrice')
     .property('schedules', BlanketOrderSchedulesView)
     // --- Customization
-    .daoBuilder(daoBuilder)
     .fromDto(fromDto)
     .toCto(toCto)
     .dataFetch(dataFetch)
