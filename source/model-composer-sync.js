@@ -26,6 +26,13 @@ var ComposerError = require('./system/composer-error.js');
 
 //endregion
 
+/**
+ * Factory method to create a model composer for synchronous business objects.
+ *
+ * @function bo.ModelComposerSync
+ * @param {string} modelName - The name of the model.
+ * @returns {ModelComposerSync} The model composer.
+ */
 function ModelComposerSyncFactory (modelName) {
   return new ModelComposerSync (modelName);
 }
@@ -36,6 +43,16 @@ var ArgsType = {
   childCollection: 2
 };
 
+/**
+ * @classdesc
+ *    Represents a model composer to build synchronous business objects.
+ * @description
+ *    Creates a new synchronous model composer instance.
+ *
+ * @name ModelComposerSync
+ * @constructor
+ * @param {string} modelName - The name of the model to build.
+ */
 function ModelComposerSync (modelName) {
 
   //region Variables
@@ -59,6 +76,15 @@ function ModelComposerSync (modelName) {
 
   //region Model types
 
+  /**
+   * Sets the type of the business object as editable root object.
+   *
+   * @function ModelComposerSync#editableRootObject
+   * @protected
+   * @param {string} dataSource - The identifier of the data source.
+   * @param {string} modelPath - The path of the model definition.
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.editableRootObject = function (dataSource, modelPath) {
     modelFactory = EditableRootObjectSync;
     modelTypeName = 'EditableRootObjectSync';
@@ -69,6 +95,15 @@ function ModelComposerSync (modelName) {
     return initialize(dataSource, modelPath);
   };
 
+  /**
+   * Sets the type of the business object as editable child object.
+   *
+   * @function ModelComposerSync#editableChildObject
+   * @protected
+   * @param {string} dataSource - The identifier of the data source.
+   * @param {string} modelPath - The path of the model definition.
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.editableChildObject = function (dataSource, modelPath) {
     modelFactory = EditableChildObjectSync;
     modelTypeName = 'EditableChildObjectSync';
@@ -79,6 +114,15 @@ function ModelComposerSync (modelName) {
     return initialize(dataSource, modelPath);
   };
 
+  /**
+   * Sets the type of the business object as read-only root object.
+   *
+   * @function ModelComposerSync#readOnlyRootObject
+   * @protected
+   * @param {string} dataSource - The identifier of the data source.
+   * @param {string} modelPath - The path of the model definition.
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.readOnlyRootObject = function (dataSource, modelPath) {
     modelFactory = ReadOnlyRootObjectSync;
     modelTypeName = 'ReadOnlyRootObjectSync';
@@ -89,6 +133,15 @@ function ModelComposerSync (modelName) {
     return initialize(dataSource, modelPath);
   };
 
+  /**
+   * Sets the type of the business object as read-only child object.
+   *
+   * @function ModelComposerSync#readOnlyChildObject
+   * @protected
+   * @param {string} dataSource - The identifier of the data source.
+   * @param {string} modelPath - The path of the model definition.
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.readOnlyChildObject = function (dataSource, modelPath) {
     modelFactory = ReadOnlyChildObjectSync;
     modelTypeName = 'ReadOnlyChildObjectSync';
@@ -99,6 +152,15 @@ function ModelComposerSync (modelName) {
     return initialize(dataSource, modelPath);
   };
 
+  /**
+   * Sets the type of the business object as editable root collection.
+   *
+   * @function ModelComposerSync#editableRootCollection
+   * @protected
+   * @param {string} dataSource - The identifier of the data source.
+   * @param {string} modelPath - The path of the model definition.
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.editableRootCollection = function (dataSource, modelPath) {
     modelFactory = EditableRootCollectionSync;
     modelTypeName = 'EditableRootCollectionSync';
@@ -109,6 +171,13 @@ function ModelComposerSync (modelName) {
     return initialize(dataSource, modelPath);
   };
 
+  /**
+   * Sets the type of the business object as editable child collection.
+   *
+   * @function ModelComposerSync#editableChildCollection
+   * @protected
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.editableChildCollection = function () {
     modelFactory = EditableChildCollectionSync;
     modelTypeName = 'EditableChildCollectionSync';
@@ -119,6 +188,15 @@ function ModelComposerSync (modelName) {
     return initialize();
   };
 
+  /**
+   * Sets the type of the business object as read-only root collection.
+   *
+   * @function ModelComposerSync#readOnlyRootCollection
+   * @protected
+   * @param {string} dataSource - The identifier of the data source.
+   * @param {string} modelPath - The path of the model definition.
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.readOnlyRootCollection = function (dataSource, modelPath) {
     modelFactory = ReadOnlyRootCollectionSync;
     modelTypeName = 'ReadOnlyRootCollectionSync';
@@ -129,6 +207,13 @@ function ModelComposerSync (modelName) {
     return initialize(dataSource, modelPath);
   };
 
+  /**
+   * Sets the type of the business object as read-only child collection.
+   *
+   * @function ModelComposerSync#readOnlyChildCollection
+   * @protected
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.readOnlyChildCollection = function () {
     modelFactory = ReadOnlyChildCollectionSync;
     modelTypeName = 'ReadOnlyChildCollectionSync';
@@ -139,6 +224,15 @@ function ModelComposerSync (modelName) {
     return initialize();
   };
 
+  /**
+   * Sets the type of the business object as command object.
+   *
+   * @function ModelComposerSync#commandObject
+   * @protected
+   * @param {string} dataSource - The identifier of the data source.
+   * @param {string} modelPath - The path of the model definition.
+   * @returns {ModelComposerSync} The model composer.
+   */
   this.commandObject = function (dataSource, modelPath) {
     modelFactory = CommandObjectSync;
     modelTypeName = 'CommandObjectSync';
@@ -163,6 +257,14 @@ function ModelComposerSync (modelName) {
 
   //region Collections
 
+  /**
+   * Defines the model type of the elements in a collection.
+   *
+   * @function ModelComposerSync#itemType
+   * @protected
+   * @param {function} itemType - The model type of the collection elements.
+   * @returns {ModelComposerSync}
+   */
   this.itemType = function (itemType) {
     if (!isCollection)
       invalid('itemType');
@@ -174,48 +276,137 @@ function ModelComposerSync (modelName) {
 
   //region Properties
 
+  /**
+   * Defines a Boolean property for the business object.
+   *
+   * @function ModelComposerSync#boolean
+   * @protected
+   * @param {string} propertyName - The name of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+   * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
+   * @returns {ModelComposerSync}
+   */
   this.boolean = function (propertyName, flags, getter, setter) {
     if (isCollection)
       invalid('boolean');
     return addProperty(propertyName, dt.Boolean, flags, getter, setter);
   };
 
+  /**
+   * Defines a text property for the business object.
+   *
+   * @function ModelComposerSync#text
+   * @protected
+   * @param {string} propertyName - The name of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+   * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
+   * @returns {ModelComposerSync}
+   */
   this.text = function (propertyName, flags, getter, setter) {
     if (isCollection)
       invalid('text');
     return addProperty(propertyName, dt.Text, flags, getter, setter);
   };
 
+  /**
+   * Defines an e-mail address property for the business object.
+   *
+   * @function ModelComposerSync#email
+   * @protected
+   * @param {string} propertyName - The name of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+   * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
+   * @returns {ModelComposerSync}
+   */
   this.email = function (propertyName, flags, getter, setter) {
     if (isCollection)
       invalid('email');
     return addProperty(propertyName, dt.Email, flags, getter, setter);
   };
 
+  /**
+   * Defines an integer property for the business object.
+   *
+   * @function ModelComposerSync#integer
+   * @protected
+   * @param {string} propertyName - The name of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+   * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
+   * @returns {ModelComposerSync}
+   */
   this.integer = function (propertyName, flags, getter, setter) {
     if (isCollection)
       invalid('integer');
     return addProperty(propertyName, dt.Integer, flags, getter, setter);
   };
 
+  /**
+   * Defines a decimal property for the business object.
+   *
+   * @function ModelComposerSync#decimal
+   * @protected
+   * @param {string} propertyName - The name of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+   * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
+   * @returns {ModelComposerSync}
+   */
   this.decimal = function (propertyName, flags, getter, setter) {
     if (isCollection)
       invalid('decimal');
     return addProperty(propertyName, dt.Decimal, flags, getter, setter);
   };
 
+  /**
+   * Defines an enumeration property for the business object.
+   *
+   * @function ModelComposerSync#enum
+   * @protected
+   * @param {string} propertyName - The name of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+   * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
+   * @returns {ModelComposerSync}
+   */
   this.enum = function (propertyName, flags, getter, setter) {
     if (isCollection)
       invalid('enum');
     return addProperty(propertyName, dt.Enum, flags, getter, setter);
   };
 
+  /**
+   * Defines a date-time property for the business object.
+   *
+   * @function ModelComposerSync#dateTime
+   * @protected
+   * @param {string} propertyName - The name of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+   * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
+   * @returns {ModelComposerSync}
+   */
   this.dateTime = function (propertyName, flags, getter, setter) {
     if (isCollection)
       invalid('dateTime');
     return addProperty(propertyName, dt.DateTime, flags, getter, setter);
   };
 
+  /**
+   * Defines a general property for the business object.
+   *
+   * @function ModelComposerSync#property
+   * @protected
+   * @param {string} propertyName - The name of the property.
+   * @param {function} typeCtor - The data type of the property.
+   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
+   * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
+   * @returns {ModelComposerSync}
+   */
   this.property = function (propertyName, typeCtor, flags, getter, setter) {
     if (isCollection)
       invalid('property');
