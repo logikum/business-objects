@@ -6,6 +6,9 @@ describe('Business object index', function() {
 
   it('returns correct data types', function() {
 
+    expect(bo.ModelComposer).toEqual(jasmine.any(Function));
+    expect(bo.ModelComposerSync).toEqual(jasmine.any(Function));
+
     expect(bo.EditableRootObject).toEqual(jasmine.any(Function));
     expect(bo.EditableChildObject).toEqual(jasmine.any(Function));
     expect(bo.EditableChildCollection).toEqual(jasmine.any(Function));

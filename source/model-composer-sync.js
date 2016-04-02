@@ -22,6 +22,8 @@ var cr = require('./common-rules/index.js');
 var PropertyInfo = require('./shared/property-info.js');
 var dt = require('./data-types/index.js');
 
+var ComposerError = require('./system/composer-error.js');
+
 //endregion
 
 function ModelComposerSyncFactory (modelName) {
@@ -234,60 +236,67 @@ function ModelComposerSync (modelName) {
   this.required = function (/* message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('required');
+    checkCurrentProperty('required');
     return addValRule(cr.required, arguments);
   };
 
   this.maxLength = function (/* maxLength, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('maxLength');
+    checkCurrentProperty('maxLength');
     return addValRule(cr.maxLength, arguments);
   };
 
   this.minLength = function (/* minLength, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('minLength');
+    checkCurrentProperty('minLength');
     return addValRule(cr.minLength, arguments);
   };
 
   this.lengthIs = function (/* length, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('lengthIs');
+    checkCurrentProperty('lengthIs');
     return addValRule(cr.lengthIs, arguments);
   };
 
   this.maxValue = function (/* maxValue, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('maxValue');
+    checkCurrentProperty('maxValue');
     return addValRule(cr.maxValue, arguments);
   };
 
   this.minValue = function (/* minValue, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('minValue');
+    checkCurrentProperty('minValue');
     return addValRule(cr.minValue, arguments);
   };
 
   this.expression = function (/* regex, option, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('expression');
+    checkCurrentProperty('expression');
     return addValRule(cr.expression, arguments);
   };
 
   this.dependency = function (/* dependencies, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('dependency');
+    checkCurrentProperty('dependency');
     return addValRule(cr.dependency, arguments);
   };
 
   this.information = function (/* message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('information');
+    checkCurrentProperty('information');
     return addValRule(cr.information, arguments);
   };
 
   function addValRule (ruleFactory, parameters) {
-    if (!currentProperty)
-      throw new Error('The current property is undefinable.');
     var args = Array.prototype.slice.call(parameters);
     args.unshift(currentProperty);
     rules.add(ruleFactory.apply(null, args));
@@ -297,8 +306,7 @@ function ModelComposerSync (modelName) {
   this.validate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('validate');
-    if (!currentProperty)
-      throw new Error('The current property is undefinable.');
+    checkCurrentProperty('validate');
     var args = Array.prototype.slice.call(parameters);
     var ruleFactory = args.shift();
     args.unshift(currentProperty);
@@ -309,18 +317,18 @@ function ModelComposerSync (modelName) {
   this.canRead = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('canRead');
+    checkCurrentProperty('canRead');
     return addAuthRule(Action.readProperty, arguments);
   };
 
   this.canWrite = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection || !isEditable)
       invalid('canWrite');
+    checkCurrentProperty('canWrite');
     return addAuthRule(Action.writeProperty, arguments);
   };
 
   function addAuthRule (action, parameters) {
-    if (!currentProperty)
-      throw new Error('The current property is undefinable.');
     var args = Array.prototype.slice.call(parameters);
     var ruleFactory = args.shift();
     args.unshift(action, currentProperty);
@@ -492,10 +500,22 @@ function ModelComposerSync (modelName) {
     return modelFactory === EditableRootObjectSync || modelFactory === EditableChildObjectSync;
   }
 
-  function invalid(functionName) {
-    var message = 'Definition of ' + modelName + ' class: ModelComposer.' + functionName +
-        '() is not applicable for ' + modelTypeName + ' models.';
-    throw new Error(message);
+  function checkCurrentProperty(methodName) {
+    if (!currentProperty) {
+      var error = new ComposerError('property', modelName, methodName);
+      error.model = modelName;
+      error.modelType = modelTypeName;
+      error.method = methodName;
+      throw error;
+    }
+  }
+
+  function invalid(methodName) {
+    var error = new ComposerError('invalid', modelName, methodName, modelTypeName);
+    error.model = modelName;
+    error.modelType = modelTypeName;
+    error.method = methodName;
+    throw error;
   }
 
   //endregion

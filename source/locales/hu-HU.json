@@ -54,5 +54,10 @@
   },
   "AuthorizationError": {
     "default": "A felhasználó nem jogosult a művelet végrehajtására."
+  },
+  "ComposerError": {
+    "default": "A modellépítő hibát talált az osztály definíciójában.",
+    "invalid": "{0} osztály definíciója: ModelComposer.{1}() nem használható {2} modelleknél.",
+    "property": "{0} osztály definíciója: Az aktuális tulajdonság megállapíthatatlan a ModelComposer.{1}() metódusnál."
   }
 }
