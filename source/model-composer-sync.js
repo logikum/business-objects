@@ -278,6 +278,7 @@ function ModelComposerSync (modelName) {
 
   /**
    * Defines a Boolean property for the business object.
+   * See {@link bo.dataTypes.Boolean Boolean} data type.
    *
    * @function ModelComposerSync#boolean
    * @protected
@@ -295,6 +296,7 @@ function ModelComposerSync (modelName) {
 
   /**
    * Defines a text property for the business object.
+   * See {@link bo.dataTypes.Text text} data type.
    *
    * @function ModelComposerSync#text
    * @protected
@@ -312,6 +314,7 @@ function ModelComposerSync (modelName) {
 
   /**
    * Defines an e-mail address property for the business object.
+   * See {@link bo.dataTypes.Email e-mail} data type.
    *
    * @function ModelComposerSync#email
    * @protected
@@ -329,6 +332,7 @@ function ModelComposerSync (modelName) {
 
   /**
    * Defines an integer property for the business object.
+   * See {@link bo.dataTypes.Integer integer} data type.
    *
    * @function ModelComposerSync#integer
    * @protected
@@ -346,6 +350,7 @@ function ModelComposerSync (modelName) {
 
   /**
    * Defines a decimal property for the business object.
+   * See {@link bo.dataTypes.Decimal decimal} data type.
    *
    * @function ModelComposerSync#decimal
    * @protected
@@ -363,6 +368,7 @@ function ModelComposerSync (modelName) {
 
   /**
    * Defines an enumeration property for the business object.
+   * See {@link bo.dataTypes.Enum enumeration} data type.
    *
    * @function ModelComposerSync#enum
    * @protected
@@ -380,6 +386,7 @@ function ModelComposerSync (modelName) {
 
   /**
    * Defines a date-time property for the business object.
+   * See {@link bo.dataTypes.DateTime date-time} data type.
    *
    * @function ModelComposerSync#dateTime
    * @protected
@@ -422,8 +429,18 @@ function ModelComposerSync (modelName) {
 
   //endregion
 
-  //region Property rules
+  //region Property rules - validation
 
+  /**
+   * Adds a required rule to the current property.
+   *
+   * @function ModelComposerSync#required
+   * @protected
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=50] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.required = function (/* message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('required');
@@ -431,6 +448,17 @@ function ModelComposerSync (modelName) {
     return addValRule(cr.required, arguments);
   };
 
+  /**
+   * Adds a maximum length rule to the current property.
+   *
+   * @function ModelComposerSync#maxLength
+   * @protected
+   * @param {number} maxLength - The maximum length of the property value.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.maxLength = function (/* maxLength, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('maxLength');
@@ -438,6 +466,17 @@ function ModelComposerSync (modelName) {
     return addValRule(cr.maxLength, arguments);
   };
 
+  /**
+   * Adds a minimum length rule to the current property.
+   *
+   * @function ModelComposerSync#minLength
+   * @protected
+   * @param {number} minLength - The minimum length of the property value.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.minLength = function (/* minLength, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('minLength');
@@ -445,6 +484,17 @@ function ModelComposerSync (modelName) {
     return addValRule(cr.minLength, arguments);
   };
 
+  /**
+   * Adds a required length rule to the current property.
+   *
+   * @function ModelComposerSync#lengthIs
+   * @protected
+   * @param {number} length - The required length of the property value.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.lengthIs = function (/* length, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('lengthIs');
@@ -452,6 +502,17 @@ function ModelComposerSync (modelName) {
     return addValRule(cr.lengthIs, arguments);
   };
 
+  /**
+   * Adds a maximum value rule to the current property.
+   *
+   * @function ModelComposerSync#maxValue
+   * @protected
+   * @param {number} maxValue - The maximum value of the property value.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.maxValue = function (/* maxValue, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('maxValue');
@@ -459,6 +520,17 @@ function ModelComposerSync (modelName) {
     return addValRule(cr.maxValue, arguments);
   };
 
+  /**
+   * Adds a minimum value rule to the current property.
+   *
+   * @function ModelComposerSync#minValue
+   * @protected
+   * @param {number} minValue - The minimum value of the property value.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.minValue = function (/* minValue, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('minValue');
@@ -466,6 +538,18 @@ function ModelComposerSync (modelName) {
     return addValRule(cr.minValue, arguments);
   };
 
+  /**
+   * Adds an expression rule to the current property.
+   *
+   * @function ModelComposerSync#expression
+   * @protected
+   * @param {regexp} regex - The regular expression that specifies the rule.
+   * @param {bo.commonRules.NullResultOption} option - The action to execute when the value is null.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.expression = function (/* regex, option, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('expression');
@@ -473,6 +557,18 @@ function ModelComposerSync (modelName) {
     return addValRule(cr.expression, arguments);
   };
 
+  /**
+   * Adds a dependency rule to the current property.
+   *
+   * @function ModelComposerSync#dependency
+   * @protected
+   * @param {(bo.shared.PropertyInfo|Array.<bo.shared.PropertyInfo>)} dependencies -
+   *    A single dependent property or an array of them.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=-100] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.dependency = function (/* dependencies, message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('dependency');
@@ -480,6 +576,16 @@ function ModelComposerSync (modelName) {
     return addValRule(cr.dependency, arguments);
   };
 
+  /**
+   * Adds an information rule to the current property.
+   *
+   * @function ModelComposerSync#information
+   * @protected
+   * @param {string} message - The information to display.
+   * @param {number} [priority=1] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.information = function (/* message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('information');
@@ -494,6 +600,19 @@ function ModelComposerSync (modelName) {
     return self;
   }
 
+  /**
+   * Adds a validation rule to the current property.
+   *
+   * @function ModelComposerSync#validate
+   * @protected
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.ValidationRule validation rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the validation rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.validate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('validate');
@@ -505,6 +624,25 @@ function ModelComposerSync (modelName) {
     return this;
   };
 
+  //endregion
+
+  //region Property rules - authorization
+
+  /**
+   * Adds an authorization rule to the current property that determines
+   * whether the user can read it.
+   * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   * @function ModelComposerSync#canRead
+   * @protected
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.AuthorizationRule authorization rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.canRead = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection)
       invalid('canRead');
@@ -512,6 +650,21 @@ function ModelComposerSync (modelName) {
     return addAuthRule(Action.readProperty, arguments);
   };
 
+  /**
+   * Adds an authorization rule to the current property that determines
+   * whether the user can write it.
+   * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   * @function ModelComposerSync#canWrite
+   * @protected
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.AuthorizationRule authorization rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.canWrite = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection || !isEditable)
       invalid('canWrite');
@@ -531,30 +684,105 @@ function ModelComposerSync (modelName) {
 
   //region Object rules
 
+  /**
+   * Adds an authorization rule to the business object that determines
+   * whether the user can create a new instance of it.
+   * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   * @function ModelComposerSync#canCreate
+   * @protected
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.AuthorizationRule authorization rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.canCreate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (!inGroup1())
       invalid('canCreate');
     return addObjRule(Action.createObject, arguments);
   };
 
+  /**
+   * Adds an authorization rule to the business object that determines
+   * whether the user can retrieve its instances.
+   * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   * @function ModelComposerSync#canFetch
+   * @protected
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.AuthorizationRule authorization rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.canFetch = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (inGroup2())
       invalid('canFetch');
     return addObjRule(Action.fetchObject, arguments);
   };
 
+  /**
+   * Adds an authorization rule to the business object that determines
+   * whether the user can update its instances.
+   * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   * @function ModelComposerSync#canUpdate
+   * @protected
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.AuthorizationRule authorization rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.canUpdate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (!inGroup1())
       invalid('canUpdate');
     return addObjRule(Action.updateObject, arguments);
   };
 
+  /**
+   * Adds an authorization rule to the business object that determines
+   * whether the user can delete its instances.
+   * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   * @function ModelComposerSync#canRemove
+   * @protected
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.AuthorizationRule authorization rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.canRemove = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (!inGroup1())
       invalid('canRemove');
     return addObjRule(Action.removeObject, arguments);
   };
 
+  /**
+   * Adds an authorization rule to the business object that determines
+   * whether the user can execute a command.
+   * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   * @function ModelComposerSync#canExecute
+   * @protected
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.AuthorizationRule authorization rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.canExecute = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (modelFactory !== CommandObjectSync)
       invalid('canExecute');
@@ -569,6 +797,22 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   }
 
+  /**
+   * Adds an authorization rule to the business object that determines
+   * whether the user can execute a custom fetch or a custom command.
+   * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   * @function ModelComposerSync#canCall
+   * @protected
+   * @param {string} methodName - The name of the custom method to execute.
+   * @param {function} ruleFactory - A factory function that returns the
+   *    {@link bo.rules.AuthorizationRule authorization rule} to add.
+   * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority] - The priority of the rule.
+   * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
+   * @returns {ModelComposerSync}
+   */
   this.canCall = function (/* methodName, ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection && !isRoot)
       invalid('canCall');
