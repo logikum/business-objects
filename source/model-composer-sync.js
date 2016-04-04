@@ -80,7 +80,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as editable root object.
    *
    * @function ModelComposerSync#editableRootObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposerSync} The model composer.
@@ -99,7 +98,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as editable child object.
    *
    * @function ModelComposerSync#editableChildObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposerSync} The model composer.
@@ -118,7 +116,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as read-only root object.
    *
    * @function ModelComposerSync#readOnlyRootObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposerSync} The model composer.
@@ -137,7 +134,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as read-only child object.
    *
    * @function ModelComposerSync#readOnlyChildObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposerSync} The model composer.
@@ -156,7 +152,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as editable root collection.
    *
    * @function ModelComposerSync#editableRootCollection
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposerSync} The model composer.
@@ -175,7 +170,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as editable child collection.
    *
    * @function ModelComposerSync#editableChildCollection
-   * @protected
    * @returns {ModelComposerSync} The model composer.
    */
   this.editableChildCollection = function () {
@@ -192,7 +186,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as read-only root collection.
    *
    * @function ModelComposerSync#readOnlyRootCollection
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposerSync} The model composer.
@@ -211,7 +204,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as read-only child collection.
    *
    * @function ModelComposerSync#readOnlyChildCollection
-   * @protected
    * @returns {ModelComposerSync} The model composer.
    */
   this.readOnlyChildCollection = function () {
@@ -228,7 +220,6 @@ function ModelComposerSync (modelName) {
    * Sets the type of the business object as command object.
    *
    * @function ModelComposerSync#commandObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposerSync} The model composer.
@@ -255,13 +246,34 @@ function ModelComposerSync (modelName) {
 
   //endregion
 
+  /*
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link EditableChildCollectionSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyRootCollectionSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link ReadOnlyChildCollectionSync}
+   *      * {@link CommandObjectSync}
+   *
+   */
+
   //region Collections
 
   /**
    * Defines the model type of the elements in a collection.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildCollectionSync}
+   *      * {@link ReadOnlyRootCollectionSync}
+   *      * {@link ReadOnlyChildCollectionSync}
+   *
    * @function ModelComposerSync#itemType
-   * @protected
    * @param {function} itemType - The model type of the collection elements.
    * @returns {ModelComposerSync}
    */
@@ -280,8 +292,15 @@ function ModelComposerSync (modelName) {
    * Defines a Boolean property for the business object.
    * See {@link bo.dataTypes.Boolean Boolean} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#boolean
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -298,8 +317,15 @@ function ModelComposerSync (modelName) {
    * Defines a text property for the business object.
    * See {@link bo.dataTypes.Text text} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#text
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -316,8 +342,15 @@ function ModelComposerSync (modelName) {
    * Defines an e-mail address property for the business object.
    * See {@link bo.dataTypes.Email e-mail} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#email
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -334,8 +367,15 @@ function ModelComposerSync (modelName) {
    * Defines an integer property for the business object.
    * See {@link bo.dataTypes.Integer integer} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#integer
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -352,8 +392,15 @@ function ModelComposerSync (modelName) {
    * Defines a decimal property for the business object.
    * See {@link bo.dataTypes.Decimal decimal} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#decimal
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -370,8 +417,15 @@ function ModelComposerSync (modelName) {
    * Defines an enumeration property for the business object.
    * See {@link bo.dataTypes.Enum enumeration} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#enum
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -388,8 +442,15 @@ function ModelComposerSync (modelName) {
    * Defines a date-time property for the business object.
    * See {@link bo.dataTypes.DateTime date-time} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#dateTime
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -405,8 +466,15 @@ function ModelComposerSync (modelName) {
   /**
    * Defines a general property for the business object.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#property
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {function} typeCtor - The data type of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
@@ -434,8 +502,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds a required rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#required
-   * @protected
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=50] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
@@ -451,8 +526,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds a maximum length rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#maxLength
-   * @protected
    * @param {number} maxLength - The maximum length of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -469,8 +551,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds a minimum length rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#minLength
-   * @protected
    * @param {number} minLength - The minimum length of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -487,8 +576,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds a required length rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#lengthIs
-   * @protected
    * @param {number} length - The required length of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -505,8 +601,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds a maximum value rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#maxValue
-   * @protected
    * @param {number} maxValue - The maximum value of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -523,8 +626,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds a minimum value rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#minValue
-   * @protected
    * @param {number} minValue - The minimum value of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -541,8 +651,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds an expression rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#expression
-   * @protected
    * @param {regexp} regex - The regular expression that specifies the rule.
    * @param {bo.commonRules.NullResultOption} option - The action to execute when the value is null.
    * @param {string} message - Human-readable description of the rule failure.
@@ -560,8 +677,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds a dependency rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#dependency
-   * @protected
    * @param {(bo.shared.PropertyInfo|Array.<bo.shared.PropertyInfo>)} dependencies -
    *    A single dependent property or an array of them.
    * @param {string} message - Human-readable description of the rule failure.
@@ -579,8 +703,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds an information rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#information
-   * @protected
    * @param {string} message - The information to display.
    * @param {number} [priority=1] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
@@ -603,8 +734,15 @@ function ModelComposerSync (modelName) {
   /**
    * Adds a validation rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync} - allowed but rarely used
+   *      * {@link ReadOnlyChildObjectSync} - allowed but rarely used
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#validate
-   * @protected
    * @param {function} ruleFactory - A factory function that returns the
    *    {@link bo.rules.ValidationRule validation rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the validation rule.
@@ -633,8 +771,15 @@ function ModelComposerSync (modelName) {
    * whether the user can read it.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#canRead
-   * @protected
    * @param {function} ruleFactory - A factory function that returns the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
@@ -654,6 +799,12 @@ function ModelComposerSync (modelName) {
    * Adds an authorization rule to the current property that determines
    * whether the user can write it.
    * See {@link bo.commonRules common rules} to find authorization ones.
+   *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link CommandObjectSync}
    *
    * @function ModelComposerSync#canWrite
    * @protected
@@ -828,6 +979,16 @@ function ModelComposerSync (modelName) {
 
   //region Extensions
 
+  /**
+   * Adds a custom function to the business object that creates
+   * the data access object of the model instance.
+   *
+   * @function ModelComposerSync#daoBuilder
+   * @protected
+   * @param {function} daoBuilder - A factory function that returns the
+   *    {@link bo.dataAccess.daoBuilder data access object} for the model instance.
+   * @returns {ModelComposerSync}
+   */
   this.daoBuilder = function (daoBuilder) {
     if (!isRoot && modelFactory !== EditableChildObjectSync)
       invalid('daoBuilder');
@@ -835,6 +996,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that converts
+   * the model instance to data transfer object.
+   *
+   * @function ModelComposerSync#toDto
+   * @protected
+   * @param {function} toDto - A factory function that converts
+   *    the model instance to data transfer object.
+   * @returns {ModelComposerSync}
+   */
   this.toDto = function (toDto) {
     if (!isEditable || isCollection)
       invalid('toDto');
@@ -842,6 +1013,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that converts
+   * the data transfer object to model instance.
+   *
+   * @function ModelComposerSync#fromDto
+   * @protected
+   * @param {function} fromDto - A factory function that converts
+   *    the data transfer object to model instance.
+   * @returns {ModelComposerSync}
+   */
   this.fromDto = function (fromDto) {
     if (isCollection)
       invalid('fromDto');
@@ -849,6 +1030,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that converts
+   * the model instance to client transfer object.
+   *
+   * @function ModelComposerSync#toCto
+   * @protected
+   * @param {function} toCto - A factory function that converts
+   *    the model instance to client transfer object.
+   * @returns {ModelComposerSync}
+   */
   this.toCto = function (toCto) {
     if (inGroup2())
       invalid('toCto');
@@ -856,6 +1047,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that converts
+   * the client transfer object to model instance.
+   *
+   * @function ModelComposerSync#fromCto
+   * @protected
+   * @param {function} fromCto - A factory function that converts
+   *    the client transfer object to model instance.
+   * @returns {ModelComposerSync}
+   */
   this.fromCto = function (fromCto) {
     if (!inGroup1())
       invalid('fromCto');
@@ -863,6 +1064,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that returns
+   * the property values of a new instance from the data source.
+   *
+   * @function ModelComposerSync#dataCreate
+   * @protected
+   * @param {function} dataCreate - A factory function that returns
+   *    the property values of a new instance from the data source.
+   * @returns {ModelComposerSync}
+   */
   this.dataCreate = function (dataCreate) {
     if (!inGroup3())
       invalid('dataCreate');
@@ -870,6 +1081,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that returns
+   * the property values of an existing instance from the data source.
+   *
+   * @function ModelComposerSync#dataFetch
+   * @protected
+   * @param {function} dataFetch - A factory function that returns
+   *    the property values of an existing instance from the data source.
+   * @returns {ModelComposerSync}
+   */
   this.dataFetch = function (dataFetch) {
     if (inGroup2())
       invalid('dataFetch');
@@ -877,6 +1098,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that saves
+   * a new instance into the data source.
+   *
+   * @function ModelComposerSync#dataInsert
+   * @protected
+   * @param {function} dataInsert - A factory function that saves
+   *    a new instance into the data source.
+   * @returns {ModelComposerSync}
+   */
   this.dataInsert = function (dataInsert) {
     if (!inGroup3())
       invalid('dataInsert');
@@ -884,6 +1115,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that saves
+   * an existing instance into the data source.
+   *
+   * @function ModelComposerSync#dataUpdate
+   * @protected
+   * @param {function} dataUpdate - A factory function that saves
+   *    an existing instance into the data source.
+   * @returns {ModelComposerSync}
+   */
   this.dataUpdate = function (dataUpdate) {
     if (!inGroup3())
       invalid('dataUpdate');
@@ -891,6 +1132,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that deletes
+   * an existing instance from the data source.
+   *
+   * @function ModelComposerSync#dataRemove
+   * @protected
+   * @param {function} dataRemove - A factory function that deletes
+   *    an existing instance from the data source.
+   * @returns {ModelComposerSync}
+   */
   this.dataRemove = function (dataRemove) {
     if (!inGroup3())
       invalid('dataRemove');
@@ -898,6 +1149,16 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that executes
+   * a command on the data source.
+   *
+   * @function ModelComposerSync#dataExecute
+   * @protected
+   * @param {function} dataExecute - A factory function that executes
+   *    a command on the data source.
+   * @returns {ModelComposerSync}
+   */
   this.dataExecute = function (dataExecute) {
     if (modelFactory !== CommandObjectSync)
       invalid('dataExecute');
@@ -905,6 +1166,17 @@ function ModelComposerSync (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a new instance method to the business object that
+   * will call a custom execute method on a command object instance.
+   * See {@link bo.shared.ExtensionManagerBase#addOtherMethod addOtherMethod}
+   * method of ExtensionManagerBase class.
+   *
+   * @function ModelComposerSync#addMethod
+   * @protected
+   * @param {string} methodName - The name of the method on the data access object to be called.
+   * @returns {ModelComposerSync}
+   */
   this.addMethod = function (methodName) {
     if (modelFactory !== CommandObjectSync)
       invalid('addMethod');

@@ -151,8 +151,7 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
 
   /**
    * Adds a new instance method to the model.
-   * (The method will call a custom execute method on the data business object
-   * of command object.)
+   * (The method will call a custom execute method on a command object instance.)
    *
    * @function bo.shared.ExtensionManagerBase#addOtherMethod
    * @param {string} methodName - The name of the method on the data access object to be called.

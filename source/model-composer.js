@@ -80,7 +80,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as editable root object.
    *
    * @function ModelComposer#editableRootObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
@@ -99,7 +98,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as editable child object.
    *
    * @function ModelComposer#editableChildObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
@@ -118,7 +116,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as read-only root object.
    *
    * @function ModelComposer#readOnlyRootObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
@@ -137,7 +134,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as read-only child object.
    *
    * @function ModelComposer#readOnlyChildObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
@@ -156,7 +152,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as editable root collection.
    *
    * @function ModelComposer#editableRootCollection
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
@@ -175,7 +170,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as editable child collection.
    *
    * @function ModelComposer#editableChildCollection
-   * @protected
    * @returns {ModelComposer} The model composer.
    */
   this.editableChildCollection = function () {
@@ -192,7 +186,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as read-only root collection.
    *
    * @function ModelComposer#readOnlyRootCollection
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
@@ -211,7 +204,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as read-only child collection.
    *
    * @function ModelComposer#readOnlyChildCollection
-   * @protected
    * @returns {ModelComposer} The model composer.
    */
   this.readOnlyChildCollection = function () {
@@ -228,7 +220,6 @@ function ModelComposer (modelName) {
    * Sets the type of the business object as command object.
    *
    * @function ModelComposer#commandObject
-   * @protected
    * @param {string} dataSource - The identifier of the data source.
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
@@ -260,8 +251,14 @@ function ModelComposer (modelName) {
   /**
    * Defines the model type of the elements in a collection.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootCollection}
+   *      * {@link EditableChildCollection}
+   *      * {@link ReadOnlyRootCollection}
+   *      * {@link ReadOnlyChildCollection}
+   *
    * @function ModelComposer#itemType
-   * @protected
    * @param {function} itemType - The model type of the collection elements.
    * @returns {ModelComposer}
    */
@@ -280,8 +277,15 @@ function ModelComposer (modelName) {
    * Defines a Boolean property for the business object.
    * See {@link bo.dataTypes.Boolean Boolean} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#boolean
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -298,8 +302,15 @@ function ModelComposer (modelName) {
    * Defines a text property for the business object.
    * See {@link bo.dataTypes.Text text} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#text
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -316,8 +327,15 @@ function ModelComposer (modelName) {
    * Defines an e-mail address property for the business object.
    * See {@link bo.dataTypes.Email e-mail} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#email
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -334,8 +352,15 @@ function ModelComposer (modelName) {
    * Defines an integer property for the business object.
    * See {@link bo.dataTypes.Integer integer} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#integer
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -352,8 +377,15 @@ function ModelComposer (modelName) {
    * Defines a decimal property for the business object.
    * See {@link bo.dataTypes.Decimal decimal} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#decimal
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -370,8 +402,15 @@ function ModelComposer (modelName) {
    * Defines an enumeration property for the business object.
    * See {@link bo.dataTypes.Enum enumeration} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#enum
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -388,8 +427,15 @@ function ModelComposer (modelName) {
    * Defines a date-time property for the business object.
    * See {@link bo.dataTypes.DateTime date-time} data type.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#dateTime
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
@@ -405,8 +451,15 @@ function ModelComposer (modelName) {
   /**
    * Defines a general property for the business object.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#property
-   * @protected
    * @param {string} propertyName - The name of the property.
    * @param {function} typeCtor - The data type of the property.
    * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
@@ -434,8 +487,15 @@ function ModelComposer (modelName) {
   /**
    * Adds a required rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#required
-   * @protected
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=50] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
@@ -451,8 +511,15 @@ function ModelComposer (modelName) {
   /**
    * Adds a maximum length rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#maxLength
-   * @protected
    * @param {number} maxLength - The maximum length of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -469,8 +536,15 @@ function ModelComposer (modelName) {
   /**
    * Adds a minimum length rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#minLength
-   * @protected
    * @param {number} minLength - The minimum length of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -487,8 +561,15 @@ function ModelComposer (modelName) {
   /**
    * Adds a required length rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#lengthIs
-   * @protected
    * @param {number} length - The required length of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -505,8 +586,15 @@ function ModelComposer (modelName) {
   /**
    * Adds a maximum value rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#maxValue
-   * @protected
    * @param {number} maxValue - The maximum value of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -523,8 +611,15 @@ function ModelComposer (modelName) {
   /**
    * Adds a minimum value rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#minValue
-   * @protected
    * @param {number} minValue - The minimum value of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
@@ -541,8 +636,15 @@ function ModelComposer (modelName) {
   /**
    * Adds an expression rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#expression
-   * @protected
    * @param {regexp} regex - The regular expression that specifies the rule.
    * @param {bo.commonRules.NullResultOption} option - The action to execute when the value is null.
    * @param {string} message - Human-readable description of the rule failure.
@@ -560,8 +662,15 @@ function ModelComposer (modelName) {
   /**
    * Adds a dependency rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#dependency
-   * @protected
    * @param {(bo.shared.PropertyInfo|Array.<bo.shared.PropertyInfo>)} dependencies -
    *    A single dependent property or an array of them.
    * @param {string} message - Human-readable description of the rule failure.
@@ -579,8 +688,15 @@ function ModelComposer (modelName) {
   /**
    * Adds an information rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#information
-   * @protected
    * @param {string} message - The information to display.
    * @param {number} [priority=1] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
@@ -603,8 +719,15 @@ function ModelComposer (modelName) {
   /**
    * Adds a validation rule to the current property.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject} - allowed but rarely used
+   *      * {@link ReadOnlyChildObject} - allowed but rarely used
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#validate
-   * @protected
    * @param {function} ruleFactory - A factory function that return the
    *    {@link bo.rules.ValidationRule validation rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the validation rule.
@@ -633,8 +756,15 @@ function ModelComposer (modelName) {
    * whether the user can read it.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link ReadOnlyRootObject}
+   *      * {@link ReadOnlyChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#canRead
-   * @protected
    * @param {function} ruleFactory - A factory function that return the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
@@ -655,8 +785,13 @@ function ModelComposer (modelName) {
    * whether the user can write it.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObject}
+   *      * {@link EditableChildObject}
+   *      * {@link CommandObject}
+   *
    * @function ModelComposer#canWrite
-   * @protected
    * @param {function} ruleFactory - A factory function that return the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
@@ -828,6 +963,16 @@ function ModelComposer (modelName) {
 
   //region Extensions
 
+  /**
+   * Adds a custom function to the business object that creates
+   * the data access object of the model instance.
+   *
+   * @function ModelComposer#daoBuilder
+   * @protected
+   * @param {function} daoBuilder - A factory function that returns the
+   *    {@link bo.dataAccess.daoBuilder data access object} for the model instance.
+   * @returns {ModelComposer}
+   */
   this.daoBuilder = function (daoBuilder) {
     if (!isRoot && modelFactory !== EditableChildObject)
       invalid('daoBuilder');
@@ -835,6 +980,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that converts
+   * the model instance to data transfer object.
+   *
+   * @function ModelComposer#toDto
+   * @protected
+   * @param {function} toDto - A factory function that converts
+   *    the model instance to data transfer object.
+   * @returns {ModelComposer}
+   */
   this.toDto = function (toDto) {
     if (!isEditable || isCollection)
       invalid('toDto');
@@ -842,6 +997,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that converts
+   * the data transfer object to model instance.
+   *
+   * @function ModelComposer#fromDto
+   * @protected
+   * @param {function} fromDto - A factory function that converts
+   *    the data transfer object to model instance.
+   * @returns {ModelComposer}
+   */
   this.fromDto = function (fromDto) {
     if (isCollection)
       invalid('fromDto');
@@ -849,6 +1014,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that converts
+   * the model instance to client transfer object.
+   *
+   * @function ModelComposer#toCto
+   * @protected
+   * @param {function} toCto - A factory function that converts
+   *    the model instance to client transfer object.
+   * @returns {ModelComposer}
+   */
   this.toCto = function (toCto) {
     if (inGroup2())
       invalid('toCto');
@@ -856,6 +1031,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that converts
+   * the client transfer object to model instance.
+   *
+   * @function ModelComposer#fromCto
+   * @protected
+   * @param {function} fromCto - A factory function that converts
+   *    the client transfer object to model instance.
+   * @returns {ModelComposer}
+   */
   this.fromCto = function (fromCto) {
     if (!inGroup1())
       invalid('fromCto');
@@ -863,6 +1048,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that returns
+   * the property values of a new instance from the data source.
+   *
+   * @function ModelComposer#dataCreate
+   * @protected
+   * @param {function} dataCreate - A factory function that returns
+   *    the property values of a new instance from the data source.
+   * @returns {ModelComposer}
+   */
   this.dataCreate = function (dataCreate) {
     if (!inGroup3())
       invalid('dataCreate');
@@ -870,6 +1065,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that returns
+   * the property values of an existing instance from the data source.
+   *
+   * @function ModelComposer#dataFetch
+   * @protected
+   * @param {function} dataFetch - A factory function that returns
+   *    the property values of an existing instance from the data source.
+   * @returns {ModelComposer}
+   */
   this.dataFetch = function (dataFetch) {
     if (inGroup2())
       invalid('dataFetch');
@@ -877,6 +1082,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that saves
+   * a new instance into the data source.
+   *
+   * @function ModelComposer#dataInsert
+   * @protected
+   * @param {function} dataInsert - A factory function that saves
+   *    a new instance into the data source.
+   * @returns {ModelComposer}
+   */
   this.dataInsert = function (dataInsert) {
     if (!inGroup3())
       invalid('dataInsert');
@@ -884,6 +1099,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that saves
+   * an existing instance into the data source.
+   *
+   * @function ModelComposer#dataUpdate
+   * @protected
+   * @param {function} dataUpdate - A factory function that saves
+   *    an existing instance into the data source.
+   * @returns {ModelComposer}
+   */
   this.dataUpdate = function (dataUpdate) {
     if (!inGroup3())
       invalid('dataUpdate');
@@ -891,6 +1116,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that deletes
+   * an existing instance from the data source.
+   *
+   * @function ModelComposer#dataRemove
+   * @protected
+   * @param {function} dataRemove - A factory function that deletes
+   *    an existing instance from the data source.
+   * @returns {ModelComposer}
+   */
   this.dataRemove = function (dataRemove) {
     if (!inGroup3())
       invalid('dataRemove');
@@ -898,6 +1133,16 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a custom function to the business object that executes
+   * a command on the data source.
+   *
+   * @function ModelComposer#dataExecute
+   * @protected
+   * @param {function} dataExecute - A factory function that executes
+   *    a command on the data source.
+   * @returns {ModelComposer}
+   */
   this.dataExecute = function (dataExecute) {
     if (modelFactory !== CommandObject)
       invalid('dataExecute');
@@ -905,6 +1150,17 @@ function ModelComposer (modelName) {
     return nonProperty();
   };
 
+  /**
+   * Adds a new instance method to the business object that
+   * will call a custom execute method on a command object instance.
+   * See {@link bo.shared.ExtensionManagerBase#addOtherMethod addOtherMethod}
+   * method of ExtensionManagerBase class.
+   *
+   * @function ModelComposer#addMethod
+   * @protected
+   * @param {string} methodName - The name of the method on the data access object to be called.
+   * @returns {ModelComposer}
+   */
   this.addMethod = function (methodName) {
     if (modelFactory !== CommandObject)
       invalid('addMethod');
