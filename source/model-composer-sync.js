@@ -246,21 +246,6 @@ function ModelComposerSync (modelName) {
 
   //endregion
 
-  /*
-   *    The function is valid for the following model types:
-   *
-   *      * {@link EditableRootObjectSync}
-   *      * {@link EditableRootCollectionSync}
-   *      * {@link EditableChildObjectSync}
-   *      * {@link EditableChildCollectionSync}
-   *      * {@link ReadOnlyRootObjectSync}
-   *      * {@link ReadOnlyRootCollectionSync}
-   *      * {@link ReadOnlyChildObjectSync}
-   *      * {@link ReadOnlyChildCollectionSync}
-   *      * {@link CommandObjectSync}
-   *
-   */
-
   //region Collections
 
   /**
@@ -276,6 +261,8 @@ function ModelComposerSync (modelName) {
    * @function ModelComposerSync#itemType
    * @param {function} itemType - The model type of the collection elements.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.itemType = function (itemType) {
     if (!isCollection)
@@ -306,6 +293,8 @@ function ModelComposerSync (modelName) {
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.boolean = function (propertyName, flags, getter, setter) {
     if (isCollection)
@@ -331,6 +320,8 @@ function ModelComposerSync (modelName) {
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.text = function (propertyName, flags, getter, setter) {
     if (isCollection)
@@ -356,6 +347,8 @@ function ModelComposerSync (modelName) {
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.email = function (propertyName, flags, getter, setter) {
     if (isCollection)
@@ -381,6 +374,8 @@ function ModelComposerSync (modelName) {
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.integer = function (propertyName, flags, getter, setter) {
     if (isCollection)
@@ -406,6 +401,8 @@ function ModelComposerSync (modelName) {
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.decimal = function (propertyName, flags, getter, setter) {
     if (isCollection)
@@ -431,6 +428,8 @@ function ModelComposerSync (modelName) {
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.enum = function (propertyName, flags, getter, setter) {
     if (isCollection)
@@ -456,6 +455,8 @@ function ModelComposerSync (modelName) {
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.dateTime = function (propertyName, flags, getter, setter) {
     if (isCollection)
@@ -481,6 +482,8 @@ function ModelComposerSync (modelName) {
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.property = function (propertyName, typeCtor, flags, getter, setter) {
     if (isCollection)
@@ -515,6 +518,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=50] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.required = function (/* message, priority, stopsProcessing */) {
     if (isCollection)
@@ -540,6 +546,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.maxLength = function (/* maxLength, message, priority, stopsProcessing */) {
     if (isCollection)
@@ -565,6 +574,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.minLength = function (/* minLength, message, priority, stopsProcessing */) {
     if (isCollection)
@@ -590,6 +602,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.lengthIs = function (/* length, message, priority, stopsProcessing */) {
     if (isCollection)
@@ -615,6 +630,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.maxValue = function (/* maxValue, message, priority, stopsProcessing */) {
     if (isCollection)
@@ -640,6 +658,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.minValue = function (/* minValue, message, priority, stopsProcessing */) {
     if (isCollection)
@@ -666,6 +687,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.expression = function (/* regex, option, message, priority, stopsProcessing */) {
     if (isCollection)
@@ -692,6 +716,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=-100] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.dependency = function (/* dependencies, message, priority, stopsProcessing */) {
     if (isCollection)
@@ -716,6 +743,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority=1] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.information = function (/* message, priority, stopsProcessing */) {
     if (isCollection)
@@ -750,6 +780,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.validate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection)
@@ -787,6 +820,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.canRead = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection)
@@ -815,6 +851,9 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
+   * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
   this.canWrite = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection || !isEditable)
@@ -840,6 +879,12 @@ function ModelComposerSync (modelName) {
    * whether the user can create a new instance of it.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *
    * @function ModelComposerSync#canCreate
    * @protected
    * @param {function} ruleFactory - A factory function that returns the
@@ -849,6 +894,8 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.canCreate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (!inGroup1())
@@ -861,6 +908,15 @@ function ModelComposerSync (modelName) {
    * whether the user can retrieve its instances.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyRootCollectionSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *
    * @function ModelComposerSync#canFetch
    * @protected
    * @param {function} ruleFactory - A factory function that returns the
@@ -870,6 +926,8 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.canFetch = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (inGroup2())
@@ -882,6 +940,12 @@ function ModelComposerSync (modelName) {
    * whether the user can update its instances.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *
    * @function ModelComposerSync#canUpdate
    * @protected
    * @param {function} ruleFactory - A factory function that returns the
@@ -891,6 +955,8 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.canUpdate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (!inGroup1())
@@ -903,6 +969,12 @@ function ModelComposerSync (modelName) {
    * whether the user can delete its instances.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *
    * @function ModelComposerSync#canRemove
    * @protected
    * @param {function} ruleFactory - A factory function that returns the
@@ -912,6 +984,8 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.canRemove = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (!inGroup1())
@@ -924,6 +998,10 @@ function ModelComposerSync (modelName) {
    * whether the user can execute a command.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model type:
+   *
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#canExecute
    * @protected
    * @param {function} ruleFactory - A factory function that returns the
@@ -933,6 +1011,8 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.canExecute = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
     if (modelFactory !== CommandObjectSync)
@@ -953,6 +1033,16 @@ function ModelComposerSync (modelName) {
    * whether the user can execute a custom fetch or a custom command.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyRootCollectionSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#canCall
    * @protected
    * @param {string} methodName - The name of the custom method to execute.
@@ -963,6 +1053,8 @@ function ModelComposerSync (modelName) {
    * @param {number} [priority] - The priority of the rule.
    * @param {boolean} [stopsProcessing] - Indicates the rule behavior in case of failure.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.canCall = function (/* methodName, ruleFactory, [params], message, priority, stopsProcessing */) {
     if (isCollection && !isRoot)
@@ -983,11 +1075,22 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that creates
    * the data access object of the model instance.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyRootCollectionSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#daoBuilder
    * @protected
    * @param {function} daoBuilder - A factory function that returns the
    *    {@link bo.dataAccess.daoBuilder data access object} for the model instance.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.daoBuilder = function (daoBuilder) {
     if (!isRoot && modelFactory !== EditableChildObjectSync)
@@ -1000,11 +1103,19 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that converts
    * the model instance to data transfer object.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#toDto
    * @protected
    * @param {function} toDto - A factory function that converts
    *    the model instance to data transfer object.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.toDto = function (toDto) {
     if (!isEditable || isCollection)
@@ -1017,11 +1128,21 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that converts
    * the data transfer object to model instance.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#fromDto
    * @protected
    * @param {function} fromDto - A factory function that converts
    *    the data transfer object to model instance.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.fromDto = function (fromDto) {
     if (isCollection)
@@ -1034,11 +1155,22 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that converts
    * the model instance to client transfer object.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyRootCollectionSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *
    * @function ModelComposerSync#toCto
    * @protected
    * @param {function} toCto - A factory function that converts
    *    the model instance to client transfer object.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.toCto = function (toCto) {
     if (inGroup2())
@@ -1051,11 +1183,19 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that converts
    * the client transfer object to model instance.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *
    * @function ModelComposerSync#fromCto
    * @protected
    * @param {function} fromCto - A factory function that converts
    *    the client transfer object to model instance.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.fromCto = function (fromCto) {
     if (!inGroup1())
@@ -1068,11 +1208,18 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that returns
    * the property values of a new instance from the data source.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *
    * @function ModelComposerSync#dataCreate
    * @protected
    * @param {function} dataCreate - A factory function that returns
    *    the property values of a new instance from the data source.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.dataCreate = function (dataCreate) {
     if (!inGroup3())
@@ -1085,11 +1232,22 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that returns
    * the property values of an existing instance from the data source.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableRootCollectionSync}
+   *      * {@link EditableChildObjectSync}
+   *      * {@link ReadOnlyRootObjectSync}
+   *      * {@link ReadOnlyRootCollectionSync}
+   *      * {@link ReadOnlyChildObjectSync}
+   *
    * @function ModelComposerSync#dataFetch
    * @protected
    * @param {function} dataFetch - A factory function that returns
    *    the property values of an existing instance from the data source.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.dataFetch = function (dataFetch) {
     if (inGroup2())
@@ -1102,11 +1260,18 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that saves
    * a new instance into the data source.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *
    * @function ModelComposerSync#dataInsert
    * @protected
    * @param {function} dataInsert - A factory function that saves
    *    a new instance into the data source.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.dataInsert = function (dataInsert) {
     if (!inGroup3())
@@ -1119,11 +1284,18 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that saves
    * an existing instance into the data source.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *
    * @function ModelComposerSync#dataUpdate
    * @protected
    * @param {function} dataUpdate - A factory function that saves
    *    an existing instance into the data source.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.dataUpdate = function (dataUpdate) {
     if (!inGroup3())
@@ -1136,11 +1308,18 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that deletes
    * an existing instance from the data source.
    *
+   *    The function is valid for the following model types:
+   *
+   *      * {@link EditableRootObjectSync}
+   *      * {@link EditableChildObjectSync}
+   *
    * @function ModelComposerSync#dataRemove
    * @protected
    * @param {function} dataRemove - A factory function that deletes
    *    an existing instance from the data source.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.dataRemove = function (dataRemove) {
     if (!inGroup3())
@@ -1153,11 +1332,17 @@ function ModelComposerSync (modelName) {
    * Adds a custom function to the business object that executes
    * a command on the data source.
    *
+   *    The function is valid for the following model type:
+   *
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#dataExecute
    * @protected
    * @param {function} dataExecute - A factory function that executes
    *    a command on the data source.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.dataExecute = function (dataExecute) {
     if (modelFactory !== CommandObjectSync)
@@ -1172,10 +1357,16 @@ function ModelComposerSync (modelName) {
    * See {@link bo.shared.ExtensionManagerBase#addOtherMethod addOtherMethod}
    * method of ExtensionManagerBase class.
    *
+   *    The function is valid for the following model type:
+   *
+   *      * {@link CommandObjectSync}
+   *
    * @function ModelComposerSync#addMethod
    * @protected
    * @param {string} methodName - The name of the method on the data access object to be called.
    * @returns {ModelComposerSync}
+   *
+   * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable for the model type.
    */
   this.addMethod = function (methodName) {
     if (modelFactory !== CommandObjectSync)

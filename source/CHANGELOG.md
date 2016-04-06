@@ -1,5 +1,12 @@
 # Release History
 
+* __v1.2.0__  
+  2016.04.06.  
+  Model composer classes are added to help creating model definitions.  
+  The single model types are renamed from models to objects.  
+  The model names are the first argument in model factory functions.  
+  The notOnDto and notOnCto options are removed from PropertyFlag.
+  
 * __v1.1.1__  
   Incrementing version number for npm publish fault.
   

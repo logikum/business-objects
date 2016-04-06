@@ -6,8 +6,8 @@ var util = require('util');
 var t = require('../locales/i18n-bo.js')(CLASS_NAME);
 
 /**
- * @classdesc Represents an argument error.
- * @description Creates an argument error object.
+ * @classdesc Represents the improper use of model composer.
+ * @description Creates a composer error object.
  *
  * @memberof bo.system
  * @constructor
