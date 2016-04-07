@@ -1,6 +1,6 @@
 {
   "name": "business-objects",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "a JavaScript object-oriented business layer for Node.js",
   "keywords": [
     "business objects"

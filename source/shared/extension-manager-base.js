@@ -155,10 +155,14 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
    *
    * @function bo.shared.ExtensionManagerBase#addOtherMethod
    * @param {string} methodName - The name of the method on the data access object to be called.
+   * @param {boolean} [isTransaction] - Indicates whether transaction is required.
    */
-  this.addOtherMethod = function (methodName) {
-    otherMethods.push(Argument.inMethod(CLASS_NAME, 'addOtherMethod')
-        .check(methodName).forMandatory('methodName').asString());
+  this.addOtherMethod = function (methodName, isTransaction) {
+    methodName = Argument.inMethod(CLASS_NAME, 'addOtherMethod')
+        .check(methodName).forMandatory('methodName').asString();
+    isTransaction = isTransaction || false;
+
+    otherMethods.push({ name: methodName, trx: isTransaction });
   };
 
   /**
@@ -173,15 +177,15 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
   this.buildOtherMethods = function (instance, isSync) {
     if (otherMethods) {
       if (isSync)
-        otherMethods.map(function (methodName) {
-          instance[methodName] = function () {
-            instance.execute(methodName);
+        otherMethods.map(function (methodDef) {
+          instance[methodDef.name] = function () {
+            instance.execute(methodDef.name, methodDef.trx);
           };
         });
       else
-        otherMethods.map(function (methodName) {
-          instance[methodName] = function (callback) {
-            instance.execute(methodName, callback);
+        otherMethods.map(function (methodDef) {
+          instance[methodDef.name] = function (callback) {
+            instance.execute(methodDef.name, methodDef.trx, callback);
           };
         });
     }

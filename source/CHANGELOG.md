@@ -1,5 +1,9 @@
 # Release History
 
+* __v1.2.1__  
+  2016.04.07.  
+  Fixing a bug in ExtensionManagerBase.addOtherMethod().
+  
 * __v1.2.0__  
   2016.04.06.  
   Model composer classes are added to help creating model definitions.  

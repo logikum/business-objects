@@ -57,7 +57,7 @@
   },
   "ComposerError": {
     "default": "The model composer found an error in the class definition.",
-    "invalid": "Definition of {0} class: ModelComposer.{1}() is not applicable for {2} models.",
-    "property": "Definition of {0} class: The current property is undefinable for ModelComposer.{1}()."
+    "invalid": "Definition of {0} class: ModelComposer.{1}() is not applicable to {2} models.",
+    "property": "Definition of {0} class: The current property is undefinable in ModelComposer.{1}()."
   }
 }
