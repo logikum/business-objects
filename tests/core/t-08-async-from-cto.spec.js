@@ -62,11 +62,11 @@ describe('Asynchronous fromCto method', function () {
 
   //endregion
 
-  it('for creating sample editable model', function () {
+  it('for creating sample editable model', function (done) {
     console.log('\n*** Asynchronous rebuild for sample CREATE');
 
-    BlanketOrder_S.create(null, function (err, order) {
-      if (err) throw err;
+    BlanketOrder_S.create()
+    .then( function( order ) {
 
       order.fromCto(data1, function (err) {
         if (err) throw err;
@@ -143,12 +143,14 @@ describe('Asynchronous fromCto method', function () {
           expect(schedule2.shipDate).toBe(shipDate2);
 
           //endregion
+
+          done();
         });
       });
     });
   });
 
-  it('for updating sample editable model', function () {
+  it('for updating sample editable model', function (done) {
     console.log('\n*** Asynchronous rebuild for sample UPDATE');
 
     //region Compose data for update
@@ -216,8 +218,8 @@ describe('Asynchronous fromCto method', function () {
 
     //endregion
 
-    BlanketOrder_S.get(5, null, function (err, order) {
-      if (err) throw err;
+    BlanketOrder_S.get( 5 )
+    .then( function( order ) {
 
       order.fromCto(data2, function (err) {
         if (err) throw err;
@@ -293,21 +295,22 @@ describe('Asynchronous fromCto method', function () {
           expect(schedule3.shipDate).toBe(shipDate2);
 
           //endregion
+
+          done();
         });
       });
     });
   });
 
-  it('for creating custom editable model', function () {
+  it('for creating custom editable model', function (done) {
     console.log('\n*** Asynchronous rebuild for custom CREATE');
 
-    BlanketOrder_C.create(null, function (err, order) {
-      if (err) throw err;
+    BlanketOrder_C.create()
+    .then( function( order ) {
 
       order.fromCto(data1, function (err) {
         if (err) throw err;
 
-        if (order.isValid())
         order.save(function (err, order) {
           if (err) throw err;
 
@@ -380,14 +383,14 @@ describe('Asynchronous fromCto method', function () {
           expect(schedule2.shipDate).toBe(shipDate2);
 
           //endregion
+
+          done();
         });
-        else
-          var zum = order.getBrokenRules();
       });
     });
   });
 
-  it('for updating custom editable model', function () {
+  it('for updating custom editable model', function (done) {
     console.log('\n*** Asynchronous rebuild for custom UPDATE');
 
     //region Compose data for update
@@ -455,8 +458,8 @@ describe('Asynchronous fromCto method', function () {
 
     //endregion
 
-    BlanketOrder_C.get(8, null, function (err, order) {
-      if (err) throw err;
+    BlanketOrder_C.get( 8 )
+    .then( function( order ) {
 
       order.fromCto(data3, function (err) {
         if (err) throw err;
@@ -532,6 +535,8 @@ describe('Asynchronous fromCto method', function () {
           expect(schedule3.shipDate).toBe(shipDate2);
 
           //endregion
+
+          done();
         });
       });
     });

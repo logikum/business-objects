@@ -922,12 +922,13 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Creating the business object collection has failed.
      */
-    this.create = function(callback) {
-
-      callback = Argument.inMethod(name, 'create')
-          .check(callback).forMandatory('callback').asFunction();
-
-      data_create(callback);
+    this.create = function() {
+      return new Promise( function( fulfill, reject ) {
+        data_create( function( err, res ) {
+          if (err) reject( err );
+          else fulfill( res );
+        });
+      });
     };
 
     /**
@@ -978,13 +979,15 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Fetching the business object collection has failed.
      */
-    this.fetch = function(filter, method, callback) {
-      var check = Argument.inMethod(name, 'fetch');
+    this.fetch = function( filter, method ) {
+      return new Promise( function ( fulfill, reject) {
+        method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
 
-      method = check(method).forOptional('method').asString();
-      callback = check(callback).forMandatory('callback').asFunction();
-
-      data_fetch(filter, method || M_FETCH, callback);
+        data_fetch( filter, method || M_FETCH, function ( err, res ) {
+          if (err) reject( err );
+          else fulfill ( res );
+        });
+      });
     };
 
     /**
@@ -1254,14 +1257,9 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *      Creating the business object collection has failed.
    */
-  EditableRootCollection.create = function(eventHandlers, callback) {
-    var instance = new EditableRootCollection(eventHandlers);
-    instance.create(function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  EditableRootCollection.create = function( eventHandlers ) {
+    var instance = new EditableRootCollection( eventHandlers );
+    return instance.create();
   };
 
   /**
@@ -1282,14 +1280,9 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *      Fetching the business object collection has failed.
    */
-  EditableRootCollection.fetch = function(filter, method, eventHandlers, callback) {
-    var instance = new EditableRootCollection(eventHandlers);
-    instance.fetch(filter, method, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  EditableRootCollection.fetch = function( filter, method, eventHandlers ) {
+    var instance = new EditableRootCollection( eventHandlers );
+    return instance.fetch( filter, method );
   };
 
   //endregion

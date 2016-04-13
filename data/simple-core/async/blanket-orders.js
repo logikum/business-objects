@@ -21,14 +21,14 @@ var BlanketOrders = bo.EditableRootCollection(
 );
 
 var BlanketOrdersFactory = {
-  create: function (eventHandlers, callback) {
-    BlanketOrders.create(eventHandlers, callback);
+  create: function (eventHandlers) {
+    return BlanketOrders.create(eventHandlers);
   },
-  getAll: function (eventHandlers, callback) {
-    BlanketOrders.fetch(null, null, eventHandlers, callback);
+  getAll: function (eventHandlers) {
+    return BlanketOrders.fetch(null, null, eventHandlers);
   },
-  getFromTo: function (from, to, eventHandlers, callback) {
-    BlanketOrders.fetch({ from: from, to: to }, 'fetchFromTo', eventHandlers, callback);
+  getFromTo: function (from, to, eventHandlers) {
+    return BlanketOrders.fetch({ from: from, to: to }, 'fetchFromTo', eventHandlers);
   }
 };
 

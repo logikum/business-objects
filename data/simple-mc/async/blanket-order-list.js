@@ -13,11 +13,11 @@ var BlanketOrderList = Model('BlanketOrderList')
     .compose();
 
 var BlanketOrderListFactory = {
-  getAll: function (eventHandlers, callback) {
-    BlanketOrderList.fetch(null, null, eventHandlers, callback);
+  getAll: function (eventHandlers) {
+    return BlanketOrderList.fetch(null, null, eventHandlers);
   },
-  getByName: function (name, eventHandlers, callback) {
-    BlanketOrderList.fetch(name, 'fetchByName', eventHandlers, callback);
+  getByName: function (name, eventHandlers) {
+    return BlanketOrderList.fetch(name, 'fetchByName', eventHandlers);
   }
 };
 

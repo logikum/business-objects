@@ -91,8 +91,8 @@ describe('Asynchronous data portal method', function () {
   it('create of custom editable model', function (done) {
     console.log('\n*** Asynchronous CREATE');
 
-    BlanketOrder.create(ehBlanketOrder, function (err, order) {
-      if (err) throw err;
+    BlanketOrder.create( ehBlanketOrder )
+    .then( function( order ) {
 
       //region Load data
 
@@ -239,8 +239,8 @@ describe('Asynchronous data portal method', function () {
   it('special fetch of custom editable model', function (done) {
     console.log('\n*** Asynchronous GET_BY_NAME');
 
-    BlanketOrder.getByName('Acme Corp.', ehBlanketOrder, function (err, order) {
-      if (err) throw err;
+    BlanketOrder.getByName( 'Acme Corp.', ehBlanketOrder )
+    .then( function( order ) {
 
       //region Check data
 
@@ -375,8 +375,8 @@ describe('Asynchronous data portal method', function () {
   it('fetch of custom read-only model', function (done) {
     console.log('\n*** Asynchronous GET');
 
-    BlanketOrderView.get(4, ehBlanketOrderView, function (err, orderView) {
-      if (err) throw err;
+    BlanketOrderView.get( 4, ehBlanketOrderView )
+    .then( function( orderView ) {
 
       //region Check data
 
@@ -580,11 +580,11 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('fetch of custom read-only collection', function () {
+  it('fetch of custom read-only collection', function (done) {
     console.log('\n*** Asynchronous GET_ALL');
 
-    BlanketOrderList.getAll(ehBlanketOrderList, function (err, orderList) {
-      if (err) throw err;
+    BlanketOrderList.getAll( ehBlanketOrderList )
+    .then( function( orderList ) {
 
       //region Check data
 
@@ -647,14 +647,16 @@ describe('Asynchronous data portal method', function () {
       expect(ctoItem.modifiedDate).toBeNull();
 
       //endregion
+
+      done();
     });
   });
 
-  it('update of custom editable model', function () {
+  it('update of custom editable model', function (done) {
     console.log('\n*** Asynchronous SAVE');
 
-    BlanketOrder.get(4, ehBlanketOrder, function (err, order) {
-      if (err) throw err;
+    BlanketOrder.get( 4, ehBlanketOrder )
+    .then( function( order ) {
 
       //region Update data
 
@@ -785,6 +787,8 @@ describe('Asynchronous data portal method', function () {
               expect(schedule3.shipDate).toBe(shipDate2);
 
               //endregion
+
+              done();
             });
           });
         });
@@ -792,11 +796,11 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('delete of custom editable model', function () {
+  it('delete of custom editable model', function (done) {
     console.log('\n*** Asynchronous REMOVE');
 
-    BlanketOrder.get(4, ehBlanketOrder, function (err, order) {
-      if (err) throw err;
+    BlanketOrder.get( 4, ehBlanketOrder )
+    .then( function( order ) {
 
       order.remove();
       order.save(function (err, result) {
@@ -807,6 +811,8 @@ describe('Asynchronous data portal method', function () {
         expect(order.getModelState()).toBe('removed');
         expect(order.address.getModelState()).toBe('removed');
         expect(order.items.count).toBe(0);
+
+        done();
       });
     });
   });

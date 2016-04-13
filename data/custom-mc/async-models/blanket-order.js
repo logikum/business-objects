@@ -195,14 +195,14 @@ var BlanketOrder = Model('BlanketOrder')
     .compose();
 
 var BlanketOrderFactory = {
-  create: function (eventHandlers, callback) {
-    BlanketOrder.create(eventHandlers, callback);
+  create: function (eventHandlers) {
+    return BlanketOrder.create(eventHandlers);
   },
-  get: function (key, eventHandlers, callback) {
-    BlanketOrder.fetch(key, null, eventHandlers, callback);
+  get: function (key, eventHandlers) {
+    return BlanketOrder.fetch(key, null, eventHandlers);
   },
-  getByName: function (name, eventHandlers, callback) {
-    BlanketOrder.fetch(name, 'fetchByName', eventHandlers, callback);
+  getByName: function (name, eventHandlers) {
+    return BlanketOrder.fetch(name, 'fetchByName', eventHandlers);
   }
 };
 

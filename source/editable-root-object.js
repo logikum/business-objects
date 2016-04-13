@@ -1029,12 +1029,13 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Creating the business object has failed.
      */
-    this.create = function(callback) {
-
-      callback = Argument.inMethod(name, 'create')
-          .check(callback).forMandatory('callback').asFunction();
-
-      data_create(callback);
+    this.create = function() {
+      return new Promise( function ( fulfill, reject) {
+        data_create( function( err, res ) {
+          if (err) reject( err );
+          else fulfill( res );
+        });
+      });
     };
 
     /**
@@ -1056,13 +1057,15 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Fetching the business object has failed.
      */
-    this.fetch = function(filter, method, callback) {
-      var check = Argument.inMethod(name, 'fetch');
+    this.fetch = function( filter, method ) {
+      return new Promise( function ( fulfill, reject) {
+        method = Argument.inMethod( name, 'fetch' ).check (method ).forOptional( 'method' ).asString();
 
-      method = check(method).forOptional('method').asString();
-      callback = check(callback).forMandatory('callback').asFunction();
-
-      data_fetch(filter, method || M_FETCH, callback);
+        data_fetch( filter, method || M_FETCH, function ( err, res ) {
+          if (err) reject( err );
+          else fulfill ( res );
+        });
+      });
     };
 
     /**
@@ -1319,14 +1322,9 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *      Creating the business object has failed.
    */
-  EditableRootObject.create = function(eventHandlers, callback) {
-    var instance = new EditableRootObject(eventHandlers);
-    instance.create(function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  EditableRootObject.create = function( eventHandlers ) {
+    var instance = new EditableRootObject( eventHandlers );
+    return instance.create();
   };
 
   /**
@@ -1349,14 +1347,9 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *      Fetching the business object has failed.
    */
-  EditableRootObject.fetch = function(filter, method, eventHandlers, callback) {
-    var instance = new EditableRootObject(eventHandlers);
-    instance.fetch(filter, method, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  EditableRootObject.fetch = function( filter, method, eventHandlers ) {
+    var instance = new EditableRootObject( eventHandlers );
+    return instance.fetch( filter, method );
   };
 
   //endregion

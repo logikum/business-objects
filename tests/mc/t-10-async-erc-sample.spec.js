@@ -104,8 +104,8 @@ describe('Asynchronous data portal method', function () {
     console.log('\n*** Asynchronous collection CREATE');
 
     console.log('    < Create order collection >');
-    BlanketOrders.create(ehBlanketOrders, function (err, orders) {
-      if (err) throw err;
+    BlanketOrders.create( ehBlanketOrders )
+    .then( function( orders ) {
 
       //region Load data
 
@@ -349,8 +349,8 @@ describe('Asynchronous data portal method', function () {
     console.log('\n*** Asynchronous collection UPDATE');
 
     console.log('    < Fetch order collection >');
-    BlanketOrders.getFromTo(12, 13, ehBlanketOrders, function (err, orders) {
-      if (err) throw err;
+    BlanketOrders.getFromTo( 12, 13, ehBlanketOrders )
+    .then( function( orders ) {
 
       //region Update data
 
@@ -629,12 +629,12 @@ describe('Asynchronous data portal method', function () {
     console.log('\n*** Asynchronous collection TO_FROM_CTO');
 
     console.log('    < Fetch order collection >');
-    BlanketOrders.getFromTo(12, 14, ehBlanketOrders, function (err, orders1) {
-      if (err) throw err;
+    BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
+    .then( function( orders1 ) {
 
       var data = orders1.toCto();
-      BlanketOrders.create(ehBlanketOrders, function (err, orders2) {
-        if (err) throw err;
+      BlanketOrders.create( ehBlanketOrders )
+      .then( function( orders2 ) {
 
         orders2.fromCto(data, function (err) {
           if (err) throw err;
@@ -790,8 +790,8 @@ describe('Asynchronous data portal method', function () {
     console.log('\n*** Asynchronous collection REMOVE');
 
     console.log('    < Fetch order collection >');
-    BlanketOrders.getFromTo(12, 14, ehBlanketOrders, function (err, orders) {
-      if (err) throw err;
+    BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
+      .then( function( orders ) {
 
       console.log('    < Remove order collection >');
       orders.remove();
@@ -803,8 +803,8 @@ describe('Asynchronous data portal method', function () {
         expect(orders).toBeNull();
 
         console.log('    < Re-fetch order collection >');
-        var exOrders = BlanketOrders.getFromTo(12, 14, ehBlanketOrders, function (err, exOrders) {
-          if (err) throw err;
+        var exOrders = BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
+          .then( function( exOrders ) {
 
           expect(exOrders.count).toBe(0);
 

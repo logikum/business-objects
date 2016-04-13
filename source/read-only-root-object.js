@@ -402,13 +402,15 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Fetching the business object has failed.
      */
-    this.fetch = function(filter, method, callback) {
-      var check = Argument.inMethod(name, 'fetch');
+    this.fetch = function(filter, method) {
+      return new Promise( function ( fulfill, reject) {
+        method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
 
-      method = check(method).forOptional('method').asString();
-      callback = check(callback).forMandatory('callback').asFunction();
-
-      data_fetch(filter, method || M_FETCH, callback);
+        data_fetch( filter, method || M_FETCH, function ( err, res ) {
+          if (err) reject( err );
+          else fulfill ( res );
+        });
+      });
     };
 
     //endregion
@@ -601,14 +603,9 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *      Fetching the business object has failed.
    */
-  ReadOnlyRootObject.fetch = function(filter, method, eventHandlers, callback) {
-    var instance = new ReadOnlyRootObject(eventHandlers);
-    instance.fetch(filter, method, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  ReadOnlyRootObject.fetch = function( filter, method, eventHandlers ) {
+    var instance = new ReadOnlyRootObject( eventHandlers );
+    return instance.fetch( filter, method );
   };
 
   //endregion

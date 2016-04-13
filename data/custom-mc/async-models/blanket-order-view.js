@@ -93,11 +93,11 @@ var BlanketOrderView = Model('BlanketOrderView')
     .compose();
 
 var BlanketOrderViewFactory = {
-  get: function (key, eventHandlers, callback) {
-    BlanketOrderView.fetch(key, null, eventHandlers, callback);
+  get: function (key, eventHandlers) {
+    return BlanketOrderView.fetch(key, null, eventHandlers);
   },
-  getByName: function (name, eventHandlers, callback) {
-    BlanketOrderView.fetch(name, 'fetchByName', eventHandlers, callback);
+  getByName: function (name, eventHandlers) {
+    return BlanketOrderView.fetch(name, 'fetchByName', eventHandlers);
   }
 };
 
