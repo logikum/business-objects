@@ -128,8 +128,8 @@ describe('Asynchronous data portal method', function () {
         address1.line2 = '';
         address1.postalCode = '20133';
 
-        order1.items.createItem(function (err, item1) {
-          if (err) throw err;
+        order1.items.createItem()
+        .then( function (item1) {
 
           item1.productName = 'D810A';
           item1.obsolete = false;
@@ -137,8 +137,8 @@ describe('Asynchronous data portal method', function () {
           item1.quantity = 10;
           item1.unitPrice = 30;
 
-          order1.items.createItem(function (err, item2) {
-            if (err) throw err;
+          order1.items.createItem()
+          .then( function (item2) {
 
             item2.productName = 'R8';
             item2.obsolete = false;
@@ -146,8 +146,8 @@ describe('Asynchronous data portal method', function () {
             item2.quantity = 5;
             item2.unitPrice = 20;
 
-            item1.schedules.createItem(function (err, schedule1) {
-              if (err) throw err;
+            item1.schedules.createItem()
+            .then( function (schedule1) {
 
               schedule1.quantity = 5;
               schedule1.totalMass = 2.5;
@@ -155,8 +155,8 @@ describe('Asynchronous data portal method', function () {
               schedule1.shipTo = 'Bologna';
               schedule1.shipDate = shipDate1;
 
-              item1.schedules.createItem(function (err, schedule2) {
-                if (err) throw err;
+              item1.schedules.createItem()
+              .then( function (schedule2) {
 
                 schedule2.quantity = 5;
                 schedule2.totalMass = 2.5;
@@ -183,8 +183,8 @@ describe('Asynchronous data portal method', function () {
                   address2.line2 = 'III piętro';
                   address2.postalCode = '01-882';
 
-                  order2.items.createItem(function (err, item3) {
-                    if (err) throw err;
+                  order2.items.createItem()
+                  .then( function (item3) {
 
                     item3.productName = 'Platforma SIRP';
                     item3.obsolete = false;
@@ -192,8 +192,8 @@ describe('Asynchronous data portal method', function () {
                     item3.quantity = 110;
                     item3.unitPrice = 60;
 
-                    var schedule3 = item3.schedules.createItem(function (err, schedule3) {
-                      if (err) throw err;
+                    var schedule3 = item3.schedules.createItem()
+                    .then( function (schedule3) {
 
                       schedule3.quantity = 45;
                       schedule3.totalMass = 540;
@@ -383,8 +383,8 @@ describe('Asynchronous data portal method', function () {
       var item2 = order1.items.at(1);
       item2.remove();
 
-      order1.items.createItem(function (err, item3) {
-        if (err) throw err;
+      order1.items.createItem()
+      .then( function (item3) {
 
         item3.productName = 'Babel Tower';
         item3.obsolete = false;
@@ -395,8 +395,8 @@ describe('Asynchronous data portal method', function () {
         var schedule1 = item1.schedules.at(0);
         schedule1.remove();
 
-        item1.schedules.createItem(function (err, schedule3) {
-          if (err) throw err;
+        item1.schedules.createItem()
+        .then( function (schedule3) {
 
           schedule3.quantity = 10;
           schedule3.totalMass = 2.5;
@@ -412,8 +412,8 @@ describe('Asynchronous data portal method', function () {
           schedule2.shipTo = 'Verona';
           schedule2.shipDate = shipDate1;
 
-          item3.schedules.createItem(function (err, schedule4) {
-            if (err) throw err;
+          item3.schedules.createItem()
+          .then( function (schedule4) {
 
             schedule4.quantity = 3;
             schedule4.totalMass = 23.4;
@@ -444,8 +444,30 @@ describe('Asynchronous data portal method', function () {
               address2.line2 = '';
               address2.postalCode = '945 01';
 
-              order3.items.createItem(function (err, item4) {
-                if (err) throw err;
+              //order3.items.createItem()
+              //.then( function (item4) {
+              //
+              //  item4.productName = 'OpenShift Origin';
+              //  item4.obsolete = false;
+              //  item4.expiry = expiry1;
+              //  item4.quantity = 49;
+              //  item4.unitPrice = 4.0;
+              //
+              //  item4.schedules.createItem()
+              //  .then( function (schedule5) {
+              //
+              //    schedule5.quantity = 10;
+              //    schedule5.totalMass = 13.7;
+              //    schedule5.required = true;
+              //    schedule5.shipTo = 'Bratislava';
+              //    schedule5.shipDate = shipDate3;
+              //
+              //    save();
+              //  });
+              //});
+
+              var item4P = order3.items.createItem()
+              .then( item4 => {
 
                 item4.productName = 'OpenShift Origin';
                 item4.obsolete = false;
@@ -453,8 +475,13 @@ describe('Asynchronous data portal method', function () {
                 item4.quantity = 49;
                 item4.unitPrice = 4.0;
 
-                item4.schedules.createItem(function (err, schedule5) {
-                  if (err) throw err;
+                return item4;
+              });
+              var schedule5P = item4P
+              .then( item4 => {
+
+                return item4.schedules.createItem()
+                .then( schedule5 => {
 
                   schedule5.quantity = 10;
                   schedule5.totalMass = 13.7;
@@ -462,9 +489,10 @@ describe('Asynchronous data portal method', function () {
                   schedule5.shipTo = 'Bratislava';
                   schedule5.shipDate = shipDate3;
 
-                  save();
+                  return schedule5;
                 });
               });
+              schedule5P.then( schedule5 => save() );
             });
           });
         });

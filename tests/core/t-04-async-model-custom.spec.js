@@ -111,8 +111,8 @@ describe('Asynchronous data portal method', function () {
       address.line2 = '';
       address.postalCode = 'M5J 1E3';
 
-      order.items.createItem(function (err, item1) {
-        if (err) throw err;
+      order.items.createItem()
+      .then( function (item1) {
 
         item1.productName = 'Tablet Creek 7';
         item1.obsolete = false;
@@ -120,8 +120,8 @@ describe('Asynchronous data portal method', function () {
         item1.quantity = 2;
         item1.unitPrice = 200;
 
-        order.items.createItem(function (err, item2) {
-          if (err) throw err;
+        order.items.createItem()
+        .then( function (item2) {
 
           item2.productName = 'USB 3.0 cable';
           item2.obsolete = false;
@@ -129,8 +129,8 @@ describe('Asynchronous data portal method', function () {
           item2.quantity = 5;
           item2.unitPrice = 19.5;
 
-          item2.schedules.createItem(function (err, schedule1) {
-            if (err) throw err;
+          item2.schedules.createItem()
+          .then( function (schedule1) {
 
             schedule1.quantity = 2;
             schedule1.totalMass = 0.24;
@@ -138,8 +138,8 @@ describe('Asynchronous data portal method', function () {
             schedule1.shipTo = 'Madrid';
             schedule1.shipDate = shipDate1;
 
-            item2.schedules.createItem(function (err, schedule2) {
-              if (err) throw err;
+            item2.schedules.createItem()
+            .then( function (schedule2) {
 
               schedule2.quantity = 3;
               schedule2.totalMass = 0.36;
@@ -677,8 +677,8 @@ describe('Asynchronous data portal method', function () {
       item2.quantity = 11;
       item2.unitPrice = 49.5;
 
-      order.items.createItem(function (err, item3) {
-        if (err) throw err;
+      order.items.createItem()
+      .then( function (item3) {
 
         item3.productName = 'DataExpert 32GB pen drive';
         item3.obsolete = false;
@@ -697,8 +697,8 @@ describe('Asynchronous data portal method', function () {
         schedule2.shipTo = 'Stockholm';
         schedule2.shipDate = shipDate1;
 
-        item2.schedules.createItem(function (err, schedule3) {
-          if (err) throw err;
+        item2.schedules.createItem()
+        .then( function (schedule3) {
 
           schedule3.quantity = 7;
           schedule3.totalMass = 0.84;
@@ -706,7 +706,8 @@ describe('Asynchronous data portal method', function () {
           schedule3.shipTo = 'Vienna';
           schedule3.shipDate = shipDate2;
 
-          item3.schedules.createItem(function (err, schedule4) {
+          item3.schedules.createItem()
+          .then( function (schedule4) {
 
             schedule4.quantity = 4;
             schedule4.totalMass = 0.06;

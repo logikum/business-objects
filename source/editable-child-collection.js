@@ -221,25 +221,26 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @param {number} index - The index of the new item.
      * @param {external.cbDataPortal} callback - Returns the newly created editable business object.
      */
-    this.createItem = function (index, callback) {
-      if (!callback) {
-        callback = index;
-        index = items.length;
-      }
-      itemType.create(parent, eventHandlers, function (err, item) {
-        if (err)
-          callback(err);
-        var ix = parseInt(index, 10);
-        ix = isNaN(ix) ? items.length : ix;
-        items.splice(ix, 0, item);
-        callback(null, item);
+    this.createItem = function (index) {
+      return new Promise( function ( fulfill, reject) {
+        index = index || items.length;
+
+        itemType.create(parent, eventHandlers, function (err, item) {
+          if (err)
+            reject( err );
+          else {
+            var ix = parseInt(index, 10);
+            ix = isNaN(ix) ? items.length : ix;
+            items.splice(ix, 0, item);
+            fulfill( item );
+          }
+        });
       });
     };
 
     /**
      * Initializes the items in the collection with data retrieved from the repository.
-     *
-     * _This method is called by the parent object._
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildCollection#fetch
      * @protected
@@ -269,8 +270,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
 
     /**
      * Saves the changes of the business object collection to the repository.
-     *
-     * _This method is called by the parent object._
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildCollection#save
      * @protected
@@ -310,8 +310,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
 
     /**
      * Indicates whether all items of the business collection are valid.
-     *
-     * _This method is called by the parent object._
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildCollection#isValid
      * @protected
@@ -325,8 +324,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
 
     /**
      * Executes validation on all items of the collection.
-     *
-     * _This method is called by the parent object._
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildCollection#checkRules
      * @protected
@@ -339,8 +337,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
 
     /**
      * Gets the broken rules of all items of the collection.
-     *
-     * _This method is called by the parent object._
+     * <br/>_This method is called by the parent object._
      *
      * @function EditableChildCollection#getBrokenRules
      * @protected
