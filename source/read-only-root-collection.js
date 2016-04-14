@@ -566,15 +566,6 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
    * @throws {@link bo.shared.DataPortalError Data portal error}:
    *      Fetching the business object collection has failed.
    */
-  //ReadOnlyRootCollection.fetch = function(filter, method, eventHandlers, callback) {
-  //  var instance = new ReadOnlyRootCollection(eventHandlers);
-  //  instance.fetch(filter, method, function (err) {
-  //    if (err)
-  //      callback(err);
-  //    else
-  //      callback(null, instance);
-  //  });
-  //};
   ReadOnlyRootCollection.fetch = function( filter, method, eventHandlers ) {
     var instance = new ReadOnlyRootCollection( eventHandlers );
     return instance.fetch( filter, method );

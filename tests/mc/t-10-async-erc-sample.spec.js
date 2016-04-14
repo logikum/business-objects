@@ -110,8 +110,8 @@ describe('Asynchronous data portal method', function () {
       //region Load data
 
       console.log('    < Create order #1 >');
-      orders.createItem(function (err, order1) {
-        if (err) throw err;
+      orders.createItem()
+      .then( function( order1 ) {
 
         order1.vendorName = 'Blue Zebra';
         order1.contractDate = contractDate1;
@@ -165,8 +165,8 @@ describe('Asynchronous data portal method', function () {
                 schedule2.shipDate = shipDate2;
 
                 console.log('    < Create order #2 >');
-                var order2 = orders.createItem(function (err, order2) {
-                  if (err) throw err;
+                var order2 = orders.createItem()
+                .then( function( order2 ) {
 
                   order2.vendorName = 'Black Spider';
                   order2.contractDate = contractDate2;
@@ -214,10 +214,10 @@ describe('Asynchronous data portal method', function () {
       //endregion
 
       function save() {
-
         console.log('    < Save order collection >');
-        orders.save(function (err, orders) {
-          if (err) throw err;
+
+        orders.save()
+        .then( function( orders ) {
 
           //region Check data
 
@@ -426,8 +426,8 @@ describe('Asynchronous data portal method', function () {
             order2.remove();
 
             console.log('    < Create order #3 >');
-            orders.createItem(function (err, order3) {
-              if (err) throw err;
+            orders.createItem()
+            .then( function( order3 ) {
 
               order3.vendorName = 'Coward Rabbit';
               order3.contractDate = contractDate3;
@@ -473,10 +473,10 @@ describe('Asynchronous data portal method', function () {
       //endregion
 
       function save() {
-
         console.log('    < Save order collection >');
-        orders.save(function (err, orders) {
-          if (err) throw err;
+
+        orders.save()
+        .then( function( orders ) {
 
           //region Check data
 
@@ -795,8 +795,8 @@ describe('Asynchronous data portal method', function () {
 
       console.log('    < Remove order collection >');
       orders.remove();
-      orders.save(function (err, orders) {
-        if (err) throw err;
+      orders.save()
+      .then( function( orders ) {
 
         //region Check data
 

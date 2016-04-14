@@ -1086,42 +1086,49 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Deleting the business object has failed.
      */
-    this.save = function(callback) {
-
-      callback = Argument.inMethod(name, 'save')
-          .check(callback).forMandatory('callback').asFunction();
-
-      if (this.isValid()) {
-        /**
-         * The event arises before the business object instance will be saved in the repository.
-         * The event is followed by a preInsert, preUpdate or preRemove event depending on the
-         * state of the business object instance.
-         * @event EditableRootObject#preSave
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
-         */
-        switch (state) {
-          case MODEL_STATE.created:
-            data_insert(callback);
-            break;
-          case MODEL_STATE.changed:
-            data_update(callback);
-            break;
-          case MODEL_STATE.markedForRemoval:
-            data_remove(callback);
-            break;
-          default:
-            callback(null, this);
+    this.save = function() {
+      return new Promise( function ( fulfill, reject) {
+        if (self.isValid()) {
+          /**
+           * The event arises before the business object instance will be saved in the repository.
+           * The event is followed by a preInsert, preUpdate or preRemove event depending on the
+           * state of the business object instance.
+           * @event EditableRootObject#preSave
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
+           */
+          switch (state) {
+            case MODEL_STATE.created:
+              data_insert(function (err, inserted) {
+                if (err) reject( err );
+                else fulfill( inserted );
+              });
+              break;
+            case MODEL_STATE.changed:
+              data_update(function (err, updated) {
+                if (err) reject( err );
+                else  fulfill( updated );
+              });
+              break;
+            case MODEL_STATE.markedForRemoval:
+              data_remove(function (err, removed) {
+                if (err) reject( err );
+                else fulfill( removed );
+              });
+              break;
+            default:
+              callback(null, self);
+          }
+          /**
+           * The event arises after the business object instance has been saved in the repository.
+           * The event is preceded by a postInsert, postUpdate or postRemove event depending on the
+           * state of the business object instance.
+           * @event EditableRootObject#postSave
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
+           */
         }
-        /**
-         * The event arises after the business object instance has been saved in the repository.
-         * The event is preceded by a postInsert, postUpdate or postRemove event depending on the
-         * state of the business object instance.
-         * @event EditableRootObject#postSave
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
-         */
-      }
+      });
     };
 
     /**

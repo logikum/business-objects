@@ -16,10 +16,4 @@ var ClearScheduleCommand = Model('ClearScheduleCommand')
     // --- Build model class
     .compose();
 
-var ClearScheduleCommandFactory = {
-  create: function (eventHandlers, callback) {
-    ClearScheduleCommand.create(eventHandlers, callback);
-  }
-};
-
-module.exports = ClearScheduleCommandFactory;
+module.exports = ClearScheduleCommand;

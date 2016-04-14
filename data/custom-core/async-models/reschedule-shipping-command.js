@@ -68,10 +68,4 @@ extensions.addOtherMethod('reschedule');
 
 var RescheduleShippingCommand = bo.CommandObject('ClearScheduleCommand', properties, rules, extensions);
 
-var RescheduleShippingCommandFactory = {
-  create: function (eventHandlers, callback) {
-    RescheduleShippingCommand.create(eventHandlers, callback);
-  }
-};
-
-module.exports = RescheduleShippingCommandFactory;
+module.exports = RescheduleShippingCommand;

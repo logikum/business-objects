@@ -939,24 +939,20 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @param {external.cbDataPortal} callback - Returns the newly created business object
      *      of the collection.
      */
-    this.createItem = function (index, callback) {
-      if (!callback) {
-        callback = index;
-        index = items.length;
-      }
+    this.createItem = function (index) {
+      return new Promise( function( fulfill, reject ) {
+        index = index || items.length;
 
-      callback = Argument.inMethod(name, 'createItem')
-          .check(callback).forMandatory('callback').asFunction();
-
-      itemType.create(self, eventHandlers, function (err, item) {
-        if (err)
-          callback(err);
-        else {
-          var ix = parseInt(index, 10);
-          ix = isNaN(ix) ? items.length : ix;
-          items.splice(ix, 0, item);
-          callback(null, item);
-        }
+        itemType.create(self, eventHandlers, function (err, item) {
+          if (err)
+            reject(err);
+          else {
+            var ix = parseInt(index, 10);
+            ix = isNaN(ix) ? items.length : ix;
+            items.splice(ix, 0, item);
+            fulfill(item);
+          }
+        });
       });
     };
 
@@ -1008,61 +1004,65 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Deleting the business object collection has failed.
      */
-    this.save = function(callback) {
+    this.save = function() {
+      return new Promise( function ( fulfill, reject) {
 
-      callback = Argument.inMethod(name, 'save')
-          .check(callback).forMandatory('callback').asFunction();
-
-      function clearRemovedItems() {
-        items = items.filter(function (item) {
-          return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
-        });
-      }
-      if (this.isValid()) {
-        /**
-         * The event arises before the business object collection will be saved in the repository.
-         * The event is followed by a preInsert, preUpdate or preRemove event depending on the
-         * state of the business object collection.
-         * @event EditableRootCollection#preSave
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
-         */
-        switch (state) {
-          case MODEL_STATE.created:
-            data_insert(callback);
-            break;
-          case MODEL_STATE.changed:
-            data_update(function (err, updated) {
-              if (err)
-                callback(err);
-              else {
-                clearRemovedItems();
-                callback(null, self);
-              }
-            });
-            break;
-          case MODEL_STATE.markedForRemoval:
-            data_remove(function (err, removed) {
-              if (err)
-                callback(err);
-              else {
-                clearRemovedItems();
-                callback(null, null);
-              }
-            });
-            break;
-          default:
-            callback(null, this);
+        function clearRemovedItems() {
+          items = items.filter(function (item) {
+            return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
+          });
         }
-        /**
-         * The event arises after the business object collection has been saved in the repository.
-         * The event is preceded by a postInsert, postUpdate or postRemove event depending on the
-         * state of the business object collection.
-         * @event EditableRootCollection#postSave
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
-         */
-      }
+        if (self.isValid()) {
+          /**
+           * The event arises before the business object collection will be saved in the repository.
+           * The event is followed by a preInsert, preUpdate or preRemove event depending on the
+           * state of the business object collection.
+           * @event EditableRootCollection#preSave
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
+           */
+          switch (state) {
+            case MODEL_STATE.created:
+              data_insert(function (err, inserted) {
+                if (err) reject( err );
+                else fulfill( inserted );
+              });
+              break;
+            case MODEL_STATE.changed:
+              data_update(function (err, updated) {
+                if (err)
+                  reject( err );
+                else {
+                  clearRemovedItems();
+                  fulfill( updated );
+                }
+              });
+              break;
+            case MODEL_STATE.markedForRemoval:
+              data_remove(function (err, removed) {
+                if (err)
+                  reject( err );
+                else {
+                  clearRemovedItems();
+                  fulfill( removed );
+                }
+              });
+              break;
+            default:
+              fulfill( self );
+          }
+          /**
+           * The event arises after the business object collection has been saved in the repository.
+           * The event is preceded by a postInsert, postUpdate or postRemove event depending on the
+           * state of the business object collection.
+           * @event EditableRootCollection#postSave
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
+           */
+        }
+        else
+          reject(new Error('Invalid!'));
+      });
     };
 
     /**

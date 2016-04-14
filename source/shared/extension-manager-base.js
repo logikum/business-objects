@@ -177,15 +177,15 @@ function ExtensionManagerBase(dataSource, modelPath, addArgs) {
   this.buildOtherMethods = function (instance, isSync) {
     if (otherMethods) {
       if (isSync)
-        otherMethods.map(function (methodDef) {
-          instance[methodDef.name] = function () {
-            instance.execute(methodDef.name, methodDef.trx);
+        otherMethods.map(function (definition) {
+          instance[definition.name] = function () {
+            instance.execute(definition.name, definition.trx);
           };
         });
       else
-        otherMethods.map(function (methodDef) {
-          instance[methodDef.name] = function (callback) {
-            instance.execute(methodDef.name, methodDef.trx, callback);
+        otherMethods.map(function (definition) {
+          instance[definition.name] = function () {
+            return instance.execute(definition.name, definition.trx);
           };
         });
     }

@@ -157,8 +157,8 @@ describe('Asynchronous data portal method', function () {
 
       function save() {
 
-        order.save(function (err, order) {
-          if (err) throw err;
+        order.save()
+        .then( function( order ) {
 
           //region Check data
 
@@ -692,85 +692,90 @@ describe('Asynchronous data portal method', function () {
             schedule4.shipTo = 'Vienna';
             schedule4.shipDate = shipDate2;
 
-            //endregion
-
-            order.save(function (err, order) {
-              if (err) throw err;
-
-              //region Check data
-
-              expect(order.orderKey).toBe(2);
-              expect(order.vendorName).toBe('Summit Ltd.');
-              expect(order.contractDate).toBe(contractDate_u);
-              expect(order.totalPrice).toBe(672.5);
-              expect(order.schedules).toBe(3);
-              expect(order.enabled).toBe(false);
-              expect(order.createdDate.getDate()).toBe(new Date().getDate());
-              expect(order.modifiedDate.getDate()).toBe(new Date().getDate());
-
-              expect(order.items.count).toBe(2);
-
-              item1 = order.items.at(0);
-
-              expect(item1.orderItemKey).toBe(5);
-              expect(item1.orderKey).toBe(2);
-              expect(item1.productName).toBe('USB 3.0 hub');
-              expect(item1.obsolete).toBe(true);
-              expect(item1.expiry).toBe(expiry1);
-              expect(item1.quantity).toBe(11);
-              expect(item1.unitPrice).toBe(49.5);
-
-              item2 = order.items.at(1);
-
-              expect(item2.orderItemKey).toBe(6);
-              expect(item2.orderKey).toBe(2);
-              expect(item2.productName).toBe('DataExpert 32GB pen drive');
-              expect(item2.obsolete).toBe(false);
-              expect(item2.expiry).toBe(expiry2);
-              expect(item2.quantity).toBe(4);
-              expect(item2.unitPrice).toBe(32.0);
-
-              expect(item1.schedules.count).toBe(2);
-
-              schedule1 = item1.schedules.at(0);
-
-              expect(schedule1.orderScheduleKey).toBe(6);
-              expect(schedule1.orderItemKey).toBe(5);
-              expect(schedule1.quantity).toBe(4);
-              expect(schedule1.totalMass).toBe(0.48);
-              expect(schedule1.required).toBe(false);
-              expect(schedule1.shipTo).toBe('Stockholm');
-              expect(schedule1.shipDate).toBe(shipDate1);
-
-              schedule2 = item1.schedules.at(1);
-
-              expect(schedule2.orderScheduleKey).toBe(7);
-              expect(schedule2.orderItemKey).toBe(5);
-              expect(schedule2.quantity).toBe(7);
-              expect(schedule2.totalMass).toBe(0.84);
-              expect(schedule2.required).toBe(true);
-              expect(schedule2.shipTo).toBe('Vienna');
-              expect(schedule2.shipDate).toBe(shipDate2);
-
-              expect(item2.schedules.count).toBe(1);
-
-              schedule3 = item2.schedules.at(0);
-
-              expect(schedule3.orderScheduleKey).toBe(8);
-              expect(schedule3.orderItemKey).toBe(6);
-              expect(schedule3.quantity).toBe(4);
-              expect(schedule3.totalMass).toBe(0.06);
-              expect(schedule3.required).toBe(true);
-              expect(schedule3.shipTo).toBe('Vienna');
-              expect(schedule3.shipDate).toBe(shipDate2);
-
-              //endregion
-
-              done();
-            });
+            save();
           });
         });
       });
+
+      //endregion
+
+      function save() {
+
+        order.save()
+        .then( function( order ) {
+
+          //region Check data
+
+          expect(order.orderKey).toBe(2);
+          expect(order.vendorName).toBe('Summit Ltd.');
+          expect(order.contractDate).toBe(contractDate_u);
+          expect(order.totalPrice).toBe(672.5);
+          expect(order.schedules).toBe(3);
+          expect(order.enabled).toBe(false);
+          expect(order.createdDate.getDate()).toBe(new Date().getDate());
+          expect(order.modifiedDate.getDate()).toBe(new Date().getDate());
+
+          expect(order.items.count).toBe(2);
+
+          item1 = order.items.at(0);
+
+          expect(item1.orderItemKey).toBe(5);
+          expect(item1.orderKey).toBe(2);
+          expect(item1.productName).toBe('USB 3.0 hub');
+          expect(item1.obsolete).toBe(true);
+          expect(item1.expiry).toBe(expiry1);
+          expect(item1.quantity).toBe(11);
+          expect(item1.unitPrice).toBe(49.5);
+
+          item2 = order.items.at(1);
+
+          expect(item2.orderItemKey).toBe(6);
+          expect(item2.orderKey).toBe(2);
+          expect(item2.productName).toBe('DataExpert 32GB pen drive');
+          expect(item2.obsolete).toBe(false);
+          expect(item2.expiry).toBe(expiry2);
+          expect(item2.quantity).toBe(4);
+          expect(item2.unitPrice).toBe(32.0);
+
+          expect(item1.schedules.count).toBe(2);
+
+          schedule1 = item1.schedules.at(0);
+
+          expect(schedule1.orderScheduleKey).toBe(6);
+          expect(schedule1.orderItemKey).toBe(5);
+          expect(schedule1.quantity).toBe(4);
+          expect(schedule1.totalMass).toBe(0.48);
+          expect(schedule1.required).toBe(false);
+          expect(schedule1.shipTo).toBe('Stockholm');
+          expect(schedule1.shipDate).toBe(shipDate1);
+
+          schedule2 = item1.schedules.at(1);
+
+          expect(schedule2.orderScheduleKey).toBe(7);
+          expect(schedule2.orderItemKey).toBe(5);
+          expect(schedule2.quantity).toBe(7);
+          expect(schedule2.totalMass).toBe(0.84);
+          expect(schedule2.required).toBe(true);
+          expect(schedule2.shipTo).toBe('Vienna');
+          expect(schedule2.shipDate).toBe(shipDate2);
+
+          expect(item2.schedules.count).toBe(1);
+
+          schedule3 = item2.schedules.at(0);
+
+          expect(schedule3.orderScheduleKey).toBe(8);
+          expect(schedule3.orderItemKey).toBe(6);
+          expect(schedule3.quantity).toBe(4);
+          expect(schedule3.totalMass).toBe(0.06);
+          expect(schedule3.required).toBe(true);
+          expect(schedule3.shipTo).toBe('Vienna');
+          expect(schedule3.shipDate).toBe(shipDate2);
+
+          //endregion
+
+          done();
+        });
+      }
     });
   });
 
@@ -781,8 +786,8 @@ describe('Asynchronous data portal method', function () {
     .then( function( order ) {
 
       order.remove();
-      order.save(function (err, result) {
-        if (err) throw err;
+      order.save()
+      .then( function( result ) {
 
         expect(result).toBeNull();
 

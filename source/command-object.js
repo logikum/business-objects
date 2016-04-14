@@ -426,28 +426,23 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
      */
-    this.execute = function(method, isTransaction, callback) {
-      var check = Argument.inMethod(name, 'execute');
+    this.execute = function(method, isTransaction) {
+      return new Promise( function ( fulfill, reject) {
+        var check = Argument.inMethod(name, 'execute');
 
-      if (!callback) {
-        if (isTransaction) {
-          callback = isTransaction;
-          isTransaction = null;
-        } else {
-          callback = method;
-          method = null;
+        if (typeof method === 'boolean' || method instanceof Boolean) {
+          isTransaction = method;
+          method = M_EXECUTE;
         }
-      }
-      if (typeof method === 'boolean' || method instanceof Boolean) {
-        isTransaction = method;
-        method = M_EXECUTE;
-      }
 
-      method = check(method).forOptional('method').asString();
-      isTransaction = check(isTransaction).forOptional('isTransaction').asBoolean();
-      callback = check(callback).forMandatory('callback').asFunction();
+        method = check(method).forOptional('method').asString();
+        isTransaction = check(isTransaction).forOptional('isTransaction').asBoolean();
 
-      data_execute(method || M_EXECUTE, isTransaction, callback);
+        data_execute( method || M_EXECUTE, function( err, res ) {
+          if (err) reject( err );
+          else fulfill( res );
+        });
+      });
     };
 
     //endregion
@@ -636,18 +631,8 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The callback must be a function.
    */
-  CommandObject.create = function(eventHandlers, callback) {
-
-    if (!callback) {
-      callback = eventHandlers;
-      eventHandlers = undefined;
-    }
-
-    callback = Argument.inMethod(name, 'create')
-        .check(callback).forMandatory('callback').asFunction();
-
-    var instance = new CommandObject(eventHandlers);
-    callback(null, instance);
+  CommandObject.create = function(eventHandlers) {
+    return new CommandObject(eventHandlers);
   };
 
   //endregion

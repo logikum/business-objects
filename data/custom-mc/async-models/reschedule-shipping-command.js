@@ -53,10 +53,4 @@ var RescheduleShippingCommand = Model('RescheduleShippingCommand')
     // --- Build model class
     .compose();
 
-var RescheduleShippingCommandFactory = {
-  create: function (eventHandlers, callback) {
-    RescheduleShippingCommand.create(eventHandlers, callback);
-  }
-};
-
-module.exports = RescheduleShippingCommandFactory;
+module.exports = RescheduleShippingCommand;

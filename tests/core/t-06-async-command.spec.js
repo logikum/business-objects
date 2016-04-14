@@ -27,47 +27,46 @@ describe('Asynchronous data portal method', function () {
   it('execute of sample command', function () {
     console.log('\n*** Asynchronous EXECUTE');
 
-    ClearScheduleCommand.create(ehClearScheduleCommand, function (err, cmd) {
+    var cmd = ClearScheduleCommand.create(ehClearScheduleCommand);
 
-      cmd.on('preExecute', function (eventArgs) {
-        console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
-      });
-      cmd.on('postExecute', function (eventArgs) {
-        console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
-      });
+    cmd.on('preExecute', function (eventArgs) {
+      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
+    });
+    cmd.on('postExecute', function (eventArgs) {
+      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
+    });
 
-      cmd.orderKey = 1;
-      cmd.orderItemKey = 2;
-      cmd.orderScheduleKey = 3;
+    cmd.orderKey = 1;
+    cmd.orderItemKey = 2;
+    cmd.orderScheduleKey = 3;
 
-      cmd.execute(function (err, cmd) {
+    cmd.execute()
+    .then( function ( res ) {
 
-        expect(cmd.result).toBe(true);
-      });
+      expect(cmd.result).toBe(true);
     });
   });
 
   it('execute of custom command', function () {
     console.log('\n*** Asynchronous RESCHEDULE');
 
-    RescheduleShippingCommand.create(ehRescheduleShippingCommand, function (err, cmd) {
+    var cmd = RescheduleShippingCommand.create(ehRescheduleShippingCommand);
 
-      cmd.orderKey = 1;
-      cmd.orderItemKey = 2;
-      cmd.orderScheduleKey = 3;
+    cmd.orderKey = 1;
+    cmd.orderItemKey = 2;
+    cmd.orderScheduleKey = 3;
 
-      cmd.reschedule(function (err) {
-        if (err) throw err;
+    cmd.reschedule()
+    .then( function ( res ) {
 
-        expect(cmd.success).toBe(true);
-        expect(cmd.result).toEqual(jasmine.any(RescheduleShippingResult));
+      expect(cmd.success).toBe(true);
+      expect(cmd.result).toEqual(jasmine.any(RescheduleShippingResult));
 
-        expect(cmd.result.quantity).toBe(2);
-        expect(cmd.result.totalMass).toBe(0.21);
-        expect(cmd.result.required).toBe(false);
-        expect(cmd.result.shipTo).toBe('Berlin');
-        expect(cmd.result.shipDate).toEqual(new Date(2015, 1, 3));
-      });
+      expect(cmd.result.quantity).toBe(2);
+      expect(cmd.result.totalMass).toBe(0.21);
+      expect(cmd.result.required).toBe(false);
+      expect(cmd.result.shipTo).toBe('Berlin');
+      expect(cmd.result.shipDate).toEqual(new Date(2015, 1, 3));
     });
   });
 });
