@@ -16,7 +16,7 @@ var shipDate1 = new Date(2015, 12, 21, 12, 0);
 var shipDate2 = new Date(2016, 1, 12, 9, 45);
 var shipDate3 = new Date(2016, 2, 5, 17, 0);
 
-describe('Asynchronous data portal method', function () {
+xdescribe('Asynchronous data portal method', function () {
 
   //region Event handlers
 
