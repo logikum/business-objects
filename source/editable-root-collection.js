@@ -361,89 +361,91 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * Rebuilds the business object collection from a plain object array sent by the client.
      *
      * @function EditableRootCollection#fromCto
-     * @param {object} cto - The client transfer object.
+     * @param {object[]} cto - The client transfer object.
      * @param {external.cbFromCto} callback - Returns the eventual error.
      */
-    this.fromCto = function (cto, callback) {
-      if (extensions.fromCto)
-        extensions.fromCto.call(self, getTransferContext(true), cto);
-      else
-        baseFromCto(cto);
+    this.fromCto = function (cto) {
+      return new Promise( function ( fulfill, reject ) {
+        if (extensions.fromCto)
+          extensions.fromCto.call(self, getTransferContext(true), cto);
+        else
+          baseFromCto(cto);
 
-      // Build children.
-      if (!(cto instanceof Array))
-        callback(null);
+        // Build children.
+        if (!(cto instanceof Array))
+          fulfill(null);
 
-      var dataNew = cto.filter(function () { return true; });
-      var itemsLive = [];
-      var itemsLate = [];
-      var count = 0;
-      var error = null;
-      var index;
+        var dataNew = cto.filter(function () { return true; });
+        var itemsLive = [];
+        var itemsLate = [];
+        var count = 0;
+        var error = null;
+        var index;
 
-      function finish() {
-        if (++count == dataNew.length) {
-          return callback(error);
-        }
-      }
-      function handleOldNew() {
-        count = 0;
-
-        // Remove non existing items.
-        for (index = 0; index < itemsLate.length; index++) {
-          items[itemsLate[index]].remove();
-        }
-        // Insert non existing data.
-        if (dataNew.length) {
-          dataNew.forEach(function (cto) {
-            itemType.create(self, eventHandlers, function (err, item) {
-              if (err) {
-                error = error || err;
-                finish();
-              } else {
-                item.fromCto(cto, function (err) {
-                  if (err)
-                    error = error || err;
-                  else
-                    items.push(item);
-                  finish();
-                });
-              }
-            });
-          });
-        } else
-          return callback(null);
-      }
-
-      // Discover changed items.
-      for (index = 0; index < items.length; index++) {
-        var dataFound = false;
-        var i = 0;
-        for (; i < dataNew.length; i++) {
-          if (items[index].keyEquals(cto[i])) {
-            itemsLive.push({ item: index, cto: i });
-            dataFound = true;
-            break;
+        function finish() {
+          if (++count == dataNew.length) {
+            return error ? reject(error) : fulfill(null);
           }
         }
-        if (dataFound)
-          dataNew.splice(i, 1);
-        else
-          itemsLate.push(index);
-      }
-      // Update existing items.
-      if (itemsLive.length)
-        for (index = 0; index < itemsLive.length; index++) {
-          var ix = itemsLive[index];
-          items[ix.item].fromCto(cto[ix.cto], function (err) {
-            if (err)
-              error = error || err;
-            if (++count == itemsLive.length)
-              handleOldNew();
-          });
+        function handleOldNew() {
+          count = 0;
+
+          // Remove non existing items.
+          for (index = 0; index < itemsLate.length; index++) {
+            items[itemsLate[index]].remove();
+          }
+          // Insert non existing data.
+          if (dataNew.length) {
+            dataNew.forEach(function (cto) {
+              itemType.create(self, eventHandlers, function (err, item) {
+                if (err) {
+                  error = error || err;
+                  finish();
+                } else {
+                  item.fromCto(cto, function (err) {
+                    if (err)
+                      error = error || err;
+                    else
+                      items.push(item);
+                    finish();
+                  });
+                }
+              });
+            });
+          } else
+            return fulfill(null);
         }
-      else
-        handleOldNew();
+
+        // Discover changed items.
+        for (index = 0; index < items.length; index++) {
+          var dataFound = false;
+          var i = 0;
+          for (; i < dataNew.length; i++) {
+            if (items[index].keyEquals(cto[i])) {
+              itemsLive.push({ item: index, cto: i });
+              dataFound = true;
+              break;
+            }
+          }
+          if (dataFound)
+            dataNew.splice(i, 1);
+          else
+            itemsLate.push(index);
+        }
+        // Update existing items.
+        if (itemsLive.length)
+          for (index = 0; index < itemsLive.length; index++) {
+            var ix = itemsLive[index];
+            items[ix.item].fromCto(cto[ix.cto], function (err) {
+              if (err)
+                error = error || err;
+              if (++count == itemsLive.length)
+                handleOldNew();
+            });
+          }
+        else
+          handleOldNew();
+      });
     };
 
     //endregion

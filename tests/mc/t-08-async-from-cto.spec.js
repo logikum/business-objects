@@ -65,14 +65,11 @@ describe('Asynchronous fromCto method', function () {
   it('for creating sample editable model', function (done) {
     console.log('\n*** Asynchronous rebuild for sample CREATE');
 
-    BlanketOrder_S.create()
-    .then( function( order ) {
+    BlanketOrder_S.create().then( order => {
 
-      order.fromCto(data1, function (err) {
-        if (err) throw err;
+      order.fromCto(data1).then( () => {
 
-        order.save()
-        .then( function( order ) {
+        order.save().then( order => {
 
           //region Check data
 
@@ -218,14 +215,11 @@ describe('Asynchronous fromCto method', function () {
 
     //endregion
 
-    BlanketOrder_S.get( 5 )
-    .then( function( order ) {
+    BlanketOrder_S.get( 5 ).then( order => {
 
-      order.fromCto(data2, function (err) {
-        if (err) throw err;
+      order.fromCto(data2).then( () => {
 
-        order.save()
-        .then( function( order ) {
+        order.save().then( order => {
 
           //region Check data
 
@@ -305,15 +299,12 @@ describe('Asynchronous fromCto method', function () {
   it('for creating custom editable model', function (done) {
     console.log('\n*** Asynchronous rebuild for custom CREATE');
 
-    BlanketOrder_C.create()
-    .then( function( order ) {
+    BlanketOrder_C.create().then( order => {
 
-      order.fromCto(data1, function (err) {
-        if (err) throw err;
+      order.fromCto(data1).then( () => {
 
         if (order.isValid())
-          order.save()
-          .then( function( order ) {
+          order.save().then( order => {
 
             //region Check data
 
@@ -461,14 +452,11 @@ describe('Asynchronous fromCto method', function () {
 
     //endregion
 
-    BlanketOrder_C.get( 8 )
-    .then( function( order ) {
+    BlanketOrder_C.get( 8 ).then( order => {
 
-      order.fromCto(data3, function (err) {
-        if (err) throw err;
+      order.fromCto(data3).then( () => {
 
-        order.save()
-        .then( function( order ) {
+        order.save().then( order => {
 
           //region Check data
 

@@ -406,28 +406,31 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * @param {object} cto - The client transfer object.
      * @param {external.cbFromCto} callback - Returns the eventual error.
      */
-    this.fromCto = function (cto, callback) {
-      if (extensions.fromCto)
-        extensions.fromCto.call(self, getTransferContext(true), cto);
-      else
-        baseFromCto(cto);
-
-      // Build children.
-      var count = properties.childCount();
-      var error = null;
-
-      function finish (err) {
-        if (err)
-          error = error || err;
-        if (--count == 0)
-          return callback(error);
-      }
-      properties.children().forEach(function (property) {
-        var child = getPropertyValue(property);
-        if (cto[property.name])
-          child.fromCto(cto[property.name], finish);
+    this.fromCto = function (cto) {
+      return new Promise( function ( fulfill, reject ) {
+        if (extensions.fromCto)
+          extensions.fromCto.call(self, getTransferContext(true), cto);
         else
-          finish(null);
+          baseFromCto(cto);
+
+        // Build children.
+        var count = properties.childCount();
+        var error = null;
+
+        function finish(err) {
+          if (err)
+            error = error || err;
+          if (--count == 0)
+            return error ? reject(error) : fulfill(null);
+        }
+
+        properties.children().forEach(function (property) {
+          var child = getPropertyValue(property);
+          if (cto[property.name])
+            child.fromCto(cto[property.name], finish);
+          else
+            finish(null);
+        });
       });
     };
 

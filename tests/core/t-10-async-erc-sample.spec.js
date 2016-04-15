@@ -714,8 +714,7 @@ describe('Asynchronous data portal method', function () {
       BlanketOrders.create( ehBlanketOrders )
       .then( orders2 => {
 
-        orders2.fromCto(data, function (err) {
-          if (err) throw err;
+        orders2.fromCto(data).then( value => {
 
           //region Check data
 
