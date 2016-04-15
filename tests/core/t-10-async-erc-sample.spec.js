@@ -103,15 +103,11 @@ describe('Asynchronous data portal method', function () {
   it('create of sample editable collection', function (done) {
     console.log('\n*** Asynchronous collection CREATE');
 
-    console.log('    < Create order collection >');
-    BlanketOrders.create( ehBlanketOrders )
-    .then( function( orders ) {
+    //region Load data
 
-      //region Load data
-
+    function createOrder1( list ) {
       console.log('    < Create order #1 >');
-      orders.createItem()
-      .then( function( order1 ) {
+      return list.createItem().then( order1 => {
 
         order1.vendorName = 'Blue Zebra';
         order1.contractDate = contractDate1;
@@ -128,234 +124,270 @@ describe('Asynchronous data portal method', function () {
         address1.line2 = '';
         address1.postalCode = '20133';
 
-        order1.items.createItem()
-        .then( function (item1) {
-
-          item1.productName = 'D810A';
-          item1.obsolete = false;
-          item1.expiry = expiry1;
-          item1.quantity = 10;
-          item1.unitPrice = 30;
-
-          order1.items.createItem()
-          .then( function (item2) {
-
-            item2.productName = 'R8';
-            item2.obsolete = false;
-            item2.expiry = expiry2;
-            item2.quantity = 5;
-            item2.unitPrice = 20;
-
-            item1.schedules.createItem()
-            .then( function (schedule1) {
-
-              schedule1.quantity = 5;
-              schedule1.totalMass = 2.5;
-              schedule1.required = true;
-              schedule1.shipTo = 'Bologna';
-              schedule1.shipDate = shipDate1;
-
-              item1.schedules.createItem()
-              .then( function (schedule2) {
-
-                schedule2.quantity = 5;
-                schedule2.totalMass = 2.5;
-                schedule2.required = true;
-                schedule2.shipTo = 'Verona';
-                schedule2.shipDate = shipDate2;
-
-                console.log('    < Create order #2 >');
-                orders.createItem()
-                .then( function( order2 ) {
-
-                  order2.vendorName = 'Black Spider';
-                  order2.contractDate = contractDate2;
-                  order2.totalPrice = 6600.0;
-                  order2.schedules = 3;
-                  order2.enabled = true;
-
-                  var address2 = order2.address;
-
-                  address2.country = 'Poland';
-                  address2.state = '';
-                  address2.city = 'Warsawa';
-                  address2.line1 = 'ul. Żeromskiego 77';
-                  address2.line2 = 'III piętro';
-                  address2.postalCode = '01-882';
-
-                  order2.items.createItem()
-                  .then( function (item3) {
-
-                    item3.productName = 'Platforma SIRP';
-                    item3.obsolete = false;
-                    item3.expiry = expiry3;
-                    item3.quantity = 110;
-                    item3.unitPrice = 60;
-
-                    var schedule3 = item3.schedules.createItem()
-                    .then( function (schedule3) {
-
-                      schedule3.quantity = 45;
-                      schedule3.totalMass = 540;
-                      schedule3.required = false;
-                      schedule3.shipTo = 'Krakow';
-                      schedule3.shipDate = shipDate3;
-
-                      save();
-                    });
-                  });
-                });
-              });
-            });
-          });
+        return Promise.all([
+          createItem1( order1.items ),
+          createItem2( order1.items )
+        ]).then( items => {
+          return order1;
         });
       });
+    }
+    function createOrder2( list ) {
+      console.log('    < Create order #2 >');
+      return list.createItem().then( order2 => {
 
-      //endregion
+        order2.vendorName = 'Black Spider';
+        order2.contractDate = contractDate2;
+        order2.totalPrice = 6600.0;
+        order2.schedules = 3;
+        order2.enabled = true;
 
-      function save() {
-        console.log('    < Save order collection >');
+        var address2 = order2.address;
 
-        orders.save()
-        .then( function( orders ) {
+        address2.country = 'Poland';
+        address2.state = '';
+        address2.city = 'Warsawa';
+        address2.line1 = 'ul. Żeromskiego 77';
+        address2.line2 = 'III piętro';
+        address2.postalCode = '01-882';
 
-          //region Check data
-
-          expect(orders.count).toBe(2);
-
-          /* ---------------------------------------- */
-
-          var order1 = orders.at(0);
-
-          expect(order1.orderKey).toBe(12);
-          expect(order1.vendorName).toBe('Blue Zebra');
-          expect(order1.contractDate).toBe(contractDate1);
-          expect(order1.totalPrice).toBe(400.0);
-          expect(order1.schedules).toBe(2);
-          expect(order1.enabled).toBe(true);
-          expect(order1.createdDate.getDate()).toBe(new Date().getDate());
-          expect(order1.modifiedDate).toBeNull();
-
-          address1 = order1.address;
-
-          expect(address1.addressKey).toBe(12);
-          expect(address1.orderKey).toBe(12);
-          expect(address1.country).toBe('Italia');
-          expect(address1.state).toBe('');
-          expect(address1.city).toBe('Milano');
-          expect(address1.line1).toBe('Via Battistotti Sassi 11/A');
-          expect(address1.line2).toBe('');
-          expect(address1.postalCode).toBe('20133');
-
-          expect(order1.items.count).toBe(2);
-
-          item1 = order1.items.at(0);
-
-          expect(item1.orderItemKey).toBe(31);
-          expect(item1.orderKey).toBe(12);
-          expect(item1.productName).toBe('D810A');
-          expect(item1.obsolete).toBe(false);
-          expect(item1.expiry).toBe(expiry1);
-          expect(item1.quantity).toBe(10);
-          expect(item1.unitPrice).toBe(30);
-
-          item2 = order1.items.at(1);
-
-          expect(item2.orderItemKey).toBe(32);
-          expect(item2.orderKey).toBe(12);
-          expect(item2.productName).toBe('R8');
-          expect(item2.obsolete).toBe(false);
-          expect(item2.expiry).toBe(expiry2);
-          expect(item2.quantity).toBe(5);
-          expect(item2.unitPrice).toBe(20);
-
-          expect(item1.schedules.count).toBe(2);
-
-          expect(item2.schedules.count).toBe(0);
-
-          schedule1 = item1.schedules.at(0);
-
-          expect(schedule1.orderScheduleKey).toBe(40);
-          expect(schedule1.orderItemKey).toBe(31);
-          expect(schedule1.quantity).toBe(5);
-          expect(schedule1.totalMass).toBe(2.5);
-          expect(schedule1.required).toBe(true);
-          expect(schedule1.shipTo).toBe('Bologna');
-          expect(schedule1.shipDate).toBe(shipDate1);
-
-          schedule2 = item1.schedules.at(1);
-
-          expect(schedule2.orderScheduleKey).toBe(41);
-          expect(schedule2.orderItemKey).toBe(31);
-          expect(schedule2.quantity).toBe(5);
-          expect(schedule2.totalMass).toBe(2.5);
-          expect(schedule2.required).toBe(true);
-          expect(schedule2.shipTo).toBe('Verona');
-          expect(schedule2.shipDate).toBe(shipDate2);
-
-          /* ---------------------------------------- */
-
-          var order2 = orders.at(1);
-
-          expect(order2.orderKey).toBe(13);
-          expect(order2.vendorName).toBe('Black Spider');
-          expect(order2.contractDate).toBe(contractDate2);
-          expect(order2.totalPrice).toBe(6600.0);
-          expect(order2.schedules).toBe(3);
-          expect(order2.enabled).toBe(true);
-          expect(order2.createdDate.getDate()).toBe(new Date().getDate());
-          expect(order2.modifiedDate).toBeNull();
-
-          address2 = order2.address;
-
-          expect(address2.addressKey).toBe(13);
-          expect(address2.orderKey).toBe(13);
-          expect(address2.country).toBe('Poland');
-          expect(address2.state).toBe('');
-          expect(address2.city).toBe('Warsawa');
-          expect(address2.line1).toBe('ul. Żeromskiego 77');
-          expect(address2.line2).toBe('III piętro');
-          expect(address2.postalCode).toBe('01-882');
-
-          item3 = order2.items.at(0);
-
-          expect(item3.orderItemKey).toBe(33);
-          expect(item3.orderKey).toBe(13);
-          expect(item3.productName).toBe('Platforma SIRP');
-          expect(item3.obsolete).toBe(false);
-          expect(item3.expiry).toBe(expiry3);
-          expect(item3.quantity).toBe(110);
-          expect(item3.unitPrice).toBe(60);
-
-          schedule3 = item3.schedules.at(0);
-
-          expect(schedule3.orderScheduleKey).toBe(42);
-          expect(schedule3.orderItemKey).toBe(33);
-          expect(schedule3.quantity).toBe(45);
-          expect(schedule3.totalMass).toBe(540);
-          expect(schedule3.required).toBe(false);
-          expect(schedule3.shipTo).toBe('Krakow');
-          expect(schedule3.shipDate).toBe(shipDate3);
-
-          //endregion
-
-          done();
+        createItem3( order2.items ).then( item3 => {
+          return order2;
         });
-      }
+      });
+    }
+    function createItem1( items ) {
+      return items.createItem().then( item1 => {
+
+        item1.productName = 'D810A';
+        item1.obsolete = false;
+        item1.expiry = expiry1;
+        item1.quantity = 10;
+        item1.unitPrice = 30;
+
+        return Promise.all([
+          createSchedule1( item1.schedules ),
+          createSchedule2( item1.schedules )
+        ]).then( schedules => {
+          return item1;
+        });
+      });
+    }
+    function createItem2( items ) {
+      return items.createItem().then( item2 => {
+
+        item2.productName = 'R8';
+        item2.obsolete = false;
+        item2.expiry = expiry2;
+        item2.quantity = 5;
+        item2.unitPrice = 20;
+
+        return item2;
+      });
+    }
+    function createItem3( items ) {
+      return items.createItem().then( item3 => {
+
+        item3.productName = 'Platforma SIRP';
+        item3.obsolete = false;
+        item3.expiry = expiry3;
+        item3.quantity = 110;
+        item3.unitPrice = 60;
+
+        createSchedule3( item3.schedules ).then( schedule3 => {
+          return item3;
+        });
+      });
+    }
+    function createSchedule1( schedules ) {
+      return schedules.createItem().then( schedule1 => {
+
+        schedule1.quantity = 5;
+        schedule1.totalMass = 2.5;
+        schedule1.required = true;
+        schedule1.shipTo = 'Bologna';
+        schedule1.shipDate = shipDate1;
+
+        return schedule1;
+      });
+    }
+    function createSchedule2( schedules ) {
+      return schedules.createItem().then( schedule2 => {
+
+        schedule2.quantity = 5;
+        schedule2.totalMass = 2.5;
+        schedule2.required = true;
+        schedule2.shipTo = 'Verona';
+        schedule2.shipDate = shipDate2;
+
+        return schedule2;
+      });
+    }
+    function createSchedule3( schedules ) {
+      return schedules.createItem().then( schedule3 => {
+
+        schedule3.quantity = 45;
+        schedule3.totalMass = 540;
+        schedule3.required = false;
+        schedule3.shipTo = 'Krakow';
+        schedule3.shipDate = shipDate3;
+
+        return schedule3;
+      });
+    }
+
+    //endregion
+
+    console.log('    < Create order collection >');
+    BlanketOrders.create( ehBlanketOrders )
+    .then( list => {
+      return Promise.all([
+        createOrder1( list ),
+        createOrder2( list )
+      ]).then( orders => {
+        return list;
+      });
+    }).then( list => {
+      console.log('    < Save order collection >');
+      return list.save()
+      .then( orders => {
+
+        //region Check data
+
+        expect(orders.count).toBe(2);
+
+        /* ---------------------------------------- */
+
+        var order1 = orders.at(0);
+
+        expect(order1.orderKey).toBe(12);
+        expect(order1.vendorName).toBe('Blue Zebra');
+        expect(order1.contractDate).toBe(contractDate1);
+        expect(order1.totalPrice).toBe(400.0);
+        expect(order1.schedules).toBe(2);
+        expect(order1.enabled).toBe(true);
+        expect(order1.createdDate.getDate()).toBe(new Date().getDate());
+        expect(order1.modifiedDate).toBeNull();
+
+        address1 = order1.address;
+
+        expect(address1.addressKey).toBe(12);
+        expect(address1.orderKey).toBe(12);
+        expect(address1.country).toBe('Italia');
+        expect(address1.state).toBe('');
+        expect(address1.city).toBe('Milano');
+        expect(address1.line1).toBe('Via Battistotti Sassi 11/A');
+        expect(address1.line2).toBe('');
+        expect(address1.postalCode).toBe('20133');
+
+        expect(order1.items.count).toBe(2);
+
+        item1 = order1.items.at(0);
+
+        expect(item1.orderItemKey).toBe(31);
+        expect(item1.orderKey).toBe(12);
+        expect(item1.productName).toBe('D810A');
+        expect(item1.obsolete).toBe(false);
+        expect(item1.expiry).toBe(expiry1);
+        expect(item1.quantity).toBe(10);
+        expect(item1.unitPrice).toBe(30);
+
+        item2 = order1.items.at(1);
+
+        expect(item2.orderItemKey).toBe(32);
+        expect(item2.orderKey).toBe(12);
+        expect(item2.productName).toBe('R8');
+        expect(item2.obsolete).toBe(false);
+        expect(item2.expiry).toBe(expiry2);
+        expect(item2.quantity).toBe(5);
+        expect(item2.unitPrice).toBe(20);
+
+        expect(item1.schedules.count).toBe(2);
+
+        expect(item2.schedules.count).toBe(0);
+
+        schedule1 = item1.schedules.at(0);
+
+        expect(schedule1.orderScheduleKey).toBe(40);
+        expect(schedule1.orderItemKey).toBe(31);
+        expect(schedule1.quantity).toBe(5);
+        expect(schedule1.totalMass).toBe(2.5);
+        expect(schedule1.required).toBe(true);
+        expect(schedule1.shipTo).toBe('Bologna');
+        expect(schedule1.shipDate).toBe(shipDate1);
+
+        schedule2 = item1.schedules.at(1);
+
+        expect(schedule2.orderScheduleKey).toBe(41);
+        expect(schedule2.orderItemKey).toBe(31);
+        expect(schedule2.quantity).toBe(5);
+        expect(schedule2.totalMass).toBe(2.5);
+        expect(schedule2.required).toBe(true);
+        expect(schedule2.shipTo).toBe('Verona');
+        expect(schedule2.shipDate).toBe(shipDate2);
+
+        /* ---------------------------------------- */
+
+        var order2 = orders.at(1);
+
+        expect(order2.orderKey).toBe(13);
+        expect(order2.vendorName).toBe('Black Spider');
+        expect(order2.contractDate).toBe(contractDate2);
+        expect(order2.totalPrice).toBe(6600.0);
+        expect(order2.schedules).toBe(3);
+        expect(order2.enabled).toBe(true);
+        expect(order2.createdDate.getDate()).toBe(new Date().getDate());
+        expect(order2.modifiedDate).toBeNull();
+
+        address2 = order2.address;
+
+        expect(address2.addressKey).toBe(13);
+        expect(address2.orderKey).toBe(13);
+        expect(address2.country).toBe('Poland');
+        expect(address2.state).toBe('');
+        expect(address2.city).toBe('Warsawa');
+        expect(address2.line1).toBe('ul. Żeromskiego 77');
+        expect(address2.line2).toBe('III piętro');
+        expect(address2.postalCode).toBe('01-882');
+
+        item3 = order2.items.at(0);
+
+        expect(item3.orderItemKey).toBe(33);
+        expect(item3.orderKey).toBe(13);
+        expect(item3.productName).toBe('Platforma SIRP');
+        expect(item3.obsolete).toBe(false);
+        expect(item3.expiry).toBe(expiry3);
+        expect(item3.quantity).toBe(110);
+        expect(item3.unitPrice).toBe(60);
+
+        schedule3 = item3.schedules.at(0);
+
+        expect(schedule3.orderScheduleKey).toBe(42);
+        expect(schedule3.orderItemKey).toBe(33);
+        expect(schedule3.quantity).toBe(45);
+        expect(schedule3.totalMass).toBe(540);
+        expect(schedule3.required).toBe(false);
+        expect(schedule3.shipTo).toBe('Krakow');
+        expect(schedule3.shipDate).toBe(shipDate3);
+
+        //endregion
+
+        done();
+      });
+    }).catch( reason => {
+      console.log( reason );
     });
   });
 
   it('update of sample editable collection', function (done) {
     console.log('\n*** Asynchronous collection UPDATE');
 
-    console.log('    < Fetch order collection >');
-    BlanketOrders.getFromTo( 12, 13, ehBlanketOrders )
-    .then( function( orders ) {
+    //region Update data
 
-      //region Update data
-
+    function updateOrder1( list ) {
       console.log('    < Update order #1 >');
-      var order1 = orders.at(0);
+
+      var order1 = list.at(0);
 
       order1.vendorName = 'Pink Giraffe';
       order1.contractDate = contractDate2;
@@ -383,8 +415,62 @@ describe('Asynchronous data portal method', function () {
       var item2 = order1.items.at(1);
       item2.remove();
 
-      order1.items.createItem()
-      .then( function (item3) {
+      var schedule1 = item1.schedules.at(0);
+      schedule1.remove();
+
+      var schedule2 = item1.schedules.at(1);
+
+      schedule2.quantity = 10;
+      schedule2.totalMass = 2.5;
+      schedule2.required = true;
+      schedule2.shipTo = 'Verona';
+      schedule2.shipDate = shipDate1;
+
+      return Promise.all([
+        createItem3( order1.items ),
+        createSchedule3( item1.schedules )
+      ]).then( values => {
+        return order1;
+      });
+    }
+
+    function deleteOrder2( list ) {
+      console.log('    < Delete order #2 >');
+
+      var order2 = list.at(1);
+      order2.remove();
+
+      return order2;
+    }
+
+    function createOrder3( list ) {
+      console.log('    < Create order #3 >');
+
+      return list.createItem().then( order3 => {
+
+        order3.vendorName = 'Coward Rabbit';
+        order3.contractDate = contractDate3;
+        order3.totalPrice = 980;
+        order3.schedules = 5;
+        order3.enabled = false;
+
+        var address2 = order3.address;
+
+        address2.country = 'Slovakia';
+        address2.state = '';
+        address2.city = 'Komárno';
+        address2.line1 = 'Ulica františkánov 22.';
+        address2.line2 = '';
+        address2.postalCode = '945 01';
+
+        return createItem4( order3.items ).then( item4 => {
+          return order3;
+        });
+      });
+    }
+
+    function createItem3( items ) {
+      return items.createItem().then( item3 => {
 
         item3.productName = 'Babel Tower';
         item3.obsolete = false;
@@ -392,249 +478,241 @@ describe('Asynchronous data portal method', function () {
         item3.quantity = 3;
         item3.unitPrice = 49.9;
 
-        var schedule1 = item1.schedules.at(0);
-        schedule1.remove();
-
-        item1.schedules.createItem()
-        .then( function (schedule3) {
-
-          schedule3.quantity = 10;
-          schedule3.totalMass = 2.5;
-          schedule3.required = false;
-          schedule3.shipTo = 'Torino';
-          schedule3.shipDate = shipDate2;
-
-          var schedule2 = item1.schedules.at(1);
-
-          schedule2.quantity = 10;
-          schedule2.totalMass = 2.5;
-          schedule2.required = true;
-          schedule2.shipTo = 'Verona';
-          schedule2.shipDate = shipDate1;
-
-          item3.schedules.createItem()
-          .then( function (schedule4) {
-
-            schedule4.quantity = 3;
-            schedule4.totalMass = 23.4;
-            schedule4.required = true;
-            schedule4.shipTo = 'Siena';
-            schedule4.shipDate = shipDate3;
-
-            console.log('    < Delete order #2 >');
-            var order2 = orders.at(1);
-            order2.remove();
-
-            console.log('    < Create order #3 >');
-            orders.createItem()
-            .then( function( order3 ) {
-
-              order3.vendorName = 'Coward Rabbit';
-              order3.contractDate = contractDate3;
-              order3.totalPrice = 980;
-              order3.schedules = 5;
-              order3.enabled = false;
-
-              var address2 = order3.address;
-
-              address2.country = 'Slovakia';
-              address2.state = '';
-              address2.city = 'Komárno';
-              address2.line1 = 'Ulica františkánov 22.';
-              address2.line2 = '';
-              address2.postalCode = '945 01';
-
-              order3.items.createItem()
-              .then( function (item4) {
-
-                item4.productName = 'OpenShift Origin';
-                item4.obsolete = false;
-                item4.expiry = expiry1;
-                item4.quantity = 49;
-                item4.unitPrice = 4.0;
-
-                item4.schedules.createItem()
-                .then( function (schedule5) {
-
-                  schedule5.quantity = 10;
-                  schedule5.totalMass = 13.7;
-                  schedule5.required = true;
-                  schedule5.shipTo = 'Bratislava';
-                  schedule5.shipDate = shipDate3;
-
-                  save();
-                });
-              });
-            });
-          });
+        return createSchedule4( item3.schedules ).then( schedule4 => {
+          return item3;
         });
       });
+    }
 
-      //endregion
+    function createItem4( items ) {
+      return items.createItem().then( item4 => {
 
-      function save() {
-        console.log('    < Save order collection >');
+        item4.productName = 'OpenShift Origin';
+        item4.obsolete = false;
+        item4.expiry = expiry1;
+        item4.quantity = 49;
+        item4.unitPrice = 4.0;
 
-        orders.save()
-        .then( function( orders ) {
-
-          //region Check data
-
-          expect(orders.count).toBe(2);
-
-          /* ---------------------------------------- */
-
-          var order1 = orders.at(0);
-
-          expect(order1.orderKey).toBe(12);
-          expect(order1.vendorName).toBe('Pink Giraffe');
-          expect(order1.contractDate).toBe(contractDate2);
-          expect(order1.totalPrice).toBe(500.0);
-          expect(order1.schedules).toBe(5);
-          expect(order1.enabled).toBe(false);
-          expect(order1.createdDate.getDate()).toBe(new Date().getDate());
-          expect(order1.modifiedDate.getDate()).toBe(new Date().getDate());
-
-          address1 = order1.address;
-
-          expect(address1.addressKey).toBe(12);
-          expect(address1.orderKey).toBe(12);
-          expect(address1.country).toBe('Italia');
-          expect(address1.state).toBe('');
-          expect(address1.city).toBe('Milano');
-          expect(address1.line1).toBe('Via Battistotti Sassi 13');
-          expect(address1.line2).toBe('');
-          expect(address1.postalCode).toBe('20133');
-
-          expect(order1.items.count).toBe(2);
-
-          item1 = order1.items.at(0);
-
-          expect(item1.orderItemKey).toBe(31);
-          expect(item1.orderKey).toBe(12);
-          expect(item1.productName).toBe('D810B');
-          expect(item1.obsolete).toBe(false);
-          expect(item1.expiry).toBe(expiry2);
-          expect(item1.quantity).toBe(20);
-          expect(item1.unitPrice).toBe(35);
-
-          item2 = order1.items.at(1);
-
-          expect(item2.orderItemKey).toBe(34);
-          expect(item2.orderKey).toBe(12);
-          expect(item2.productName).toBe('Babel Tower');
-          expect(item2.obsolete).toBe(false);
-          expect(item2.expiry).toBe(expiry1);
-          expect(item2.quantity).toBe(3);
-          expect(item2.unitPrice).toBe(49.9);
-
-          expect(item1.schedules.count).toBe(2);
-
-          expect(item2.schedules.count).toBe(1);
-
-          schedule1 = item1.schedules.at(0);
-
-          expect(schedule1.orderScheduleKey).toBe(41);
-          expect(schedule1.orderItemKey).toBe(31);
-          expect(schedule1.quantity).toBe(10);
-          expect(schedule1.totalMass).toBe(2.5);
-          expect(schedule1.required).toBe(true);
-          expect(schedule1.shipTo).toBe('Verona');
-          expect(schedule1.shipDate).toBe(shipDate1);
-
-          schedule2 = item1.schedules.at(1);
-
-          expect(schedule2.orderScheduleKey).toBe(43);
-          expect(schedule2.orderItemKey).toBe(31);
-          expect(schedule2.quantity).toBe(10);
-          expect(schedule2.totalMass).toBe(2.5);
-          expect(schedule2.required).toBe(false);
-          expect(schedule2.shipTo).toBe('Torino');
-          expect(schedule2.shipDate).toBe(shipDate2);
-
-          schedule3 = item2.schedules.at(0);
-
-          expect(schedule3.orderScheduleKey).toBe(44);
-          expect(schedule3.orderItemKey).toBe(34);
-          expect(schedule3.quantity).toBe(3);
-          expect(schedule3.totalMass).toBe(23.4);
-          expect(schedule3.required).toBe(true);
-          expect(schedule3.shipTo).toBe('Siena');
-          expect(schedule3.shipDate).toBe(shipDate3);
-
-          /* ---------------------------------------- */
-
-          var order2 = orders.at(1);
-
-          expect(order2.orderKey).toBe(14);
-          expect(order2.vendorName).toBe('Coward Rabbit');
-          expect(order2.contractDate).toBe(contractDate3);
-          expect(order2.totalPrice).toBe(980);
-          expect(order2.schedules).toBe(5);
-          expect(order2.enabled).toBe(false);
-          expect(order2.createdDate.getDate()).toBe(new Date().getDate());
-          expect(order2.modifiedDate).toBeNull();
-
-          address2 = order2.address;
-
-          address2.country = 'Slovakia';
-          address2.state = '';
-          address2.city = 'Komárno';
-          address2.line1 = 'Ulica františkánov 22.';
-          address2.line2 = '';
-          address2.postalCode = '945 01';
-
-          expect(address2.addressKey).toBe(14);
-          expect(address2.orderKey).toBe(14);
-          expect(address2.country).toBe('Slovakia');
-          expect(address2.state).toBe('');
-          expect(address2.city).toBe('Komárno');
-          expect(address2.line1).toBe('Ulica františkánov 22.');
-          expect(address2.line2).toBe('');
-          expect(address2.postalCode).toBe('945 01');
-
-          expect(order2.items.count).toBe(1);
-
-          item3 = order2.items.at(0);
-
-          expect(item3.orderItemKey).toBe(35);
-          expect(item3.orderKey).toBe(14);
-          expect(item3.productName).toBe('OpenShift Origin');
-          expect(item3.obsolete).toBe(false);
-          expect(item3.expiry).toBe(expiry1);
-          expect(item3.quantity).toBe(49);
-          expect(item3.unitPrice).toBe(4.0);
-
-          expect(item3.schedules.count).toBe(1);
-
-          schedule3 = item3.schedules.at(0);
-
-          expect(schedule3.orderScheduleKey).toBe(45);
-          expect(schedule3.orderItemKey).toBe(35);
-          expect(schedule3.quantity).toBe(10);
-          expect(schedule3.totalMass).toBe(13.7);
-          expect(schedule3.required).toBe(true);
-          expect(schedule3.shipTo).toBe('Bratislava');
-          expect(schedule3.shipDate).toBe(shipDate3);
-
-          //endregion
-
-          done();
+        return createSchedule5( item4.schedules ).then( schedule5 => {
+          return item4;
         });
-      }
+      });
+    }
+
+    function createSchedule3( schedules ) {
+      return schedules.createItem().then( schedule3 => {
+
+        schedule3.quantity = 10;
+        schedule3.totalMass = 2.5;
+        schedule3.required = false;
+        schedule3.shipTo = 'Torino';
+        schedule3.shipDate = shipDate2;
+
+        return schedule3;
+      });
+    }
+
+    function createSchedule4( schedules ) {
+      return schedules.createItem().then( schedule4 => {
+
+        schedule4.quantity = 3;
+        schedule4.totalMass = 23.4;
+        schedule4.required = true;
+        schedule4.shipTo = 'Siena';
+        schedule4.shipDate = shipDate3;
+
+        return schedule4;
+      });
+    }
+
+    function createSchedule5( schedules ) {
+      return schedules.createItem().then( schedule5 => {
+
+        schedule5.quantity = 10;
+        schedule5.totalMass = 13.7;
+        schedule5.required = true;
+        schedule5.shipTo = 'Bratislava';
+        schedule5.shipDate = shipDate3;
+
+        return schedule5;
+      });
+    }
+
+    //endregion
+
+    console.log('    < Fetch order collection >');
+    BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
+    .then( list => {
+      return Promise.all([
+        updateOrder1( list ),
+        deleteOrder2( list ),
+        createOrder3( list )
+      ]).then( orders => {
+        return list;
+      });
+    }).then( list => {
+      console.log('    < Save order collection >');
+      return list.save()
+      .then( orders => {
+
+        //region Check data
+
+        expect(orders.count).toBe(2);
+
+        /* ---------------------------------------- */
+
+        var order1 = orders.at(0);
+
+        expect(order1.orderKey).toBe(12);
+        expect(order1.vendorName).toBe('Pink Giraffe');
+        expect(order1.contractDate).toBe(contractDate2);
+        expect(order1.totalPrice).toBe(500.0);
+        expect(order1.schedules).toBe(5);
+        expect(order1.enabled).toBe(false);
+        expect(order1.createdDate.getDate()).toBe(new Date().getDate());
+        expect(order1.modifiedDate.getDate()).toBe(new Date().getDate());
+
+        address1 = order1.address;
+
+        expect(address1.addressKey).toBe(12);
+        expect(address1.orderKey).toBe(12);
+        expect(address1.country).toBe('Italia');
+        expect(address1.state).toBe('');
+        expect(address1.city).toBe('Milano');
+        expect(address1.line1).toBe('Via Battistotti Sassi 13');
+        expect(address1.line2).toBe('');
+        expect(address1.postalCode).toBe('20133');
+
+        expect(order1.items.count).toBe(2);
+
+        item1 = order1.items.at(0);
+
+        expect(item1.orderItemKey).toBe(31);
+        expect(item1.orderKey).toBe(12);
+        expect(item1.productName).toBe('D810B');
+        expect(item1.obsolete).toBe(false);
+        expect(item1.expiry).toBe(expiry2);
+        expect(item1.quantity).toBe(20);
+        expect(item1.unitPrice).toBe(35);
+
+        item2 = order1.items.at(1);
+
+        expect(item2.orderItemKey).toBe(34);
+        expect(item2.orderKey).toBe(12);
+        expect(item2.productName).toBe('Babel Tower');
+        expect(item2.obsolete).toBe(false);
+        expect(item2.expiry).toBe(expiry1);
+        expect(item2.quantity).toBe(3);
+        expect(item2.unitPrice).toBe(49.9);
+
+        expect(item1.schedules.count).toBe(2);
+
+        expect(item2.schedules.count).toBe(1);
+
+        schedule1 = item1.schedules.at(0);
+
+        expect(schedule1.orderScheduleKey).toBe(41);
+        expect(schedule1.orderItemKey).toBe(31);
+        expect(schedule1.quantity).toBe(10);
+        expect(schedule1.totalMass).toBe(2.5);
+        expect(schedule1.required).toBe(true);
+        expect(schedule1.shipTo).toBe('Verona');
+        expect(schedule1.shipDate).toBe(shipDate1);
+
+        schedule2 = item1.schedules.at(1);
+
+        expect(schedule2.orderScheduleKey).toBe(43);
+        expect(schedule2.orderItemKey).toBe(31);
+        expect(schedule2.quantity).toBe(10);
+        expect(schedule2.totalMass).toBe(2.5);
+        expect(schedule2.required).toBe(false);
+        expect(schedule2.shipTo).toBe('Torino');
+        expect(schedule2.shipDate).toBe(shipDate2);
+
+        schedule3 = item2.schedules.at(0);
+
+        expect(schedule3.orderScheduleKey).toBe(44);
+        expect(schedule3.orderItemKey).toBe(34);
+        expect(schedule3.quantity).toBe(3);
+        expect(schedule3.totalMass).toBe(23.4);
+        expect(schedule3.required).toBe(true);
+        expect(schedule3.shipTo).toBe('Siena');
+        expect(schedule3.shipDate).toBe(shipDate3);
+
+        /* ---------------------------------------- */
+
+        var order2 = orders.at(1);
+
+        expect(order2.orderKey).toBe(14);
+        expect(order2.vendorName).toBe('Coward Rabbit');
+        expect(order2.contractDate).toBe(contractDate3);
+        expect(order2.totalPrice).toBe(980);
+        expect(order2.schedules).toBe(5);
+        expect(order2.enabled).toBe(false);
+        expect(order2.createdDate.getDate()).toBe(new Date().getDate());
+        expect(order2.modifiedDate).toBeNull();
+
+        address2 = order2.address;
+
+        address2.country = 'Slovakia';
+        address2.state = '';
+        address2.city = 'Komárno';
+        address2.line1 = 'Ulica františkánov 22.';
+        address2.line2 = '';
+        address2.postalCode = '945 01';
+
+        expect(address2.addressKey).toBe(14);
+        expect(address2.orderKey).toBe(14);
+        expect(address2.country).toBe('Slovakia');
+        expect(address2.state).toBe('');
+        expect(address2.city).toBe('Komárno');
+        expect(address2.line1).toBe('Ulica františkánov 22.');
+        expect(address2.line2).toBe('');
+        expect(address2.postalCode).toBe('945 01');
+
+        expect(order2.items.count).toBe(1);
+
+        item3 = order2.items.at(0);
+
+        expect(item3.orderItemKey).toBe(35);
+        expect(item3.orderKey).toBe(14);
+        expect(item3.productName).toBe('OpenShift Origin');
+        expect(item3.obsolete).toBe(false);
+        expect(item3.expiry).toBe(expiry1);
+        expect(item3.quantity).toBe(49);
+        expect(item3.unitPrice).toBe(4.0);
+
+        expect(item3.schedules.count).toBe(1);
+
+        schedule3 = item3.schedules.at(0);
+
+        expect(schedule3.orderScheduleKey).toBe(45);
+        expect(schedule3.orderItemKey).toBe(35);
+        expect(schedule3.quantity).toBe(10);
+        expect(schedule3.totalMass).toBe(13.7);
+        expect(schedule3.required).toBe(true);
+        expect(schedule3.shipTo).toBe('Bratislava');
+        expect(schedule3.shipDate).toBe(shipDate3);
+
+        //endregion
+
+        done();
+      });
+    }).catch( reason => {
+      console.log( reason );
     });
   });
 
-  it('client conversion of sample editable collection', function (done) {
+  it('client conversion of sample editable collection', function(done) {
     console.log('\n*** Asynchronous collection TO_FROM_CTO');
 
     console.log('    < Fetch order collection >');
     BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
-    .then( function( orders1 ) {
+    .then( orders1 => {
 
       var data = orders1.toCto();
       BlanketOrders.create( ehBlanketOrders )
-      .then( function( orders2 ) {
+      .then( orders2 => {
 
         orders2.fromCto(data, function (err) {
           if (err) throw err;
@@ -783,6 +861,8 @@ describe('Asynchronous data portal method', function () {
           done();
         });
       });
+    }).catch( reason => {
+      console.log( reason );
     });
   });
 
@@ -791,12 +871,12 @@ describe('Asynchronous data portal method', function () {
 
     console.log('    < Fetch order collection >');
     BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
-    .then( function( orders ) {
+    .then( orders => {
 
       console.log('    < Remove order collection >');
       orders.remove();
       orders.save()
-      .then( function( orders ) {
+      .then( orders => {
 
         //region Check data
 
@@ -804,7 +884,7 @@ describe('Asynchronous data portal method', function () {
 
         console.log('    < Re-fetch order collection >');
         var exOrders = BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
-        .then( function( exOrders ) {
+        .then( exOrders => {
 
           expect(exOrders.count).toBe(0);
 
@@ -813,6 +893,8 @@ describe('Asynchronous data portal method', function () {
 
         //endregion
       });
+    }).catch( reason => {
+      console.log( reason );
     });
   });
 });
