@@ -56,78 +56,63 @@ function fromCto (ctx, dto) {
 //region Data portal methods
 
 function dataCreate (ctx, callback) {
-    ctx.dao.create(ctx.connection, function (err, dto) {
-        if (err)
-            callback(err);
-        else {
-            ctx.setValue('quantity',  dto.quantity);
-            ctx.setValue('totalMass', dto.totalMass);
-            ctx.setValue('required',  dto.required);
-            ctx.setValue('shipTo',    dto.shipTo);
-            ctx.setValue('shipDate',  dto.shipDate);
-            callback(null);
-        }
-    });
+  ctx.dao.create(ctx.connection).then( dto => {
+    ctx.setValue('quantity',  dto.quantity);
+    ctx.setValue('totalMass', dto.totalMass);
+    ctx.setValue('required',  dto.required);
+    ctx.setValue('shipTo',    dto.shipTo);
+    ctx.setValue('shipDate',  dto.shipDate);
+    callback(null);
+  });
 }
 
 function dataFetch (ctx, dto, method, callback) {
-    ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
-    ctx.setValue('orderItemKey',     dto.orderItemKey);
-    ctx.setValue('quantity',         dto.quantity);
-    ctx.setValue('totalMass',        dto.totalMass);
-    ctx.setValue('required',         dto.required);
-    ctx.setValue('shipTo',           dto.shipTo);
-    ctx.setValue('shipDate',         dto.shipDate);
-    callback(null, dto);
+  ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
+  ctx.setValue('orderItemKey',     dto.orderItemKey);
+  ctx.setValue('quantity',         dto.quantity);
+  ctx.setValue('totalMass',        dto.totalMass);
+  ctx.setValue('required',         dto.required);
+  ctx.setValue('shipTo',           dto.shipTo);
+  ctx.setValue('shipDate',         dto.shipDate);
+  callback(null, dto);
 }
 
 function dataInsert (ctx, callback) {
-    var dto = {
-        orderItemKey: ctx.getValue('orderItemKey'),
-        quantity:     ctx.getValue('quantity'),
-        totalMass:    ctx.getValue('totalMass'),
-        required:     ctx.getValue('required'),
-        shipTo:       ctx.getValue('shipTo'),
-        shipDate:     ctx.getValue('shipDate')
-    };
-    ctx.dao.insert(ctx.connection, dto, function (err, dto) {
-        if (err)
-            callback(err);
-        else {
-            ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
-            callback(null);
-        }
-    });
+  var dto = {
+    orderItemKey: ctx.getValue('orderItemKey'),
+    quantity:     ctx.getValue('quantity'),
+    totalMass:    ctx.getValue('totalMass'),
+    required:     ctx.getValue('required'),
+    shipTo:       ctx.getValue('shipTo'),
+    shipDate:     ctx.getValue('shipDate')
+  };
+  ctx.dao.insert(ctx.connection, dto).then( dto => {
+    ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
+    callback(null);
+  });
 }
 
 function dataUpdate (ctx, callback) {
-    if (ctx.isSelfDirty) {
-        var dto = {
-            orderScheduleKey: ctx.getValue('orderScheduleKey'),
-            quantity:         ctx.getValue('quantity'),
-            totalMass:        ctx.getValue('totalMass'),
-            required:         ctx.getValue('required'),
-            shipTo:           ctx.getValue('shipTo'),
-            shipDate:         ctx.getValue('shipDate')
-        };
-        ctx.dao.update(ctx.connection, dto, function (err, dto) {
-            if (err)
-                callback(err);
-            else {
-                callback(null);
-            }
-        });
-    }
+  if (ctx.isSelfDirty) {
+    var dto = {
+      orderScheduleKey: ctx.getValue('orderScheduleKey'),
+      quantity:         ctx.getValue('quantity'),
+      totalMass:        ctx.getValue('totalMass'),
+      required:         ctx.getValue('required'),
+      shipTo:           ctx.getValue('shipTo'),
+      shipDate:         ctx.getValue('shipDate')
+    };
+    ctx.dao.update(ctx.connection, dto).then( dto => {
+      callback(null);
+    });
+  }
 }
 
 function dataRemove (ctx, callback) {
-    var primaryKey = ctx.getValue('orderScheduleKey');
-    ctx.dao.remove(ctx.connection, primaryKey, function (err) {
-        if (err)
-            callback(err);
-        else
-            callback(null);
-    });
+  var primaryKey = ctx.getValue('orderScheduleKey');
+  ctx.dao.remove(ctx.connection, primaryKey).then( dto => {
+    callback(null);
+  });
 }
 
 //endregion

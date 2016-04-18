@@ -125,8 +125,8 @@ describe('Asynchronous data portal method', function () {
         address1.postalCode = '20133';
 
         return Promise.all([
-          createItem1( order1.items ),
-          createItem2( order1.items )
+          createItem2( order1.items ),
+          createItem1( order1.items )
         ]).then( items => {
           return order1;
         });
@@ -166,8 +166,8 @@ describe('Asynchronous data portal method', function () {
         item1.unitPrice = 30;
 
         return Promise.all([
-          createSchedule1( item1.schedules ),
-          createSchedule2( item1.schedules )
+          createSchedule2( item1.schedules ),
+          createSchedule1( item1.schedules )
         ]).then( schedules => {
           return item1;
         });
@@ -242,8 +242,8 @@ describe('Asynchronous data portal method', function () {
     BlanketOrders.create( ehBlanketOrders )
     .then( list => {
       return Promise.all([
-        createOrder1( list ),
-        createOrder2( list )
+        createOrder2( list ),
+        createOrder1( list )
       ]).then( orders => {
         return list;
       });

@@ -92,17 +92,13 @@ function fromCto (ctx, cto) {
 //region Data portal methods
 
 function dataCreate (ctx, callback) {
-  ctx.dao.create(ctx.connection, function (err, dto) {
-    if (err)
-      callback(err);
-    else {
-      ctx.setValue('productName', dto.productName);
-      ctx.setValue('obsolete',    dto.obsolete);
-      ctx.setValue('expiry',      dto.expiry);
-      ctx.setValue('quantity',    dto.quantity);
-      ctx.setValue('unitPrice',   dto.unitPrice);
-      callback(null);
-    }
+  ctx.dao.create(ctx.connection).then( dto => {
+    ctx.setValue('productName', dto.productName);
+    ctx.setValue('obsolete',    dto.obsolete);
+    ctx.setValue('expiry',      dto.expiry);
+    ctx.setValue('quantity',    dto.quantity);
+    ctx.setValue('unitPrice',   dto.unitPrice);
+    callback(null);
   });
 }
 
@@ -126,13 +122,9 @@ function dataInsert (ctx, callback) {
     quantity:     ctx.getValue('quantity'),
     unitPrice:    ctx.getValue('unitPrice')
   };
-  ctx.dao.insert(ctx.connection, dto, function (err, dto) {
-    if (err)
-      callback(err);
-    else {
-      ctx.setValue('orderItemKey', dto.orderItemKey);
-      callback(null);
-    }
+  ctx.dao.insert(ctx.connection, dto).then( dto => {
+    ctx.setValue('orderItemKey', dto.orderItemKey);
+    callback(null);
   });
 }
 
@@ -146,22 +138,16 @@ function dataUpdate (ctx, callback) {
       quantity:     ctx.getValue('quantity'),
       unitPrice:    ctx.getValue('unitPrice')
     };
-    ctx.dao.update(ctx.connection, dto, function (err, dto) {
-      if (err)
-        callback(err);
-      else
-        callback(null);
+    ctx.dao.update(ctx.connection, dto).then( dto => {
+      callback(null);
     });
   }
 }
 
 function dataRemove (ctx, callback) {
   var primaryKey = ctx.getValue('orderItemKey');
-  ctx.dao.remove(ctx.connection, primaryKey, function (err) {
-    if (err)
-      callback(err);
-    else
-      callback(null);
+  ctx.dao.remove(ctx.connection, primaryKey).then( dto => {
+    callback(null);
   });
 }
 

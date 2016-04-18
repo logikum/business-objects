@@ -30,21 +30,18 @@ function toCto (ctx) {
 //region Data portal methods
 
 function dataFetch (ctx, filter, method, callback) {
-  function cb (err, dto) {
-    if (err)
-      callback(err);
-    else
-      callback(null, dto);
+  function cb (dto) {
+    callback(null, dto);
   }
   if (method === 'fetchByName') {
     // filter: vendorName
-    ctx.dao.fetchByName(ctx.connection, filter, cb);
+    ctx.dao.fetchByName(ctx.connection, filter).then( cb );
   } else {
     // filter: primaryKey
-    ctx.dao.fetch(ctx.connection, filter, cb);
+    ctx.dao.fetch(ctx.connection, filter).then( cb );
   }
   // or:
-  // ctx.dao[method](ctx.connection, filter, cb);
+  // ctx.dao[method](ctx.connection, filter).then( cb );
 }
 
 //endregion

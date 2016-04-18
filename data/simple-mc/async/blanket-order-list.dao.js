@@ -8,31 +8,35 @@ var BlanketOrderListDao = function() {
 };
 util.inherits(BlanketOrderListDao, DaoBase);
 
-BlanketOrderListDao.prototype.fetch = function(connection, filter, callback) {
+BlanketOrderListDao.prototype.fetch = function(connection, filter) {
   console.log('--- Blanket order list DAO.fetch');
 
-  var orderList = [];
-  for (var key in global.orders) {
-    if (global.orders.hasOwnProperty(key)) {
-      orderList.push(global.orders[key]);
+  return new Promise( (fulfill, reject) => {
+    var orderList = [];
+    for (var key in global.orders) {
+      if (global.orders.hasOwnProperty(key)) {
+        orderList.push(global.orders[key]);
+      }
     }
-  }
-  orderList.totalItems = 73;
-  callback(null, orderList);
+    orderList.totalItems = 73;
+    fulfill( orderList );
+  });
 };
 
-BlanketOrderListDao.prototype.fetchByName = function(connection, filter, callback) {
+BlanketOrderListDao.prototype.fetchByName = function(connection, filter) {
   console.log('--- Blanket order list DAO.fetchByName');
 
-  var orderList = [];
-  for (var key in global.orders) {
-    if (global.orders.hasOwnProperty(key)) {
-      var order = global.orders[key];
-      if (order.vendorName === filter)
-        orderList.push();
+  return new Promise( (fulfill, reject) => {
+    var orderList = [];
+    for (var key in global.orders) {
+      if (global.orders.hasOwnProperty(key)) {
+        var order = global.orders[key];
+        if (order.vendorName === filter)
+          orderList.push();
+      }
     }
-  }
-  callback(null, orderList);
+    fulfill( orderList );
+  });
 };
 
 module.exports = BlanketOrderListDao;

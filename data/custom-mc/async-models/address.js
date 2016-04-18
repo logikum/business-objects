@@ -60,81 +60,67 @@ function fromCto (ctx, dto) {
 //region Data portal methods
 
 function dataCreate (ctx, callback) {
-    ctx.dao.create(ctx.connection, function (err, dto) {
-        if (err)
-            callback(err);
-        else {
-            ctx.setValue('country',    dto.country);
-            ctx.setValue('state',      dto.state);
-            ctx.setValue('city',       dto.city);
-            ctx.setValue('line1',      dto.line1);
-            ctx.setValue('line2',      dto.line2);
-            ctx.setValue('postalCode', dto.postalCode);
-            callback(null);
-        }
-    });
-}
-
-function dataFetch (ctx, dto, method, callback) {
-    ctx.setValue('addressKey', dto.addressKey);
-    ctx.setValue('orderKey',   dto.orderKey);
+  ctx.dao.create(ctx.connection).then( dto => {
     ctx.setValue('country',    dto.country);
     ctx.setValue('state',      dto.state);
     ctx.setValue('city',       dto.city);
     ctx.setValue('line1',      dto.line1);
     ctx.setValue('line2',      dto.line2);
     ctx.setValue('postalCode', dto.postalCode);
-    callback(null, dto);
+    callback(null);
+  });
+}
+
+function dataFetch (ctx, dto, method, callback) {
+  ctx.setValue('addressKey', dto.addressKey);
+  ctx.setValue('orderKey',   dto.orderKey);
+  ctx.setValue('country',    dto.country);
+  ctx.setValue('state',      dto.state);
+  ctx.setValue('city',       dto.city);
+  ctx.setValue('line1',      dto.line1);
+  ctx.setValue('line2',      dto.line2);
+  ctx.setValue('postalCode', dto.postalCode);
+  callback(null, dto);
 }
 
 function dataInsert (ctx, callback) {
-    var dto = {
-        orderKey:   ctx.getValue('orderKey'),
-        country:    ctx.getValue('country'),
-        state:      ctx.getValue('state'),
-        city:       ctx.getValue('city'),
-        line1:      ctx.getValue('line1'),
-        line2:      ctx.getValue('line2'),
-        postalCode: ctx.getValue('postalCode')
-    };
-    ctx.dao.insert(ctx.connection, dto, function (err, dto) {
-        if (err)
-            callback(err);
-        else {
-            ctx.setValue('addressKey', dto.addressKey);
-            callback(null);
-        }
-    });
+  var dto = {
+    orderKey:   ctx.getValue('orderKey'),
+    country:    ctx.getValue('country'),
+    state:      ctx.getValue('state'),
+    city:       ctx.getValue('city'),
+    line1:      ctx.getValue('line1'),
+    line2:      ctx.getValue('line2'),
+    postalCode: ctx.getValue('postalCode')
+  };
+  ctx.dao.insert(ctx.connection, dto).then( dto => {
+    ctx.setValue('addressKey', dto.addressKey);
+    callback(null);
+  });
 }
 
 function dataUpdate (ctx, callback) {
-    if (ctx.isSelfDirty) {
-        var dto = {
-            addressKey: ctx.getValue('addressKey'),
-            country:    ctx.getValue('country'),
-            state:      ctx.getValue('state'),
-            city:       ctx.getValue('city'),
-            line1:      ctx.getValue('line1'),
-            line2:      ctx.getValue('line2'),
-            postalCode: ctx.getValue('postalCode')
-        };
-        ctx.dao.update(ctx.connection, dto, function (err, dto) {
-            if (err)
-                callback(err);
-            else
-                callback(null);
-        });
-    }
+  if (ctx.isSelfDirty) {
+    var dto = {
+      addressKey: ctx.getValue('addressKey'),
+      country:    ctx.getValue('country'),
+      state:      ctx.getValue('state'),
+      city:       ctx.getValue('city'),
+      line1:      ctx.getValue('line1'),
+      line2:      ctx.getValue('line2'),
+      postalCode: ctx.getValue('postalCode')
+    };
+    ctx.dao.update(ctx.connection, dto).then( dto => {
+      callback(null);
+    });
+  }
 }
 
 function dataRemove (ctx, callback) {
-    var primaryKey = ctx.getValue('addressKey');
-    ctx.dao.remove(ctx.connection, primaryKey, function (err) {
-        if (err)
-            callback(err);
-        else
-            callback(null);
-    });
+  var primaryKey = ctx.getValue('addressKey');
+  ctx.dao.remove(ctx.connection, primaryKey).then( dto => {
+    callback(null);
+  });
 }
 
 //endregion

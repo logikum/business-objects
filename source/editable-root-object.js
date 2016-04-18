@@ -1033,7 +1033,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *      Creating the business object has failed.
      */
     this.create = function() {
-      return new Promise( function ( fulfill, reject) {
+      return new Promise( function ( fulfill, reject ) {
         data_create( function( err, res ) {
           if (err) reject( err );
           else fulfill( res );

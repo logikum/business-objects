@@ -8,52 +8,60 @@ var BlanketOrderScheduleDao = function() {
 };
 util.inherits(BlanketOrderScheduleDao, DaoBase);
 
-BlanketOrderScheduleDao.prototype.create = function(connection, callback) {
+BlanketOrderScheduleDao.prototype.create = function(connection) {
   console.log('--- Blanket order schedule DAO.create');
 
-  callback(null, {});
+  return Promise.resolve( {} );
 };
 
 /* Special fetch method for test circumstances. */
-BlanketOrderScheduleDao.prototype.fetchForItem = function(connection, filter, callback) {
+BlanketOrderScheduleDao.prototype.fetchForItem = function(connection, filter) {
   console.log('--- Blanket order schedule DAO.fetchForItem');
 
-  var schedules = [];
-  for (var key in global.schedules) {
-    if (global.schedules.hasOwnProperty(key)) {
-      var schedule = global.schedules[key];
-      if (schedule.orderItemKey === filter)
-        schedules.push(schedule);
+  return new Promise( (fulfill, reject) => {
+    var schedules = [];
+    for (var key in global.schedules) {
+      if (global.schedules.hasOwnProperty(key)) {
+        var schedule = global.schedules[key];
+        if (schedule.orderItemKey === filter)
+          schedules.push(schedule);
+      }
     }
-  }
-  callback(null, schedules);
+    fulfill( schedules );
+  });
 };
 
-BlanketOrderScheduleDao.prototype.insert = function(connection, data, callback) {
+BlanketOrderScheduleDao.prototype.insert = function(connection, data) {
   console.log('--- Blanket order schedule DAO.insert');
 
-  data.orderScheduleKey = ++global.scheduleKey;
-  global.schedules[data.orderScheduleKey] = data;
-  callback(null, data);
+  return new Promise( (fulfill, reject) => {
+    data.orderScheduleKey = ++global.scheduleKey;
+    global.schedules[data.orderScheduleKey] = data;
+    fulfill( data );
+  });
 };
 
-BlanketOrderScheduleDao.prototype.update = function(connection, data, callback) {
+BlanketOrderScheduleDao.prototype.update = function(connection, data) {
   console.log('--- Blanket order schedule DAO.update');
 
-  if (!global.schedules[data.orderScheduleKey])
-    callback(new Error('Blanket order schedule not found.'));
-  else {
-    global.schedules[data.orderScheduleKey] = data;
-    callback(null, data);
-  }
+  return new Promise( (fulfill, reject) => {
+    if (!global.schedules[data.orderScheduleKey])
+      reject(new Error('Blanket order schedule not found.'));
+    else {
+      global.schedules[data.orderScheduleKey] = data;
+      fulfill( data );
+    }
+  });
 };
 
-BlanketOrderScheduleDao.prototype.remove = function(connection, filter, callback) {
+BlanketOrderScheduleDao.prototype.remove = function(connection, filter) {
   console.log('--- Blanket order schedule DAO.remove');
 
-  if (global.schedules[filter])
-    delete global.schedules[filter];
-  callback(null);
+  return new Promise( (fulfill, reject) => {
+    if (global.schedules[filter])
+      delete global.schedules[filter];
+    fulfill( null );
+  });
 };
 
 module.exports = BlanketOrderScheduleDao;

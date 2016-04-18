@@ -1103,6 +1103,18 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Properties
 
+    this.wait = 0;
+    this.onReady = function() {};
+
+    function freeze() {
+      if (self.wait === 0) {
+        self.onReady(self);
+        delete self.wait;
+        delete self.onReady;
+        Object.freeze(self);
+      }
+    }
+
     function getPropertyValue(property) {
       return store.getValue(property);
     }
@@ -1161,11 +1173,14 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
       } else {
         // Child item/collection
-        if (property.type.create) // Item
+        if (property.type.create) { // Item
+          self.wait++;
           property.type.create(self, eventHandlers, function (err, item) {
             store.initValue(property, item);
+            self.wait--;
+            freeze();
           });
-        else                      // Collection
+        } else                      // Collection
           store.initValue(property, new property.type(self, eventHandlers));
 
         Object.defineProperty(self, property.name, {
@@ -1183,7 +1198,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
     //endregion
 
     // Immutable object.
-    Object.freeze(this);
+    freeze();
   };
   util.inherits(EditableChildObject, ModelBase);
 
@@ -1256,6 +1271,29 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
       else
         callback(null, instance);
     });
+  };
+
+  var fnReady = null;
+  function instantiate(parent, eventHandlers) {
+    return new Promise( function( fulfill, reject ) {
+      var instance = new EditableChildObject(parent, eventHandlers);
+      if (instance.wait === 0)
+        fulfill( instance );
+      else
+        instance.onReady = fulfill;
+    });
+  }
+
+  EditableChildObject.safeLoad = function(parent, data, eventHandlers, callback) {
+    instantiate(parent, eventHandlers)
+    .then( instance => {
+      instance.fetch(data, undefined, function (err) {
+        if (err)
+          callback(err);
+        else
+          callback(null, instance);
+      });
+    })
   };
 
   //endregion

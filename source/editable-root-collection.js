@@ -478,7 +478,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
         var error = null;
 
         dto.forEach(function (data) {
-          itemType.load(self, data, eventHandlers, function (err, item) {
+          itemType.safeLoad(self, data, eventHandlers, function (err, item) {
             if (err)
               error = error || err;
             else

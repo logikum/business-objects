@@ -54,8 +54,16 @@ DaoBase.prototype.$runMethod = function (methodName) {
     throw new DaoError('noMethod', this.name, methodName);
 
   var callback = args.length ? args[args.length - 1] : null;
-  if (typeof callback === 'function')
-    this[methodName].apply(this, args);
+  if (typeof callback === 'function'){
+    args.pop();
+    this[methodName].apply(this, args)
+    .then( data => {
+      callback( null, data );
+    })
+    .catch( reason => {
+      callback( reason );
+    });
+  }
   else
     return this[methodName].apply(this, args);
 };

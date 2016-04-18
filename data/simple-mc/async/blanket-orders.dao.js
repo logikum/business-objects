@@ -16,111 +16,94 @@ var BlanketOrdersDao = function() {
 };
 util.inherits(BlanketOrdersDao, DaoBase);
 
-BlanketOrdersDao.prototype.fetch = function(connection, callback) {
+BlanketOrdersDao.prototype.fetch = function(connection) {
   console.log('--- Blanket orders DAO.fetch');
 
-  var orders = [];
-  var countOrders = 0;
-  var totalOrders = 0;
+  return new Promise( (fulfill, reject) => {
+    var orders = [];
+    var countOrders = 0;
+    var totalOrders = 0;
 
-  for (var key in global.orders) {
-    if (global.orders.hasOwnProperty(key)) {
-      var order = global.orders[key];
-      orders.push(order);
-      totalOrders++;
-    }
-  }
-
-  orders.forEach(function (order) {
-    daoAddress.fetchForOrder(connection, order.orderKey, function (err, address) {
-      if (err) {
-        callback(err);
-        return;
-      }
-      order.address = address;
-
-      daoOrderItem.fetchForOrder(connection, order.orderKey, function (err, items) {
-        if (err) {
-          callback(err);
-          return;
-        }
-        order.items = items;
-
-        var count = 0;
-        for (var i = 0; i < order.items.length; i++) {
-          var item = order.items[i];
-          daoOrderSchedule.fetchForItem(connection, item.orderItemKey, function (err, schedules) {
-            if (err) {
-              callback(err);
-              return;
-            }
-            item.schedules = schedules;
-
-            if (++count === order.items.length) {
-              if (++countOrders === totalOrders)
-                callback(null, order);
-            }
-          });
-        }
-      });
-    });
-  });
-};
-
-BlanketOrdersDao.prototype.fetchFromTo = function(connection, filter, callback) {
-  console.log('--- Blanket orders DAO.fetchFromTo');
-
-  var orders = [];
-  var countOrders = 0;
-  var totalOrders = 0;
-
-  for (var key in global.orders) {
-    if (global.orders.hasOwnProperty(key)) {
-      var order = global.orders[key];
-      if (filter.from <= order.orderKey && order.orderKey <= filter.to) {
+    for (var key in global.orders) {
+      if (global.orders.hasOwnProperty(key)) {
+        var order = global.orders[key];
         orders.push(order);
         totalOrders++;
       }
     }
-  }
 
-  if (orders.length) {
-    orders.forEach(function (order) {
-      daoAddress.fetchForOrder(connection, order.orderKey, function (err, address) {
-        if (err) {
-          callback(err);
-          return;
+    return Promise.all(orders.map( order => {
+      return daoAddress.fetchForOrder(connection, order.orderKey);
+    }))
+    .then( addresses => {
+      for(i = 0; i < adresses.length; i++) {
+        orders[i].address = addresses[i];
+
+        return daoOrderItem.fetchForOrder(connection, order.orderKey)
+        .then( items => {
+          orders[i].items = items;
+
+          return Promise.all(items.map( item => {
+            return daoOrderSchedule.fetchForItem(connection, item.orderItemKey);
+          }))
+          .then( values => {
+            for (var i = 0; i < values.length; i++) {
+              order.items[i].schedules = values[i];
+            }
+            fulfill( orders );
+          })
+        });
+      }
+    });
+  });
+};
+
+BlanketOrdersDao.prototype.fetchFromTo = function(connection, filter) {
+  console.log('--- Blanket orders DAO.fetchFromTo');
+
+  return new Promise( (fulfill, reject) => {
+    var orders = [];
+    var countOrders = 0;
+    var totalOrders = 0;
+
+    for (var key in global.orders) {
+      if (global.orders.hasOwnProperty(key)) {
+        var order = global.orders[key];
+        if (filter.from <= order.orderKey && order.orderKey <= filter.to) {
+          orders.push(order);
+          totalOrders++;
         }
-        order.address = address;
+      }
+    }
 
-        daoOrderItem.fetchForOrder(connection, order.orderKey, function (err, items) {
-          if (err) {
-            callback(err);
-            return;
-          }
-          order.items = items;
+    if (orders.length) {
+      var xx = orders.map( order => {
+        return daoAddress.fetchForOrder(connection, order.orderKey)
+        .then( address => {
+          order.address = address;
 
-          var count = 0;
-          for (var i = 0; i < order.items.length; i++) {
-            var item = order.items[i];
-            daoOrderSchedule.fetchForItem(connection, item.orderItemKey, function (err, schedules) {
-              if (err) {
-                callback(err);
-                return;
-              }
-              item.schedules = schedules;
+          return daoOrderItem.fetchForOrder(connection, order.orderKey)
+          .then( items => {
+            order.items = items;
 
-              if (++count === order.items.length) {
-                if (++countOrders === totalOrders)
-                  callback(null, orders);
+            return Promise.all(items.map(item => {
+              return daoOrderSchedule.fetchForItem(connection, item.orderItemKey);
+            }))
+            .then( schedules => {
+              for (var i = 0; i < schedules.length; i++) {
+                order.items[i].schedules = schedules[i];
               }
             });
-          }
+          });
         });
       });
-    });
-  } else
-    callback(null, orders);
+      return Promise.all( xx )
+          .then( values => {
+            fulfill( orders );
+          });
+    } else
+      fulfill( orders );
+  });
 };
 
 module.exports = BlanketOrdersDao;

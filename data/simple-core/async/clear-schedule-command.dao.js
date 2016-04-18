@@ -8,11 +8,13 @@ var ClearScheduleCommandDao = function() {
 };
 util.inherits(ClearScheduleCommandDao, DaoBase);
 
-ClearScheduleCommandDao.prototype.execute = function(connection, data, callback) {
+ClearScheduleCommandDao.prototype.execute = function(connection, data) {
   console.log('--- Clear schedule command DAO.execute');
 
-  data.result = true;
-  callback(null, data);
+  return new Promise( (fulfill, reject) => {
+    data.result = true;
+    fulfill( data );
+  });
 };
 
 module.exports = ClearScheduleCommandDao;

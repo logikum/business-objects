@@ -58,77 +58,66 @@ function fromCto (ctx, cto) {
 //region Data portal methods
 
 function dataCreate (ctx, callback) {
-    ctx.dao.create(ctx.connection, function (err, dto) {
-        if (err)
-            callback(err);
-        else {
-            ctx.setValue('productName', dto.productName);
-            ctx.setValue('obsolete',    dto.obsolete);
-            ctx.setValue('expiry',      dto.expiry);
-            ctx.setValue('quantity',    dto.quantity);
-            ctx.setValue('unitPrice',   dto.unitPrice);
-            callback(null);
-        }
-    });
+  ctx.dao.create(ctx.connection).then( dto => {
+    ctx.setValue('productName', dto.productName);
+    ctx.setValue('obsolete',    dto.obsolete);
+    ctx.setValue('expiry',      dto.expiry);
+    ctx.setValue('quantity',    dto.quantity);
+    ctx.setValue('unitPrice',   dto.unitPrice);
+    callback(null);
+  });
 }
 
 function dataFetch (ctx, dto, method, callback) {
-    ctx.setValue('orderItemKey', dto.orderItemKey);
-    ctx.setValue('orderKey',     dto.orderKey);
-    ctx.setValue('productName',  dto.productName);
-    ctx.setValue('obsolete',     dto.obsolete);
-    ctx.setValue('expiry',       dto.expiry);
-    ctx.setValue('quantity',     dto.quantity);
-    ctx.setValue('unitPrice',    dto.unitPrice);
-    callback(null, dto);
+  ctx.setValue('orderItemKey', dto.orderItemKey);
+  ctx.setValue('orderKey',     dto.orderKey);
+  ctx.setValue('productName',  dto.productName);
+  ctx.setValue('obsolete',     dto.obsolete);
+  ctx.setValue('expiry',       dto.expiry);
+  ctx.setValue('quantity',     dto.quantity);
+  ctx.setValue('unitPrice',    dto.unitPrice);
+  callback(null, dto);
 }
 
 function dataInsert (ctx, callback) {
-    var dto = {
-        orderKey:     ctx.getValue('orderKey'),
-        productName:  ctx.getValue('productName'),
-        obsolete:     ctx.getValue('obsolete'),
-        expiry:       ctx.getValue('expiry'),
-        quantity:     ctx.getValue('quantity'),
-        unitPrice:    ctx.getValue('unitPrice')
-    };
-    ctx.dao.insert(ctx.connection, dto, function (err, dto) {
-        if (err)
-            callback(err);
-        else {
-            ctx.setValue('orderItemKey', dto.orderItemKey);
-            callback(null);
-        }
-    });
+  var dto = {
+    orderKey:     ctx.getValue('orderKey'),
+    productName:  ctx.getValue('productName'),
+    obsolete:     ctx.getValue('obsolete'),
+    expiry:       ctx.getValue('expiry'),
+    quantity:     ctx.getValue('quantity'),
+    unitPrice:    ctx.getValue('unitPrice')
+  };
+  ctx.dao.insert(ctx.connection, dto).then( dto => {
+    ctx.setValue('orderItemKey', dto.orderItemKey);
+    callback(null);
+  });
 }
 
 function dataUpdate (ctx, callback) {
-    if (ctx.isSelfDirty) {
-        var dto = {
-            orderItemKey: ctx.getValue('orderItemKey'),
-            productName:  ctx.getValue('productName'),
-            obsolete:     ctx.getValue('obsolete'),
-            expiry:       ctx.getValue('expiry'),
-            quantity:     ctx.getValue('quantity'),
-            unitPrice:    ctx.getValue('unitPrice')
-        };
-        ctx.dao.update(ctx.connection, dto, function (err, dto) {
-            if (err)
-                callback(err);
-            else
-                callback(null);
-        });
-    }
+  if (ctx.isSelfDirty) {
+    var dto = {
+      orderItemKey: ctx.getValue('orderItemKey'),
+      productName:  ctx.getValue('productName'),
+      obsolete:     ctx.getValue('obsolete'),
+      expiry:       ctx.getValue('expiry'),
+      quantity:     ctx.getValue('quantity'),
+      unitPrice:    ctx.getValue('unitPrice')
+    };
+    ctx.dao.update(ctx.connection, dto, function (err, dto) {
+      if (err)
+        callback(err);
+      else
+        callback(null);
+    });
+  }
 }
 
 function dataRemove (ctx, callback) {
-    var primaryKey = ctx.getValue('orderItemKey');
-    ctx.dao.remove(ctx.connection, primaryKey, function (err) {
-        if (err)
-            callback(err);
-        else
-            callback(null);
-    });
+  var primaryKey = ctx.getValue('orderItemKey');
+  ctx.dao.remove(ctx.connection, primaryKey).then( dto => {
+    callback(null);
+  });
 }
 
 //endregion
