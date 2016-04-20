@@ -904,25 +904,27 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
          */
         raiseEvent(DataPortalEvent.preUpdate);
         // Execute update.
-        if (extensions.dataUpdate) {
-          // *** Custom update.
-          extensions.dataUpdate.call(self, getDataContext(connection), function (err) {
-            if (err)
-              failed(err, cb);
-            else
-              finish(connection, cb);
-          });
-        } else if (isDirty) {
-          // *** Standard update.
-          var dto = toDto.call(self);
-          dao.$runMethod('update', connection, dto, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else {
-              fromDto.call(self, dto);
-              finish(connection, cb);
-            }
-          });
+        if (isDirty) {
+          if (extensions.dataUpdate) {
+            // *** Custom update.
+            extensions.dataUpdate.call(self, getDataContext(connection), function (err) {
+              if (err)
+                failed(err, cb);
+              else
+                finish(connection, cb);
+            });
+          } else {
+            // *** Standard update.
+            var dto = toDto.call(self);
+            dao.$runMethod('update', connection, dto, function (err, dto) {
+              if (err)
+                failed(err, cb);
+              else {
+                fromDto.call(self, dto);
+                finish(connection, cb);
+              }
+            });
+          }
         } else {
           // Update children only.
           finish();
