@@ -358,7 +358,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      *      Fetching the business object has failed.
      */
     this.fetch = function( filter, method ) {
-      return new Promise( function ( fulfill, reject) {
+      return new Promise( (fulfill, reject) => {
         method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
 
         data_fetch( filter, method || M_FETCH, function ( err, res ) {

@@ -407,7 +407,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * @param {external.cbFromCto} callback - Returns the eventual error.
      */
     this.fromCto = function (cto) {
-      return new Promise( function ( fulfill, reject ) {
+      return new Promise( (fulfill, reject) => {
         if (extensions.fromCto)
           extensions.fromCto.call(self, getTransferContext(true), cto);
         else
@@ -1033,7 +1033,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *      Creating the business object has failed.
      */
     this.create = function() {
-      return new Promise( function ( fulfill, reject ) {
+      return new Promise( (fulfill, reject) => {
         data_create( function( err, res ) {
           if (err) reject( err );
           else fulfill( res );
@@ -1061,7 +1061,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *      Fetching the business object has failed.
      */
     this.fetch = function( filter, method ) {
-      return new Promise( function ( fulfill, reject) {
+      return new Promise( (fulfill, reject) => {
         method = Argument.inMethod( name, 'fetch' ).check (method ).forOptional( 'method' ).asString();
 
         data_fetch( filter, method || M_FETCH, function ( err, res ) {
@@ -1090,7 +1090,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *      Deleting the business object has failed.
      */
     this.save = function() {
-      return new Promise( function ( fulfill, reject) {
+      return new Promise( (fulfill, reject) => {
         if (self.isValid()) {
           /**
            * The event arises before the business object instance will be saved in the repository.

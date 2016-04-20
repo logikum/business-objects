@@ -427,7 +427,7 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
      *      The user has no permission to execute the action.
      */
     this.execute = function(method, isTransaction) {
-      return new Promise( function ( fulfill, reject) {
+      return new Promise( (fulfill, reject) => {
         var check = Argument.inMethod(name, 'execute');
 
         if (typeof method === 'boolean' || method instanceof Boolean) {

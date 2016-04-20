@@ -1277,7 +1277,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
   var fnReady = null;
   function instantiate(parent, eventHandlers) {
-    return new Promise( function( fulfill, reject ) {
+    return new Promise( (fulfill, reject) => {
       var instance = new EditableChildObject(parent, eventHandlers);
       if (instance.wait === 0)
         fulfill( instance );

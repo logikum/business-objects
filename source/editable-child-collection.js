@@ -222,7 +222,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @param {external.cbDataPortal} callback - Returns the newly created editable business object.
      */
     this.createItem = function (index) {
-      return new Promise( function ( fulfill, reject) {
+      return new Promise( (fulfill, reject) => {
         index = index || items.length;
 
         itemType.create(parent, eventHandlers, function (err, item) {

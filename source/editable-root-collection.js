@@ -365,7 +365,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @param {external.cbFromCto} callback - Returns the eventual error.
      */
     this.fromCto = function (cto) {
-      return new Promise( function ( fulfill, reject ) {
+      return new Promise( (fulfill, reject) => {
         if (extensions.fromCto)
           extensions.fromCto.call(self, getTransferContext(true), cto);
         else
@@ -925,7 +925,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *      Creating the business object collection has failed.
      */
     this.create = function() {
-      return new Promise( function( fulfill, reject ) {
+      return new Promise( (fulfill, reject) => {
         data_create( function( err, res ) {
           if (err) reject( err );
           else fulfill( res );
@@ -942,7 +942,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *      of the collection.
      */
     this.createItem = function (index) {
-      return new Promise( function( fulfill, reject ) {
+      return new Promise( (fulfill, reject) => {
         index = index || items.length;
 
         itemType.create(self, eventHandlers, function (err, item) {
@@ -978,7 +978,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *      Fetching the business object collection has failed.
      */
     this.fetch = function( filter, method ) {
-      return new Promise( function ( fulfill, reject) {
+      return new Promise( (fulfill, reject) => {
         method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
 
         data_fetch( filter, method || M_FETCH, function ( err, res ) {
@@ -1007,7 +1007,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *      Deleting the business object collection has failed.
      */
     this.save = function() {
-      return new Promise( function ( fulfill, reject) {
+      return new Promise( (fulfill, reject) => {
 
         function clearRemovedItems() {
           items = items.filter(function (item) {
