@@ -104,11 +104,8 @@ function dataUpdate (ctx, callback) {
       quantity:     ctx.getValue('quantity'),
       unitPrice:    ctx.getValue('unitPrice')
     };
-    ctx.dao.update(ctx.connection, dto, function (err, dto) {
-      if (err)
-        callback(err);
-      else
-        callback(null);
+    ctx.dao.update(ctx.connection, dto).then( dto => {
+      callback(null);
     });
   }
 }

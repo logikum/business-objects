@@ -667,7 +667,7 @@ describe('Asynchronous data portal method', function () {
       order.enabled = false;
 
       var item1 = order.items.at(0);
-      //item1.remove();
+      item1.remove();
 
       var item2 = order.items.at(1);
 
@@ -676,8 +676,7 @@ describe('Asynchronous data portal method', function () {
       item2.expiry = expiry1;
       item2.quantity = 11;
       item2.unitPrice = 49.5;
-        save();
-/*
+
       order.items.createItem()
       .then( function (item3) {
 
@@ -720,7 +719,7 @@ describe('Asynchronous data portal method', function () {
           });
         });
       });
-*/
+
       //endregion
 
       function save() {
@@ -729,7 +728,7 @@ describe('Asynchronous data portal method', function () {
         .then( function( order ) {
 
           //region Check data
-/*
+
           expect(order.orderKey).toBe(4);
           expect(order.vendorName).toBe('Summit Ltd.');
           expect(order.contractDate).toBe(contractDate_u);
@@ -794,7 +793,7 @@ describe('Asynchronous data portal method', function () {
           expect(schedule3.required).toBe(true);
           expect(schedule3.shipTo).toBe('Vienna');
           expect(schedule3.shipDate).toBe(shipDate2);
-*/
+
           //endregion
 
           done();

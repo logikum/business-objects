@@ -37,7 +37,7 @@ BlanketOrderItemDao.prototype.fetchForOrder = function(connection, filter) {
   });
 };
 
-BlanketOrderItemDao.prototype.insert = function(connection, data, callback) {
+BlanketOrderItemDao.prototype.insert = function(connection, data) {
   console.log('--- Blanket order item DAO.insert');
 
   return new Promise( (fulfill, reject) => {
@@ -47,7 +47,7 @@ BlanketOrderItemDao.prototype.insert = function(connection, data, callback) {
   });
 };
 
-BlanketOrderItemDao.prototype.update = function(connection, data, callback) {
+BlanketOrderItemDao.prototype.update = function(connection, data) {
   console.log('--- Blanket order item DAO.update');
 
   return new Promise( (fulfill, reject) => {
@@ -60,7 +60,7 @@ BlanketOrderItemDao.prototype.update = function(connection, data, callback) {
   });
 };
 
-BlanketOrderItemDao.prototype.remove = function(connection, filter, callback) {
+BlanketOrderItemDao.prototype.remove = function(connection, filter) {
   console.log('--- Blanket order item DAO.remove');
 
   return new Promise( (fulfill, reject) => {
