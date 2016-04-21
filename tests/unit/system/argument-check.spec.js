@@ -9,7 +9,7 @@ var PropertyError = require('../../../source/system/property-error.js');
 var Enumeration = require('../../../source/system/enumeration.js');
 var ModelBase = require('../../../source/model-base.js');
 
-var ClearScheduleCommand = require('../../../data/simple-core/sync/clear-schedule-command.js');
+var ClearScheduleCommand = require('../../../data/simple-core/clear-schedule-command.js');
 
 describe('Argument checking function', function () {
 
@@ -745,18 +745,18 @@ describe('Argument checking function', function () {
   it('asModelType method works', function () {
     var cmd = ClearScheduleCommand.create();
 
-    function call01() { return Argument.check(undefined).for().asModelType('CommandObjectSync'); }
-    function call02() { return Argument.check(null).for().asModelType('CommandObjectSync'); }
-    function call03() { return Argument.check({}).for().asModelType('CommandObjectSync'); }
-    function call04() { return Argument.check(cmd).for().asModelType('CommandObject'); }
-    function call05() { return Argument.check(cmd).for().asModelType('CommandObject', 'Invalid model type!'); }
+    function call01() { return Argument.check(undefined).for().asModelType('CommandObject'); }
+    function call02() { return Argument.check(null).for().asModelType('CommandObject'); }
+    function call03() { return Argument.check({}).for().asModelType('CommandObject'); }
+    function call04() { return Argument.check(cmd).for().asModelType('EditableRootObject'); }
+    function call05() { return Argument.check(cmd).for().asModelType('ReadOnlyChildObject', 'Invalid model type!'); }
 
-    var cmd01 = Argument.check(cmd).for().asModelType('CommandObjectSync');
+    var cmd01 = Argument.check(cmd).for().asModelType('CommandObject');
 
-    expect(call01).toThrow('The  argument must be CommandObjectSync type.');
-    expect(call02).toThrow('The  argument must be CommandObjectSync type.');
-    expect(call03).toThrow('The  argument must be CommandObjectSync type.');
-    expect(call04).toThrow('The  argument must be CommandObject type.');
+    expect(call01).toThrow('The  argument must be CommandObject type.');
+    expect(call02).toThrow('The  argument must be CommandObject type.');
+    expect(call03).toThrow('The  argument must be CommandObject type.');
+    expect(call04).toThrow('The  argument must be EditableRootObject type.');
     expect(call05).toThrow('Invalid model type!');
 
     expect(cmd01).toBe(cmd);
