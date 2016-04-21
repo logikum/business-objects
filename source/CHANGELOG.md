@@ -1,5 +1,9 @@
 # Release History
 
+* __v1.2.2__  
+  2016.04.21.  
+  Fixing a bug in data portal update methods.
+  
 * __v1.2.1__  
   2016.04.07.  
   Fixing a bug in ExtensionManagerBase.addOtherMethod().
