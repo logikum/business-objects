@@ -387,7 +387,7 @@ describe( 'Asynchronous fromCto method', () => {
             done();
           });
         else
-          var zum = order.getBrokenRules();
+          var br = order.getBrokenRules();
       });
     });
   });

@@ -819,11 +819,11 @@ describe('Asynchronous data portal method', () => {
 
       order.remove();
       order.save()
-      .then( result => {
+      .then( deleted => {
 
         //region Check result
 
-        expect(result).toBeNull();
+        expect(deleted).toBeNull();
 
         expect(order.getModelState()).toBe('removed');
         expect(order.address.getModelState()).toBe('removed');

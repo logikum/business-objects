@@ -1,4 +1,6 @@
-console.log('Testing data portal methods of asynchronous models...');
+console.log( 'Testing data portal methods of asynchronous models...' );
+
+//region Imports
 
 var BlanketOrder = require('../../data/simple-mc/async/blanket-order.js');
 var BlanketOrderView = require('../../data/simple-mc/async/blanket-order-view.js');
@@ -7,14 +9,20 @@ var BlanketOrderList = require('../../data/simple-mc/async/blanket-order-list.js
 var DataPortalEvent = require('../../source/shared/data-portal-event.js');
 var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
-var contractDate = new Date(2014, 12, 15, 15, 26);
-var contractDate_u = new Date(2014, 12, 20, 8, 40);
-var expiry1 = new Date(2015, 1, 1, 0, 0);
-var expiry2 = new Date(2015, 3, 21, 0, 0);
-var shipDate1 = new Date(2015, 1, 8, 12, 0);
-var shipDate2 = new Date(2015, 2, 28, 16, 30);
+//endregion
 
-describe('Asynchronous data portal method', function () {
+describe( 'Asynchronous data portal method', () => {
+
+  //region Data
+
+  var contractDate = new Date(2014, 12, 15, 15, 26);
+  var contractDate_u = new Date(2014, 12, 20, 8, 40);
+  var expiry1 = new Date(2015, 1, 1, 0, 0);
+  var expiry2 = new Date(2015, 3, 21, 0, 0);
+  var shipDate1 = new Date(2015, 1, 8, 12, 0);
+  var shipDate2 = new Date(2015, 2, 28, 16, 30);
+
+  //endregion
 
   //region Event handlers
 
@@ -88,11 +96,11 @@ describe('Asynchronous data portal method', function () {
 
   //endregion
 
-  it('create of sample editable model', function (done) {
+  it( 'create of sample editable model', done => {
     console.log('\n*** Asynchronous CREATE');
 
     BlanketOrder.create( ehBlanketOrder )
-    .then( function( order ) {
+    .then( order => {
 
       //region Load data
 
@@ -158,11 +166,11 @@ describe('Asynchronous data portal method', function () {
       function save() {
 
         order.save()
-        .then( function( order ) {
+        .then( order => {
 
           //region Check data
 
-          expect(order.orderKey).toBe(2);
+          expect(order.orderKey).toBe(1);
           expect(order.vendorName).toBe('Acme Corp.');
           expect(order.contractDate).toBe(contractDate);
           expect(order.totalPrice).toBe(497.5);
@@ -173,8 +181,8 @@ describe('Asynchronous data portal method', function () {
 
           address = order.address;
 
-          expect(address.addressKey).toBe(2);
-          expect(address.orderKey).toBe(2);
+          expect(address.addressKey).toBe(1);
+          expect(address.orderKey).toBe(1);
           expect(address.country).toBe('Canada');
           expect(address.state).toBe('Ontario');
           expect(address.city).toBe('Toronto');
@@ -186,8 +194,8 @@ describe('Asynchronous data portal method', function () {
 
           var item1 = order.items.at(0);
 
-          expect(item1.orderItemKey).toBe(4);
-          expect(item1.orderKey).toBe(2);
+          expect(item1.orderItemKey).toBe(1);
+          expect(item1.orderKey).toBe(1);
           expect(item1.productName).toBe('Tablet Creek 7');
           expect(item1.obsolete).toBe(false);
           expect(item1.expiry).toBe(expiry1);
@@ -196,8 +204,8 @@ describe('Asynchronous data portal method', function () {
 
           var item2 = order.items.at(1);
 
-          expect(item2.orderItemKey).toBe(5);
-          expect(item2.orderKey).toBe(2);
+          expect(item2.orderItemKey).toBe(2);
+          expect(item2.orderKey).toBe(1);
           expect(item2.productName).toBe('USB 3.0 cable');
           expect(item2.obsolete).toBe(false);
           expect(item2.expiry).toBe(expiry2);
@@ -210,8 +218,8 @@ describe('Asynchronous data portal method', function () {
 
           var schedule1 = item2.schedules.at(0);
 
-          expect(schedule1.orderScheduleKey).toBe(5);
-          expect(schedule1.orderItemKey).toBe(5);
+          expect(schedule1.orderScheduleKey).toBe(1);
+          expect(schedule1.orderItemKey).toBe(2);
           expect(schedule1.quantity).toBe(2);
           expect(schedule1.totalMass).toBe(0.24);
           expect(schedule1.required).toBe(true);
@@ -220,8 +228,8 @@ describe('Asynchronous data portal method', function () {
 
           var schedule2 = item2.schedules.at(1);
 
-          expect(schedule2.orderScheduleKey).toBe(6);
-          expect(schedule2.orderItemKey).toBe(5);
+          expect(schedule2.orderScheduleKey).toBe(2);
+          expect(schedule2.orderItemKey).toBe(2);
           expect(schedule2.quantity).toBe(3);
           expect(schedule2.totalMass).toBe(0.36);
           expect(schedule2.required).toBe(true);
@@ -236,15 +244,15 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('special fetch of sample editable model', function (done) {
-    console.log('\n*** Asynchronous GET_BY_NAME');
+  it( 'special fetch of sample editable model', done => {
+    console.log( '\n*** Asynchronous GET_BY_NAME' );
 
     BlanketOrder.getByName( 'Acme Corp.', ehBlanketOrder )
-    .then( function( order ) {
+    .then( order => {
 
       //region Check data
 
-      expect(order.orderKey).toBe(2);
+      expect(order.orderKey).toBe(1);
       expect(order.vendorName).toBe('Acme Corp.');
       expect(order.contractDate).toBe(contractDate);
       expect(order.totalPrice).toBe(497.5);
@@ -255,8 +263,8 @@ describe('Asynchronous data portal method', function () {
 
       var address = order.address;
 
-      expect(address.addressKey).toBe(2);
-      expect(address.orderKey).toBe(2);
+      expect(address.addressKey).toBe(1);
+      expect(address.orderKey).toBe(1);
       expect(address.country).toBe('Canada');
       expect(address.state).toBe('Ontario');
       expect(address.city).toBe('Toronto');
@@ -268,8 +276,8 @@ describe('Asynchronous data portal method', function () {
 
       var item1 = order.items.at(0);
 
-      expect(item1.orderItemKey).toBe(4);
-      expect(item1.orderKey).toBe(2);
+      expect(item1.orderItemKey).toBe(1);
+      expect(item1.orderKey).toBe(1);
       expect(item1.productName).toBe('Tablet Creek 7');
       expect(item1.obsolete).toBe(false);
       expect(item1.expiry).toBe(expiry1);
@@ -278,8 +286,8 @@ describe('Asynchronous data portal method', function () {
 
       var item2 = order.items.at(1);
 
-      expect(item2.orderItemKey).toBe(5);
-      expect(item2.orderKey).toBe(2);
+      expect(item2.orderItemKey).toBe(2);
+      expect(item2.orderKey).toBe(1);
       expect(item2.productName).toBe('USB 3.0 cable');
       expect(item2.obsolete).toBe(false);
       expect(item2.expiry).toBe(expiry2);
@@ -292,8 +300,8 @@ describe('Asynchronous data portal method', function () {
 
       var schedule1 = item2.schedules.at(0);
 
-      expect(schedule1.orderScheduleKey).toBe(5);
-      expect(schedule1.orderItemKey).toBe(5);
+      expect(schedule1.orderScheduleKey).toBe(1);
+      expect(schedule1.orderItemKey).toBe(2);
       expect(schedule1.quantity).toBe(2);
       expect(schedule1.totalMass).toBe(0.24);
       expect(schedule1.required).toBe(true);
@@ -302,8 +310,8 @@ describe('Asynchronous data portal method', function () {
 
       var schedule2 = item2.schedules.at(1);
 
-      expect(schedule2.orderScheduleKey).toBe(6);
-      expect(schedule2.orderItemKey).toBe(5);
+      expect(schedule2.orderScheduleKey).toBe(2);
+      expect(schedule2.orderItemKey).toBe(2);
       expect(schedule2.quantity).toBe(3);
       expect(schedule2.totalMass).toBe(0.36);
       expect(schedule2.required).toBe(true);
@@ -316,7 +324,7 @@ describe('Asynchronous data portal method', function () {
 
       var cto = order.toCto();
 
-      expect(cto.orderKey).toBe(2);
+      expect(cto.orderKey).toBe(1);
       expect(cto.vendorName).toBe('Acme Corp.');
       expect(cto.contractDate).toBe(contractDate);
       expect(cto.totalPrice).toBe(497.5);
@@ -325,8 +333,8 @@ describe('Asynchronous data portal method', function () {
       expect(cto.createdDate.getDate()).toBe(new Date().getDate());
       expect(cto.modifiedDate).toBeNull();
 
-      expect(cto.address.addressKey).toBe(2);
-      expect(cto.address.orderKey).toBe(2);
+      expect(cto.address.addressKey).toBe(1);
+      expect(cto.address.orderKey).toBe(1);
       expect(cto.address.country).toBe('Canada');
       expect(cto.address.state).toBe('Ontario');
       expect(cto.address.city).toBe('Toronto');
@@ -334,32 +342,32 @@ describe('Asynchronous data portal method', function () {
       expect(cto.address.line2).toBe('');
       expect(cto.address.postalCode).toBe('M5J 1E3');
 
-      expect(cto.items[0].orderItemKey).toBe(4);
-      expect(cto.items[0].orderKey).toBe(2);
+      expect(cto.items[0].orderItemKey).toBe(1);
+      expect(cto.items[0].orderKey).toBe(1);
       expect(cto.items[0].productName).toBe('Tablet Creek 7');
       expect(cto.items[0].obsolete).toBe(false);
       expect(cto.items[0].expiry).toBe(expiry1);
       expect(cto.items[0].quantity).toBe(2);
       expect(cto.items[0].unitPrice).toBe(200);
 
-      expect(cto.items[1].orderItemKey).toBe(5);
-      expect(cto.items[1].orderKey).toBe(2);
+      expect(cto.items[1].orderItemKey).toBe(2);
+      expect(cto.items[1].orderKey).toBe(1);
       expect(cto.items[1].productName).toBe('USB 3.0 cable');
       expect(cto.items[1].obsolete).toBe(false);
       expect(cto.items[1].expiry).toBe(expiry2);
       expect(cto.items[1].quantity).toBe(5);
       expect(cto.items[1].unitPrice).toBe(19.5);
 
-      expect(cto.items[1].schedules[0].orderScheduleKey).toBe(5);
-      expect(cto.items[1].schedules[0].orderItemKey).toBe(5);
+      expect(cto.items[1].schedules[0].orderScheduleKey).toBe(1);
+      expect(cto.items[1].schedules[0].orderItemKey).toBe(2);
       expect(cto.items[1].schedules[0].quantity).toBe(2);
       expect(cto.items[1].schedules[0].totalMass).toBe(0.24);
       expect(cto.items[1].schedules[0].required).toBe(true);
       expect(cto.items[1].schedules[0].shipTo).toBe('Madrid');
       expect(cto.items[1].schedules[0].shipDate).toBe(shipDate1);
 
-      expect(cto.items[1].schedules[1].orderScheduleKey).toBe(6);
-      expect(cto.items[1].schedules[1].orderItemKey).toBe(5);
+      expect(cto.items[1].schedules[1].orderScheduleKey).toBe(2);
+      expect(cto.items[1].schedules[1].orderItemKey).toBe(2);
       expect(cto.items[1].schedules[1].quantity).toBe(3);
       expect(cto.items[1].schedules[1].totalMass).toBe(0.36);
       expect(cto.items[1].schedules[1].required).toBe(true);
@@ -372,15 +380,15 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('fetch of sample read-only model', function (done) {
-    console.log('\n*** Asynchronous GET');
+  it( 'fetch of sample read-only model', done => {
+    console.log( '\n*** Asynchronous GET' );
 
-    BlanketOrderView.get( 2, ehBlanketOrderView )
-    .then( function( orderView ) {
+    BlanketOrderView.get( 1, ehBlanketOrderView )
+    .then( orderView => {
 
       //region Check data
 
-      expect(orderView.orderKey).toBe(2);
+      expect(orderView.orderKey).toBe(1);
       expect(orderView.vendorName).toBe('Acme Corp.');
       expect(orderView.contractDate).toBe(contractDate);
       expect(orderView.totalPrice).toBe(497.5);
@@ -391,8 +399,8 @@ describe('Asynchronous data portal method', function () {
 
       var addressView = orderView.address;
 
-      expect(addressView.addressKey).toBe(2);
-      expect(addressView.orderKey).toBe(2);
+      expect(addressView.addressKey).toBe(1);
+      expect(addressView.orderKey).toBe(1);
       expect(addressView.country).toBe('Canada');
       expect(addressView.state).toBe('Ontario');
       expect(addressView.city).toBe('Toronto');
@@ -404,8 +412,8 @@ describe('Asynchronous data portal method', function () {
 
       var itemView1 = orderView.items.at(0);
 
-      expect(itemView1.orderItemKey).toBe(4);
-      expect(itemView1.orderKey).toBe(2);
+      expect(itemView1.orderItemKey).toBe(1);
+      expect(itemView1.orderKey).toBe(1);
       expect(itemView1.productName).toBe('Tablet Creek 7');
       expect(itemView1.obsolete).toBe(false);
       expect(itemView1.expiry).toBe(expiry1);
@@ -414,8 +422,8 @@ describe('Asynchronous data portal method', function () {
 
       var itemView2 = orderView.items.at(1);
 
-      expect(itemView2.orderItemKey).toBe(5);
-      expect(itemView2.orderKey).toBe(2);
+      expect(itemView2.orderItemKey).toBe(2);
+      expect(itemView2.orderKey).toBe(1);
       expect(itemView2.productName).toBe('USB 3.0 cable');
       expect(itemView2.obsolete).toBe(false);
       expect(itemView2.expiry).toBe(expiry2);
@@ -428,8 +436,8 @@ describe('Asynchronous data portal method', function () {
 
       var scheduleView1 = itemView2.schedules.at(0);
 
-      expect(scheduleView1.orderScheduleKey).toBe(5);
-      expect(scheduleView1.orderItemKey).toBe(5);
+      expect(scheduleView1.orderScheduleKey).toBe(1);
+      expect(scheduleView1.orderItemKey).toBe(2);
       expect(scheduleView1.quantity).toBe(2);
       expect(scheduleView1.totalMass).toBe(0.24);
       expect(scheduleView1.required).toBe(true);
@@ -438,8 +446,8 @@ describe('Asynchronous data portal method', function () {
 
       var scheduleView2 = itemView2.schedules.at(1);
 
-      expect(scheduleView2.orderScheduleKey).toBe(6);
-      expect(scheduleView2.orderItemKey).toBe(5);
+      expect(scheduleView2.orderScheduleKey).toBe(2);
+      expect(scheduleView2.orderItemKey).toBe(2);
       expect(scheduleView2.quantity).toBe(3);
       expect(scheduleView2.totalMass).toBe(0.36);
       expect(scheduleView2.required).toBe(true);
@@ -524,7 +532,7 @@ describe('Asynchronous data portal method', function () {
 
       var cto = orderView.toCto();
 
-      expect(cto.orderKey).toBe(2);
+      expect(cto.orderKey).toBe(1);
       expect(cto.vendorName).toBe('Acme Corp.');
       expect(cto.contractDate).toBe(contractDate);
       expect(cto.totalPrice).toBe(497.5);
@@ -533,8 +541,8 @@ describe('Asynchronous data portal method', function () {
       expect(cto.createdDate.getDate()).toBe(new Date().getDate());
       expect(cto.modifiedDate).toBeNull();
 
-      expect(cto.address.addressKey).toBe(2);
-      expect(cto.address.orderKey).toBe(2);
+      expect(cto.address.addressKey).toBe(1);
+      expect(cto.address.orderKey).toBe(1);
       expect(cto.address.country).toBe('Canada');
       expect(cto.address.state).toBe('Ontario');
       expect(cto.address.city).toBe('Toronto');
@@ -542,32 +550,32 @@ describe('Asynchronous data portal method', function () {
       expect(cto.address.line2).toBe('');
       expect(cto.address.postalCode).toBe('M5J 1E3');
 
-      expect(cto.items[0].orderItemKey).toBe(4);
-      expect(cto.items[0].orderKey).toBe(2);
+      expect(cto.items[0].orderItemKey).toBe(1);
+      expect(cto.items[0].orderKey).toBe(1);
       expect(cto.items[0].productName).toBe('Tablet Creek 7');
       expect(cto.items[0].obsolete).toBe(false);
       expect(cto.items[0].expiry).toBe(expiry1);
       expect(cto.items[0].quantity).toBe(2);
       expect(cto.items[0].unitPrice).toBe(200);
 
-      expect(cto.items[1].orderItemKey).toBe(5);
-      expect(cto.items[1].orderKey).toBe(2);
+      expect(cto.items[1].orderItemKey).toBe(2);
+      expect(cto.items[1].orderKey).toBe(1);
       expect(cto.items[1].productName).toBe('USB 3.0 cable');
       expect(cto.items[1].obsolete).toBe(false);
       expect(cto.items[1].expiry).toBe(expiry2);
       expect(cto.items[1].quantity).toBe(5);
       expect(cto.items[1].unitPrice).toBe(19.5);
 
-      expect(cto.items[1].schedules[0].orderScheduleKey).toBe(5);
-      expect(cto.items[1].schedules[0].orderItemKey).toBe(5);
+      expect(cto.items[1].schedules[0].orderScheduleKey).toBe(1);
+      expect(cto.items[1].schedules[0].orderItemKey).toBe(2);
       expect(cto.items[1].schedules[0].quantity).toBe(2);
       expect(cto.items[1].schedules[0].totalMass).toBe(0.24);
       expect(cto.items[1].schedules[0].required).toBe(true);
       expect(cto.items[1].schedules[0].shipTo).toBe('Madrid');
       expect(cto.items[1].schedules[0].shipDate).toBe(shipDate1);
 
-      expect(cto.items[1].schedules[1].orderScheduleKey).toBe(6);
-      expect(cto.items[1].schedules[1].orderItemKey).toBe(5);
+      expect(cto.items[1].schedules[1].orderScheduleKey).toBe(2);
+      expect(cto.items[1].schedules[1].orderItemKey).toBe(2);
       expect(cto.items[1].schedules[1].quantity).toBe(3);
       expect(cto.items[1].schedules[1].totalMass).toBe(0.36);
       expect(cto.items[1].schedules[1].required).toBe(true);
@@ -580,11 +588,11 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('fetch of sample read-only collection', function (done) {
-    console.log('\n*** Asynchronous GET_ALL');
+  it( 'fetch of sample read-only collection', done => {
+    console.log( '\n*** Asynchronous GET_ALL' );
 
     BlanketOrderList.getAll( ehBlanketOrderList )
-    .then( function( orderList ) {
+    .then( orderList => {
 
       //region Check data
 
@@ -593,7 +601,7 @@ describe('Asynchronous data portal method', function () {
 
       var orderListItem = orderList.at(0);
 
-      expect(orderListItem.orderKey).toBe(2);
+      expect(orderListItem.orderKey).toBe(1);
       expect(orderListItem.vendorName).toBe('Acme Corp.');
       expect(orderListItem.contractDate).toBe(contractDate);
       expect(orderListItem.totalPrice).toBe(497.5);
@@ -630,11 +638,11 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('update of sample editable model', function (done) {
-    console.log('\n*** Asynchronous SAVE');
+  it( 'update of sample editable model', done => {
+    console.log( '\n*** Asynchronous SAVE' );
 
-    BlanketOrder.get( 2, ehBlanketOrder )
-    .then( function( order ) {
+    BlanketOrder.get( 1, ehBlanketOrder )
+    .then( order => {
 
       //region Update data
 
@@ -656,58 +664,58 @@ describe('Asynchronous data portal method', function () {
       item2.unitPrice = 49.5;
 
       order.items.createItem()
-      .then( function (item3) {
+          .then( item3 => {
 
-        item3.productName = 'DataExpert 32GB pen drive';
-        item3.obsolete = false;
-        item3.expiry = expiry2;
-        item3.quantity = 4;
-        item3.unitPrice = 32.0;
+            item3.productName = 'DataExpert 32GB pen drive';
+            item3.obsolete = false;
+            item3.expiry = expiry2;
+            item3.quantity = 4;
+            item3.unitPrice = 32.0;
 
-        var schedule1 = item2.schedules.at(0);
-        schedule1.remove();
+            var schedule1 = item2.schedules.at(0);
+            schedule1.remove();
 
-        var schedule2 = item2.schedules.at(1);
+            var schedule2 = item2.schedules.at(1);
 
-        schedule2.quantity = 4;
-        schedule2.totalMass = 0.48;
-        schedule2.required = false;
-        schedule2.shipTo = 'Stockholm';
-        schedule2.shipDate = shipDate1;
+            schedule2.quantity = 4;
+            schedule2.totalMass = 0.48;
+            schedule2.required = false;
+            schedule2.shipTo = 'Stockholm';
+            schedule2.shipDate = shipDate1;
 
-        item2.schedules.createItem()
-        .then( function (schedule3) {
+            item2.schedules.createItem()
+                .then( schedule3 => {
 
-          schedule3.quantity = 7;
-          schedule3.totalMass = 0.84;
-          schedule3.required = true;
-          schedule3.shipTo = 'Vienna';
-          schedule3.shipDate = shipDate2;
+                  schedule3.quantity = 7;
+                  schedule3.totalMass = 0.84;
+                  schedule3.required = true;
+                  schedule3.shipTo = 'Vienna';
+                  schedule3.shipDate = shipDate2;
 
-          item3.schedules.createItem()
-          .then( function (schedule4) {
+                  item3.schedules.createItem()
+                      .then( schedule4 => {
 
-            schedule4.quantity = 4;
-            schedule4.totalMass = 0.06;
-            schedule4.required = true;
-            schedule4.shipTo = 'Vienna';
-            schedule4.shipDate = shipDate2;
+                        schedule4.quantity = 4;
+                        schedule4.totalMass = 0.06;
+                        schedule4.required = true;
+                        schedule4.shipTo = 'Vienna';
+                        schedule4.shipDate = shipDate2;
 
-            save();
+                        save();
+                      });
+                });
           });
-        });
-      });
 
       //endregion
 
       function save() {
 
         order.save()
-        .then( function( order ) {
+        .then( order => {
 
           //region Check data
 
-          expect(order.orderKey).toBe(2);
+          expect(order.orderKey).toBe(1);
           expect(order.vendorName).toBe('Summit Ltd.');
           expect(order.contractDate).toBe(contractDate_u);
           expect(order.totalPrice).toBe(672.5);
@@ -720,8 +728,8 @@ describe('Asynchronous data portal method', function () {
 
           item1 = order.items.at(0);
 
-          expect(item1.orderItemKey).toBe(5);
-          expect(item1.orderKey).toBe(2);
+          expect(item1.orderItemKey).toBe(2);
+          expect(item1.orderKey).toBe(1);
           expect(item1.productName).toBe('USB 3.0 hub');
           expect(item1.obsolete).toBe(true);
           expect(item1.expiry).toBe(expiry1);
@@ -730,8 +738,8 @@ describe('Asynchronous data portal method', function () {
 
           item2 = order.items.at(1);
 
-          expect(item2.orderItemKey).toBe(6);
-          expect(item2.orderKey).toBe(2);
+          expect(item2.orderItemKey).toBe(3);
+          expect(item2.orderKey).toBe(1);
           expect(item2.productName).toBe('DataExpert 32GB pen drive');
           expect(item2.obsolete).toBe(false);
           expect(item2.expiry).toBe(expiry2);
@@ -742,8 +750,8 @@ describe('Asynchronous data portal method', function () {
 
           schedule1 = item1.schedules.at(0);
 
-          expect(schedule1.orderScheduleKey).toBe(6);
-          expect(schedule1.orderItemKey).toBe(5);
+          expect(schedule1.orderScheduleKey).toBe(2);
+          expect(schedule1.orderItemKey).toBe(2);
           expect(schedule1.quantity).toBe(4);
           expect(schedule1.totalMass).toBe(0.48);
           expect(schedule1.required).toBe(false);
@@ -752,8 +760,8 @@ describe('Asynchronous data portal method', function () {
 
           schedule2 = item1.schedules.at(1);
 
-          expect(schedule2.orderScheduleKey).toBe(7);
-          expect(schedule2.orderItemKey).toBe(5);
+          expect(schedule2.orderScheduleKey).toBe(3);
+          expect(schedule2.orderItemKey).toBe(2);
           expect(schedule2.quantity).toBe(7);
           expect(schedule2.totalMass).toBe(0.84);
           expect(schedule2.required).toBe(true);
@@ -764,8 +772,8 @@ describe('Asynchronous data portal method', function () {
 
           schedule3 = item2.schedules.at(0);
 
-          expect(schedule3.orderScheduleKey).toBe(8);
-          expect(schedule3.orderItemKey).toBe(6);
+          expect(schedule3.orderScheduleKey).toBe(4);
+          expect(schedule3.orderItemKey).toBe(3);
           expect(schedule3.quantity).toBe(4);
           expect(schedule3.totalMass).toBe(0.06);
           expect(schedule3.required).toBe(true);
@@ -780,21 +788,25 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('delete of sample editable model', function (done) {
-    console.log('\n*** Asynchronous REMOVE');
+  it( 'delete of sample editable model', done => {
+    console.log( '\n*** Asynchronous REMOVE' );
 
-    BlanketOrder.get( 2, ehBlanketOrder )
-    .then( function( order ) {
+    BlanketOrder.get( 1, ehBlanketOrder )
+    .then( order => {
 
       order.remove();
       order.save()
-      .then( function( result ) {
+      .then( deleted => {
 
-        expect(result).toBeNull();
+        //region Check result
+
+        expect(deleted).toBeNull();
 
         expect(order.getModelState()).toBe('removed');
         expect(order.address.getModelState()).toBe('removed');
         expect(order.items.count).toBe(0);
+
+        //endregion
 
         done();
       });

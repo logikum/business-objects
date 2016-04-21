@@ -49,7 +49,7 @@ describe('Asynchronous data portal method', () => {
     cmd.orderScheduleKey = 3;
 
     cmd.execute()
-    .then( res => {
+    .then( value => {
 
       expect(cmd.result).toBe(true);
 
@@ -67,7 +67,7 @@ describe('Asynchronous data portal method', () => {
     cmd.orderScheduleKey = 3;
 
     cmd.reschedule()
-    .then( res => {
+    .then( value => {
 
       expect(cmd.success).toBe(true);
       expect(cmd.result).toEqual(jasmine.any(RescheduleShippingResult));

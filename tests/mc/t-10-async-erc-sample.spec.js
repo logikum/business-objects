@@ -1,4 +1,6 @@
-console.log('Testing data portal methods of sample asynchronous root collection...');
+console.log( 'Testing data portal methods of sample asynchronous root collection...' );
+
+//region Imports
 
 var BlanketOrders = require('../../data/simple-mc/async/blanket-orders.js');
 var BlanketOrderChild = require('../../data/simple-mc/async/blanket-order-child.js');
@@ -6,17 +8,23 @@ var BlanketOrderChild = require('../../data/simple-mc/async/blanket-order-child.
 var DataPortalEvent = require('../../source/shared/data-portal-event.js');
 var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
-var contractDate1 = new Date(2015, 10, 23, 11, 7);
-var contractDate2 = new Date(2015, 10, 24, 15, 48);
-var contractDate3 = new Date(2015, 11, 7, 19, 0);
-var expiry1 = new Date(2016, 7, 1, 0, 0);
-var expiry2 = new Date(2016, 4, 1, 0, 0);
-var expiry3 = new Date(2016, 8, 20, 12, 0);
-var shipDate1 = new Date(2015, 12, 21, 12, 0);
-var shipDate2 = new Date(2016, 1, 12, 9, 45);
-var shipDate3 = new Date(2016, 2, 5, 17, 0);
+//endregion
 
-describe('Asynchronous data portal method', function () {
+describe('Asynchronous data portal method', () => {
+
+  //region Data
+
+  var contractDate1 = new Date(2015, 10, 23, 11, 7);
+  var contractDate2 = new Date(2015, 10, 24, 15, 48);
+  var contractDate3 = new Date(2015, 11, 7, 19, 0);
+  var expiry1 = new Date(2016, 7, 1, 0, 0);
+  var expiry2 = new Date(2016, 4, 1, 0, 0);
+  var expiry3 = new Date(2016, 8, 20, 12, 0);
+  var shipDate1 = new Date(2015, 12, 21, 12, 0);
+  var shipDate2 = new Date(2016, 1, 12, 9, 45);
+  var shipDate3 = new Date(2016, 2, 5, 17, 0);
+
+  //endregion
 
   //region Event handlers
 
@@ -100,8 +108,8 @@ describe('Asynchronous data portal method', function () {
 
   //endregion
 
-  it('create of sample editable collection', function (done) {
-    console.log('\n*** Asynchronous collection CREATE');
+  it( 'create of sample editable collection', done => {
+    console.log( '\n*** Asynchronous collection CREATE' );
 
     //region Load data
 
@@ -260,7 +268,7 @@ describe('Asynchronous data portal method', function () {
 
         var order1 = orders.at(0);
 
-        expect(order1.orderKey).toBe(12);
+        expect(order1.orderKey).toBe(5);
         expect(order1.vendorName).toBe('Blue Zebra');
         expect(order1.contractDate).toBe(contractDate1);
         expect(order1.totalPrice).toBe(400.0);
@@ -271,8 +279,8 @@ describe('Asynchronous data portal method', function () {
 
         address1 = order1.address;
 
-        expect(address1.addressKey).toBe(12);
-        expect(address1.orderKey).toBe(12);
+        expect(address1.addressKey).toBe(5);
+        expect(address1.orderKey).toBe(5);
         expect(address1.country).toBe('Italia');
         expect(address1.state).toBe('');
         expect(address1.city).toBe('Milano');
@@ -284,8 +292,8 @@ describe('Asynchronous data portal method', function () {
 
         item1 = order1.items.at(0);
 
-        expect(item1.orderItemKey).toBe(31);
-        expect(item1.orderKey).toBe(12);
+        expect(item1.orderItemKey).toBe(13);
+        expect(item1.orderKey).toBe(5);
         expect(item1.productName).toBe('D810A');
         expect(item1.obsolete).toBe(false);
         expect(item1.expiry).toBe(expiry1);
@@ -294,8 +302,8 @@ describe('Asynchronous data portal method', function () {
 
         item2 = order1.items.at(1);
 
-        expect(item2.orderItemKey).toBe(32);
-        expect(item2.orderKey).toBe(12);
+        expect(item2.orderItemKey).toBe(14);
+        expect(item2.orderKey).toBe(5);
         expect(item2.productName).toBe('R8');
         expect(item2.obsolete).toBe(false);
         expect(item2.expiry).toBe(expiry2);
@@ -308,8 +316,8 @@ describe('Asynchronous data portal method', function () {
 
         schedule1 = item1.schedules.at(0);
 
-        expect(schedule1.orderScheduleKey).toBe(40);
-        expect(schedule1.orderItemKey).toBe(31);
+        expect(schedule1.orderScheduleKey).toBe(17);
+        expect(schedule1.orderItemKey).toBe(13);
         expect(schedule1.quantity).toBe(5);
         expect(schedule1.totalMass).toBe(2.5);
         expect(schedule1.required).toBe(true);
@@ -318,8 +326,8 @@ describe('Asynchronous data portal method', function () {
 
         schedule2 = item1.schedules.at(1);
 
-        expect(schedule2.orderScheduleKey).toBe(41);
-        expect(schedule2.orderItemKey).toBe(31);
+        expect(schedule2.orderScheduleKey).toBe(18);
+        expect(schedule2.orderItemKey).toBe(13);
         expect(schedule2.quantity).toBe(5);
         expect(schedule2.totalMass).toBe(2.5);
         expect(schedule2.required).toBe(true);
@@ -330,7 +338,7 @@ describe('Asynchronous data portal method', function () {
 
         var order2 = orders.at(1);
 
-        expect(order2.orderKey).toBe(13);
+        expect(order2.orderKey).toBe(6);
         expect(order2.vendorName).toBe('Black Spider');
         expect(order2.contractDate).toBe(contractDate2);
         expect(order2.totalPrice).toBe(6600.0);
@@ -341,8 +349,8 @@ describe('Asynchronous data portal method', function () {
 
         address2 = order2.address;
 
-        expect(address2.addressKey).toBe(13);
-        expect(address2.orderKey).toBe(13);
+        expect(address2.addressKey).toBe(6);
+        expect(address2.orderKey).toBe(6);
         expect(address2.country).toBe('Poland');
         expect(address2.state).toBe('');
         expect(address2.city).toBe('Warsawa');
@@ -352,8 +360,8 @@ describe('Asynchronous data portal method', function () {
 
         item3 = order2.items.at(0);
 
-        expect(item3.orderItemKey).toBe(33);
-        expect(item3.orderKey).toBe(13);
+        expect(item3.orderItemKey).toBe(15);
+        expect(item3.orderKey).toBe(6);
         expect(item3.productName).toBe('Platforma SIRP');
         expect(item3.obsolete).toBe(false);
         expect(item3.expiry).toBe(expiry3);
@@ -362,8 +370,8 @@ describe('Asynchronous data portal method', function () {
 
         schedule3 = item3.schedules.at(0);
 
-        expect(schedule3.orderScheduleKey).toBe(42);
-        expect(schedule3.orderItemKey).toBe(33);
+        expect(schedule3.orderScheduleKey).toBe(19);
+        expect(schedule3.orderItemKey).toBe(15);
         expect(schedule3.quantity).toBe(45);
         expect(schedule3.totalMass).toBe(540);
         expect(schedule3.required).toBe(false);
@@ -379,8 +387,8 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('update of sample editable collection', function (done) {
-    console.log('\n*** Asynchronous collection UPDATE');
+  it( 'update of sample editable collection', done => {
+    console.log( '\n*** Asynchronous collection UPDATE' );
 
     //region Update data
 
@@ -541,7 +549,7 @@ describe('Asynchronous data portal method', function () {
     //endregion
 
     console.log('    < Fetch order collection >');
-    BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
+    BlanketOrders.getFromTo( 5, 7, ehBlanketOrders )
     .then( list => {
       return Promise.all([
         updateOrder1( list ),
@@ -563,7 +571,7 @@ describe('Asynchronous data portal method', function () {
 
         var order1 = orders.at(0);
 
-        expect(order1.orderKey).toBe(12);
+        expect(order1.orderKey).toBe(5);
         expect(order1.vendorName).toBe('Pink Giraffe');
         expect(order1.contractDate).toBe(contractDate2);
         expect(order1.totalPrice).toBe(500.0);
@@ -574,8 +582,8 @@ describe('Asynchronous data portal method', function () {
 
         address1 = order1.address;
 
-        expect(address1.addressKey).toBe(12);
-        expect(address1.orderKey).toBe(12);
+        expect(address1.addressKey).toBe(5);
+        expect(address1.orderKey).toBe(5);
         expect(address1.country).toBe('Italia');
         expect(address1.state).toBe('');
         expect(address1.city).toBe('Milano');
@@ -587,8 +595,8 @@ describe('Asynchronous data portal method', function () {
 
         item1 = order1.items.at(0);
 
-        expect(item1.orderItemKey).toBe(31);
-        expect(item1.orderKey).toBe(12);
+        expect(item1.orderItemKey).toBe(13);
+        expect(item1.orderKey).toBe(5);
         expect(item1.productName).toBe('D810B');
         expect(item1.obsolete).toBe(false);
         expect(item1.expiry).toBe(expiry2);
@@ -597,8 +605,8 @@ describe('Asynchronous data portal method', function () {
 
         item2 = order1.items.at(1);
 
-        expect(item2.orderItemKey).toBe(34);
-        expect(item2.orderKey).toBe(12);
+        expect(item2.orderItemKey).toBe(16);
+        expect(item2.orderKey).toBe(5);
         expect(item2.productName).toBe('Babel Tower');
         expect(item2.obsolete).toBe(false);
         expect(item2.expiry).toBe(expiry1);
@@ -611,8 +619,8 @@ describe('Asynchronous data portal method', function () {
 
         schedule1 = item1.schedules.at(0);
 
-        expect(schedule1.orderScheduleKey).toBe(41);
-        expect(schedule1.orderItemKey).toBe(31);
+        expect(schedule1.orderScheduleKey).toBe(18);
+        expect(schedule1.orderItemKey).toBe(13);
         expect(schedule1.quantity).toBe(10);
         expect(schedule1.totalMass).toBe(2.5);
         expect(schedule1.required).toBe(true);
@@ -621,8 +629,8 @@ describe('Asynchronous data portal method', function () {
 
         schedule2 = item1.schedules.at(1);
 
-        expect(schedule2.orderScheduleKey).toBe(43);
-        expect(schedule2.orderItemKey).toBe(31);
+        expect(schedule2.orderScheduleKey).toBe(20);
+        expect(schedule2.orderItemKey).toBe(13);
         expect(schedule2.quantity).toBe(10);
         expect(schedule2.totalMass).toBe(2.5);
         expect(schedule2.required).toBe(false);
@@ -631,8 +639,8 @@ describe('Asynchronous data portal method', function () {
 
         schedule3 = item2.schedules.at(0);
 
-        expect(schedule3.orderScheduleKey).toBe(44);
-        expect(schedule3.orderItemKey).toBe(34);
+        expect(schedule3.orderScheduleKey).toBe(21);
+        expect(schedule3.orderItemKey).toBe(16);
         expect(schedule3.quantity).toBe(3);
         expect(schedule3.totalMass).toBe(23.4);
         expect(schedule3.required).toBe(true);
@@ -643,7 +651,7 @@ describe('Asynchronous data portal method', function () {
 
         var order2 = orders.at(1);
 
-        expect(order2.orderKey).toBe(14);
+        expect(order2.orderKey).toBe(7);
         expect(order2.vendorName).toBe('Coward Rabbit');
         expect(order2.contractDate).toBe(contractDate3);
         expect(order2.totalPrice).toBe(980);
@@ -661,8 +669,8 @@ describe('Asynchronous data portal method', function () {
         address2.line2 = '';
         address2.postalCode = '945 01';
 
-        expect(address2.addressKey).toBe(14);
-        expect(address2.orderKey).toBe(14);
+        expect(address2.addressKey).toBe(7);
+        expect(address2.orderKey).toBe(7);
         expect(address2.country).toBe('Slovakia');
         expect(address2.state).toBe('');
         expect(address2.city).toBe('Komárno');
@@ -674,8 +682,8 @@ describe('Asynchronous data portal method', function () {
 
         item3 = order2.items.at(0);
 
-        expect(item3.orderItemKey).toBe(35);
-        expect(item3.orderKey).toBe(14);
+        expect(item3.orderItemKey).toBe(17);
+        expect(item3.orderKey).toBe(7);
         expect(item3.productName).toBe('OpenShift Origin');
         expect(item3.obsolete).toBe(false);
         expect(item3.expiry).toBe(expiry1);
@@ -686,8 +694,8 @@ describe('Asynchronous data portal method', function () {
 
         schedule3 = item3.schedules.at(0);
 
-        expect(schedule3.orderScheduleKey).toBe(45);
-        expect(schedule3.orderItemKey).toBe(35);
+        expect(schedule3.orderScheduleKey).toBe(22);
+        expect(schedule3.orderItemKey).toBe(17);
         expect(schedule3.quantity).toBe(10);
         expect(schedule3.totalMass).toBe(13.7);
         expect(schedule3.required).toBe(true);
@@ -703,11 +711,11 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('client conversion of sample editable collection', function(done) {
-    console.log('\n*** Asynchronous collection TO_FROM_CTO');
+  it( 'client conversion of sample editable collection', done => {
+    console.log( '\n*** Asynchronous collection TO_FROM_CTO' );
 
     console.log('    < Fetch order collection >');
-    BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
+    BlanketOrders.getFromTo( 5, 7, ehBlanketOrders )
     .then( orders1 => {
 
       var data = orders1.toCto();
@@ -724,7 +732,7 @@ describe('Asynchronous data portal method', function () {
 
           var order1 = orders2.at(0);
 
-          expect(order1.orderKey).toBe(12);
+          expect(order1.orderKey).toBe(5);
           expect(order1.vendorName).toBe('Pink Giraffe');
           expect(order1.contractDate).toBe(contractDate2);
           expect(order1.totalPrice).toBe(500.0);
@@ -735,8 +743,8 @@ describe('Asynchronous data portal method', function () {
 
           address1 = order1.address;
 
-          expect(address1.addressKey).toBe(12);
-          expect(address1.orderKey).toBe(12);
+          expect(address1.addressKey).toBe(5);
+          expect(address1.orderKey).toBe(5);
           expect(address1.country).toBe('Italia');
           expect(address1.state).toBe('');
           expect(address1.city).toBe('Milano');
@@ -748,8 +756,8 @@ describe('Asynchronous data portal method', function () {
 
           item1 = order1.items.at(0);
 
-          expect(item1.orderItemKey).toBe(31);
-          expect(item1.orderKey).toBe(12);
+          expect(item1.orderItemKey).toBe(13);
+          expect(item1.orderKey).toBe(5);
           expect(item1.productName).toBe('D810B');
           expect(item1.obsolete).toBe(false);
           expect(item1.expiry).toBe(expiry2);
@@ -758,8 +766,8 @@ describe('Asynchronous data portal method', function () {
 
           item2 = order1.items.at(1);
 
-          expect(item2.orderItemKey).toBe(34);
-          expect(item2.orderKey).toBe(12);
+          expect(item2.orderItemKey).toBe(16);
+          expect(item2.orderKey).toBe(5);
           expect(item2.productName).toBe('Babel Tower');
           expect(item2.obsolete).toBe(false);
           expect(item2.expiry).toBe(expiry1);
@@ -772,8 +780,8 @@ describe('Asynchronous data portal method', function () {
 
           schedule1 = item1.schedules.at(0);
 
-          expect(schedule1.orderScheduleKey).toBe(41);
-          expect(schedule1.orderItemKey).toBe(31);
+          expect(schedule1.orderScheduleKey).toBe(18);
+          expect(schedule1.orderItemKey).toBe(13);
           expect(schedule1.quantity).toBe(10);
           expect(schedule1.totalMass).toBe(2.5);
           expect(schedule1.required).toBe(true);
@@ -782,8 +790,8 @@ describe('Asynchronous data portal method', function () {
 
           schedule2 = item1.schedules.at(1);
 
-          expect(schedule2.orderScheduleKey).toBe(43);
-          expect(schedule2.orderItemKey).toBe(31);
+          expect(schedule2.orderScheduleKey).toBe(20);
+          expect(schedule2.orderItemKey).toBe(13);
           expect(schedule2.quantity).toBe(10);
           expect(schedule2.totalMass).toBe(2.5);
           expect(schedule2.required).toBe(false);
@@ -792,8 +800,8 @@ describe('Asynchronous data portal method', function () {
 
           schedule3 = item2.schedules.at(0);
 
-          expect(schedule3.orderScheduleKey).toBe(44);
-          expect(schedule3.orderItemKey).toBe(34);
+          expect(schedule3.orderScheduleKey).toBe(21);
+          expect(schedule3.orderItemKey).toBe(16);
           expect(schedule3.quantity).toBe(3);
           expect(schedule3.totalMass).toBe(23.4);
           expect(schedule3.required).toBe(true);
@@ -804,7 +812,7 @@ describe('Asynchronous data portal method', function () {
 
           var order2 = orders2.at(1);
 
-          expect(order2.orderKey).toBe(14);
+          expect(order2.orderKey).toBe(7);
           expect(order2.vendorName).toBe('Coward Rabbit');
           expect(order2.contractDate).toBe(contractDate3);
           expect(order2.totalPrice).toBe(980);
@@ -822,8 +830,8 @@ describe('Asynchronous data portal method', function () {
           address2.line2 = '';
           address2.postalCode = '945 01';
 
-          expect(address2.addressKey).toBe(14);
-          expect(address2.orderKey).toBe(14);
+          expect(address2.addressKey).toBe(7);
+          expect(address2.orderKey).toBe(7);
           expect(address2.country).toBe('Slovakia');
           expect(address2.state).toBe('');
           expect(address2.city).toBe('Komárno');
@@ -835,8 +843,8 @@ describe('Asynchronous data portal method', function () {
 
           item3 = order2.items.at(0);
 
-          expect(item3.orderItemKey).toBe(35);
-          expect(item3.orderKey).toBe(14);
+          expect(item3.orderItemKey).toBe(17);
+          expect(item3.orderKey).toBe(7);
           expect(item3.productName).toBe('OpenShift Origin');
           expect(item3.obsolete).toBe(false);
           expect(item3.expiry).toBe(expiry1);
@@ -847,8 +855,8 @@ describe('Asynchronous data portal method', function () {
 
           schedule3 = item3.schedules.at(0);
 
-          expect(schedule3.orderScheduleKey).toBe(45);
-          expect(schedule3.orderItemKey).toBe(35);
+          expect(schedule3.orderScheduleKey).toBe(22);
+          expect(schedule3.orderItemKey).toBe(17);
           expect(schedule3.quantity).toBe(10);
           expect(schedule3.totalMass).toBe(13.7);
           expect(schedule3.required).toBe(true);
@@ -865,11 +873,11 @@ describe('Asynchronous data portal method', function () {
     });
   });
 
-  it('delete of sample editable collection', function (done) {
-    console.log('\n*** Asynchronous collection REMOVE');
+  it( 'delete of sample editable collection', done => {
+    console.log( '\n*** Asynchronous collection REMOVE' );
 
     console.log('    < Fetch order collection >');
-    BlanketOrders.getFromTo( 12, 14, ehBlanketOrders )
+    BlanketOrders.getFromTo( 5, 7, ehBlanketOrders )
     .then( orders => {
 
       console.log('    < Remove order collection >');

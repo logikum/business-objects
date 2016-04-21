@@ -1,16 +1,24 @@
-console.log('Testing fromCto methods of asynchronous models...');
+console.log( 'Testing fromCto methods of asynchronous models...' );
+
+//region Imports
 
 var BlanketOrder_S = require('../../data/simple-mc/async/blanket-order.js');
 var BlanketOrder_C = require('../../data/custom-mc/async-models/blanket-order.js');
 
-var contractDate = new Date(2014, 12, 15, 15, 26);
-var contractDate_u = new Date(2014, 12, 20, 8, 40);
-var expiry1 = new Date(2015, 1, 1, 0, 0);
-var expiry2 = new Date(2015, 3, 21, 0, 0);
-var shipDate1 = new Date(2015, 1, 8, 12, 0);
-var shipDate2 = new Date(2015, 2, 28, 16, 30);
+//endregion
 
 describe('Asynchronous fromCto method', function () {
+
+  //region Data
+
+  var contractDate = new Date(2014, 12, 15, 15, 26);
+  var contractDate_u = new Date(2014, 12, 20, 8, 40);
+  var expiry1 = new Date(2015, 1, 1, 0, 0);
+  var expiry2 = new Date(2015, 3, 21, 0, 0);
+  var shipDate1 = new Date(2015, 1, 8, 12, 0);
+  var shipDate2 = new Date(2015, 2, 28, 16, 30);
+
+  //endregion
 
   //region Compose data for insert
 
@@ -62,8 +70,8 @@ describe('Asynchronous fromCto method', function () {
 
   //endregion
 
-  it('for creating sample editable model', function (done) {
-    console.log('\n*** Asynchronous rebuild for sample CREATE');
+  it( 'for creating sample editable model', done => {
+    console.log( '\n*** Asynchronous rebuild for sample CREATE' );
 
     BlanketOrder_S.create().then( order => {
 
@@ -73,7 +81,7 @@ describe('Asynchronous fromCto method', function () {
 
           //region Check data
 
-          expect(order.orderKey).toBe(7);
+          expect(order.orderKey).toBe(3);
           expect(order.vendorName).toBe('Acme Corp.');
           expect(order.contractDate).toBe(contractDate);
           expect(order.totalPrice).toBe(497.5);
@@ -84,8 +92,8 @@ describe('Asynchronous fromCto method', function () {
 
           var address = order.address;
 
-          expect(address.addressKey).toBe(7);
-          expect(address.orderKey).toBe(7);
+          expect(address.addressKey).toBe(3);
+          expect(address.orderKey).toBe(3);
           expect(address.country).toBe('Canada');
           expect(address.state).toBe('Ontario');
           expect(address.city).toBe('Toronto');
@@ -97,8 +105,8 @@ describe('Asynchronous fromCto method', function () {
 
           var item1 = order.items.at(0);
 
-          expect(item1.orderItemKey).toBe(19);
-          expect(item1.orderKey).toBe(7);
+          expect(item1.orderItemKey).toBe(7);
+          expect(item1.orderKey).toBe(3);
           expect(item1.productName).toBe('Tablet Creek 7');
           expect(item1.obsolete).toBe(false);
           expect(item1.expiry).toBe(expiry1);
@@ -107,8 +115,8 @@ describe('Asynchronous fromCto method', function () {
 
           var item2 = order.items.at(1);
 
-          expect(item2.orderItemKey).toBe(20);
-          expect(item2.orderKey).toBe(7);
+          expect(item2.orderItemKey).toBe(8);
+          expect(item2.orderKey).toBe(3);
           expect(item2.productName).toBe('USB 3.0 cable');
           expect(item2.obsolete).toBe(false);
           expect(item2.expiry).toBe(expiry2);
@@ -121,8 +129,8 @@ describe('Asynchronous fromCto method', function () {
 
           var schedule1 = item2.schedules.at(0);
 
-          expect(schedule1.orderScheduleKey).toBe(25);
-          expect(schedule1.orderItemKey).toBe(20);
+          expect(schedule1.orderScheduleKey).toBe(9);
+          expect(schedule1.orderItemKey).toBe(8);
           expect(schedule1.quantity).toBe(2);
           expect(schedule1.totalMass).toBe(0.24);
           expect(schedule1.required).toBe(true);
@@ -131,8 +139,8 @@ describe('Asynchronous fromCto method', function () {
 
           var schedule2 = item2.schedules.at(1);
 
-          expect(schedule2.orderScheduleKey).toBe(26);
-          expect(schedule2.orderItemKey).toBe(20);
+          expect(schedule2.orderScheduleKey).toBe(10);
+          expect(schedule2.orderItemKey).toBe(8);
           expect(schedule2.quantity).toBe(3);
           expect(schedule2.totalMass).toBe(0.36);
           expect(schedule2.required).toBe(true);
@@ -147,9 +155,9 @@ describe('Asynchronous fromCto method', function () {
     });
   });
 
-  it('for updating sample editable model', function (done) {
-    console.log('\n*** Asynchronous rebuild for sample UPDATE');
-
+  it( 'for updating sample editable model', done => {
+    console.log( '\n*** Asynchronous rebuild for sample UPDATE' );
+/*
     //region Compose data for update
 
     var data2 = {
@@ -214,8 +222,74 @@ describe('Asynchronous fromCto method', function () {
     });
 
     //endregion
+*/
 
-    BlanketOrder_S.get( 5 ).then( order => {
+    //region Compose data for update
+
+    var data2 = {
+      orderKey: 3,
+      vendorName: 'Summit Ltd.',
+      contractDate: contractDate_u,
+      totalPrice: 672.5,
+      schedules: 3,
+      enabled: false
+    };
+    data2.address = {
+      addressKey: 3,
+      orderKey: 3,
+      country: 'Ireland',
+      state: '',
+      city: 'Dublin',
+      line1: '79-81 Iona Rd',
+      line2: '',
+      postalCode: '9'
+    };
+    data2.items = [];
+    data2.items.push({
+      orderItemKey: 8,
+      orderKey: 3,
+      productName: 'USB 3.0 hub',
+      obsolete: true,
+      expiry: expiry1,
+      quantity: 11,
+      unitPrice: 49.5
+    });
+    data2.items.push({
+      productName: 'DataExpert 32GB pen drive',
+      obsolete: false,
+      expiry: expiry2,
+      quantity: 4,
+      unitPrice: 32.0
+    });
+    data2.items[0].schedules = [];
+    data2.items[0].schedules.push({
+      orderScheduleKey: 10,
+      orderItemKey: 8,
+      quantity: 4,
+      totalMass: 0.48,
+      required: false,
+      shipTo: 'Stockholm',
+      shipDate: shipDate1
+    });
+    data2.items[0].schedules.push({
+      quantity: 7,
+      totalMass: 0.84,
+      required: true,
+      shipTo: 'Vienna',
+      shipDate: shipDate2
+    });
+    data2.items[1].schedules = [];
+    data2.items[1].schedules.push({
+      quantity: 4,
+      totalMass: 0.06,
+      required: true,
+      shipTo: 'Vienna',
+      shipDate: shipDate2
+    });
+
+    //endregion
+
+    BlanketOrder_S.get( 3 ).then( order => {
 
       order.fromCto(data2).then( () => {
 
@@ -223,7 +297,7 @@ describe('Asynchronous fromCto method', function () {
 
           //region Check data
 
-          expect(order.orderKey).toBe(7);
+          expect(order.orderKey).toBe(3);
           expect(order.vendorName).toBe('Summit Ltd.');
           expect(order.contractDate).toBe(contractDate_u);
           expect(order.totalPrice).toBe(672.5);
@@ -236,8 +310,8 @@ describe('Asynchronous fromCto method', function () {
 
           var item1 = order.items.at(0);
 
-          expect(item1.orderItemKey).toBe(21);
-          expect(item1.orderKey).toBe(7);
+          expect(item1.orderItemKey).toBe(8);
+          expect(item1.orderKey).toBe(3);
           expect(item1.productName).toBe('USB 3.0 hub');
           expect(item1.obsolete).toBe(true);
           expect(item1.expiry).toBe(expiry1);
@@ -246,8 +320,8 @@ describe('Asynchronous fromCto method', function () {
 
           var item2 = order.items.at(1);
 
-          expect(item2.orderItemKey).toBe(22);
-          expect(item2.orderKey).toBe(7);
+          expect(item2.orderItemKey).toBe(9);
+          expect(item2.orderKey).toBe(3);
           expect(item2.productName).toBe('DataExpert 32GB pen drive');
           expect(item2.obsolete).toBe(false);
           expect(item2.expiry).toBe(expiry2);
@@ -258,8 +332,8 @@ describe('Asynchronous fromCto method', function () {
 
           var schedule1 = item1.schedules.at(0);
 
-          expect(schedule1.orderScheduleKey).toBe(27);
-          expect(schedule1.orderItemKey).toBe(21);
+          expect(schedule1.orderScheduleKey).toBe(10);
+          expect(schedule1.orderItemKey).toBe(8);
           expect(schedule1.quantity).toBe(4);
           expect(schedule1.totalMass).toBe(0.48);
           expect(schedule1.required).toBe(false);
@@ -268,8 +342,8 @@ describe('Asynchronous fromCto method', function () {
 
           var schedule2 = item1.schedules.at(1);
 
-          expect(schedule2.orderScheduleKey).toBe(28);
-          expect(schedule2.orderItemKey).toBe(21);
+          expect(schedule2.orderScheduleKey).toBe(11);
+          expect(schedule2.orderItemKey).toBe(8);
           expect(schedule2.quantity).toBe(7);
           expect(schedule2.totalMass).toBe(0.84);
           expect(schedule2.required).toBe(true);
@@ -280,8 +354,8 @@ describe('Asynchronous fromCto method', function () {
 
           var schedule3 = item2.schedules.at(0);
 
-          expect(schedule3.orderScheduleKey).toBe(29);
-          expect(schedule3.orderItemKey).toBe(22);
+          expect(schedule3.orderScheduleKey).toBe(12);
+          expect(schedule3.orderItemKey).toBe(9);
           expect(schedule3.quantity).toBe(4);
           expect(schedule3.totalMass).toBe(0.06);
           expect(schedule3.required).toBe(true);
@@ -296,8 +370,8 @@ describe('Asynchronous fromCto method', function () {
     });
   });
 
-  it('for creating custom editable model', function (done) {
-    console.log('\n*** Asynchronous rebuild for custom CREATE');
+  it( 'for creating custom editable model', done => {
+    console.log( '\n*** Asynchronous rebuild for custom CREATE' );
 
     BlanketOrder_C.create().then( order => {
 
@@ -308,7 +382,7 @@ describe('Asynchronous fromCto method', function () {
 
             //region Check data
 
-            expect(order.orderKey).toBe(8);
+            expect(order.orderKey).toBe(4);
             expect(order.vendorName).toBe('Acme Corp.');
             expect(order.contractDate).toBe(contractDate);
             expect(order.totalPrice).toBe(497.5);
@@ -319,8 +393,8 @@ describe('Asynchronous fromCto method', function () {
 
             var address = order.address;
 
-            expect(address.addressKey).toBe(8);
-            expect(address.orderKey).toBe(8);
+            expect(address.addressKey).toBe(4);
+            expect(address.orderKey).toBe(4);
             expect(address.country).toBe('Canada');
             expect(address.state).toBe('Ontario');
             expect(address.city).toBe('Toronto');
@@ -332,8 +406,8 @@ describe('Asynchronous fromCto method', function () {
 
             var item1 = order.items.at(0);
 
-            expect(item1.orderItemKey).toBe(23);
-            expect(item1.orderKey).toBe(8);
+            expect(item1.orderItemKey).toBe(10);
+            expect(item1.orderKey).toBe(4);
             expect(item1.productName).toBe('Tablet Creek 7');
             expect(item1.obsolete).toBe(false);
             expect(item1.expiry).toBe(expiry1);
@@ -342,8 +416,8 @@ describe('Asynchronous fromCto method', function () {
 
             var item2 = order.items.at(1);
 
-            expect(item2.orderItemKey).toBe(24);
-            expect(item2.orderKey).toBe(8);
+            expect(item2.orderItemKey).toBe(11);
+            expect(item2.orderKey).toBe(4);
             expect(item2.productName).toBe('USB 3.0 cable');
             expect(item2.obsolete).toBe(false);
             expect(item2.expiry).toBe(expiry2);
@@ -356,8 +430,8 @@ describe('Asynchronous fromCto method', function () {
 
             var schedule1 = item2.schedules.at(0);
 
-            expect(schedule1.orderScheduleKey).toBe(30);
-            expect(schedule1.orderItemKey).toBe(24);
+            expect(schedule1.orderScheduleKey).toBe(13);
+            expect(schedule1.orderItemKey).toBe(11);
             expect(schedule1.quantity).toBe(2);
             expect(schedule1.totalMass).toBe(0.24);
             expect(schedule1.required).toBe(true);
@@ -366,8 +440,8 @@ describe('Asynchronous fromCto method', function () {
 
             var schedule2 = item2.schedules.at(1);
 
-            expect(schedule2.orderScheduleKey).toBe(31);
-            expect(schedule2.orderItemKey).toBe(24);
+            expect(schedule2.orderScheduleKey).toBe(14);
+            expect(schedule2.orderItemKey).toBe(11);
             expect(schedule2.quantity).toBe(3);
             expect(schedule2.totalMass).toBe(0.36);
             expect(schedule2.required).toBe(true);
@@ -379,7 +453,7 @@ describe('Asynchronous fromCto method', function () {
             done();
           });
         else
-          var zum = order.getBrokenRules();
+          var br = order.getBrokenRules();
       });
     });
   });
@@ -390,7 +464,7 @@ describe('Asynchronous fromCto method', function () {
     //region Compose data for update
 
     var data3 = {
-      orderKey: 8,
+      orderKey: 4,
       vendorName: 'Summit Ltd.',
       contractDate: contractDate_u,
       totalPrice: 672.5,
@@ -398,8 +472,8 @@ describe('Asynchronous fromCto method', function () {
       enabled: false
     };
     data3.address = {
-      addressKey: 8,
-      orderKey: 8,
+      addressKey: 4,
+      orderKey: 4,
       country: 'Ireland',
       state: '',
       city: 'Dublin',
@@ -409,8 +483,8 @@ describe('Asynchronous fromCto method', function () {
     };
     data3.items = [];
     data3.items.push({
-      orderItemKey: 24,
-      orderKey: 8,
+      orderItemKey: 11,
+      orderKey: 4,
       productName: 'USB 3.0 hub',
       obsolete: true,
       expiry: expiry1,
@@ -426,8 +500,8 @@ describe('Asynchronous fromCto method', function () {
     });
     data3.items[0].schedules = [];
     data3.items[0].schedules.push({
-      orderScheduleKey: 31,
-      orderItemKey: 24,
+      orderScheduleKey: 14,
+      orderItemKey: 11,
       quantity: 4,
       totalMass: 0.48,
       required: false,
@@ -452,7 +526,7 @@ describe('Asynchronous fromCto method', function () {
 
     //endregion
 
-    BlanketOrder_C.get( 8 ).then( order => {
+    BlanketOrder_C.get( 4 ).then( order => {
 
       order.fromCto(data3).then( () => {
 
@@ -460,7 +534,7 @@ describe('Asynchronous fromCto method', function () {
 
           //region Check data
 
-          expect(order.orderKey).toBe(8);
+          expect(order.orderKey).toBe(4);
           expect(order.vendorName).toBe('Summit Ltd.');
           expect(order.contractDate).toBe(contractDate_u);
           expect(order.totalPrice).toBe(672.5);
@@ -473,8 +547,8 @@ describe('Asynchronous fromCto method', function () {
 
           var item1 = order.items.at(0);
 
-          expect(item1.orderItemKey).toBe(24);
-          expect(item1.orderKey).toBe(8);
+          expect(item1.orderItemKey).toBe(11);
+          expect(item1.orderKey).toBe(4);
           expect(item1.productName).toBe('USB 3.0 hub');
           expect(item1.obsolete).toBe(true);
           expect(item1.expiry).toBe(expiry1);
@@ -483,8 +557,8 @@ describe('Asynchronous fromCto method', function () {
 
           var item2 = order.items.at(1);
 
-          expect(item2.orderItemKey).toBe(25);
-          expect(item2.orderKey).toBe(8);
+          expect(item2.orderItemKey).toBe(12);
+          expect(item2.orderKey).toBe(4);
           expect(item2.productName).toBe('DataExpert 32GB pen drive');
           expect(item2.obsolete).toBe(false);
           expect(item2.expiry).toBe(expiry2);
@@ -495,8 +569,8 @@ describe('Asynchronous fromCto method', function () {
 
           var schedule1 = item1.schedules.at(0);
 
-          expect(schedule1.orderScheduleKey).toBe(31);
-          expect(schedule1.orderItemKey).toBe(24);
+          expect(schedule1.orderScheduleKey).toBe(14);
+          expect(schedule1.orderItemKey).toBe(11);
           expect(schedule1.quantity).toBe(4);
           expect(schedule1.totalMass).toBe(0.48);
           expect(schedule1.required).toBe(false);
@@ -505,8 +579,8 @@ describe('Asynchronous fromCto method', function () {
 
           var schedule2 = item1.schedules.at(1);
 
-          expect(schedule2.orderScheduleKey).toBe(32);
-          expect(schedule2.orderItemKey).toBe(24);
+          expect(schedule2.orderScheduleKey).toBe(15);
+          expect(schedule2.orderItemKey).toBe(11);
           expect(schedule2.quantity).toBe(7);
           expect(schedule2.totalMass).toBe(0.84);
           expect(schedule2.required).toBe(true);
@@ -517,8 +591,8 @@ describe('Asynchronous fromCto method', function () {
 
           var schedule3 = item2.schedules.at(0);
 
-          expect(schedule3.orderScheduleKey).toBe(33);
-          expect(schedule3.orderItemKey).toBe(25);
+          expect(schedule3.orderScheduleKey).toBe(16);
+          expect(schedule3.orderItemKey).toBe(12);
           expect(schedule3.quantity).toBe(4);
           expect(schedule3.totalMass).toBe(0.06);
           expect(schedule3.required).toBe(true);

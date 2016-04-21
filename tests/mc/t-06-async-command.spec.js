@@ -1,4 +1,6 @@
-console.log('Testing data portal methods of asynchronous commands...');
+console.log( 'Testing data portal methods of asynchronous commands...' );
+
+//region Imports
 
 var ClearScheduleCommand = require('../../data/simple-mc/async/clear-schedule-command.js');
 var RescheduleShippingCommand = require('../../data/custom-mc/async-models/reschedule-shipping-command.js');
@@ -7,7 +9,11 @@ var RescheduleShippingResult = require('../../data/custom-mc/async-models/resche
 var DataPortalEvent = require('../../source/shared/data-portal-event.js');
 var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
-describe('Asynchronous data portal method', function () {
+//endregion
+
+describe( 'Asynchronous data portal method', () => {
+
+  //region Event handlers
 
   function logEvent (eventArgs) {
     var id = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName;
@@ -24,8 +30,10 @@ describe('Asynchronous data portal method', function () {
   ehRescheduleShippingCommand.add('RescheduleShippingResult', DataPortalEvent.preFetch, logEvent);
   ehRescheduleShippingCommand.add('RescheduleShippingResult', DataPortalEvent.postFetch, logEvent);
 
-  it('execute of sample command', function () {
-    console.log('\n*** Asynchronous EXECUTE');
+  //endregion
+
+  it( 'execute of sample command', done => {
+    console.log( '\n*** Asynchronous EXECUTE' );
 
     var cmd = ClearScheduleCommand.create(ehClearScheduleCommand);
 
@@ -41,14 +49,16 @@ describe('Asynchronous data portal method', function () {
     cmd.orderScheduleKey = 3;
 
     cmd.execute()
-    .then( function (cmd) {
+    .then( value => {
 
       expect(cmd.result).toBe(true);
+
+      done();
     });
   });
 
-  it('execute of custom command', function () {
-    console.log('\n*** Asynchronous RESCHEDULE');
+  it( 'execute of custom command', done => {
+    console.log( '\n*** Asynchronous RESCHEDULE' );
 
     var cmd = RescheduleShippingCommand.create(ehRescheduleShippingCommand);
 
@@ -57,7 +67,7 @@ describe('Asynchronous data portal method', function () {
     cmd.orderScheduleKey = 3;
 
     cmd.reschedule()
-    .then( function (err) {
+    .then( value => {
 
       expect(cmd.success).toBe(true);
       expect(cmd.result).toEqual(jasmine.any(RescheduleShippingResult));
@@ -67,6 +77,8 @@ describe('Asynchronous data portal method', function () {
       expect(cmd.result.required).toBe(false);
       expect(cmd.result.shipTo).toBe('Berlin');
       expect(cmd.result.shipDate).toEqual(new Date(2015, 1, 3));
+
+      done();
     });
   });
 });
