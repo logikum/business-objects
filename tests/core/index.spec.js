@@ -1,4 +1,4 @@
-console.log('Testing index.js...');
+console.log( 'Testing index.js...' );
 
 var bo = require('../../source/index.js');
 

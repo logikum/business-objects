@@ -438,7 +438,7 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
         method = check(method).forOptional('method').asString();
         isTransaction = check(isTransaction).forOptional('isTransaction').asBoolean();
 
-        data_execute( method || M_EXECUTE, function( err, res ) {
+        data_execute( method || M_EXECUTE, isTransaction, function( err, res ) {
           if (err) reject( err );
           else fulfill( res );
         });
