@@ -1178,19 +1178,19 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
         if (property.type.create) { // Item
           self.wait++;
           property.type.create(self, eventHandlers, function (err, item) {
-            store.initValue(property, item);
+            store.initValue( property, item );
             self.wait--;
             freeze();
           });
         } else                      // Collection
-          store.initValue(property, new property.type(self, eventHandlers));
+          store.initValue(property, new property.type( self, eventHandlers ));
 
         Object.defineProperty(self, property.name, {
           get: function () {
-            return readPropertyValue(property);
+            return readPropertyValue( property );
           },
           set: function (value) {
-            throw new ModelError('readOnly', name, property.name);
+            throw new ModelError( 'readOnly', name, property.name );
           },
           enumerable: false
         });
@@ -1275,7 +1275,6 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
     });
   };
 
-  var fnReady = null;
   function instantiate(parent, eventHandlers) {
     return new Promise( (fulfill, reject) => {
       var instance = new EditableChildObject(parent, eventHandlers);

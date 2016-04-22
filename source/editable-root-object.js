@@ -317,44 +317,42 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Transfer object methods
 
-    function getTransferContext (authorize) {
+    function getTransferContext( authorize ) {
       return authorize ?
-          new TransferContext(properties.toArray(), readPropertyValue, writePropertyValue) :
-          new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
+          new TransferContext( properties.toArray(), readPropertyValue, writePropertyValue ) :
+          new TransferContext( properties.toArray(), getPropertyValue, setPropertyValue );
     }
 
     function baseToDto() {
       var dto = {};
-      properties.filter(function (property) {
+      properties.filter( property => {
         return property.isOnDto;
-      }).forEach(function (property) {
-        dto[property.name] = getPropertyValue(property);
+      }).forEach( property => {
+        dto[ property.name ] = getPropertyValue( property );
       });
       return dto;
     }
 
     function toDto () {
-      if (extensions.toDto)
-        return extensions.toDto.call(self, getTransferContext(false));
-      else
-        return baseToDto();
+      return extensions.toDto ?
+        extensions.toDto.call( self, getTransferContext( false ) ) :
+        baseToDto();
     }
 
-    function baseFromDto(dto) {
-      properties.filter(function (property) {
+    function baseFromDto( dto ) {
+      properties.filter( property => {
         return property.isOnDto;
-      }).forEach(function (property) {
-        if (dto.hasOwnProperty(property.name) && typeof dto[property.name] !== 'function') {
-          setPropertyValue(property, dto[property.name]);
+      }).forEach( property => {
+        if (dto.hasOwnProperty( property.name ) && typeof dto[property.name] !== 'function') {
+          setPropertyValue( property, dto[property.name] );
         }
       });
     }
 
-    function fromDto (dto) {
-      if (extensions.fromDto)
-        extensions.fromDto.call(self, getTransferContext(false), dto);
-      else
-        baseFromDto(dto);
+    function fromDto( dto ) {
+      extensions.fromDto ?
+          extensions.fromDto.call( self, getTransferContext(false), dto ) :
+          baseFromDto( dto );
     }
 
     function baseToCto() {
@@ -640,7 +638,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Create
 
-    function data_create (callback) {
+    function xdata_create (callback) {
       var hasConnection = false;
       // Helper callback for post-creation actions.
       function finish (cb) {
@@ -699,6 +697,64 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
       if (extensions.dataCreate || dao.$hasCreate()) {
         runStatements(main, DataPortalAction.create, callback);
       }
+    }
+    function data_create () {
+      if (extensions.dataCreate || dao.$hasCreate()) {
+        return new Promise( (fulfill, reject) => {
+          var connection = null;
+          // Open connection.
+          config.connectionManager.openConnection( extensions.dataSource )
+          .then( dsc => {
+            connection = dsc;
+            // Launch start event.
+            /**
+             * The event arises before the business object instance will be initialized in the repository.
+             * @event EditableRootObjectSync#preCreate
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {EditableRootObjectSync} oldObject - The instance of the model before the data portal action.
+             */
+            raiseEvent( DataPortalEvent.preCreate );
+            // Execute creation.
+            return extensions.dataCreate ?
+              // *** Custom creation.
+              extensions.dataCreate.call( self, getDataContext(connection) ) :
+              // *** Standard creation.
+              dao.$runMethod('create', connection)
+                .then( dto => {
+                  fromDto.call( self, dto );
+                })
+          })
+          .then( none => {
+            markAsCreated();
+            // Launch finish event.
+            /**
+             * The event arises after the business object instance has been initialized in the repository.
+             * @event EditableRootObjectSync#postCreate
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {EditableRootObjectSync} newObject - The instance of the model after the data portal action.
+             */
+            raiseEvent( DataPortalEvent.postCreate );
+            // Close connection.
+            config.connectionManager.closeConnection( extensions.dataSource, connection )
+            .then( none => {
+              fulfill( self );
+            })
+          })
+          .catch( reason => {
+            // Wrap the intercepted error.
+            var dpe = wrapError(DataPortalAction.create, reason);
+            // Launch finish event.
+            if (connection)
+              raiseEvent(DataPortalEvent.postCreate, null, dpe);
+            // Close connection.
+            return config.connectionManager.closeConnection( extensions.dataSource, connection )
+              .then( none => {
+                reject( dpe );
+              })
+          })
+        });
+      } else
+        return Promise.resolve( self );
     }
 
     //endregion
@@ -1025,7 +1081,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *
      * @function EditableRootObject#create
      * @protected
-     * @param {external.cbDataPortal} callback - Returns a new editable business object.
+     * @returns {promise<object>} Returns a promise to a new editable business object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -1035,12 +1091,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *      Creating the business object has failed.
      */
     this.create = function() {
-      return new Promise( (fulfill, reject) => {
-        data_create( function( err, res ) {
-          if (err) reject( err );
-          else fulfill( res );
-        });
-      });
+      return data_create();
     };
 
     /**
@@ -1212,6 +1263,18 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Properties
 
+    this.wait = 0;
+    this.onReady = function() {};
+
+    function freeze() {
+      if (self.wait === 0) {
+        self.onReady( self );
+        delete self.wait;
+        delete self.onReady;
+        Object.freeze( self );
+      }
+    }
+
     function getPropertyValue(property) {
       return store.getValue(property);
     }
@@ -1251,38 +1314,52 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
     properties.map(function(property) {
 
       if (property.type instanceof DataType) {
-        // Normal property
-        store.initValue(property);
 
-        Object.defineProperty(self, property.name, {
+        // Initialize normal property.
+        store.initValue( property );
+
+        // Create normal property.
+        Object.defineProperty( self, property.name, {
           get: function () {
-            return readPropertyValue(property);
+            return readPropertyValue( property );
           },
           set: function (value) {
             if (property.isReadOnly)
-              throw new ModelError('readOnly', name, property.name);
-            writePropertyValue(property, value);
+              throw new ModelError( 'readOnly', name, property.name );
+            writePropertyValue( property, value );
           },
           enumerable: true
         });
 
-        rules.add(new DataTypeRule(property));
+        // Add data type rule to normal property.
+        rules.add(new DataTypeRule( property ));
 
       } else {
-        // Child item/collection
-        if (property.type.create) // Item
-          property.type.create(self, eventHandlers, function (err, item) {
-            store.initValue(property, item);
-          });
-        else                      // Collection
-          store.initValue(property, new property.type(self, eventHandlers));
+        // Determine child element type.
+        if (property.type.create) {
 
-        Object.defineProperty(self, property.name, {
+          self.wait++;
+          // Create child object.
+          property.type.create( self, eventHandlers )
+          .then( item => {
+
+            // Initialize child object property.
+            store.initValue( property, item );
+            self.wait--;
+            freeze();
+          });
+        }
+        else
+          // Create child collection and initialize property.
+          store.initValue( property, new property.type( self, eventHandlers ));
+
+        // Create child element property.
+        Object.defineProperty( self, property.name, {
           get: function () {
-            return readPropertyValue(property);
+            return readPropertyValue( property );
           },
           set: function (value) {
-            throw new ModelError('readOnly', name , property.name);
+            throw new ModelError( 'readOnly', name , property.name );
           },
           enumerable: false
         });
@@ -1292,7 +1369,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
     //endregion
 
     // Immutable object.
-    Object.freeze(this);
+    //Object.freeze(this);
+    freeze();
   };
   util.inherits(EditableRootObject, ModelBase);
 
@@ -1318,6 +1396,16 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
   //region Factory methods
 
+  function instantiate( eventHandlers ) {
+    return new Promise( (fulfill, reject) => {
+      var instance = new EditableRootObject( eventHandlers );
+      if (instance.wait === 0)
+        fulfill( instance );
+      else
+        instance.onReady = fulfill;
+    });
+  }
+
   /**
    * Creates a new editable business object instance.
    *
@@ -1335,8 +1423,12 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    *      Creating the business object has failed.
    */
   EditableRootObject.create = function( eventHandlers ) {
-    var instance = new EditableRootObject( eventHandlers );
-    return instance.create();
+    //var instance = new EditableRootObject( eventHandlers );
+    //return instance.create();
+    return instantiate( eventHandlers )
+      .then( instance => {
+        return instance.create();
+      });
   };
 
   /**

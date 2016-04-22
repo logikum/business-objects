@@ -3,7 +3,6 @@
 //region Imports
 
 var ModelComposer = require('./model-composer.js');
-var ModelComposerSync = require('./model-composer-sync.js');
 
 var EditableRootObject = require('./editable-root-object.js');
 var EditableChildObject = require('./editable-child-object.js');
@@ -14,16 +13,6 @@ var ReadOnlyChildObject = require('./read-only-child-object.js');
 var ReadOnlyRootCollection = require('./read-only-root-collection.js');
 var ReadOnlyChildCollection = require('./read-only-child-collection.js');
 var CommandObject = require('./command-object.js');
-
-var EditableRootObjectSync = require('./editable-root-object-sync.js');
-var EditableChildObjectSync = require('./editable-child-object-sync.js');
-var EditableRootCollectionSync = require('./editable-root-collection-sync.js');
-var EditableChildCollectionSync = require('./editable-child-collection-sync.js');
-var ReadOnlyRootObjectSync = require('./read-only-root-object-sync.js');
-var ReadOnlyChildObjectSync = require('./read-only-child-object-sync.js');
-var ReadOnlyRootCollectionSync = require('./read-only-root-collection-sync.js');
-var ReadOnlyChildCollectionSync = require('./read-only-child-collection-sync.js');
-var CommandObjectSync = require('./command-object-sync.js');
 
 var commonRules = require('./common-rules/index.js');
 var dataAccess = require('./data-access/index.js');
@@ -62,7 +51,6 @@ var i18n = require('./locales/i18n.js');
  */
 var index = {
   ModelComposer: ModelComposer,
-  ModelComposerSync: ModelComposerSync,
 
   //ModelBase: ModelBase,
   //CollectionBase: CollectionBase,
@@ -76,16 +64,6 @@ var index = {
   ReadOnlyRootCollection: ReadOnlyRootCollection,
   ReadOnlyChildCollection: ReadOnlyChildCollection,
   CommandObject: CommandObject,
-
-  EditableRootObjectSync: EditableRootObjectSync,
-  EditableChildObjectSync: EditableChildObjectSync,
-  EditableRootCollectionSync: EditableRootCollectionSync,
-  EditableChildCollectionSync: EditableChildCollectionSync,
-  ReadOnlyRootObjectSync: ReadOnlyRootObjectSync,
-  ReadOnlyChildObjectSync: ReadOnlyChildObjectSync,
-  ReadOnlyRootCollectionSync: ReadOnlyRootCollectionSync,
-  ReadOnlyChildCollectionSync: ReadOnlyChildCollectionSync,
-  CommandObjectSync: CommandObjectSync,
 
   commonRules: commonRules,
   dataAccess: dataAccess,
