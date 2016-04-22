@@ -9,7 +9,7 @@ var Enumeration = require('./system/enumeration.js');
 
 var ModelBase = require('./model-base.js');
 var ModelError = require('./shared/model-error.js');
-var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var ExtensionManagerSync = require('./shared/extension-manager.js');
 var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 var DataType = require('./data-types/data-type.js');

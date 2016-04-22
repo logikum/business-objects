@@ -8,7 +8,7 @@ var Argument = require('./system/argument-check.js');
 
 var CollectionBase = require('./collection-base.js');
 var ModelError = require('./shared/model-error.js');
-var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var ExtensionManagerSync = require('./shared/extension-manager.js');
 var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 

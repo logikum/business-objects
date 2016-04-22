@@ -14,7 +14,7 @@ var CommandObjectSync = require('./command-object-sync.js');
 
 var PropertyManager = require('./shared/property-manager.js');
 var RuleManager = require('./rules/rule-manager.js');
-var ExtensionManagerSync = require('./shared/extension-manager-sync.js');
+var ExtensionManagerSync = require('./shared/extension-manager.js');
 
 var Action = require('./rules/authorization-action.js');
 var cr = require('./common-rules/index.js');
