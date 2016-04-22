@@ -625,7 +625,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Create
 
-    function data_create (callback) {
+    function xdata_create (callback) {
       var hasConnection = false;
       // Helper callback for post-creation actions.
       function finish (cb) {
@@ -684,6 +684,64 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
       if (extensions.dataCreate || dao.$hasCreate()) {
         runStatements(main, DataPortalAction.create, callback);
       }
+    }
+    function data_create () {
+      if (extensions.dataCreate || dao.$hasCreate()) {
+        return new Promise( (fulfill, reject) => {
+          var connection = null;
+          // Open connection.
+          config.connectionManager.openConnection( extensions.dataSource )
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              /**
+               * The event arises before the business object instance will be initialized in the repository.
+               * @event EditableChildObject#preCreate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preCreate );
+              // Execute creation.
+              return extensions.dataCreate ?
+                // *** Custom creation.
+                extensions.dataCreate.call( self, getDataContext(connection) ) :
+                // *** Standard creation.
+                dao.$runMethod('create', connection)
+                  .then( dto => {
+                    fromDto.call( self, dto );
+                  })
+            })
+            .then( none => {
+              markAsCreated();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been initialized in the repository.
+               * @event EditableChildObject#postCreate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postCreate );
+              // Close connection.
+              config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  fulfill( self );
+                })
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError(DataPortalAction.create, reason);
+              // Launch finish event.
+              if (connection)
+                raiseEvent(DataPortalEvent.postCreate, null, dpe);
+              // Close connection.
+              return config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  reject( dpe );
+                })
+            })
+        });
+      } else
+        return Promise.resolve( self );
     }
 
     //endregion
@@ -986,10 +1044,10 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      *
      * @function EditableChildObject#create
      * @protected
-     * @param {external.cbDataPortal} callback - Returns a new editable business object.
+     * @returns {promise<EditableChildObject>} Returns a promise to a new editable business object.
      */
-    this.create = function(callback) {
-      data_create(callback);
+    this.create = function() {
+      return data_create();
     };
 
     /**
@@ -1105,92 +1163,103 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Properties
 
-    this.wait = 0;
+    var wait = 0;
     this.onReady = function() {};
 
     function freeze() {
-      if (self.wait === 0) {
-        self.onReady(self);
-        delete self.wait;
+      if (wait === 0) {
+        var onReady = self.onReady;
         delete self.onReady;
-        Object.freeze(self);
+        Object.freeze( self );
+        onReady( self );
       }
     }
 
-    function getPropertyValue(property) {
-      return store.getValue(property);
+    function getPropertyValue( property ) {
+      return store.getValue( property );
     }
 
-    function setPropertyValue(property, value) {
-      if (store.setValue(property, value))
-        markAsChanged(true);
+    function setPropertyValue( property, value ) {
+      if (store.setValue( property, value ))
+        markAsChanged( true );
     }
 
-    function readPropertyValue(property) {
-      if (canBeRead(property)) {
-        if (property.getter)
-          return property.getter(getPropertyContext(property));
-        else
-          return store.getValue(property);
-      } else
+    function readPropertyValue( property ) {
+      if (canBeRead( property ))
+        return property.getter ?
+               property.getter( getPropertyContext( property )) :
+               store.getValue( property );
+      else
         return null;
     }
 
-    function writePropertyValue(property, value) {
-      if (canBeWritten(property)) {
+    function writePropertyValue( property, value ) {
+      if (canBeWritten( property )) {
         var changed = property.setter ?
-            property.setter(getPropertyContext(property), value) :
-            store.setValue(property, value);
+            property.setter( getPropertyContext( property ), value ) :
+            store.setValue( property, value );
         if (changed === true)
-          markAsChanged(true);
+          markAsChanged( true );
       }
     }
 
-    function getPropertyContext(primaryProperty) {
+    function getPropertyContext( primaryProperty ) {
       if (!propertyContext)
         propertyContext = new PropertyContext(
-            name, properties.toArray(), readPropertyValue, writePropertyValue);
-      return propertyContext.with(primaryProperty);
+          name, properties.toArray(), readPropertyValue, writePropertyValue );
+      return propertyContext.with( primaryProperty );
     }
 
-    properties.map(function(property) {
+    properties.map( property => {
 
       if (property.type instanceof DataType) {
-        // Normal property
-        store.initValue(property);
 
-        Object.defineProperty(self, property.name, {
-          get: function () {
-            return readPropertyValue(property);
+        // Initialize normal property.
+        store.initValue( property );
+
+        // Create normal property.
+        Object.defineProperty( self, property.name, {
+          get: () => {
+            return readPropertyValue( property );
           },
-          set: function (value) {
+          set: value => {
             if (property.isReadOnly)
-              throw new ModelError('readOnly', name, property.name);
-            writePropertyValue(property, value);
+              throw new ModelError( 'readOnly', name, property.name );
+            writePropertyValue( property, value );
           },
           enumerable: true
         });
 
-        rules.add(new DataTypeRule(property));
+        // Add data type rule to normal property.
+        rules.add( new DataTypeRule( property ));
+      }
+      else
+      {
+        // Determine child element type.
+        if (property.type.create) {
 
-      } else {
-        // Child item/collection
-        if (property.type.create) { // Item
-          self.wait++;
-          property.type.create(self, eventHandlers, function (err, item) {
-            store.initValue( property, item );
-            self.wait--;
-            freeze();
-          });
-        } else                      // Collection
-          store.initValue(property, new property.type( self, eventHandlers ));
+          wait++;
+          // Create child object.
+          property.type.create( self, eventHandlers )
+            .then( item => {
 
-        Object.defineProperty(self, property.name, {
-          get: function () {
+              // Initialize child object property.
+              store.initValue( property, item );
+              wait--;
+              freeze();
+            });
+        }
+        else
+        // Create child collection and initialize property.
+          store.initValue( property, new property.type( self, eventHandlers ));
+
+        // Create child element property.
+        Object.defineProperty( self, property.name, {
+          get: () => {
             return readPropertyValue( property );
           },
-          set: function (value) {
-            throw new ModelError( 'readOnly', name, property.name );
+          set: value => {
+            throw new ModelError( 'readOnly', name , property.name );
           },
           enumerable: false
         });
@@ -1226,6 +1295,16 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
   //region Factory methods
 
+  function instantiate( parent, eventHandlers ) {
+    return new Promise( (fulfill, reject) => {
+      var instance = new EditableChildObject( parent, eventHandlers );
+      if (instance.onReady)
+        instance.onReady = fulfill;
+      else
+        fulfill( instance );
+    });
+  }
+
   /**
    * Creates a new editable business object instance.
    * <br/>_This method is called by the parent object._
@@ -1234,21 +1313,18 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
    * @protected
    * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns a new editable business object.
+   * @returns {promise<EditableChildObject>} Returns a promise to a new editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    * @throws {@link bo.shared.DataPortalError Data portal error}:
-   *    Creating the business object has failed.
+   *      Creating the business object has failed.
    */
-  EditableChildObject.create = function(parent, eventHandlers, callback) {
-    var instance = new EditableChildObject(parent, eventHandlers);
-    instance.create(function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  EditableChildObject.create = function( parent, eventHandlers ) {
+    return instantiate( parent, eventHandlers )
+      .then( instance => {
+        return instance.create();
+      });
   };
 
   /**
@@ -1266,7 +1342,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
    *      The user has no permission to execute the action.
    */
   EditableChildObject.load = function(parent, data, eventHandlers, callback) {
-    var instance = new EditableChildObject(parent, eventHandlers);
+    var instance = new EditableChildObject( parent, eventHandlers );
     instance.fetch(data, undefined, function (err) {
       if (err)
         callback(err);
@@ -1275,18 +1351,8 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
     });
   };
 
-  function instantiate(parent, eventHandlers) {
-    return new Promise( (fulfill, reject) => {
-      var instance = new EditableChildObject(parent, eventHandlers);
-      if (instance.wait === 0)
-        fulfill( instance );
-      else
-        instance.onReady = fulfill;
-    });
-  }
-
   EditableChildObject.safeLoad = function(parent, data, eventHandlers, callback) {
-    instantiate(parent, eventHandlers)
+    instantiate( parent, eventHandlers )
     .then( instance => {
       instance.fetch(data, undefined, function (err) {
         if (err)

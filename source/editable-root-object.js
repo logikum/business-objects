@@ -704,54 +704,54 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
           var connection = null;
           // Open connection.
           config.connectionManager.openConnection( extensions.dataSource )
-          .then( dsc => {
-            connection = dsc;
-            // Launch start event.
-            /**
-             * The event arises before the business object instance will be initialized in the repository.
-             * @event EditableRootObjectSync#preCreate
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableRootObjectSync} oldObject - The instance of the model before the data portal action.
-             */
-            raiseEvent( DataPortalEvent.preCreate );
-            // Execute creation.
-            return extensions.dataCreate ?
-              // *** Custom creation.
-              extensions.dataCreate.call( self, getDataContext(connection) ) :
-              // *** Standard creation.
-              dao.$runMethod('create', connection)
-                .then( dto => {
-                  fromDto.call( self, dto );
-                })
-          })
-          .then( none => {
-            markAsCreated();
-            // Launch finish event.
-            /**
-             * The event arises after the business object instance has been initialized in the repository.
-             * @event EditableRootObjectSync#postCreate
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableRootObjectSync} newObject - The instance of the model after the data portal action.
-             */
-            raiseEvent( DataPortalEvent.postCreate );
-            // Close connection.
-            config.connectionManager.closeConnection( extensions.dataSource, connection )
-            .then( none => {
-              fulfill( self );
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              /**
+               * The event arises before the business object instance will be initialized in the repository.
+               * @event EditableRootObject#preCreate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preCreate );
+              // Execute creation.
+              return extensions.dataCreate ?
+                // *** Custom creation.
+                extensions.dataCreate.call( self, getDataContext(connection) ) :
+                // *** Standard creation.
+                dao.$runMethod('create', connection)
+                  .then( dto => {
+                    fromDto.call( self, dto );
+                  })
             })
-          })
-          .catch( reason => {
-            // Wrap the intercepted error.
-            var dpe = wrapError(DataPortalAction.create, reason);
-            // Launch finish event.
-            if (connection)
-              raiseEvent(DataPortalEvent.postCreate, null, dpe);
-            // Close connection.
-            return config.connectionManager.closeConnection( extensions.dataSource, connection )
-              .then( none => {
-                reject( dpe );
-              })
-          })
+            .then( none => {
+              markAsCreated();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been initialized in the repository.
+               * @event EditableRootObject#postCreate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postCreate );
+              // Close connection.
+              config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  fulfill( self );
+                })
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError(DataPortalAction.create, reason);
+              // Launch finish event.
+              if (connection)
+                raiseEvent(DataPortalEvent.postCreate, null, dpe);
+              // Close connection.
+              return config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  reject( dpe );
+                })
+            })
         });
       } else
         return Promise.resolve( self );
@@ -1081,7 +1081,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *
      * @function EditableRootObject#create
      * @protected
-     * @returns {promise<object>} Returns a promise to a new editable business object.
+     * @returns {promise<EditableRootObject>} Returns a promise to a new editable business object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -1263,55 +1263,54 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Properties
 
-    this.wait = 0;
+    var wait = 0;
     this.onReady = function() {};
 
     function freeze() {
-      if (self.wait === 0) {
-        self.onReady( self );
-        delete self.wait;
+      if (wait === 0) {
+        var onReady = self.onReady;
         delete self.onReady;
         Object.freeze( self );
+        onReady( self );
       }
     }
 
-    function getPropertyValue(property) {
-      return store.getValue(property);
+    function getPropertyValue( property ) {
+      return store.getValue( property );
     }
 
-    function setPropertyValue(property, value) {
-      if (store.setValue(property, value))
-        markAsChanged(true);
+    function setPropertyValue( property, value ) {
+      if (store.setValue( property, value ))
+        markAsChanged( true );
     }
 
-    function readPropertyValue(property) {
-      if (canBeRead(property)) {
-        if (property.getter)
-          return property.getter(getPropertyContext(property));
-        else
-          return store.getValue(property);
-      } else
+    function readPropertyValue( property ) {
+      if (canBeRead( property ))
+        return property.getter ?
+               property.getter( getPropertyContext( property )) :
+               store.getValue( property );
+      else
         return null;
     }
 
-    function writePropertyValue(property, value) {
-      if (canBeWritten(property)) {
+    function writePropertyValue( property, value ) {
+      if (canBeWritten( property )) {
         var changed = property.setter ?
-            property.setter(getPropertyContext(property), value) :
-            store.setValue(property, value);
+            property.setter( getPropertyContext( property), value ) :
+            store.setValue( property, value );
         if (changed === true)
-          markAsChanged(true);
+          markAsChanged( true );
       }
     }
 
-    function getPropertyContext(primaryProperty) {
+    function getPropertyContext( primaryProperty ) {
       if (!propertyContext)
         propertyContext = new PropertyContext(
-            name, properties.toArray(), readPropertyValue, writePropertyValue);
-      return propertyContext.with(primaryProperty);
+          name, properties.toArray(), readPropertyValue, writePropertyValue );
+      return propertyContext.with( primaryProperty );
     }
 
-    properties.map(function(property) {
+    properties.map( property => {
 
       if (property.type instanceof DataType) {
 
@@ -1320,10 +1319,10 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
         // Create normal property.
         Object.defineProperty( self, property.name, {
-          get: function () {
+          get: () => {
             return readPropertyValue( property );
           },
-          set: function (value) {
+          set: value => {
             if (property.isReadOnly)
               throw new ModelError( 'readOnly', name, property.name );
             writePropertyValue( property, value );
@@ -1332,20 +1331,21 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
         });
 
         // Add data type rule to normal property.
-        rules.add(new DataTypeRule( property ));
-
-      } else {
+        rules.add( new DataTypeRule( property ));
+      }
+      else
+      {
         // Determine child element type.
         if (property.type.create) {
 
-          self.wait++;
+          wait++;
           // Create child object.
           property.type.create( self, eventHandlers )
           .then( item => {
 
             // Initialize child object property.
             store.initValue( property, item );
-            self.wait--;
+            wait--;
             freeze();
           });
         }
@@ -1355,10 +1355,10 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
         // Create child element property.
         Object.defineProperty( self, property.name, {
-          get: function () {
+          get: () => {
             return readPropertyValue( property );
           },
-          set: function (value) {
+          set: value => {
             throw new ModelError( 'readOnly', name , property.name );
           },
           enumerable: false
@@ -1369,7 +1369,6 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
     //endregion
 
     // Immutable object.
-    //Object.freeze(this);
     freeze();
   };
   util.inherits(EditableRootObject, ModelBase);
@@ -1399,10 +1398,10 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
   function instantiate( eventHandlers ) {
     return new Promise( (fulfill, reject) => {
       var instance = new EditableRootObject( eventHandlers );
-      if (instance.wait === 0)
-        fulfill( instance );
-      else
+      if (instance.onReady)
         instance.onReady = fulfill;
+      else
+        fulfill( instance );
     });
   }
 
@@ -1411,7 +1410,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    *
    * @function EditableRootObject.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns a new editable business object.
+   * @returns {promise<EditableRootObject>} Returns a promise to a new editable business object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The event handlers must be an EventHandlerList object or null.
@@ -1423,8 +1422,6 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    *      Creating the business object has failed.
    */
   EditableRootObject.create = function( eventHandlers ) {
-    //var instance = new EditableRootObject( eventHandlers );
-    //return instance.create();
     return instantiate( eventHandlers )
       .then( instance => {
         return instance.create();
