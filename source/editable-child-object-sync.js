@@ -629,7 +629,7 @@ var EditableChildObjectSyncFactory = function (name, properties, rules, extensio
           var dto = null;
           if (extensions.dataFetch) {
             // *** Custom fetch.
-            dto = extensions.dataFetch.call(self, getDataContext(null), data, method);
+            dto = extensions.dataFetch.call(self, getDataContext( null ), data, method);
           } else {
             // *** Standard fetch.
             // Child element gets data from parent.

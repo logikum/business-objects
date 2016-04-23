@@ -491,27 +491,15 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Child methods
 
-    function fetchChildren(dto, callback) {
-      var count = 0;
-      var error = null;
-
-      function finish (err) {
-        error = error || err;
-        // Check if all children are done.
-        if (++count === properties.childCount()) {
-          callback(error);
-        }
-      }
-      if (properties.childCount()) {
-        properties.children().forEach(function(property) {
-          var child = getPropertyValue(property);
-          if (child instanceof ModelBase)
-            child.fetch(dto[property.name], undefined, finish);
-          else
-            child.fetch(dto[property.name], finish);
-        });
-      } else
-        callback(null);
+    function fetchChildren( dto ) {
+      return properties.childCount() ?
+        Promise.all( properties.children().map( property => {
+          var child = getPropertyValue( property );
+          return child instanceof ModelBase ?
+            child.fetch( dto[ property.name ], undefined ) :
+            child.fetch( dto[ property.name ] );
+        })) :
+        Promise.resolve( [] );
     }
 
     function insertChildren(connection, callback) {
@@ -627,6 +615,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     function data_create () {
       return new Promise( (fulfill, reject) => {
+        // Does it have initializing method?
         if (extensions.dataCreate || dao.$hasCreate()) {
           var connection = null;
           // Open connection.
@@ -680,6 +669,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
                 })
             })
         } else
+          // Nothing to do.
           fulfill( self );
       });
     }
@@ -688,61 +678,53 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Fetch
 
-    function data_fetch (data, method, callback) {
-      // Helper function for post-fetch actions.
-      function finish (dto, cb) {
-        // Fetch children as well.
-        fetchChildren(dto, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            markAsPristine();
-            // Launch finish event.
-            /**
-             * The event arises after the business object instance has been retrieved from the repository.
-             * @event EditableChildObject#postFetch
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postFetch, method);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        // Launch finish event.
-        var dpError = wrapError(DataPortalAction.fetch, err);
-        raiseEvent(DataPortalEvent.postFetch, method, dpError);
-        cb(err);
-      }
-      // Check permissions.
-      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
-        // Launch start event.
-        /**
-         * The event arises before the business object instance will be retrieved from the repository.
-         * @event EditableChildObject#preFetch
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preFetch, method);
-        // Execute fetch.
-        if (extensions.dataFetch) {
-          // *** Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(null), data, method, function (err, dto) {
-            if (err)
-              failed(err, callback);
-            else
-              finish(dto, callback);
-          });
-        } else {
-          // *** Standard fetch.
-          // Child element gets data from parent.
-          fromDto.call(self, data);
-          finish(data, callback);
+    function data_fetch ( data, method ) {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (method === M_FETCH ? canDo( AuthorizationAction.fetchObject ) : canExecute( method )) {
+          // Launch start event.
+          /**
+           * The event arises before the business object instance will be retrieved from the repository.
+           * @event EditableChildObject#preFetch
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
+           */
+          raiseEvent( DataPortalEvent.preFetch, method );
+          // Execute fetch.
+          (extensions.dataFetch ?
+            // *** Custom fetch.
+            extensions.dataFetch.call( self, getDataContext( null ), data, method ) :
+            // *** Standard fetch.
+            new Promise( (f, r) => {
+              fromDto.call( self, data );
+              f( data );
+            }))
+            .then( none => {
+              // Fetch children as well.
+              return fetchChildren( data );
+            })
+            .then( none => {
+              markAsPristine();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been retrieved from the repository.
+               * @event EditableChildObject#postFetch
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postFetch, method );
+              fulfill( null );
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.fetch, reason );
+              // Launch finish event.
+              raiseEvent( DataPortalEvent.postFetch, method, dpe );
+              // Rethrow the original error.
+              reject( dpe );
+            });
         }
-      } else
-        callback(null, self);
+      });
     }
 
     //endregion
@@ -979,10 +961,10 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      * @protected
      * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
-     * @param {external.cbDataPortal} callback - Returns the required editable business object.
+     * @returns {promise<EditableChildObject>} Returns a promise to the end of load.
      */
-    this.fetch = function(data, method, callback) {
-      data_fetch(data, method || M_FETCH, callback);
+    this.fetch = function( data, method ) {
+      return data_fetch( data, method || M_FETCH );
     };
 
     /**
@@ -1257,30 +1239,18 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
    * @param {object} parent - The parent business object.
    * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns the required editable business object.
+   * @returns {promise<EditableChildObject>} Returns a promise to the required editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    */
-  EditableChildObject.load = function(parent, data, eventHandlers, callback) {
-    var instance = new EditableChildObject( parent, eventHandlers );
-    instance.fetch(data, undefined, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
-  };
-
-  EditableChildObject.safeLoad = function(parent, data, eventHandlers, callback) {
-    instantiate( parent, eventHandlers )
+  EditableChildObject.load = function( parent, data, eventHandlers ) {
+    return instantiate( parent, eventHandlers )
     .then( instance => {
-      instance.fetch(data, undefined, function (err) {
-        if (err)
-          callback(err);
-        else
-          callback(null, instance);
-      });
+      return instance.fetch( data, undefined )
+        .then( none => {
+          return instance;
+        });
     })
   };
 
