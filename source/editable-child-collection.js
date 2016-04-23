@@ -219,22 +219,16 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#create
      * @param {number} index - The index of the new item.
-     * @param {external.cbDataPortal} callback - Returns the newly created editable business object.
+     * @returns {promise<EditableChildObject>} Returns a promise to
+     *      the newly created editable business object.
      */
-    this.createItem = function (index) {
-      return new Promise( (fulfill, reject) => {
-        index = index || items.length;
-
-        itemType.create(parent, eventHandlers, function (err, item) {
-          if (err)
-            reject( err );
-          else {
-            var ix = parseInt(index, 10);
-            ix = isNaN(ix) ? items.length : ix;
-            items.splice(ix, 0, item);
-            fulfill( item );
-          }
-        });
+    this.createItem = function( index ) {
+      return itemType.create( parent, eventHandlers )
+        .then( item => {
+          var ix = parseInt( index || items.length, 10 );
+          ix = isNaN( ix ) ? items.length : ix;
+          items.splice( ix, 0, item );
+          return item;
       });
     };
 

@@ -625,69 +625,9 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Create
 
-    function xdata_create (callback) {
-      var hasConnection = false;
-      // Helper callback for post-creation actions.
-      function finish (cb) {
-        markAsCreated();
-        // Launch finish event.
-        /**
-         * The event arises after the business object instance has been initialized in the repository.
-         * @event EditableChildObject#postCreate
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
-         */
-        raiseEvent(DataPortalEvent.postCreate);
-        cb(null, self);
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(DataPortalAction.create, err);
-          raiseEvent(DataPortalEvent.postCreate, null, dpError);
-        }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        /**
-         * The event arises before the business object instance will be initialized in the repository.
-         * @event EditableChildObject#preCreate
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preCreate);
-        // Execute creation.
-        if (extensions.dataCreate) {
-          // *** Custom creation.
-          extensions.dataCreate.call(self, getDataContext(connection), function (err) {
-            if (err)
-              failed(err, cb);
-            else
-              finish(cb);
-          });
-        } else {
-          // *** Standard creation.
-          dao.$runMethod('create', connection, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else {
-              fromDto.call(self, dto);
-              finish(cb);
-            }
-          });
-        }
-      }
-      if (extensions.dataCreate || dao.$hasCreate()) {
-        runStatements(main, DataPortalAction.create, callback);
-      }
-    }
     function data_create () {
-      if (extensions.dataCreate || dao.$hasCreate()) {
-        return new Promise( (fulfill, reject) => {
+      return new Promise( (fulfill, reject) => {
+        if (extensions.dataCreate || dao.$hasCreate()) {
           var connection = null;
           // Open connection.
           config.connectionManager.openConnection( extensions.dataSource )
@@ -739,9 +679,9 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
                   reject( dpe );
                 })
             })
-        });
-      } else
-        return Promise.resolve( self );
+        } else
+          fulfill( self );
+      });
     }
 
     //endregion
@@ -809,82 +749,63 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Insert
 
-    function data_insert (connection, callback) {
-      // Helper function for post-insert actions.
-      function finish (conn, cb) {
-        // Insert children as well.
-        insertChildren(conn, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            markAsPristine();
-            // Launch finish event.
-            /**
-             * The event arises after the business object instance has been created in the repository.
-             * @event EditableChildObject#postInsert
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postInsert);
-            cb(null, self);
+    function data_insert (connection) {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (canDo( AuthorizationAction.createObject )) {
+          // Launch start event.
+          /**
+           * The event arises before the business object instance will be created in the repository.
+           * @event EditableChildObject#preInsert
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
+           */
+          raiseEvent( DataPortalEvent.preInsert );
+          // Copy the values of parent keys.
+          var references = properties.filter( property => {
+            return property.isParentKey;
+          });
+          for (var i = 0; i < references.length; i++) {
+            var referenceProperty = references[i];
+            var parentValue = parent[ referenceProperty.name ];
+            if (parentValue !== undefined)
+              setPropertyValue( referenceProperty, parentValue );
           }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        // Launch finish event.
-        var dpError = wrapError(DataPortalAction.insert, err);
-        raiseEvent(DataPortalEvent.postInsert, null, dpError);
-        cb(err);
-      }
-      // Main activity.
-      function main (conn, cb) {
-        // Launch start event.
-        /**
-         * The event arises before the business object instance will be created in the repository.
-         * @event EditableChildObject#preInsert
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preInsert);
-        // Execute insert.
-        if (extensions.dataInsert) {
-          // *** Custom insert.
-          extensions.dataInsert.call(self, getDataContext(conn), function (err) {
-            if (err)
-              failed(err, cb);
-            else
-              finish(conn, cb);
-          });
-        } else {
-          // *** Standard insert.
-          var dto = toDto.call(self);
-          dao.$runMethod('insert', conn, dto, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else {
-              fromDto.call(self, dto);
-              finish(conn, cb);
-            }
-          });
+          // Execute insert.
+          (extensions.dataInsert ?
+            // *** Custom insert.
+            extensions.dataInsert.call( self, getDataContext( connection )) :
+            // *** Standard insert.
+            dao.$runMethod( 'insert', connection, toDto.call( self ))
+              .then( dto => {
+                fromDto.call( self, dto );
+              }))
+            .then( none => {
+              // Insert children as well.
+              return insertChildren( connection );
+            })
+            .then( none => {
+              markAsPristine();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been created in the repository.
+               * @event EditableChildObject#postInsert
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postInsert );
+              fulfill( null );
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.insert, reason );
+              // Launch finish event.
+              raiseEvent( DataPortalEvent.postInsert, null, dpe );
+              // Pass the original error.
+              reject( dpe );
+            })
         }
-      }
-      // Check permissions.
-      if (canDo(AuthorizationAction.createObject)) {
-        // Copy the values of parent keys.
-        var references = properties.filter(function (property) {
-          return property.isParentKey;
-        });
-        for (var i = 0; i < references.length; i++) {
-          var referenceProperty = references[i];
-          var parentValue = parent[referenceProperty.name];
-          if (parentValue !== undefined)
-            setPropertyValue(referenceProperty, parentValue);
-        }
-        // Execute insert.
-        main(connection, callback);
-      } else
-        callback(null, self);
+      });
     }
 
     //endregion
