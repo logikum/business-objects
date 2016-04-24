@@ -524,9 +524,10 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, eventHandlers, function (err, item) {
-            store.initValue(property, item);
-          });
+          //property.type.create(self, eventHandlers, function (err, item) {
+          //  store.initValue(property, item);
+          //});
+          store.initValue(property, new property.type(self, eventHandlers));
         else                      // Collection
           store.initValue(property, new property.type(self, eventHandlers));
 

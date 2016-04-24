@@ -192,6 +192,18 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
 
     //endregion
 
+    //region Child methods
+
+    function fetchChildren( data ) {
+      return data instanceof Array ?
+        Promise.all( data.map( dto => {
+          return itemType.load( self, dto, eventHandlers );
+        })) :
+        Promise.resolve( [] );
+    }
+
+    //endregion
+
     //region Data portal methods
 
     //region Helper
@@ -240,7 +252,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
 
     //region Fetch
 
-    function data_fetch (filter, method, callback) {
+    function xdata_fetch (filter, method, callback) {
       var hasConnection = false;
       // Helper callback for failure.
       function succeeded (cb) {
@@ -331,6 +343,78 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
       else
         callback(null, self);
     }
+    function data_fetch ( filter, method ) {
+      return new Promise( (fulfill, reject) => {
+        if (method === M_FETCH ? canDo( AuthorizationAction.fetchObject ) : canExecute( method )) {
+          var connection = null;
+          // Open connection.
+          config.connectionManager.openConnection(extensions.dataSource)
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              /**
+               * The event arises before the collection instance will be retrieved from the repository.
+               * @event ReadOnlyRootCollection#preFetch
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {ReadOnlyRootCollection} oldObject - The collection instance before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preFetch, method );
+              // Execute fetch.
+              // Root element fetches all data from repository.
+              return extensions.dataFetch ?
+                // *** Custom fetch.
+                extensions.dataFetch.call( self, getDataContext( connection ), filter, method ) :
+                // *** Standard fetch.
+                dao.$runMethod( method, connection, filter );
+            })
+            .then( dto => {
+              // Get the count of all available items.
+              if (dto.totalItems &&
+                  (typeof dto.totalItems === 'number' || dto.totalItems instanceof Number) &&
+                  dto.totalItems % 1 === 0)
+                totalItems = dto.totalItems;
+              else
+                totalItems = null;
+              // Load children.
+              return fetchChildren( dto )
+                .then( children => {
+                  children.forEach( child => {
+                    items.push( child );
+                  });
+                  return null;
+                });
+            })
+            .then( none => {
+              // Launch finish event.
+              /**
+               * The event arises after the collection instance has been retrieved from the repository.
+               * @event ReadOnlyRootCollection#postFetch
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {ReadOnlyRootCollection} newObject - The collection instance after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postFetch, method );
+              // Close connection.
+              config.connectionManager.closeConnection(extensions.dataSource, connection)
+                .then( none => {
+                  // Nothing to return.
+                  fulfill( null );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( reason );
+              // Launch finish event.
+              raiseEvent( DataPortalEvent.postFetch, method, dpe );
+              // Close connection.
+              config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  // Pass the error.
+                  reject( dpe );
+                });
+            });
+        }
+      });
+    }
 
     //endregion
 
@@ -346,7 +430,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {external.cbDataPortal} callback - Returns the required read-only collection.
+     * @returns {promise<ReadOnlyRootCollection>} Returns a promise to
+     *      the required read-only collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -361,10 +446,10 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
       return new Promise( (fulfill, reject) => {
         method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
 
-        data_fetch( filter, method || M_FETCH, function ( err, res ) {
-          if (err) reject( err );
-          else fulfill ( res );
-        });
+        data_fetch( filter, method || M_FETCH )
+          .then( none => {
+            fulfill( self );
+          });
       });
     };
 
@@ -553,7 +638,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns the required read-only collection.
+   * @returns {promise<ReadOnlyRootCollection>} Returns a promise to
+   *      the required read-only collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.
