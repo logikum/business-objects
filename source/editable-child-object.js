@@ -491,13 +491,27 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Child methods
 
-    function fetchChildren( dto ) {
+    function createChildren( connection ) {
       return properties.childCount() ?
         Promise.all( properties.children().map( property => {
           var child = getPropertyValue( property );
           return child instanceof ModelBase ?
+            child.create( connection ) :
+            Promise.resolve( null );
+        })) :
+        Promise.resolve( null );
+    }
+
+    function fetchChildren( dto ) {
+      return properties.childCount() ?
+        Promise.all( properties.children().map( property => {
+          var child = getPropertyValue( property );
+          /*
+          return child instanceof ModelBase ?
             child.fetch( dto[ property.name ], undefined ) :
             child.fetch( dto[ property.name ] );
+          */
+          return child.fetch( dto[ property.name ] );
         })) :
         Promise.resolve( [] );
     }
@@ -613,7 +627,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Create
 
-    function data_create () {
+    function xdata_create () {
       return new Promise( (fulfill, reject) => {
         // Does it have initializing method?
         if (extensions.dataCreate || dao.$hasCreate()) {
@@ -673,6 +687,73 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
           fulfill( self );
       });
     }
+    function data_create ( connection ) {
+      return new Promise( (fulfill, reject) => {
+        // Does it have initializing method?
+        if (extensions.dataCreate || dao.$hasCreate()) {
+          (connection ?
+              Promise.resolve( connection ) :
+              // Open connection.
+              config.connectionManager.openConnection( extensions.dataSource )
+                .then( dsc => {
+                  connection = dsc;
+                }))
+            .then( none => {
+              // Launch start event.
+              /**
+               * The event arises before the business object instance will be initialized in the repository.
+               * @event EditableChildObject#preCreate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preCreate );
+              // Execute creation.
+              return extensions.dataCreate ?
+                // *** Custom creation.
+                extensions.dataCreate.call( self, getDataContext(connection) ) :
+                // *** Standard creation.
+                dao.$runMethod('create', connection)
+                  .then( dto => {
+                    fromDto.call( self, dto );
+                  })
+            })
+            .then( none => {
+              // Create children as well.
+              return createChildren( connection );
+            })
+            .then( none => {
+              markAsCreated();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been initialized in the repository.
+               * @event EditableChildObject#postCreate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postCreate );
+              // Close connection.
+              config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  fulfill( self );
+                })
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError(DataPortalAction.create, reason);
+              // Launch finish event.
+              if (connection)
+                raiseEvent(DataPortalEvent.postCreate, null, dpe);
+              // Close connection.
+              return config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  reject( dpe );
+                })
+            })
+        } else
+        // Nothing to do.
+          fulfill( self );
+      });
+    }
 
     //endregion
 
@@ -692,12 +773,12 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
           raiseEvent( DataPortalEvent.preFetch, method );
           // Execute fetch.
           (extensions.dataFetch ?
-            // *** Custom fetch.
-            extensions.dataFetch.call( self, getDataContext( null ), data, method ) :
-            // *** Standard fetch.
-            new Promise( (f, r) => {
-              fromDto.call( self, data );
-              f( data );
+              // *** Custom fetch.
+              extensions.dataFetch.call( self, getDataContext( null ), data, method ) :
+              // *** Standard fetch.
+              new Promise( (f, r) => {
+                fromDto.call( self, data );
+                f( data );
             }))
             .then( none => {
               // Fetch children as well.
@@ -713,6 +794,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
                * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
                */
               raiseEvent( DataPortalEvent.postFetch, method );
+              // Nothing to return.
               fulfill( null );
             })
             .catch( reason => {
@@ -720,7 +802,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
               var dpe = wrapError( DataPortalAction.fetch, reason );
               // Launch finish event.
               raiseEvent( DataPortalEvent.postFetch, method, dpe );
-              // Rethrow the original error.
+              // Pass the error.
               reject( dpe );
             });
         }
@@ -731,7 +813,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Insert
 
-    function data_insert (connection) {
+    function data_insert ( connection ) {
       return new Promise( (fulfill, reject) => {
         // Check permissions.
         if (canDo( AuthorizationAction.createObject )) {
@@ -947,10 +1029,11 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      *
      * @function EditableChildObject#create
      * @protected
+     * @param {object} connection - The connection data.
      * @returns {promise<EditableChildObject>} Returns a promise to a new editable business object.
      */
-    this.create = function() {
-      return data_create();
+    this.create = function( connection ) {
+      return data_create( connection );
     };
 
     /**
@@ -1140,17 +1223,18 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
       {
         // Determine child element type.
         if (property.type.create) {
+          store.initValue( property, new property.type( self, eventHandlers ));
 
-          wait++;
-          // Create child object.
-          property.type.create( self, eventHandlers )
-            .then( item => {
-
-              // Initialize child object property.
-              store.initValue( property, item );
-              wait--;
-              freeze();
-            });
+          //wait++;
+          //// Create child object.
+          //property.type.create( self, eventHandlers )
+          //  .then( item => {
+          //
+          //    // Initialize child object property.
+          //    store.initValue( property, item );
+          //    wait--;
+          //    freeze();
+          //  });
         }
         else
         // Create child collection and initialize property.
@@ -1172,7 +1256,8 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
     //endregion
 
     // Immutable object.
-    freeze();
+    //freeze();
+    Object.freeze( self );
   };
   util.inherits(EditableChildObject, ModelBase);
 
@@ -1201,9 +1286,9 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
   function instantiate( parent, eventHandlers ) {
     return new Promise( (fulfill, reject) => {
       var instance = new EditableChildObject( parent, eventHandlers );
-      if (instance.onReady)
-        instance.onReady = fulfill;
-      else
+      //if (instance.onReady)
+      //  instance.onReady = fulfill;
+      //else
         fulfill( instance );
     });
   }
@@ -1239,7 +1324,8 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
    * @param {object} parent - The parent business object.
    * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {promise<EditableChildObject>} Returns a promise to the required editable business object.
+   * @returns {promise<EditableChildObject>} Returns a promise to
+   *      the required editable business object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.

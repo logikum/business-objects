@@ -468,13 +468,27 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Child methods
 
-    function fetchChildren( dto ) {
+    function createChildren( connection ) {
       return properties.childCount() ?
         Promise.all( properties.children().map( property => {
           var child = getPropertyValue( property );
           return child instanceof ModelBase ?
+            child.create( connection ) :
+            Promise.resolve( null );
+        })) :
+        Promise.resolve( null );
+    }
+
+    function fetchChildren( dto ) {
+      return properties.childCount() ?
+        Promise.all( properties.children().map( property => {
+          var child = getPropertyValue( property );
+          /*
+          return child instanceof ModelBase ?
             child.fetch( dto[ property.name ], undefined ) :
             child.fetch( dto[ property.name ] );
+          */
+          return child.fetch( dto[ property.name ] );
         })) :
         Promise.resolve( null );
     }
@@ -644,6 +658,10 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
                   })
             })
             .then( none => {
+              // Create children as well.
+              return createChildren( connection );
+            })
+            .then( none => {
               markAsCreated();
               // Launch finish event.
               /**
@@ -699,11 +717,11 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
                */
               raiseEvent( DataPortalEvent.preFetch, method );
               // Execute fetch.
+              // Root element fetches all data from repository.
               return extensions.dataFetch ?
                 // *** Custom fetch.
                 extensions.dataFetch.call( self, getDataContext( connection ), filter, method ) :
                 // *** Standard fetch.
-                // Root element fetches all data from repository.
                 dao.$runMethod( method, connection, filter )
                   .then( dto => {
                     fromDto.call( self, dto );
@@ -727,6 +745,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Close connection.
               config.connectionManager.closeConnection( extensions.dataSource, connection )
                 .then( none => {
+                  // Nothing to return.
                   fulfill( null );
                 });
             })
@@ -739,6 +758,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Close connection.
               config.connectionManager.closeConnection(extensions.dataSource, connection)
                 .then( none => {
+                  // Pass the error.
                   reject ( dpe );
                 });
             });
@@ -1243,17 +1263,18 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
       {
         // Determine child element type.
         if (property.type.create) {
+          store.initValue( property, new property.type( self, eventHandlers ));
 
-          wait++;
-          // Create child object.
-          property.type.create( self, eventHandlers )
-          .then( item => {
-
-            // Initialize child object property.
-            store.initValue( property, item );
-            wait--;
-            freeze();
-          });
+          //wait++;
+          //// Create child object.
+          //property.type.create( self, eventHandlers )
+          //.then( item => {
+          //
+          //  // Initialize child object property.
+          //  store.initValue( property, item );
+          //  wait--;
+          //  freeze();
+          //});
         }
         else
           // Create child collection and initialize property.
@@ -1275,7 +1296,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
     //endregion
 
     // Immutable object.
-    freeze();
+    //freeze();
+    Object.freeze( self );
   };
   util.inherits(EditableRootObject, ModelBase);
 
@@ -1304,9 +1326,9 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
   function instantiate( eventHandlers ) {
     return new Promise( (fulfill, reject) => {
       var instance = new EditableRootObject( eventHandlers );
-      if (instance.onReady)
-        instance.onReady = fulfill;
-      else
+      //if (instance.onReady)
+      //  instance.onReady = fulfill;
+      //else
         fulfill( instance );
     });
   }

@@ -204,27 +204,18 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Child methods
 
-    function fetchChildren(dto, callback) {
-      var count = 0;
-      var error = null;
-
-      function finish (err) {
-        error = error || err;
-        // Check if all children are done.
-        if (++count === properties.childCount()) {
-          callback(error);
-        }
-      }
-      if (properties.childCount()) {
-        properties.children().forEach(function(property) {
-          var child = getPropertyValue(property);
-          if (child instanceof ModelBase)
-            child.fetch(dto[property.name], undefined, finish);
-          else
-            child.fetch(dto[property.name], finish);
-        });
-      } else
-        callback(null);
+    function fetchChildren( dto ) {
+      return properties.childCount() ?
+        Promise.all( properties.children().map( property => {
+          var child = getPropertyValue( property );
+          /*
+          return child instanceof ModelBase ?
+            child.fetch( dto[ property.name ], undefined ) :
+            child.fetch( dto[ property.name ] );
+          */
+          return child.fetch( dto[ property.name ] );
+        })) :
+        Promise.resolve( null );
     }
 
     function childrenAreValid() {
@@ -307,74 +298,70 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Fetch
 
-    function data_fetch (filter, method, callback) {
-      var hasConnection = false;
-      // Helper function for post-fetch actions.
-      function finish (dto, cb) {
-        // Fetch children as well.
-        fetchChildren(dto, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            // Launch finish event.
-            /**
-             * The event arises after the business object instance has been retrieved from the repository.
-             * @event ReadOnlyRootObject#postFetch
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {ReadOnlyRootObject} newObject - The instance of the model after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postFetch, method);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(err);
-          raiseEvent(DataPortalEvent.postFetch, method, dpError);
+    function data_fetch( filter, method ) {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (method === M_FETCH ? canDo( AuthorizationAction.fetchObject ) : canExecute( method )) {
+          var connection = null;
+          // Open connection.
+          config.connectionManager.openConnection( extensions.dataSource )
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              /**
+               * The event arises before the business object instance will be retrieved from the repository.
+               * @event ReadOnlyRootObject#preFetch
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {ReadOnlyRootObject} oldObject - The instance of the model before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preFetch, method );
+              // Execute fetch.
+              // Root element fetches all data from repository.
+              return extensions.dataFetch ?
+                // *** Custom fetch.
+                extensions.dataFetch.call( self, getDataContext( connection ), filter, method ) :
+                // *** Standard fetch.
+                dao.$runMethod( method, connection, filter )
+                  .then( dto => {
+                    fromDto.call(self, dto);
+                    return dto;
+                  });
+            })
+            .then( dto => {
+              // Fetch children as well.
+              return fetchChildren( dto );
+            })
+            .then( none => {
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been retrieved from the repository.
+               * @event ReadOnlyRootObject#postFetch
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {ReadOnlyRootObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postFetch, method );
+              // Close connection.
+              config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  // Nothing to return.
+                  fulfill( null );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( reason );
+              // Launch finish event.
+              raiseEvent( DataPortalEvent.postFetch, method, dpe );
+              // Close connection.
+              config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  // Pass the error.
+                  reject( dpe );
+                });
+            });
         }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        /**
-         * The event arises before the business object instance will be retrieved from the repository.
-         * @event ReadOnlyRootObject#preFetch
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {ReadOnlyRootObject} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preFetch, method);
-        // Execute fetch.
-        if (extensions.dataFetch) {
-          // *** Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(connection), filter, method, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else
-              finish(dto, cb);
-          });
-        } else {
-          // *** Standard fetch.
-          // Root element fetches data from repository.
-          dao.$runMethod(method, connection, filter, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else {
-              fromDto.call(self, dto);
-              finish(dto, cb);
-            }
-          });
-        }
-      }
+      });
       // Check permissions.
-      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method))
-        runStatements(main, callback);
-      else
-        callback(null, self);
     }
 
     //endregion
@@ -391,7 +378,8 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {external.cbDataPortal} callback - Returns the required read-only business object.
+     * @returns {promise<ReadOnlyRootObject>} Returns a promise to
+     *      the required read-only business object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -402,14 +390,14 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
      * @throws {@link bo.shared.DataPortalError Data portal error}:
      *      Fetching the business object has failed.
      */
-    this.fetch = function(filter, method) {
+    this.fetch = function( filter, method ) {
       return new Promise( (fulfill, reject) => {
         method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
 
-        data_fetch( filter, method || M_FETCH, function ( err, res ) {
-          if (err) reject( err );
-          else fulfill ( res );
-        });
+        data_fetch( filter, method || M_FETCH )
+          .then( none => {
+            fulfill( self );
+          });
       });
     };
 
@@ -590,7 +578,8 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns the required read-only business object.
+   * @returns {promise<ReadOnlyRootObject>} Returns a promise to
+   *      the required read-only business object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.

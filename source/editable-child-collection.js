@@ -247,9 +247,11 @@ var EditableChildCollectionFactory = function (name, itemType) {
           return itemType.load( parent, dto, eventHandlers )
         }))
           .then( list => {
+            // Add loaded items to the collection.
             list.forEach( item => {
               items.push( item );
             });
+            // Nothing to return.
             return null;
           }) :
         Promise.resolve( null );
