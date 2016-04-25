@@ -630,7 +630,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Create
 
-    function data_create () {
+    function data_create() {
       return new Promise( (fulfill, reject) => {
         // Does it have initializing method?
         if (extensions.dataCreate || dao.$hasCreate()) {
@@ -699,7 +699,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Fetch
 
-    function data_fetch ( filter, method ) {
+    function data_fetch( filter, method ) {
       return new Promise( (fulfill, reject) => {
         // Check permissions.
         if (method === M_FETCH ? canDo( AuthorizationAction.fetchObject ) : canExecute( method )) {
@@ -770,7 +770,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Insert
 
-    function data_insert () {
+    function data_insert() {
       return new Promise( (fulfill, reject) => {
         // Check permissions.
         if (canDo( AuthorizationAction.createObject )) {
@@ -841,7 +841,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Update
 
-    function data_update (callback) {
+    function xdata_update(callback) {
       var hasConnection = false;
       // Helper function for post-update actions.
       function finish (connection, cb) {
@@ -919,12 +919,79 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
       else
         callback(null, self);
     }
+    function data_update() {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (canDo( AuthorizationAction.updateObject )) {
+          var connection = null;
+          // Start transaction.
+          config.connectionManager.beginTransaction( extensions.dataSource )
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              raiseSave( DataPortalEvent.preSave, DataPortalAction.update );
+              /**
+               * The event arises before the business object instance will be updated in the repository.
+               * @event EditableRootObject#preUpdate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preUpdate );
+              // Execute update.
+              return extensions.dataUpdate ?
+                // *** Custom update.
+                extensions.dataUpdate.call( self, getDataContext( connection )) :
+                // *** Standard update.
+                dao.$runMethod( 'update', connection, /* dto = */ toDto.call( self ))
+                  .then( dto => {
+                    fromDto.call( self, dto );
+                  });
+            })
+            .then( none => {
+              // Update children as well.
+              updateChildren( connection );
+            })
+            .then( none => {
+              markAsPristine();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been updated in the repository.
+               * @event EditableRootObject#postUpdate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postUpdate );
+              raiseSave( DataPortalEvent.postSave, DataPortalAction.update );
+              // Finish transaction.
+              config.connectionManager.commitTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  fulfill( self );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.update, reason );
+              // Launch finish event.
+              if (connection) {
+                raiseEvent( DataPortalEvent.postUpdate, null, dpe );
+                raiseSave( DataPortalEvent.postSave, DataPortalAction.update, dpe);
+              }
+              // Undo transaction.
+              config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Pass the error.
+                  reject( dpe );
+                });
+            });
+        }
+      });
+    }
 
     //endregion
 
     //region Remove
 
-    function data_remove (callback) {
+    function xdata_remove (callback) {
       var hasConnection = false;
       // Helper callback for post-removal actions.
       function finish (cb) {
@@ -994,6 +1061,73 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
         runTransaction(main, DataPortalAction.remove, callback);
       else
         callback(null, null);
+    }
+    function data_remove() {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (canDo( AuthorizationAction.removeObject )) {
+          var connection = null;
+          // Start transaction.
+          config.connectionManager.beginTransaction( extensions.dataSource )
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              raiseSave( DataPortalEvent.preSave, DataPortalAction.remove );
+              /**
+               * The event arises before the business object instance will be removed from the repository.
+               * @event EditableRootObject#preRemove
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preRemove );
+            })
+            .then( none => {
+              // Remove children first.
+              removeChildren( connection );
+            })
+            .then( none => {
+              // Execute removal.
+              extensions.dataRemove ?
+                // Custom removal.
+                extensions.dataRemove.call( self, getDataContext( connection )) :
+                // Standard removal.
+                dao.$runMethod('remove', connection, /* filter = */ properties.getKey( getPropertyValue ));
+            })
+            .then( none => {
+              markAsRemoved();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been removed from the repository.
+               * @event EditableRootObject#postRemove
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postRemove );
+              raiseSave( DataPortalEvent.postSave, DataPortalAction.remove );
+              // Finish transaction.
+              config.connectionManager.commitTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Nothing to return.
+                  fulfill( null );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.remove, reason );
+              // Launch finish event.
+              if (connection) {
+                raiseEvent( DataPortalEvent.postRemove, null, dpe );
+                raiseSave( DataPortalEvent.postSave, DataPortalAction.remove, dpe );
+              }
+              // Undo transaction.
+              config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Pass the error.
+                  reject( dpe );
+                });
+            });
+        }
+      });
     }
 
     //endregion
@@ -1087,17 +1221,15 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
                   fulfill( inserted );
                 });
             case MODEL_STATE.changed:
-              data_update(function (err, updated) {
-                if (err) reject( err );
-                else  fulfill( updated );
-              });
-              break;
+              return data_update()
+                .then( updated => {
+                  fulfill( updated );
+                });
             case MODEL_STATE.markedForRemoval:
-              data_remove(function (err, removed) {
-                if (err) reject( err );
-                else fulfill( removed );
-              });
-              break;
+              return data_remove()
+                .then( removed => {
+                  fulfill( removed );
+                });
             default:
               fulfill( self );
           }

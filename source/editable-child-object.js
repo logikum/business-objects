@@ -516,35 +516,25 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
         Promise.resolve( [] );
     }
 
-    function insertChildren(connection, callback) {
-      saveChildren(connection, callback);
+    function insertChildren( connection ) {
+      return saveChildren( connection );
     }
 
-    function updateChildren(connection, callback) {
-      saveChildren(connection, callback);
+    function updateChildren( connection ) {
+      return saveChildren( connection );
     }
 
-    function removeChildren(connection, callback) {
-      saveChildren(connection, callback);
+    function removeChildren( connection ) {
+      return saveChildren( connection );
     }
 
-    function saveChildren(connection, callback) {
-      var count = 0;
-      var error = null;
-
-      if (properties.childCount()) {
-        properties.children().forEach(function (property) {
-          var child = getPropertyValue(property);
-          child.save(connection, function (err) {
-            error = error || err;
-            // Check if all children are done.
-            if (++count === properties.childCount()) {
-              callback(error);
-            }
-          });
-        });
-      } else
-        callback(null);
+    function saveChildren( connection ) {
+      return properties.childCount() ?
+        Promise.all( properties.children().map( property => {
+          var child = getPropertyValue( property );
+          return child.save( connection );
+        })) :
+        Promise.resolve( [] );
     }
 
     function childrenAreValid() {
@@ -846,7 +836,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
               }))
             .then( none => {
               // Insert children as well.
-              return insertChildren( connection );
+              insertChildren( connection );
             })
             .then( none => {
               markAsPristine();
@@ -858,7 +848,8 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
                * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
                */
               raiseEvent( DataPortalEvent.postInsert );
-              fulfill( null );
+              // Return the result.
+              fulfill( self );
             })
             .catch( reason => {
               // Wrap the intercepted error.
@@ -876,7 +867,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Update
 
-    function data_update (connection, callback) {
+    function xdata_update (connection, callback) {
       // Helper function for post-update actions.
       function finish (conn, cb) {
         // Update children as well.
@@ -947,12 +938,63 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
       else
         callback(null, self);
     }
+    function data_update( connection ) {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (canDo( AuthorizationAction.updateObject )) {
+          // Launch start event.
+          /**
+           * The event arises before the business object instance will be updated in the repository.
+           * @event EditableChildObject#preUpdate
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
+           */
+          raiseEvent( DataPortalEvent.preUpdate );
+          // Execute update.
+          (extensions.dataUpdate ?
+            // *** Custom update.
+            extensions.dataUpdate.call( self, getDataContext( connection )) :
+            // *** Standard update.
+            isDirty ?
+              dao.$runMethod( 'update', connection, /* dto = */ toDto.call( self ))
+                .then( dto => {
+                  fromDto.call( self, dto );
+                }) :
+              Promise.resolve( null ))
+            .then( none => {
+              // Update children as well.
+              updateChildren( connection );
+            })
+            .then( none => {
+              markAsPristine();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been updated in the repository.
+               * @event EditableChildObjectSync#postUpdate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableChildObjectSync} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postUpdate );
+              // Return the result.
+              fulfill( self );
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.update, reason );
+              // Launch finish event.
+              raiseEvent( DataPortalEvent.postUpdate, null, dpe);
+              // Pass the error.
+              reject( dpe );
+            });
+        }
+      });
+    }
 
     //endregion
 
     //region Remove
 
-    function data_remove (connection, callback) {
+    function xdata_remove (connection, callback) {
       // Helper callback for post-removal actions.
       function finish (cb) {
         markAsRemoved();
@@ -1016,6 +1058,52 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
       else
         callback(null);
     }
+    function data_remove( connection ) {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (canDo( AuthorizationAction.removeObject )) {
+          // Launch start event.
+          /**
+           * The event arises before the business object instance will be removed from the repository.
+           * @event EditableChildObject#preRemove
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
+           */
+          raiseEvent( DataPortalEvent.preRemove );
+          // Remove children first.
+          removeChildren( connection )
+            .then( none => {
+              // Execute delete.
+              extensions.dataRemove ?
+                // *** Custom removal.
+                extensions.dataRemove.call( self, getDataContext (connection )) :
+                // *** Standard removal.
+                dao.$runMethod( 'remove', connection, /* filter = */ properties.getKey( getPropertyValue ));
+            })
+            .then( none => {
+              markAsRemoved();
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been removed from the repository.
+               * @event EditableChildObject#postRemove
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postRemove );
+              // Return the result.
+              fulfill( self );
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.remove, reason );
+              // Launch finish event.
+              raiseEvent( DataPortalEvent.postRemove, null, dpe );
+              // Pass the error.
+              reject( dpe );
+            });
+        }
+      });
+    }
 
     //endregion
 
@@ -1059,22 +1147,30 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      * @param {object} connection - The connection data.
      * @param {external.cbDataPortal} callback - The business object with the new state after the save.
      */
-    this.save = function(connection, callback) {
-      if (this.isValid()) {
-        switch (state) {
-          case MODEL_STATE.created:
-            data_insert(connection, callback);
-            break;
-          case MODEL_STATE.changed:
-            data_update(connection, callback);
-            break;
-          case MODEL_STATE.markedForRemoval:
-            data_remove(connection, callback);
-            break;
-          default:
-            callback(null, this);
-        }
-      }
+    this.save = function( connection ) {
+      return new Promise( (fulfill, reject) => {
+        if (self.isValid()) {
+          switch (state) {
+            case MODEL_STATE.created:
+              return data_insert()
+                .then( inserted => {
+                  fulfill( inserted );
+                });
+            case MODEL_STATE.changed:
+              return data_update()
+                .then( updated => {
+                  fulfill( updated );
+                });
+            case MODEL_STATE.markedForRemoval:
+              return data_remove()
+                .then( removed => {
+                  fulfill( removed );
+                });
+            default:
+              fulfill( self );
+          }
+        } else reject( new Error('Invalid!'));
+      });
     };
 
     /**

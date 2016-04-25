@@ -266,24 +266,43 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @param {object} connection - The connection data.
      * @param {external.cbDataPortal} callback - Returns the eventual error.
      */
-    this.save = function (connection, callback) {
-      var count = 0;
-      var error = null;
-      if (items.length) {
-        items.forEach(function (item) {
-          item.save(connection, function (err) {
-            error = error || err;
-            // Check if all items are done.
-            if (++count === items.length) {
-              items = items.filter(function (item) {
-                return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
-              });
-              callback(error);
-            }
-          });
+    this.save = function( connection ) {
+      //return items.length ?
+      //  Promise.all( items.map( item => {
+      //    return item.save( connection );
+      //  }))
+      //    .then( values => {
+      //      // Update items.
+      //      items = values.filter( item => {
+      //        return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
+      //      });
+      //      return self;
+      //    }) :
+      //  Promise.resolve( self );
+      return new Promise( (fulfill, reject) => {
+        var modified = items.filter(item => {
+          return [
+              MODEL_STATE.getName( MODEL_STATE.created ),
+              MODEL_STATE.getName( MODEL_STATE.changed ),
+              MODEL_STATE.getName( MODEL_STATE.markedForRemoval )
+            ].indexOf(item.getModelState()) > -1;
         });
-      } else
-        callback(null);
+        if (modified.length) {
+          Promise.all( modified.map( item => {
+            return item.save( connection );
+          }))
+            .then( values => {
+              // Store updated items.
+              items = values.filter( item => {
+                return item.getModelState() !== MODEL_STATE.getName( MODEL_STATE.removed );
+              });
+              fulfill( null );
+            }).catch( reason => {
+              reject( reason );
+            })
+        } else
+          fulfill( null );
+      });
     };
 
     /**

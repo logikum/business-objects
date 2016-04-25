@@ -644,8 +644,13 @@ describe('Asynchronous data portal method', () => {
     BlanketOrder.get( 1, ehBlanketOrder )
     .then( order => {
 
-      //region Update data
+        var item2 = order.items.at(1);
+        var schedule1 = item2.schedules.at(0);
+        schedule1.remove();
+        save();
 
+      //region Update data
+/*
       order.vendorName = 'Summit Ltd.';
       order.contractDate = contractDate_u;
       order.totalPrice = 672.5;
@@ -705,13 +710,17 @@ describe('Asynchronous data portal method', () => {
           });
         });
       });
-
+*/
       //endregion
 
       function save() {
 
         order.save()
         .then( order => {
+
+            var c = order.items.at(1).schedules.count;
+
+            var end = order.city;
 
           //region Check data
 
