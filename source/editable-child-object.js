@@ -1150,26 +1150,33 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
     this.save = function( connection ) {
       return new Promise( (fulfill, reject) => {
         if (self.isValid()) {
-          switch (state) {
-            case MODEL_STATE.created:
-              return data_insert()
-                .then( inserted => {
-                  fulfill( inserted );
-                });
-            case MODEL_STATE.changed:
-              return data_update()
-                .then( updated => {
-                  fulfill( updated );
-                });
-            case MODEL_STATE.markedForRemoval:
-              return data_remove()
-                .then( removed => {
-                  fulfill( removed );
-                });
-            default:
-              fulfill( self );
-          }
-        } else reject( new Error('Invalid!'));
+        //  switch (state) {
+        //    case MODEL_STATE.created:
+        //      return data_insert()
+        //        .then( inserted => {
+        //          fulfill( inserted );
+        //        });
+        //    case MODEL_STATE.changed:
+        //      return data_update()
+        //        .then( updated => {
+        //          fulfill( updated );
+        //        });
+        //    case MODEL_STATE.markedForRemoval:
+        //      return data_remove()
+        //        .then( removed => {
+        //          fulfill( removed );
+        //        });
+        //    default:
+        //      fulfill( self );
+        //  }
+          if (state == MODEL_STATE.created)
+            data_insert();
+          else if (state == MODEL_STATE.changed)
+            data_update();
+          else if (state == MODEL_STATE.markedForRemoval)
+            data_remove();
+          //fulfill( self );
+        }
       });
     };
 

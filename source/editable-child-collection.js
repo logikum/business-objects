@@ -279,30 +279,18 @@ var EditableChildCollectionFactory = function (name, itemType) {
       //      return self;
       //    }) :
       //  Promise.resolve( self );
-      return new Promise( (fulfill, reject) => {
-        var modified = items.filter(item => {
-          return [
-              MODEL_STATE.getName( MODEL_STATE.created ),
-              MODEL_STATE.getName( MODEL_STATE.changed ),
-              MODEL_STATE.getName( MODEL_STATE.markedForRemoval )
-            ].indexOf(item.getModelState()) > -1;
-        });
-        if (modified.length) {
-          Promise.all( modified.map( item => {
-            return item.save( connection );
-          }))
-            .then( values => {
-              // Store updated items.
-              items = values.filter( item => {
-                return item.getModelState() !== MODEL_STATE.getName( MODEL_STATE.removed );
-              });
-              fulfill( null );
-            }).catch( reason => {
-              reject( reason );
-            })
-        } else
-          fulfill( null );
+      var pa = items.filter( item => {
+        return item.isDirty();
+      }).map( item => {
+        return item.save( connection );
       });
+      return Promise.all( pa )
+        .then( values => {
+          // Store updated items.
+          items = items.filter( item => {
+            return item.getModelState() !== MODEL_STATE.getName( MODEL_STATE.removed );
+          });
+        });
     };
 
     /**
