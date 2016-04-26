@@ -1,4 +1,6 @@
-console.log( 'Testing data portal methods of asynchronous models...' );
+console.log( '--------------------------------------------------' );
+console.log( 'Testing data portal methods of simple models...' );
+console.log( '--------------------------------------------------' );
 
 //region Imports
 
@@ -11,7 +13,7 @@ var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
 //endregion
 
-describe('Asynchronous data portal method', () => {
+describe('Data portal method', () => {
 
   //region Data
 
@@ -96,8 +98,8 @@ describe('Asynchronous data portal method', () => {
 
   //endregion
 
-  it( 'create of sample editable model', done => {
-    console.log( '\n*** Asynchronous CREATE' );
+  it( 'CREATE of simple editable model', done => {
+    console.log( '\n*** Method CREATE' );
 
     BlanketOrder.create( ehBlanketOrder )
     .then( order => {
@@ -244,8 +246,8 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'special fetch of sample editable model', done => {
-    console.log( '\n*** Asynchronous GET_BY_NAME' );
+  it( 'GET_BY_NAME of simple editable model', done => {
+    console.log( '\n*** Method GET_BY_NAME' );
 
     BlanketOrder.getByName( 'Acme Corp.', ehBlanketOrder )
     .then( order => {
@@ -380,8 +382,8 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'fetch of sample read-only model', done => {
-    console.log( '\n*** Asynchronous GET' );
+  it( 'GET of simple read-only model', done => {
+    console.log( '\n*** Method GET' );
 
     BlanketOrderView.get( 1, ehBlanketOrderView )
     .then( orderView => {
@@ -588,8 +590,8 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'fetch of sample read-only collection', done => {
-    console.log( '\n*** Asynchronous GET_ALL' );
+  it( 'GET_ALL of simple read-only collection', done => {
+    console.log( '\n*** Method GET_ALL' );
 
     BlanketOrderList.getAll( ehBlanketOrderList )
     .then( orderList => {
@@ -638,8 +640,8 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'update of sample editable model', done => {
-    console.log( '\n*** Asynchronous SAVE' );
+  it( 'SAVE of simple editable model', done => {
+    console.log( '\n*** Method SAVE' );
 
     BlanketOrder.get( 1, ehBlanketOrder )
     .then( order => {
@@ -797,8 +799,8 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'delete of sample editable model', done => {
-    console.log( '\n*** Asynchronous REMOVE' );
+  it( 'REMOVE of simple editable model', done => {
+    console.log( '\n*** Method REMOVE' );
 
     BlanketOrder.get( 1, ehBlanketOrder )
     .then( order => {

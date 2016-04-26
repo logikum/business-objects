@@ -267,30 +267,17 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @param {external.cbDataPortal} callback - Returns the eventual error.
      */
     this.save = function( connection ) {
-      //return items.length ?
-      //  Promise.all( items.map( item => {
-      //    return item.save( connection );
-      //  }))
-      //    .then( values => {
-      //      // Update items.
-      //      items = values.filter( item => {
-      //        return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
-      //      });
-      //      return self;
-      //    }) :
-      //  Promise.resolve( self );
-      var pa = items.filter( item => {
-        return item.isDirty();
-      }).map( item => {
-        return item.save( connection );
-      });
-      return Promise.all( pa )
-        .then( values => {
-          // Store updated items.
-          items = items.filter( item => {
-            return item.getModelState() !== MODEL_STATE.getName( MODEL_STATE.removed );
+      return Promise.all( items.filter( item => {
+          return item.isDirty();
+        }).map( item => {
+          return item.save( connection );
+        }))
+          .then( values => {
+            // Store updated items.
+            items = items.filter( item => {
+              return item.getModelState() !== MODEL_STATE.getName( MODEL_STATE.removed );
+            });
           });
-        });
     };
 
     /**

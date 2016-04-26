@@ -469,28 +469,24 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
     //region Child methods
 
     function createChildren( connection ) {
-      return properties.childCount() ?
-        Promise.all( properties.children().map( property => {
-          var child = getPropertyValue( property );
-          return child instanceof ModelBase ?
-            child.create( connection ) :
-            Promise.resolve( null );
-        })) :
-        Promise.resolve( null );
+      return Promise.all( properties.children().map( property => {
+        var child = getPropertyValue( property );
+        return child instanceof ModelBase ?
+          child.create( connection ) :
+          Promise.resolve( null );
+      }));
     }
 
     function fetchChildren( dto ) {
-      return properties.childCount() ?
-        Promise.all( properties.children().map( property => {
-          var child = getPropertyValue( property );
-          /*
-          return child instanceof ModelBase ?
-            child.fetch( dto[ property.name ], undefined ) :
-            child.fetch( dto[ property.name ] );
-          */
-          return child.fetch( dto[ property.name ] );
-        })) :
-        Promise.resolve( null );
+      return Promise.all( properties.children().map( property => {
+        var child = getPropertyValue( property );
+        /*
+         return child instanceof ModelBase ?
+         child.fetch( dto[ property.name ], undefined ) :
+         child.fetch( dto[ property.name ] );
+         */
+        return child.fetch( dto[ property.name ] );
+      }));
     }
 
     function insertChildren( connection ) {
@@ -506,12 +502,10 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
     }
 
     function saveChildren( connection ) {
-      return properties.childCount() ?
-        Promise.all( properties.children().map( property => {
-          var child = getPropertyValue( property );
-          return child.save( connection );
-        })) :
-        Promise.resolve( [] );
+      return Promise.all( properties.children().map( property => {
+        var child = getPropertyValue( property );
+        return child.save( connection );
+      }));
     }
 
     function childrenAreValid() {
@@ -841,84 +835,6 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Update
 
-    function xdata_update(callback) {
-      var hasConnection = false;
-      // Helper function for post-update actions.
-      function finish (connection, cb) {
-        // Update children as well.
-        updateChildren(connection, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            markAsPristine();
-            // Launch finish event.
-            /**
-             * The event arises after the business object instance has been updated in the repository.
-             * @event EditableRootObject#postUpdate
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postUpdate);
-            raiseSave(DataPortalEvent.postSave, DataPortalAction.update);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(DataPortalAction.update, err);
-          raiseEvent(DataPortalEvent.postUpdate, null, dpError);
-          raiseSave(DataPortalEvent.postSave, DataPortalAction.update, dpError);
-        }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        raiseSave(DataPortalEvent.preSave, DataPortalAction.update);
-        /**
-         * The event arises before the business object instance will be updated in the repository.
-         * @event EditableRootObject#preUpdate
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preUpdate);
-        // Execute update.
-        if (isDirty) {
-          if (extensions.dataUpdate) {
-            // *** Custom update.
-            extensions.dataUpdate.call(self, getDataContext(connection), function (err) {
-              if (err)
-                failed(err, cb);
-              else
-                finish(connection, cb);
-            });
-          } else {
-            // *** Standard update.
-            var dto = toDto.call(self);
-            dao.$runMethod('update', connection, dto, function (err, dto) {
-              if (err)
-                failed(err, cb);
-              else {
-                fromDto.call(self, dto);
-                finish(connection, cb);
-              }
-            });
-          }
-        } else {
-          // Update children only.
-          finish();
-        }
-      }
-      // Check permissions.
-      if (canDo(AuthorizationAction.updateObject))
-        runTransaction(main, DataPortalAction.update, callback);
-      else
-        callback(null, self);
-    }
     function data_update() {
       return new Promise( (fulfill, reject) => {
         // Check permissions.
@@ -949,7 +865,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
             })
             .then( none => {
               // Update children as well.
-              updateChildren( connection );
+              return updateChildren( connection );
             })
             .then( none => {
               markAsPristine();
@@ -963,8 +879,9 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               raiseEvent( DataPortalEvent.postUpdate );
               raiseSave( DataPortalEvent.postSave, DataPortalAction.update );
               // Finish transaction.
-              config.connectionManager.commitTransaction( extensions.dataSource, connection )
+              return config.connectionManager.commitTransaction( extensions.dataSource, connection )
                 .then( none => {
+                  // Return the result.
                   fulfill( self );
                 });
             })
@@ -974,10 +891,10 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Launch finish event.
               if (connection) {
                 raiseEvent( DataPortalEvent.postUpdate, null, dpe );
-                raiseSave( DataPortalEvent.postSave, DataPortalAction.update, dpe);
+                raiseSave( DataPortalEvent.postSave, DataPortalAction.update, dpe );
               }
               // Undo transaction.
-              config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
+              return config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
                 .then( none => {
                   // Pass the error.
                   reject( dpe );
@@ -991,77 +908,6 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Remove
 
-    function xdata_remove (callback) {
-      var hasConnection = false;
-      // Helper callback for post-removal actions.
-      function finish (cb) {
-        markAsRemoved();
-        // Launch finish event.
-        /**
-         * The event arises after the business object instance has been removed from the repository.
-         * @event EditableRootObject#postRemove
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
-         */
-        raiseEvent(DataPortalEvent.postRemove);
-        raiseSave(DataPortalEvent.postSave, DataPortalAction.remove);
-        cb(null, null);
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(DataPortalAction.remove, err);
-          raiseEvent(DataPortalEvent.postRemove, null, dpError);
-          raiseSave(DataPortalEvent.postSave, DataPortalAction.remove, dpError);
-        }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        raiseSave(DataPortalEvent.preSave, DataPortalAction.remove);
-        /**
-         * The event arises before the business object instance will be removed from the repository.
-         * @event EditableRootObject#preRemove
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preRemove);
-        // Remove children first.
-        removeChildren(connection, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            // Execute removal.
-            if (extensions.dataRemove) {
-              // *** Custom removal.
-              extensions.dataRemove.call(self, getDataContext(connection), function (err) {
-                if (err)
-                  failed(err, cb);
-                else
-                  finish(cb);
-              });
-            } else {
-              // *** Standard removal.
-              var filter = properties.getKey(getPropertyValue);
-              dao.$runMethod('remove', connection, filter, function (err) {
-                if (err)
-                  failed(err, cb);
-                else
-                  finish(cb);
-              });
-            }
-          }
-        });
-      }
-      // Check permissions.
-      if (canDo(AuthorizationAction.removeObject))
-        runTransaction(main, DataPortalAction.remove, callback);
-      else
-        callback(null, null);
-    }
     function data_remove() {
       return new Promise( (fulfill, reject) => {
         // Check permissions.
@@ -1080,14 +926,12 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
                * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
                */
               raiseEvent( DataPortalEvent.preRemove );
-            })
-            .then( none => {
               // Remove children first.
-              removeChildren( connection );
+              return removeChildren( connection );
             })
             .then( none => {
               // Execute removal.
-              extensions.dataRemove ?
+              return extensions.dataRemove ?
                 // Custom removal.
                 extensions.dataRemove.call( self, getDataContext( connection )) :
                 // Standard removal.
@@ -1105,7 +949,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               raiseEvent( DataPortalEvent.postRemove );
               raiseSave( DataPortalEvent.postSave, DataPortalAction.remove );
               // Finish transaction.
-              config.connectionManager.commitTransaction( extensions.dataSource, connection )
+              return config.connectionManager.commitTransaction( extensions.dataSource, connection )
                 .then( none => {
                   // Nothing to return.
                   fulfill( null );
@@ -1120,7 +964,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
                 raiseSave( DataPortalEvent.postSave, DataPortalAction.remove, dpe );
               }
               // Undo transaction.
-              config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
+              return config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
                 .then( none => {
                   // Pass the error.
                   reject( dpe );
@@ -1216,20 +1060,23 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
            */
           switch (state) {
             case MODEL_STATE.created:
-              return data_insert()
+              data_insert()
                 .then( inserted => {
                   fulfill( inserted );
                 });
+              break;
             case MODEL_STATE.changed:
-              return data_update()
+              data_update()
                 .then( updated => {
                   fulfill( updated );
                 });
+              break;
             case MODEL_STATE.markedForRemoval:
-              return data_remove()
+              data_remove()
                 .then( removed => {
                   fulfill( removed );
                 });
+              break;
             default:
               fulfill( self );
           }
