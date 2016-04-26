@@ -197,6 +197,30 @@ function ExtensionManager( dataSource, modelPath ) {
         config.daoBuilder(dataSource, modelPath, modelName);
   };
 
+  this.$runMethod = function (methodName) {
+    var check = Argument.inMethod(CLASS_NAME, '$runMethod');
+
+    methodName = 'data' + check(methodName).forMandatory('methodName').asString();
+    if (!this[methodName] || typeof this[methodName] !== 'function')
+      throw new ModelError('noMethod', this.name, methodName);
+
+    var args = Array.prototype.slice.call(arguments);
+    if (args.length < 3)
+      throw new ModelError('missingArgs', this.name, methodName);
+    // Remove method name from arguments.
+    args.shift();
+    // Remove method context from arguments.
+    var thisArg = args.shift();
+    // First argument must be a DataPortalContext object.
+    var ctx = args[0];
+
+    return new Promise( (fulfill, reject) => {
+      ctx.fulfill = fulfill;
+      ctx.reject = reject;
+      this[methodName].apply(thisArg, args);
+    });
+  };
+
   // Immutable object.
   Object.freeze(this);
 }

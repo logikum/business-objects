@@ -139,19 +139,21 @@ function dataFetch (ctx, filter, method, callback) {
   // ctx.dao[method](ctx.connection, filter).then( cb );
 }
 
-function dataInsert (ctx, callback) {
-  var dto = {
-    vendorName:   ctx.getValue('vendorName'),
-    contractDate: ctx.getValue('contractDate'),
-    totalPrice:   ctx.getValue('totalPrice'),
-    schedules:    ctx.getValue('schedules'),
-    enabled:      ctx.getValue('enabled')
-  };
-  ctx.dao.insert(ctx.connection, dto).then( dto => {
-    ctx.setValue('orderKey', dto.orderKey);
-    ctx.setValue('createdDate', dto.createdDate);
-    callback(null);
-  });
+function dataInsert ( ctx, callback ) {
+  //return new Promise( (fulfill, reject) => {
+    var dto = {
+      vendorName:   ctx.getValue( 'vendorName' ),
+      contractDate: ctx.getValue( 'contractDate' ),
+      totalPrice:   ctx.getValue( 'totalPrice' ),
+      schedules:    ctx.getValue( 'schedules' ),
+      enabled:      ctx.getValue( 'enabled' )
+    };
+    ctx.dao.insert( ctx.connection, dto ).then( dto => {
+      ctx.setValue( 'orderKey', dto.orderKey );
+      ctx.setValue( 'createdDate', dto.createdDate );
+      ctx.fulfill( null );
+    });
+  //});
 }
 
 function dataUpdate (ctx, callback) {

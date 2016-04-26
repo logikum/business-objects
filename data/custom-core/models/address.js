@@ -116,20 +116,22 @@ function dataFetch (ctx, dto, method, callback) {
   callback(null, dto);
 }
 
-function dataInsert (ctx, callback) {
-  var dto = {
-    orderKey:   ctx.getValue('orderKey'),
-    country:    ctx.getValue('country'),
-    state:      ctx.getValue('state'),
-    city:       ctx.getValue('city'),
-    line1:      ctx.getValue('line1'),
-    line2:      ctx.getValue('line2'),
-    postalCode: ctx.getValue('postalCode')
-  };
-  ctx.dao.insert(ctx.connection, dto).then( dto => {
-    ctx.setValue('addressKey', dto.addressKey);
-    callback(null);
-  });
+function dataInsert ( ctx, callback ) {
+  //return new Promise( (fulfill, reject) => {
+    var dto = {
+      orderKey:   ctx.getValue('orderKey'),
+      country:    ctx.getValue('country'),
+      state:      ctx.getValue('state'),
+      city:       ctx.getValue('city'),
+      line1:      ctx.getValue('line1'),
+      line2:      ctx.getValue('line2'),
+      postalCode: ctx.getValue('postalCode')
+    };
+    ctx.dao.insert(ctx.connection, dto).then( dto => {
+      ctx.setValue('addressKey', dto.addressKey);
+      ctx.fulfill( null );
+    });
+  //});
 }
 
 function dataUpdate (ctx, callback) {

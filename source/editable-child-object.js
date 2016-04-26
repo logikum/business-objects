@@ -822,7 +822,8 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
           // Execute insert.
           (extensions.dataInsert ?
               // *** Custom insert.
-              extensions.dataInsert.call( self, getDataContext( connection )) :
+              //extensions.dataInsert.call( self, getDataContext( connection )) :
+              extensions.$runMethod( 'Insert', self, getDataContext( connection )) :
               // *** Standard insert.
               dao.$runMethod( 'insert', connection, toDto.call( self ))
                 .then( dto => {

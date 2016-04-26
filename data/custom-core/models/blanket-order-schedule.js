@@ -109,19 +109,21 @@ function dataFetch (ctx, dto, method, callback) {
   callback(null, dto);
 }
 
-function dataInsert (ctx, callback) {
-  var dto = {
-    orderItemKey: ctx.getValue('orderItemKey'),
-    quantity:     ctx.getValue('quantity'),
-    totalMass:    ctx.getValue('totalMass'),
-    required:     ctx.getValue('required'),
-    shipTo:       ctx.getValue('shipTo'),
-    shipDate:     ctx.getValue('shipDate')
-  };
-  ctx.dao.insert(ctx.connection, dto).then( dto => {
-    ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
-    callback(null);
-  });
+function dataInsert ( ctx, callback ) {
+  //return new Promise( (fulfill, reject) => {
+    var dto = {
+      orderItemKey: ctx.getValue('orderItemKey'),
+      quantity:     ctx.getValue('quantity'),
+      totalMass:    ctx.getValue('totalMass'),
+      required:     ctx.getValue('required'),
+      shipTo:       ctx.getValue('shipTo'),
+      shipDate:     ctx.getValue('shipDate')
+    };
+    ctx.dao.insert(ctx.connection, dto).then( dto => {
+      ctx.setValue('orderScheduleKey', dto.orderScheduleKey);
+      ctx.fulfill( null );
+    });
+  //});
 }
 
 function dataUpdate (ctx, callback) {

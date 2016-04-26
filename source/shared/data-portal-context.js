@@ -35,6 +35,8 @@ function DataPortalContext (dao, properties, getValue, setValue) {
   var self = this;
   var isDirty = false;
   var daConnection = null;
+  var fulfill = null;
+  var reject = null;
   var check = Argument.inConstructor(CLASS_NAME);
 
   /**
@@ -88,6 +90,26 @@ function DataPortalContext (dao, properties, getValue, setValue) {
   Object.defineProperty(self, 'isSelfDirty', {
     get: function () {
       return isDirty;
+    },
+    enumerable: true
+  });
+
+  Object.defineProperty(self, 'fulfill', {
+    get: function () {
+      return fulfill;
+    },
+    set: function( value ) {
+      fulfill = value;
+    },
+    enumerable: true
+  });
+
+  Object.defineProperty(self, 'reject', {
+    get: function () {
+      return reject;
+    },
+    set: function( value ) {
+      reject = value;
     },
     enumerable: true
   });
