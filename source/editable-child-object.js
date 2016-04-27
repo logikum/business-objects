@@ -411,34 +411,23 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      *
      * @function EditableChildObject#fromCto
      * @param {object} cto - The client transfer object.
-     * @param {external.cbFromCto} callback - Returns the eventual error.
+     * @returns {promise<null>} Returns a promise to indicate the end of rebuild.
      */
-    this.fromCto = function (cto, callback) {
+    this.fromCto = function( cto ) {
       if (extensions.fromCto)
-        extensions.fromCto.call(self, getTransferContext(true), cto);
+        extensions.fromCto.call( self, getTransferContext( true ), cto );
       else
-        baseFromCto(cto);
+        baseFromCto( cto );
 
-      // Build children.
-      var count = properties.childCount();
-      var error = null;
-
-      function finish (err) {
-        if (err)
-          error = error || err;
-        if (--count == 0)
-          callback(error);
-      }
-      if (count)
-        properties.children().forEach(function (property) {
-          var child = getPropertyValue(property);
-          if (cto[property.name])
-            child.fromCto(cto[property.name], finish);
-          else
-            finish(null);
+      Promise.all( properties.children().map( property => {
+        var child = getPropertyValue( property );
+        return cto[ property.name ] ?
+          child.fromCto( cto[ property.name ]) :
+          Promise.resolve( null );
+      }))
+        .then( values => {
+          fulfill( null );
         });
-      else
-        callback(null);
     };
 
     /**
