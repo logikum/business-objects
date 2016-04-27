@@ -306,7 +306,7 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
           // Execute fetch.
           (extensions.dataFetch ?
               // *** Custom fetch.
-              extensions.dataFetch.call( self, getDataContext(), data, method ) :
+              extensions.$runMethod( 'fetch', self, getDataContext(), data, method ) :
               // *** Standard fetch.
               new Promise( (f, r) => {
                 fromDto.call(self, data);

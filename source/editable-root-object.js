@@ -644,9 +644,9 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Execute creation.
               return extensions.dataCreate ?
                 // *** Custom creation.
-                extensions.dataCreate.call( self, getDataContext(connection) ) :
+                extensions.$runMethod( 'create', self, getDataContext(connection) ) :
                 // *** Standard creation.
-                dao.$runMethod('create', connection)
+                dao.$runMethod( 'create', connection )
                   .then( dto => {
                     fromDto.call( self, dto );
                   })
@@ -714,7 +714,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Root element fetches all data from repository.
               return extensions.dataFetch ?
                 // *** Custom fetch.
-                extensions.dataFetch.call( self, getDataContext( connection ), filter, method ) :
+                extensions.$runMethod( 'fetch', self, getDataContext( connection ), filter, method ) :
                 // *** Standard fetch.
                 dao.$runMethod( method, connection, filter )
                   .then( dto => {
@@ -785,8 +785,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Execute insert.
               return extensions.dataInsert ?
                 // *** Custom insert.
-//                extensions.dataInsert.call( self, getDataContext( connection )) :
-                extensions.$runMethod( 'Insert', self, getDataContext( connection )) :
+                extensions.$runMethod( 'insert', self, getDataContext( connection )) :
                 // *** Standard insert.
                 dao.$runMethod( 'insert', connection, toDto.call( self ))
                   .then( dto => {
@@ -857,7 +856,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Execute update.
               return extensions.dataUpdate ?
                 // *** Custom update.
-                extensions.dataUpdate.call( self, getDataContext( connection )) :
+                extensions.$runMethod( 'update', self, getDataContext( connection )) :
                 // *** Standard update.
                 dao.$runMethod( 'update', connection, /* dto = */ toDto.call( self ))
                   .then( dto => {
@@ -934,9 +933,9 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Execute removal.
               return extensions.dataRemove ?
                 // Custom removal.
-                extensions.dataRemove.call( self, getDataContext( connection )) :
+                extensions.$runMethod( 'remove', self, getDataContext( connection )) :
                 // Standard removal.
-                dao.$runMethod('remove', connection, /* filter = */ properties.getKey( getPropertyValue ));
+                dao.$runMethod( 'remove', connection, /* filter = */ properties.getKey( getPropertyValue ));
             })
             .then( none => {
               markAsRemoved();

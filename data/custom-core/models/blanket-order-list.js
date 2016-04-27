@@ -14,10 +14,10 @@ var rules = new Rules(
 
 //region Transfer object methods
 
-function toCto (ctx) {
+function toCto( ctx ) {
   var list = [];
-  this.forEach(function (item) {
-    list.push(item.toCto());
+  this.forEach( item => {
+    list.push( item.toCto() );
   });
   return {
     list: list,
@@ -29,19 +29,19 @@ function toCto (ctx) {
 
 //region Data portal methods
 
-function dataFetch (ctx, filter, method, callback) {
-  function cb (dto) {
-    callback(null, dto);
+function dataFetch( ctx, filter, method ) {
+  function finish( dto ) {
+    ctx.fulfill( dto );
   }
   if (method === 'fetchByName') {
     // filter: vendorName
-    ctx.dao.fetchByName(ctx.connection, filter).then( cb );
+    ctx.dao.fetchByName( ctx.connection, filter ).then( finish );
   } else {
     // filter: primaryKey
-    ctx.dao.fetch(ctx.connection, filter).then( cb );
+    ctx.dao.fetch( ctx.connection, filter ).then( finish );
   }
   // or:
-  // ctx.dao[method](ctx.connection, filter).then( cb );
+  // ctx.dao[method]( ctx.connection, filter ).then( finish );
 }
 
 //endregion
@@ -59,11 +59,11 @@ var BlanketOrderList = bo.ReadOnlyRootCollection(
 );
 
 var BlanketOrderListFactory = {
-  getAll: function (eventHandlers) {
-    return BlanketOrderList.fetch(null, null, eventHandlers);
+  getAll: function( eventHandlers ) {
+    return BlanketOrderList.fetch( null, null, eventHandlers );
   },
-  getByName: function (name, eventHandlers) {
-    return BlanketOrderList.fetch(name, 'fetchByName', eventHandlers);
+  getByName: function( name, eventHandlers ) {
+    return BlanketOrderList.fetch( name, 'fetchByName', eventHandlers );
   }
 };
 

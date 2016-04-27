@@ -13,14 +13,14 @@ var cr = bo.commonRules;
 
 var BlanketOrderSchedules = require('./blanket-order-schedules.js');
 
-var orderItemKey = new Property('orderItemKey', dt.Integer, F.key | F.readOnly);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly);
-var productName = new Property('productName', dt.Text);
-var obsolete = new Property('obsolete', dt.Boolean);
-var expiry = new Property('expiry', dt.DateTime);
-var quantity = new Property('quantity', dt.Integer);
-var unitPrice = new Property('unitPrice', dt.Decimal);
-var schedules = new Property('schedules', BlanketOrderSchedules);
+var orderItemKey = new Property( 'orderItemKey', dt.Integer, F.key | F.readOnly );
+var orderKey = new Property( 'orderKey', dt.Integer, F.parentKey | F.readOnly );
+var productName = new Property( 'productName', dt.Text );
+var obsolete = new Property( 'obsolete', dt.Boolean );
+var expiry = new Property( 'expiry', dt.DateTime );
+var quantity = new Property( 'quantity', dt.Integer );
+var unitPrice = new Property( 'unitPrice', dt.Decimal );
+var schedules = new Property( 'schedules', BlanketOrderSchedules );
 
 var properties = new Properties(
     orderItemKey,
@@ -34,38 +34,38 @@ var properties = new Properties(
 );
 
 var rules = new Rules(
-    cr.required(productName),
-    cr.required(obsolete),
-    cr.required(expiry),
-    cr.required(quantity),
-    cr.required(unitPrice)
+    cr.required( productName ),
+    cr.required( obsolete ),
+    cr.required( expiry ),
+    cr.required( quantity ),
+    cr.required( unitPrice )
 );
 
 //region Transfer object methods
 
-function toDto (ctx) {
+function toDto( ctx ) {
   return {
-    orderItemKey: ctx.getValue('orderItemKey'),
-    orderKey:     ctx.getValue('orderKey'),
-    productName:  ctx.getValue('productName'),
-    obsolete:     ctx.getValue('obsolete'),
-    expiry:       ctx.getValue('expiry'),
-    quantity:     ctx.getValue('quantity'),
-    unitPrice:    ctx.getValue('unitPrice')
+    orderItemKey: ctx.getValue( 'orderItemKey' ),
+    orderKey:     ctx.getValue( 'orderKey' ),
+    productName:  ctx.getValue( 'productName' ),
+    obsolete:     ctx.getValue( 'obsolete' ),
+    expiry:       ctx.getValue( 'expiry' ),
+    quantity:     ctx.getValue( 'quantity' ),
+    unitPrice:    ctx.getValue( 'unitPrice' )
   };
 }
 
-function fromDto (ctx, dto) {
-  ctx.setValue('orderItemKey',  dto.orderItemKey);
-  ctx.setValue('orderKey',      dto.orderKey);
-  ctx.setValue('productName',   dto.productName);
-  ctx.setValue('obsolete',      dto.obsolete);
-  ctx.setValue('expiry',        dto.expiry);
-  ctx.setValue('quantity',      dto.quantity);
-  ctx.setValue('unitPrice',     dto.unitPrice);
+function fromDto( ctx, dto ) {
+  ctx.setValue( 'orderItemKey',  dto.orderItemKey );
+  ctx.setValue( 'orderKey',      dto.orderKey );
+  ctx.setValue( 'productName',   dto.productName );
+  ctx.setValue( 'obsolete',      dto.obsolete );
+  ctx.setValue( 'expiry',        dto.expiry );
+  ctx.setValue( 'quantity',      dto.quantity );
+  ctx.setValue( 'unitPrice',     dto.unitPrice );
 }
 
-function toCto (ctx) {
+function toCto( ctx ) {
   return {
     orderItemKey: this.orderItemKey,
     orderKey:     this.orderKey,
@@ -77,9 +77,9 @@ function toCto (ctx) {
    };
 }
 
-function fromCto (ctx, cto) {
-  //this.orderItemKey = cto.orderItemKey;
-  //this.orderKey =     cto.orderKey;
+function fromCto( ctx, cto ) {
+//this.orderItemKey = cto.orderItemKey;
+//this.orderKey =     cto.orderKey;
   this.productName =  cto.productName;
   this.obsolete =     cto.obsolete;
   this.expiry =       cto.expiry;
@@ -91,71 +91,69 @@ function fromCto (ctx, cto) {
 
 //region Data portal methods
 
-function dataCreate (ctx, callback) {
-  ctx.dao.create(ctx.connection).then( dto => {
-    ctx.setValue('productName', dto.productName);
-    ctx.setValue('obsolete',    dto.obsolete);
-    ctx.setValue('expiry',      dto.expiry);
-    ctx.setValue('quantity',    dto.quantity);
-    ctx.setValue('unitPrice',   dto.unitPrice);
-    callback(null);
+function dataCreate( ctx ) {
+  ctx.dao.create( ctx.connection ).then( dto => {
+    ctx.setValue( 'productName', dto.productName );
+    ctx.setValue( 'obsolete',    dto.obsolete );
+    ctx.setValue( 'expiry',      dto.expiry );
+    ctx.setValue( 'quantity',    dto.quantity );
+    ctx.setValue( 'unitPrice',   dto.unitPrice );
+    ctx.fulfill( null );
   });
 }
 
-function dataFetch (ctx, dto, method, callback) {
-  ctx.setValue('orderItemKey', dto.orderItemKey);
-  ctx.setValue('orderKey',     dto.orderKey);
-  ctx.setValue('productName',  dto.productName);
-  ctx.setValue('obsolete',     dto.obsolete);
-  ctx.setValue('expiry',       dto.expiry);
-  ctx.setValue('quantity',     dto.quantity);
-  ctx.setValue('unitPrice',    dto.unitPrice);
-  callback(null, dto);
+function dataFetch( ctx, dto, method ) {
+  ctx.setValue( 'orderItemKey', dto.orderItemKey );
+  ctx.setValue( 'orderKey',     dto.orderKey );
+  ctx.setValue( 'productName',  dto.productName );
+  ctx.setValue( 'obsolete',     dto.obsolete );
+  ctx.setValue( 'expiry',       dto.expiry );
+  ctx.setValue( 'quantity',     dto.quantity );
+  ctx.setValue( 'unitPrice',    dto.unitPrice );
+  ctx.fulfill( dto );
 }
 
-function dataInsert ( ctx, callback ) {
-  //return new Promise( (fulfill, reject) => {
-    var dto = {
-      orderKey:     ctx.getValue('orderKey'),
-      productName:  ctx.getValue('productName'),
-      obsolete:     ctx.getValue('obsolete'),
-      expiry:       ctx.getValue('expiry'),
-      quantity:     ctx.getValue('quantity'),
-      unitPrice:    ctx.getValue('unitPrice')
-    };
-    ctx.dao.insert(ctx.connection, dto).then( dto => {
-      ctx.setValue('orderItemKey', dto.orderItemKey);
-      ctx.fulfill( null );
-    });
-  //});
+function dataInsert( ctx ) {
+  var dto = {
+    orderKey:     ctx.getValue( 'orderKey' ),
+    productName:  ctx.getValue( 'productName' ),
+    obsolete:     ctx.getValue( 'obsolete' ),
+    expiry:       ctx.getValue( 'expiry' ),
+    quantity:     ctx.getValue( 'quantity' ),
+    unitPrice:    ctx.getValue( 'unitPrice' )
+  };
+  ctx.dao.insert( ctx.connection, dto ).then( dto => {
+    ctx.setValue( 'orderItemKey', dto.orderItemKey );
+    ctx.fulfill( null );
+  });
 }
 
-function dataUpdate (ctx, callback) {
+function dataUpdate( ctx ) {
   if (ctx.isSelfDirty) {
     var dto = {
-      orderItemKey: ctx.getValue('orderItemKey'),
-      productName:  ctx.getValue('productName'),
-      obsolete:     ctx.getValue('obsolete'),
-      expiry:       ctx.getValue('expiry'),
-      quantity:     ctx.getValue('quantity'),
-      unitPrice:    ctx.getValue('unitPrice')
+      orderItemKey: ctx.getValue( 'orderItemKey' ),
+      productName:  ctx.getValue( 'productName' ),
+      obsolete:     ctx.getValue( 'obsolete' ),
+      expiry:       ctx.getValue( 'expiry' ),
+      quantity:     ctx.getValue( 'quantity' ),
+      unitPrice:    ctx.getValue( 'unitPrice' )
     };
-    ctx.dao.update(ctx.connection, dto).then( dto => {
-      callback(null);
+    ctx.dao.update( ctx.connection, dto ).then( dto => {
+      ctx.fulfill( null );
     });
   }
 }
 
-function dataRemove (ctx, callback) {
-  var primaryKey = ctx.getValue('orderItemKey');
-  ctx.dao.remove(ctx.connection, primaryKey).then( dto => {
-    callback(null);
+function dataRemove( ctx ) {
+  var primaryKey = ctx.getValue( 'orderItemKey' );
+  ctx.dao.remove( ctx.connection, primaryKey ).then( dto => {
+    ctx.fulfill( null );
   });
 }
 
 //endregion
 
-var extensions = new Extensions('dal', __filename);
+var extensions = new Extensions( 'dal', __filename );
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
@@ -167,6 +165,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var BlanketOrderItem = bo.EditableChildObject('BlanketOrderItem', properties, rules, extensions);
+var BlanketOrderItem = bo.EditableChildObject( 'BlanketOrderItem', properties, rules, extensions );
 
 module.exports = BlanketOrderItem;

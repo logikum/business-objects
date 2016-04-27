@@ -1,10 +1,16 @@
-console.log( 'Testing index.js...' );
-
 var bo = require('../../source/index.js');
 
 describe('Business object index', function() {
 
+  function showTitle() {
+    console.log('');
+    console.log('--------------------------------------------------');
+    console.log('Testing index.js...' );
+    console.log('--------------------------------------------------');
+  }
+
   it('returns correct data types', function() {
+    showTitle();
 
     expect(bo.ModelComposer).toEqual(jasmine.any(Function));
 

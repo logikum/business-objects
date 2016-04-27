@@ -1,7 +1,3 @@
-console.log( '--------------------------------------------------' );
-console.log( 'Testing data portal methods of custom models...' );
-console.log( '--------------------------------------------------' );
-
 //region Imports
 
 var BlanketOrder = require('../../data/custom-core/models/blanket-order.js');
@@ -14,6 +10,13 @@ var EventHandlerList = require('../../source/shared/event-handler-list.js');
 //endregion
 
 describe('Data portal method', () => {
+
+  function showTitle() {
+    console.log('');
+    console.log('--------------------------------------------------');
+    console.log('Testing data portal methods of custom models...');
+    console.log('--------------------------------------------------');
+  }
 
   //region Data
 
@@ -99,6 +102,7 @@ describe('Data portal method', () => {
   //endregion
 
   it( 'CREATE of custom editable model', done => {
+    showTitle();
     console.log( '\n*** Method CREATE' );
 
     BlanketOrder.create( ehBlanketOrder )

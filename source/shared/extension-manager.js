@@ -5,6 +5,7 @@ var CLASS_NAME = 'ExtensionManager';
 var config = require('./configuration-reader.js');
 var Argument = require('../system/argument-check.js');
 var ModelError = require('./model-error.js');
+var DataPortalContext = require('../shared/data-portal-context.js');
 
 /**
  * @classdesc
@@ -37,6 +38,8 @@ function ExtensionManager( dataSource, modelPath ) {
    */
   this.modelPath = check(modelPath).forMandatory('modelPath').asString();
 
+  //region Properties for the custom methods
+
   var self = this;
   var methods = {};
   var definitions = [
@@ -45,12 +48,12 @@ function ExtensionManager( dataSource, modelPath ) {
     { name: 'fromDto',     length: 2 },
     { name: 'toCto',       length: 1 },
     { name: 'fromCto',     length: 2 },
-    { name: 'dataCreate',  length: 2 },
-    { name: 'dataFetch',   length: 4 },
-    { name: 'dataInsert',  length: 2 },
-    { name: 'dataUpdate',  length: 2 },
-    { name: 'dataRemove',  length: 2 },
-    { name: 'dataExecute', length: 3 }
+    { name: 'dataCreate',  length: 1 },
+    { name: 'dataFetch',   length: 3 },
+    { name: 'dataInsert',  length: 1 },
+    { name: 'dataUpdate',  length: 1 },
+    { name: 'dataRemove',  length: 1 },
+    { name: 'dataExecute', length: 2 }
   ];
 
   /**
@@ -143,6 +146,8 @@ function ExtensionManager( dataSource, modelPath ) {
     });
   });
 
+  //endregion
+
   //region Command object extensions
 
   var otherMethods = [];
@@ -197,28 +202,36 @@ function ExtensionManager( dataSource, modelPath ) {
         config.daoBuilder(dataSource, modelPath, modelName);
   };
 
-  this.$runMethod = function (methodName) {
-    var check = Argument.inMethod(CLASS_NAME, '$runMethod');
+  /**
+   * Executes a custom data portal method.
+   *
+   * @param {string} methodName - The short name of the data portal method to execute.
+   * @param {object} thisArg - The business object that executes the data portal method.
+   *      E.g. 'update' for 'dataUpdate'.
+   * @param {bo.shared.DataPortalContext} dpContext - Tha data portal context
+   *      of the custom data portal method.
+   * @param {...*} [dpParams] - More optional parameters of the data portal method.
+   * @returns {Promise<object>} A promise to the result of the custom data portal method.
+   */
+  this.$runMethod = function( methodName, thisArg, dpContext, dpParams) {
+    var check = Argument.inMethod( CLASS_NAME, '$runMethod' );
 
-    methodName = 'data' + check(methodName).forMandatory('methodName').asString();
-    if (!this[methodName] || typeof this[methodName] !== 'function')
-      throw new ModelError('noMethod', this.name, methodName);
+    methodName = check( methodName ).forMandatory( 'methodName' ).asString();
+    thisArg = check( thisArg ).forMandatory( 'thisArg' ).asObject();
+    dpContext = check( dpContext ).forMandatory( 'dpContext' ).asType( DataPortalContext );
 
-    var args = Array.prototype.slice.call(arguments);
-    if (args.length < 3)
-      throw new ModelError('missingArgs', this.name, methodName);
-    // Remove method name from arguments.
-    args.shift();
-    // Remove method context from arguments.
-    var thisArg = args.shift();
-    // First argument must be a DataPortalContext object.
-    var ctx = args[0];
+    methodName = 'data' + methodName[0].toUpperCase() + methodName.substr(1);
+    if ( methods[ methodName ]) {
 
-    return new Promise( (fulfill, reject) => {
-      ctx.fulfill = fulfill;
-      ctx.reject = reject;
-      this[methodName].apply(thisArg, args);
-    });
+      // Remove method name and execution context from arguments.
+      var args = Array.prototype.slice.call( arguments ).slice( 2 );
+
+      // Execute the custom data portal method.
+      return new Promise( (fulfill, reject) => {
+        dpContext.setPromise( fulfill, reject );
+        methods[ methodName ].apply( thisArg, args );
+      });
+    }
   };
 
   // Immutable object.

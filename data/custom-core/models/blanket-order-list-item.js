@@ -10,8 +10,8 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-function getOrderCode (ctx) {
-  return ctx.getValue('orderKey').toString(2);
+function getOrderCode( ctx ) {
+  return ctx.getValue( 'orderKey' ).toString(2);
 }
 
 var orderKey = new Property('orderKey', dt.Integer, F.key | F.onDtoOnly);
@@ -41,18 +41,18 @@ var rules = new Rules(
 
 //region Transfer object methods
 
-function fromDto (ctx, dto) {
-  ctx.setValue('orderKey',     dto.orderKey);
-  ctx.setValue('vendorName',   dto.vendorName);
-  ctx.setValue('contractDate', dto.contractDate);
-  ctx.setValue('totalPrice',   dto.totalPrice);
-  ctx.setValue('schedules',    dto.schedules);
-  ctx.setValue('enabled',      dto.enabled);
-  ctx.setValue('createdDate',  dto.createdDate);
-  ctx.setValue('modifiedDate', dto.modifiedDate);
+function fromDto( ctx, dto ) {
+  ctx.setValue( 'orderKey',     dto.orderKey );
+  ctx.setValue( 'vendorName',   dto.vendorName );
+  ctx.setValue( 'contractDate', dto.contractDate );
+  ctx.setValue( 'totalPrice',   dto.totalPrice );
+  ctx.setValue( 'schedules',    dto.schedules );
+  ctx.setValue( 'enabled',      dto.enabled );
+  ctx.setValue( 'createdDate',  dto.createdDate );
+  ctx.setValue( 'modifiedDate', dto.modifiedDate );
 }
 
-function toCto (ctx) {
+function toCto( ctx ) {
   return {
     orderCode:    this.orderCode,
     vendorName:   this.vendorName,
@@ -69,25 +69,25 @@ function toCto (ctx) {
 
 //region Data portal methods
 
-function dataFetch (ctx, dto, method, callback) {
-  ctx.setValue('orderKey',     dto.orderKey);
-  ctx.setValue('vendorName',   dto.vendorName);
-  ctx.setValue('contractDate', dto.contractDate);
-  ctx.setValue('totalPrice',   dto.totalPrice);
-  ctx.setValue('schedules',    dto.schedules);
-  ctx.setValue('enabled',      dto.enabled);
-  ctx.setValue('createdDate',  dto.createdDate);
-  ctx.setValue('modifiedDate', dto.modifiedDate);
-  callback(null, dto);
+function dataFetch( ctx, dto, method ) {
+  ctx.setValue( 'orderKey',     dto.orderKey );
+  ctx.setValue( 'vendorName',   dto.vendorName );
+  ctx.setValue( 'contractDate', dto.contractDate );
+  ctx.setValue( 'totalPrice',   dto.totalPrice );
+  ctx.setValue( 'schedules',    dto.schedules );
+  ctx.setValue( 'enabled',      dto.enabled );
+  ctx.setValue( 'createdDate',  dto.createdDate );
+  ctx.setValue( 'modifiedDate', dto.modifiedDate );
+  ctx.fulfill( dto );
 }
 
 //endregion
 
-var extensions = new Extensions('dal', __filename);
+var extensions = new Extensions( 'dal', __filename );
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-var BlanketOrderListItem = bo.ReadOnlyChildObject('BlanketOrderListItem', properties, rules, extensions);
+var BlanketOrderListItem = bo.ReadOnlyChildObject( 'BlanketOrderListItem', properties, rules, extensions );
 
 module.exports = BlanketOrderListItem;

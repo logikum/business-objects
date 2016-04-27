@@ -10,14 +10,14 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var addressKey = new Property('addressKey', dt.Integer, F.key);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey);
-var country = new Property('country', dt.Text);
-var state = new Property('state', dt.Text);
-var city = new Property('city', dt.Text);
-var line1 = new Property('line1', dt.Text);
-var line2 = new Property('line2', dt.Text);
-var postalCode = new Property('postalCode', dt.Text);
+var addressKey = new Property( 'addressKey', dt.Integer, F.key );
+var orderKey = new Property( 'orderKey', dt.Integer, F.parentKey );
+var country = new Property( 'country', dt.Text );
+var state = new Property( 'state', dt.Text );
+var city = new Property( 'city', dt.Text );
+var line1 = new Property( 'line1', dt.Text );
+var line2 = new Property( 'line2', dt.Text );
+var postalCode = new Property( 'postalCode', dt.Text );
 
 var properties = new Properties(
     addressKey,
@@ -35,26 +35,26 @@ var rules = new Rules(
 
 //region Transfer object methods
 
-function fromDto (ctx, dto) {
-  ctx.setValue('addressKey',  dto.addressKey);
-  ctx.setValue('orderKey',    dto.orderKey);
-  ctx.setValue('country',     dto.country);
-  ctx.setValue('state',       dto.state);
-  ctx.setValue('city',        dto.city);
-  ctx.setValue('line1',       dto.line1);
-  ctx.setValue('line2',       dto.line2);
-  ctx.setValue('postalCode',  dto.postalCode);
+function fromDto( ctx, dto ) {
+  ctx.setValue( 'addressKey',  dto.addressKey );
+  ctx.setValue( 'orderKey',    dto.orderKey );
+  ctx.setValue( 'country',     dto.country );
+  ctx.setValue( 'state',       dto.state );
+  ctx.setValue( 'city',        dto.city );
+  ctx.setValue( 'line1',       dto.line1 );
+  ctx.setValue( 'line2',       dto.line2 );
+  ctx.setValue( 'postalCode',  dto.postalCode );
 }
 
-function toCto (ctx) {
+function toCto( ctx ) {
   return {
-    addressKey:     this.addressKey,
+    addressKey: this.addressKey,
     orderKey:   this.orderKey,
-    country: this.country,
-    state:   this.state,
-    city:    this.city,
+    country:    this.country,
+    state:      this.state,
+    city:       this.city,
     line1:      this.line1,
-    line2:  this.line2,
+    line2:      this.line2,
     postalCode: this.postalCode
   };
 }
@@ -63,25 +63,25 @@ function toCto (ctx) {
 
 //region Data portal methods
 
-function dataFetch (ctx, dto, method, callback) {
-  ctx.setValue('addressKey', dto.addressKey);
-  ctx.setValue('orderKey',   dto.orderKey);
-  ctx.setValue('country',    dto.country);
-  ctx.setValue('state',      dto.state);
-  ctx.setValue('city',       dto.city);
-  ctx.setValue('line1',      dto.line1);
-  ctx.setValue('line2',      dto.line2);
-  ctx.setValue('postalCode', dto.postalCode);
-  callback(null, dto);
+function dataFetch( ctx, dto, method ) {
+  ctx.setValue( 'addressKey', dto.addressKey );
+  ctx.setValue( 'orderKey',   dto.orderKey );
+  ctx.setValue( 'country',    dto.country );
+  ctx.setValue( 'state',      dto.state );
+  ctx.setValue( 'city',       dto.city );
+  ctx.setValue( 'line1',      dto.line1 );
+  ctx.setValue( 'line2',      dto.line2 );
+  ctx.setValue( 'postalCode', dto.postalCode );
+  ctx.fulfill( dto );
 }
 
 //endregion
 
-var extensions = new Extensions('dal', __filename);
+var extensions = new Extensions( 'dal', __filename );
 extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-var AddressView = bo.ReadOnlyChildObject('AddressView', properties, rules, extensions);
+var AddressView = bo.ReadOnlyChildObject( 'AddressView', properties, rules, extensions );
 
 module.exports = AddressView;

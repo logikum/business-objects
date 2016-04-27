@@ -272,7 +272,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
               // Root element fetches all data from repository.
               return extensions.dataFetch ?
                 // *** Custom fetch.
-                extensions.dataFetch.call( self, getDataContext( connection ), filter, method ) :
+                extensions.$runMethod( 'fetch', self, getDataContext( connection ), filter, method ) :
                 // *** Standard fetch.
                 dao.$runMethod( method, connection, filter );
             })

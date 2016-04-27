@@ -14,11 +14,11 @@ var cr = bo.commonRules;
 
 var RescheduleShippingResult = require('./reschedule-shipping-result.js');
 
-var orderKey = new Property('orderKey', dt.Integer);
-var orderItemKey = new Property('orderItemKey', dt.Integer);
-var orderScheduleKey = new Property('orderScheduleKey', dt.Integer);
-var success = new Property('success', dt.Boolean);
-var result = new Property('result', RescheduleShippingResult);
+var orderKey = new Property( 'orderKey', dt.Integer );
+var orderItemKey = new Property( 'orderItemKey', dt.Integer );
+var orderScheduleKey = new Property( 'orderScheduleKey', dt.Integer );
+var success = new Property( 'success', dt.Boolean );
+var result = new Property( 'result', RescheduleShippingResult );
 
 var properties = new Properties(
     orderKey,
@@ -29,39 +29,39 @@ var properties = new Properties(
 );
 
 var rules = new Rules(
-    cr.required(orderKey),
-    cr.required(orderItemKey),
-    cr.required(orderScheduleKey),
-    cr.isInRole(Action.executeMethod, 'reschedule', 'developers', 'You are not authorized to execute the command.')
+    cr.required( orderKey ),
+    cr.required( orderItemKey ),
+    cr.required( orderScheduleKey ),
+    cr.isInRole( Action.executeMethod, 'reschedule', 'developers', 'You are not authorized to execute the command.' )
 );
 
 //region Data portal methods
 
-function dataExecute (ctx, method, callback) {
-  function cb (dto) {
-    ctx.setValue('success', dto.success);
-    callback(null, dto);
+function dataExecute( ctx, method ) {
+  function finish( dto ) {
+    ctx.setValue( 'success', dto.success );
+    ctx.fulfill( dto );
   }
   var dto = {
-    orderKey:         ctx.getValue('orderKey'),
-    orderItemKey:     ctx.getValue('orderItemKey'),
-    orderScheduleKey: ctx.getValue('orderScheduleKey')
+    orderKey:         ctx.getValue( 'orderKey' ),
+    orderItemKey:     ctx.getValue( 'orderItemKey' ),
+    orderScheduleKey: ctx.getValue( 'orderScheduleKey' )
   };
   if (method === 'reschedule')
-    ctx.dao.reschedule(ctx.connection, dto).then( cb );
+    ctx.dao.reschedule( ctx.connection, dto ).then( finish );
   else
-    dto = ctx.dao.execute(ctx.connection, dto).then( cb );
+    dto = ctx.dao.execute( ctx.connection, dto ).then( finish );
   // or:
-  // ctx.dao[method](ctx.connection, dto).then( cb );
+  // ctx.dao[method]( ctx.connection, dto ).then( finish );
 }
 
 //endregion
 
-var extensions = new Extensions('dal', __filename);
+var extensions = new Extensions( 'dal', __filename );
 extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
-extensions.addOtherMethod('reschedule');
+extensions.addOtherMethod( 'reschedule' );
 
-var RescheduleShippingCommand = bo.CommandObject('ClearScheduleCommand', properties, rules, extensions);
+var RescheduleShippingCommand = bo.CommandObject( 'ClearScheduleCommand', properties, rules, extensions );
 
 module.exports = RescheduleShippingCommand;

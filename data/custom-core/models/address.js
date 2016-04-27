@@ -11,14 +11,14 @@ var F = bo.shared.PropertyFlag;
 var dt = bo.dataTypes;
 var cr = bo.commonRules;
 
-var addressKey = new Property('addressKey', dt.Integer, F.key | F.readOnly);
-var orderKey = new Property('orderKey', dt.Integer, F.parentKey | F.readOnly);
-var country = new Property('country', dt.Text);
-var state = new Property('state', dt.Text);
-var city = new Property('city', dt.Text);
-var line1 = new Property('line1', dt.Text);
-var line2 = new Property('line2', dt.Text);
-var postalCode = new Property('postalCode', dt.Text);
+var addressKey = new Property( 'addressKey', dt.Integer, F.key | F.readOnly );
+var orderKey = new Property( 'orderKey', dt.Integer, F.parentKey | F.readOnly );
+var country = new Property( 'country', dt.Text );
+var state = new Property( 'state', dt.Text );
+var city = new Property( 'city', dt.Text );
+var line1 = new Property( 'line1', dt.Text );
+var line2 = new Property( 'line2', dt.Text );
+var postalCode = new Property( 'postalCode', dt.Text );
 
 var properties = new Properties(
     addressKey,
@@ -32,135 +32,133 @@ var properties = new Properties(
 );
 
 var rules = new Rules(
-    cr.required(country),
-    cr.required(city),
-    cr.required(line1),
-    cr.required(postalCode)
+    cr.required( country ),
+    cr.required( city ),
+    cr.required( line1 ),
+    cr.required( postalCode )
 );
 
 //region Transfer object methods
 
-function toDto (ctx) {
-    return {
-        addressKey: ctx.getValue('addressKey'),
-        orderKey:   ctx.getValue('orderKey'),
-        country:    ctx.getValue('country'),
-        state:      ctx.getValue('state'),
-        city:       ctx.getValue('city'),
-        line1:      ctx.getValue('line1'),
-        line2:      ctx.getValue('line2'),
-        postalCode: ctx.getValue('postalCode')
-    };
+function toDto( ctx ) {
+  return {
+    addressKey: ctx.getValue( 'addressKey' ),
+    orderKey:   ctx.getValue( 'orderKey' ),
+    country:    ctx.getValue( 'country' ),
+    state:      ctx.getValue( 'state' ),
+    city:       ctx.getValue( 'city' ),
+    line1:      ctx.getValue( 'line1' ),
+    line2:      ctx.getValue( 'line2' ),
+    postalCode: ctx.getValue( 'postalCode' )
+  };
 }
 
-function fromDto (ctx, dto) {
-    ctx.setValue('addressKey',  dto.addressKey);
-    ctx.setValue('orderKey',    dto.orderKey);
-    ctx.setValue('country',     dto.country);
-    ctx.setValue('state',       dto.state);
-    ctx.setValue('city',        dto.city);
-    ctx.setValue('line1',       dto.line1);
-    ctx.setValue('line2',       dto.line2);
-    ctx.setValue('postalCode',  dto.postalCode);
+function fromDto( ctx, dto ) {
+  ctx.setValue( 'addressKey',  dto.addressKey );
+  ctx.setValue( 'orderKey',    dto.orderKey );
+  ctx.setValue( 'country',     dto.country );
+  ctx.setValue( 'state',       dto.state );
+  ctx.setValue( 'city',        dto.city );
+  ctx.setValue( 'line1',       dto.line1 );
+  ctx.setValue( 'line2',       dto.line2 );
+  ctx.setValue( 'postalCode',  dto.postalCode );
 }
 
-function toCto (ctx) {
-    return {
-        addressKey:     this.addressKey,
-        orderKey:   this.orderKey,
-        country: this.country,
-        state:   this.state,
-        city:    this.city,
-        line1:      this.line1,
-        line2:  this.line2,
-        postalCode: this.postalCode
-    };
+function toCto( ctx ) {
+  return {
+    addressKey: this.addressKey,
+    orderKey:   this.orderKey,
+    country:    this.country,
+    state:      this.state,
+    city:       this.city,
+    line1:      this.line1,
+    line2:      this.line2,
+    postalCode: this.postalCode
+  };
 }
 
-function fromCto (ctx, dto) {
-    //this.addressKey = dto.addressKey;
-    //this.orderKey =   dto.orderKey;
-    this.country =    dto.country;
-    this.state =      dto.state;
-    this.city =       dto.city;
-    this.line1 =      dto.line1;
-    this.line2 =      dto.line2;
-    this.postalCode = dto.postalCode;
+function fromCto( ctx, dto ) {
+//this.addressKey = dto.addressKey;
+//this.orderKey =   dto.orderKey;
+  this.country =    dto.country;
+  this.state =      dto.state;
+  this.city =       dto.city;
+  this.line1 =      dto.line1;
+  this.line2 =      dto.line2;
+  this.postalCode = dto.postalCode;
 }
 
 //endregion
 
 //region Data portal methods
 
-function dataCreate (ctx, callback) {
-  ctx.dao.create(ctx.connection).then( dto => {
-    ctx.setValue('country',    dto.country);
-    ctx.setValue('state',      dto.state);
-    ctx.setValue('city',       dto.city);
-    ctx.setValue('line1',      dto.line1);
-    ctx.setValue('line2',      dto.line2);
-    ctx.setValue('postalCode', dto.postalCode);
-    callback(null);
+function dataCreate( ctx ) {
+  ctx.dao.create( ctx.connection ).then( dto => {
+    ctx.setValue( 'country',    dto.country );
+    ctx.setValue( 'state',      dto.state );
+    ctx.setValue( 'city',       dto.city );
+    ctx.setValue( 'line1',      dto.line1 );
+    ctx.setValue( 'line2',      dto.line2 );
+    ctx.setValue( 'postalCode', dto.postalCode );
+    ctx.fulfill( null );
   });
 }
 
-function dataFetch (ctx, dto, method, callback) {
-  ctx.setValue('addressKey', dto.addressKey);
-  ctx.setValue('orderKey',   dto.orderKey);
-  ctx.setValue('country',    dto.country);
-  ctx.setValue('state',      dto.state);
-  ctx.setValue('city',       dto.city);
-  ctx.setValue('line1',      dto.line1);
-  ctx.setValue('line2',      dto.line2);
-  ctx.setValue('postalCode', dto.postalCode);
-  callback(null, dto);
+function dataFetch( ctx, dto, method ) {
+  ctx.setValue( 'addressKey', dto.addressKey );
+  ctx.setValue( 'orderKey',   dto.orderKey );
+  ctx.setValue( 'country',    dto.country );
+  ctx.setValue( 'state',      dto.state );
+  ctx.setValue( 'city',       dto.city );
+  ctx.setValue( 'line1',      dto.line1 );
+  ctx.setValue( 'line2',      dto.line2 );
+  ctx.setValue( 'postalCode', dto.postalCode );
+  ctx.fulfill( dto );
 }
 
-function dataInsert ( ctx, callback ) {
-  //return new Promise( (fulfill, reject) => {
-    var dto = {
-      orderKey:   ctx.getValue('orderKey'),
-      country:    ctx.getValue('country'),
-      state:      ctx.getValue('state'),
-      city:       ctx.getValue('city'),
-      line1:      ctx.getValue('line1'),
-      line2:      ctx.getValue('line2'),
-      postalCode: ctx.getValue('postalCode')
-    };
-    ctx.dao.insert(ctx.connection, dto).then( dto => {
-      ctx.setValue('addressKey', dto.addressKey);
-      ctx.fulfill( null );
-    });
-  //});
+function dataInsert( ctx ) {
+  var dto = {
+    orderKey:   ctx.getValue( 'orderKey' ),
+    country:    ctx.getValue( 'country' ),
+    state:      ctx.getValue( 'state' ),
+    city:       ctx.getValue( 'city' ),
+    line1:      ctx.getValue( 'line1' ),
+    line2:      ctx.getValue( 'line2' ),
+    postalCode: ctx.getValue( 'postalCode' )
+  };
+  ctx.dao.insert( ctx.connection, dto ).then( dto => {
+    ctx.setValue( 'addressKey', dto.addressKey );
+    ctx.fulfill( null );
+  });
 }
 
-function dataUpdate (ctx, callback) {
+function dataUpdate( ctx ) {
   if (ctx.isSelfDirty) {
     var dto = {
-      addressKey: ctx.getValue('addressKey'),
-      country:    ctx.getValue('country'),
-      state:      ctx.getValue('state'),
-      city:       ctx.getValue('city'),
-      line1:      ctx.getValue('line1'),
-      line2:      ctx.getValue('line2'),
-      postalCode: ctx.getValue('postalCode')
+      addressKey: ctx.getValue( 'addressKey' ),
+      country:    ctx.getValue( 'country' ),
+      state:      ctx.getValue( 'state' ),
+      city:       ctx.getValue( 'city' ),
+      line1:      ctx.getValue( 'line1' ),
+      line2:      ctx.getValue( 'line2' ),
+      postalCode: ctx.getValue( 'postalCode' )
     };
-    ctx.dao.update(ctx.connection, dto).then( dto => {
-      callback(null);
+    ctx.dao.update( ctx.connection, dto ).then( dto => {
+      ctx.fulfill( null );
     });
   }
 }
 
-function dataRemove (ctx, callback) {
-  var primaryKey = ctx.getValue('addressKey');
-  ctx.dao.remove(ctx.connection, primaryKey).then( dto => {
-    callback(null);
+function dataRemove( ctx ) {
+  var primaryKey = ctx.getValue( 'addressKey' );
+  ctx.dao.remove( ctx.connection, primaryKey ).then( dto => {
+    ctx.fulfill( null );
   });
 }
 
 //endregion
 
-var extensions = new Extensions('dal', __filename);
+var extensions = new Extensions( 'dal', __filename );
 extensions.daoBuilder = daoBuilder;
 extensions.toDto = toDto;
 extensions.fromDto = fromDto;
@@ -172,6 +170,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-var Address = bo.EditableChildObject('Address', properties, rules, extensions);
+var Address = bo.EditableChildObject( 'Address', properties, rules, extensions );
 
 module.exports = Address;

@@ -631,7 +631,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
               // Execute creation.
               return extensions.dataCreate ?
                 // *** Custom creation.
-                extensions.dataCreate.call( self, getDataContext(connection) ) :
+                extensions.$runMethod( 'create', self, getDataContext(connection) ) :
                 // *** Standard creation.
                 dao.$runMethod('create', connection)
                   .then( dto => {
@@ -758,7 +758,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
           // Execute fetch.
           (extensions.dataFetch ?
               // *** Custom fetch.
-              extensions.dataFetch.call( self, getDataContext( null ), data, method ) :
+              extensions.$runMethod( 'fetch', self, getDataContext( null ), data, method ) :
               // *** Standard fetch.
               new Promise( (f, r) => {
                 fromDto.call( self, data );
@@ -822,7 +822,6 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
           // Execute insert.
           (extensions.dataInsert ?
               // *** Custom insert.
-              //extensions.dataInsert.call( self, getDataContext( connection )) :
               extensions.$runMethod( 'Insert', self, getDataContext( connection )) :
               // *** Standard insert.
               dao.$runMethod( 'insert', connection, toDto.call( self ))
@@ -877,7 +876,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
           // Execute update.
           (extensions.dataUpdate ?
               // *** Custom update.
-              extensions.dataUpdate.call( self, getDataContext( connection )) :
+              extensions.$runMethod( 'update', self, getDataContext( connection )) :
               // *** Standard update.
               (isDirty ?
                 dao.$runMethod( 'update', connection, /* dto = */ toDto.call( self ))
@@ -936,7 +935,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
               // Execute delete.
               return extensions.dataRemove ?
                 // *** Custom removal.
-                extensions.dataRemove.call( self, getDataContext (connection )) :
+                extensions.$runMethod( 'remove', self, getDataContext (connection )) :
                 // *** Standard removal.
                 dao.$runMethod( 'remove', connection, /* filter = */ properties.getKey( getPropertyValue ));
             })

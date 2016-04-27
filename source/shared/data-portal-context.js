@@ -32,18 +32,26 @@ var UserInfo = require('../system/user-info.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
  */
 function DataPortalContext (dao, properties, getValue, setValue) {
+
+  //region Variables
+
   var self = this;
   var isDirty = false;
   var daConnection = null;
-  var fulfill = null;
-  var reject = null;
+  var fnFulfill = null;
+  var fnReject = null;
   var check = Argument.inConstructor(CLASS_NAME);
+
+  //endregion
+
+  //region Properties
 
   /**
    * The data access object of the current model.
    * @type {object}
    * @readonly
    */
+
   this.dao = check(dao || {}).forMandatory('dao').asObject();
   /**
    * Array of property definitions that may appear on the data transfer object.
@@ -61,6 +69,7 @@ function DataPortalContext (dao, properties, getValue, setValue) {
    * @readonly
    */
   this.user = config.getUser();
+
   /**
    * The current locale.
    * @type {string}
@@ -94,25 +103,37 @@ function DataPortalContext (dao, properties, getValue, setValue) {
     enumerable: true
   });
 
+  /**
+   * The fulfilling function of the promise when extension manager
+   * calls a custom data portal method.
+   * @name bo.shared.DataPortalContext#fulfill
+   * @type {function}
+   * @readonly
+   */
   Object.defineProperty(self, 'fulfill', {
     get: function () {
-      return fulfill;
-    },
-    set: function( value ) {
-      fulfill = value;
+      return fnFulfill;
     },
     enumerable: true
   });
 
+  /**
+   * The rejecting function of the promise when extension manager
+   * calls a custom data portal method.
+   * @name bo.shared.DataPortalContext#reject
+   * @type {function}
+   * @readonly
+   */
   Object.defineProperty(self, 'reject', {
     get: function () {
-      return reject;
-    },
-    set: function( value ) {
-      reject = value;
+      return fnReject;
     },
     enumerable: true
   });
+
+  //endregion
+
+  //region Methods
 
   /**
    * Sets the current state of the model.
@@ -125,6 +146,18 @@ function DataPortalContext (dao, properties, getValue, setValue) {
     daConnection = connection || null;
     isDirty = isSelfDirty === true;
     return this;
+  };
+
+  /**
+   * Sets the state setting functions of the promise when
+   * extension manager calls a custom data portal method.
+   *
+   * @param {function} fulfill - The fulfill argument of the promise factory.
+   * @param {function} reject - The reject argument of the promise factory.
+   */
+  this.setPromise = function( fulfill, reject ) {
+    fnFulfill = typeof fulfill === 'function' ? fulfill : null;
+    fnReject = typeof reject === 'function' ? reject : null;
   };
 
   function getByName (name) {
@@ -174,6 +207,8 @@ function DataPortalContext (dao, properties, getValue, setValue) {
     } else
       throw new ModelError('writeCollection', properties.name, propertyName);
   };
+
+  //endregion
 
   // Immutable object.
   Object.freeze(this);
