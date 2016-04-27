@@ -50,7 +50,7 @@ function dataExecute( ctx, method ) {
   if (method === 'reschedule')
     ctx.dao.reschedule( ctx.connection, dto ).then( finish );
   else
-    dto = ctx.dao.execute( ctx.connection, dto ).then( finish );
+    ctx.dao.execute( ctx.connection, dto ).then( finish );
   // or:
   // ctx.dao[method]( ctx.connection, dto ).then( finish );
 }
@@ -62,6 +62,6 @@ extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
 extensions.addOtherMethod( 'reschedule' );
 
-var RescheduleShippingCommand = bo.CommandObject( 'ClearScheduleCommand', properties, rules, extensions );
+var RescheduleShippingCommand = bo.CommandObject( 'RescheduleShippingCommand', properties, rules, extensions );
 
 module.exports = RescheduleShippingCommand;

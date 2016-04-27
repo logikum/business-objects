@@ -1,4 +1,3 @@
-console.log( 'Testing data portal methods of asynchronous commands...' );
 
 //region Imports
 
@@ -12,6 +11,13 @@ var EventHandlerList = require('../../source/shared/event-handler-list.js');
 //endregion
 
 describe('Asynchronous data portal method', () => {
+
+  function showTitle() {
+    console.log('');
+    console.log('--------------------------------------------------');
+    console.log('Testing data portal methods of commands...' );
+    console.log('--------------------------------------------------');
+  }
 
   //region Event handlers
 
@@ -32,17 +38,18 @@ describe('Asynchronous data portal method', () => {
 
   //endregion
 
-  it( 'execute of sample command', done => {
-    console.log( '\n*** Asynchronous EXECUTE' );
+  it( 'EXECUTE of simple command', done => {
+    showTitle();
+    console.log( '\n*** Method EXECUTE' );
 
-    var cmd = ClearScheduleCommand.create(ehClearScheduleCommand);
+    var cmd = ClearScheduleCommand.create( ehClearScheduleCommand );
 
-    cmd.on('preExecute', function (eventArgs) {
-      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
-    });
-    cmd.on('postExecute', function (eventArgs) {
-      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
-    });
+    //cmd.on('preExecute', eventArgs => {
+    //  console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
+    //});
+    //cmd.on('postExecute', eventArgs => {
+    //  console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
+    //});
 
     cmd.orderKey = 1;
     cmd.orderItemKey = 2;
@@ -57,10 +64,10 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'execute of custom command', done => {
-    console.log( '\n*** Asynchronous RESCHEDULE' );
+  it( 'RESCHEDULE of custom command', done => {
+    console.log( '\n*** Method RESCHEDULE' );
 
-    var cmd = RescheduleShippingCommand.create(ehRescheduleShippingCommand);
+    var cmd = RescheduleShippingCommand.create( ehRescheduleShippingCommand );
 
     cmd.orderKey = 1;
     cmd.orderItemKey = 2;
