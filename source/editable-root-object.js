@@ -402,15 +402,17 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *
      * @function EditableRootObject#fromCto
      * @param {object} cto - The client transfer object.
-     * @returns {promise<null>} Returns a promise to indicate the end of rebuild.
+     * @returns {Promise<EditableRootObject>} Returns a promise to the business object rebuilt.
      */
     this.fromCto = function( cto ) {
       return new Promise( (fulfill, reject) => {
-        if (extensions.fromCto)
-          extensions.fromCto.call( self, getTransferContext( true ), cto );
-        else
+
+        // Set self properties.
+        extensions.fromCto ?
+          extensions.fromCto.call( self, getTransferContext( true ), cto ) :
           baseFromCto( cto );
 
+        // Build children.
         Promise.all( properties.children().map( property => {
           var child = getPropertyValue( property );
           return cto[ property.name ] ?
@@ -418,7 +420,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
             Promise.resolve( null );
         }))
           .then( values => {
-            fulfill( null );
+            // Finished.
+            fulfill( self );
           });
       });
     };

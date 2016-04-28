@@ -131,83 +131,61 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildCollection#fromCto
-     * @param {Array.<object>} data - The array of client transfer objects.
-     * @param {external.cbFromCto} callback - Returns the eventual error.
+     * @param {Array.<object>} cto - The array of client transfer objects.
+     * @returns {Promise<EditableChildCollection>} Returns a promise to
+     *      the child collection rebuilt.
      */
-    this.fromCto = function (data, callback) {
-      if (!(data instanceof Array))
-        callback(null);
+    this.fromCto = function( cto ) {
+      return new Promise( (fulfill, reject) => {
+        if (cto instanceof Array) {
+          var ctoNew = cto.filter( d => { return true; }); // Deep copy.
+          var itemsLive = [];
+          var itemsLate = [];
+          var index;
 
-      var dataNew = data.filter(function () { return true; });
-      var itemsLive = [];
-      var itemsLate = [];
-      var count = 0;
-      var error = null;
-      var index;
-
-      function finish() {
-        if (++count == dataNew.length) {
-          return callback(error);
-        }
-      }
-      function handleOldNew() {
-        count = 0;
-
-        // Remove non existing items.
-        for (index = 0; index < itemsLate.length; index++) {
-          items[itemsLate[index]].remove();
-        }
-        // Insert non existing data.
-        if (dataNew.length) {
-          dataNew.forEach(function (cto) {
-            itemType.create(parent, eventHandlers, function (err, item) {
-              if (err) {
-                error = error || err;
-                finish();
-              } else {
-                item.fromCto(cto, function (err) {
-                  if (err)
-                    error = error || err;
-                  else
-                    items.push(item);
-                  finish();
-                });
+          // Discover changed items.
+          for (index = 0; index < items.length; index++) {
+            var dataFound = false;
+            var i = 0;
+            for (; i < ctoNew.length; i++) {
+              if (items[ index ].keyEquals( cto[i] )) {
+                itemsLive.push( { item: index, cto: i } );
+                dataFound = true;
+                break;
               }
-            });
-          });
-        } else
-          return callback(null);
-      }
-
-      // Discover changed items.
-      for (index = 0; index < items.length; index++) {
-        var dataFound = false;
-        var i = 0;
-        for (; i < dataNew.length; i++) {
-          if (items[index].keyEquals(data[i])) {
-            itemsLive.push({ item: index, cto: i });
-            dataFound = true;
-            break;
+            }
+            dataFound ?
+              ctoNew.splice(i, 1) :
+              itemsLate.push(index);
           }
-        }
-        if (dataFound)
-          dataNew.splice(i, 1);
-        else
-          itemsLate.push(index);
-      }
-      // Update existing items.
-      if (itemsLive.length)
-        for (index = 0; index < itemsLive.length; index++) {
-          var ix = itemsLive[index];
-          items[ix.item].fromCto(data[ix.cto], function (err) {
-            if (err)
-              error = error || err;
-            if (++count == itemsLive.length)
-              handleOldNew();
-          });
-        }
-      else
-        handleOldNew();
+          // Update existing items.
+          Promise.all( itemsLive.map( live => {
+            return items[ live.item ].fromCto( cto[ live.cto ] );
+          }))
+            .then( values => {
+              // Remove non existing items.
+              for (index = 0; index < itemsLate.length; index++) {
+                items[ itemsLate[ index ]].remove();
+              }
+              // Insert non existing items.
+              Promise.all( ctoNew.map( cto => {
+                return itemType.create( parent, eventHandlers )
+              }))
+                .then( newItems => {
+                  items.push.apply( items, newItems );
+                  Promise.all( newItems.map( (newItem, j) => {
+                    return newItem.fromCto( ctoNew[j] );
+                  }))
+                    .then( values => {
+                      // Finished.
+                      fulfill( self );
+                    })
+                });
+            });
+        } else
+          // Nothing to do.
+          fulfill( self );
+      });
     };
 
     //endregion

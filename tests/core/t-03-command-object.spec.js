@@ -1,4 +1,3 @@
-
 //region Imports
 
 var ClearScheduleCommand = require('../../data/simple-core/clear-schedule-command.js');
@@ -10,7 +9,7 @@ var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
 //endregion
 
-describe('Asynchronous data portal method', () => {
+describe('Data portal method', () => {
 
   function showTitle() {
     console.log('');

@@ -10,7 +10,7 @@ var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
 //endregion
 
-describe('Asynchronous data portal method', () => {
+xdescribe('Asynchronous data portal method', () => {
 
   //region Data
 

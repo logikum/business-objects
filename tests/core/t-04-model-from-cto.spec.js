@@ -1,5 +1,3 @@
-console.log( 'Testing fromCto methods of asynchronous models...' );
-
 //region Imports
 
 var BlanketOrder_S = require('../../data/simple-core/blanket-order.js');
@@ -7,7 +5,14 @@ var BlanketOrder_C = require('../../data/custom-core/models/blanket-order.js');
 
 //endregion
 
-describe( 'Asynchronous fromCto method', () => {
+describe( 'Using fromCto method', () => {
+
+  function showTitle() {
+    console.log('');
+    console.log('--------------------------------------------------');
+    console.log('Testing fromCto methods...');
+    console.log('--------------------------------------------------');
+  }
 
   //region Data
 
@@ -70,8 +75,9 @@ describe( 'Asynchronous fromCto method', () => {
 
   //endregion
 
-  it( 'for creating sample editable model', done => {
-    console.log( '\n*** Asynchronous rebuild for sample CREATE' );
+  it( 'to create a simple editable model', done => {
+    showTitle();
+    console.log( '\n*** Rebuild a simple model to be created' );
 
     BlanketOrder_S.create().then( order => {
 
@@ -155,8 +161,8 @@ describe( 'Asynchronous fromCto method', () => {
     });
   });
 
-  it( 'for updating sample editable model', done => {
-    console.log( '\n*** Asynchronous rebuild for sample UPDATE' );
+  it( 'to update a simple editable model', done => {
+    console.log( '\n*** Rebuild a simple model to be updated' );
 
     //region Compose data for update
 
@@ -304,8 +310,8 @@ describe( 'Asynchronous fromCto method', () => {
     });
   });
 
-  it( 'for creating custom editable model', done => {
-    console.log( '\n*** Asynchronous rebuild for custom CREATE' );
+  it( 'to create a custom editable model', done => {
+    console.log( '\n*** Rebuild a custom model to be created' );
 
     BlanketOrder_C.create().then( order => {
 
@@ -392,8 +398,8 @@ describe( 'Asynchronous fromCto method', () => {
     });
   });
 
-  it( 'for updating custom editable model', done => {
-    console.log( '\n*** Asynchronous rebuild for custom UPDATE' );
+  it( 'to update a custom editable model', done => {
+    console.log( '\n*** Rebuild a custom model to be updated' );
 
     //region Compose data for update
 
