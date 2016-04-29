@@ -252,46 +252,23 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Helper
 
-    function getDataContext (connection) {
+    function getDataContext( connection ) {
       if (!dataContext)
         dataContext = new DataPortalContext(
           dao, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setState(connection, false);
+      return dataContext.setState( connection, false );
     }
 
-    function raiseEvent (event, methodName, error) {
+    function raiseEvent( event, methodName, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, null, methodName, error )
       );
     }
 
-    function wrapError (error) {
-      return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
-    }
-
-    function runStatements (main, callback) {
-      // Open connection.
-      config.connectionManager.openConnection(
-          extensions.dataSource, function (errOpen, connection) {
-            if (errOpen)
-              callback(wrapError(errOpen));
-            else
-              main(connection, function (err, result) {
-                // Close connection.
-                config.connectionManager.closeConnection(
-                    extensions.dataSource, connection, function (errClose, connClosed) {
-                      connection = connClosed;
-                      if (err)
-                        callback(wrapError(err));
-                      else if (errClose)
-                        callback(wrapError(errClose));
-                      else
-                        callback(null, result);
-                    });
-              });
-          });
+    function wrapError( error ) {
+      return new DataPortalError( MODEL_DESC, name, DataPortalAction.fetch, error );
     }
 
     //endregion
@@ -343,8 +320,8 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
               // Close connection.
               config.connectionManager.closeConnection( extensions.dataSource, connection )
                 .then( none => {
-                  // Nothing to return.
-                  fulfill( null );
+                  // Return the fetched read-only root object.
+                  fulfill( self );
                 });
             })
             .catch( reason => {
@@ -361,7 +338,6 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
             });
         }
       });
-      // Check permissions.
     }
 
     //endregion
@@ -378,8 +354,8 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {promise<ReadOnlyRootObject>} Returns a promise to
-     *      the required read-only business object.
+     * @returns {Promise<ReadOnlyRootObject>} Returns a promise to
+     *      the required read-only root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -391,14 +367,8 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
      *      Fetching the business object has failed.
      */
     this.fetch = function( filter, method ) {
-      return new Promise( (fulfill, reject) => {
-        method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
-
-        data_fetch( filter, method || M_FETCH )
-          .then( none => {
-            fulfill( self );
-          });
-      });
+      method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
+      return data_fetch( filter, method || M_FETCH );
     };
 
     //endregion
@@ -579,8 +549,8 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {promise<ReadOnlyRootObject>} Returns a promise to
-   *      the required read-only business object.
+   * @returns {Promise<ReadOnlyRootObject>} Returns a promise to
+   *      the required read-only root object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.

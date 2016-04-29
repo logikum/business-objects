@@ -34,6 +34,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var CLASS_NAME = 'ReadOnlyChildObject';
+var MODEL_DESC = 'Read-only child object';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 //endregion
@@ -269,23 +270,23 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Helper
 
-    function getDataContext () {
+    function getDataContext() {
       if (!dataContext)
         dataContext = new DataPortalContext(
           null, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setState(null, false);
+      return dataContext.setState( null, false );
     }
 
-    function raiseEvent (event, methodName, error) {
+    function raiseEvent( event, methodName, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, null, methodName, error )
       );
     }
 
-    function wrapError (error) {
-      return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
+    function wrapError( error ) {
+      return new DataPortalError( MODEL_DESC, name, DataPortalAction.fetch, error );
     }
 
     //endregion
@@ -325,8 +326,8 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
                * @param {ReadOnlyChildObject} newObject - The instance of the model after the data portal action.
                */
               raiseEvent(DataPortalEvent.postFetch, method);
-              // Nothing to return.
-              fulfill( null );
+              // Return the fetched read-only child object.
+              fulfill( self );
             })
             .catch( reason => {
               // Wrap the intercepted error.
@@ -354,7 +355,8 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
      * @protected
      * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
-     * @returns {promise<ReadOnlyChildObject>} Returns a promise to the and of load.
+     * @returns {Promise<ReadOnlyChildObject>} Returns a promise to
+     *      the required read-only child object.
      */
     this.fetch = function( data, method ) {
       return data_fetch( data, method || M_FETCH );
@@ -524,21 +526,6 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
   //region Factory methods
 
   /**
-   * Creates a new read-only business object instance.
-   * <br/>_This method is called by the parent object._
-   *
-   * @function ReadOnlyChildObject.create
-   * @protected
-   * @param {object} parent - The parent business object.
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns a new read-only business object.
-   */
-  ReadOnlyChildObject.create = function(parent, eventHandlers, callback) {
-    var instance = new ReadOnlyChildObject(parent, eventHandlers);
-    callback(null, instance);
-  };
-
-  /**
    * Initializes a read-only business object width data retrieved from the repository.
    * <br/>_This method is called by the parent object._
    *
@@ -547,20 +534,15 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
    * @param {object} parent - The parent business object.
    * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {promise<ReadOnlyChildObject>} Returns a promise to
-   *      the required read-only business object.
+   * @returns {Promise<ReadOnlyChildObject>} Returns a promise to
+   *      the required read-only child object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    */
   ReadOnlyChildObject.load = function( parent, data, eventHandlers ) {
-    return new Promise( (fulfill, reject) => {
-      var instance = new ReadOnlyChildObject( parent, eventHandlers );
-      return instance.fetch( data, undefined )
-        .then( none => {
-          fulfill( instance );
-        });
-    });
+    var instance = new ReadOnlyChildObject( parent, eventHandlers );
+    return instance.fetch( data );
   };
 
   //endregion

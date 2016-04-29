@@ -20,7 +20,7 @@ var ConnectionManagerBase = function () {
  * @abstract
  * @function bo.dataAccess.ConnectionManagerBase#openConnection
  * @param {string} dataSource - The name of the data source.
- * @returns {promise<object>} A promise to the new connection.
+ * @returns {Promise<object>} A promise to the new connection.
  */
 ConnectionManagerBase.prototype.openConnection = function (dataSource) {
   throw new NotImplementedError('method', CLASS_NAME, 'openConnection');
@@ -33,7 +33,7 @@ ConnectionManagerBase.prototype.openConnection = function (dataSource) {
  * @function bo.dataAccess.ConnectionManagerBase#openConnection
  * @param {string} dataSource - The name of the data source.
  * @param {object} connection - The connection to be closed.
- * @returns {promise<object>} A promise to the closed connection.
+ * @returns {Promise<object>} A promise to the closed connection.
  */
 ConnectionManagerBase.prototype.closeConnection = function (dataSource, connection) {
   throw new NotImplementedError('method', CLASS_NAME, 'closeConnection');
@@ -46,7 +46,7 @@ ConnectionManagerBase.prototype.closeConnection = function (dataSource, connecti
  * @abstract
  * @function bo.dataAccess.ConnectionManagerBase#beginTransaction
  * @param {string} dataSource - The name of the data source.
- * @returns {promise<object>} A promise to the new connection with initiated transaction.
+ * @returns {Promise<object>} A promise to the new connection with initiated transaction.
  */
 ConnectionManagerBase.prototype.beginTransaction = function (dataSource) {
   return this.openConnection(dataSource);
@@ -60,7 +60,7 @@ ConnectionManagerBase.prototype.beginTransaction = function (dataSource) {
  * @function bo.dataAccess.ConnectionManagerBase#commitTransaction
  * @param {string} dataSource - The name of the data source.
  * @param {object} connection - The connection to be closed.
- * @returns {promise<object>} A promise to the closed connection.
+ * @returns {Promise<object>} A promise to the closed connection.
  */
 ConnectionManagerBase.prototype.commitTransaction = function (dataSource, connection) {
   return this.closeConnection(dataSource, connection);
@@ -74,7 +74,7 @@ ConnectionManagerBase.prototype.commitTransaction = function (dataSource, connec
  * @function bo.dataAccess.ConnectionManagerBase#rollbackTransaction
  * @param {string} dataSource - The name of the data source.
  * @param {object} connection - The connection to be closed.
- * @returns {promise<object>} A promise to the closed connection.
+ * @returns {Promise<object>} A promise to the closed connection.
  */
 ConnectionManagerBase.prototype.rollbackTransaction = function (dataSource, connection) {
   return this.closeConnection(dataSource, connection);

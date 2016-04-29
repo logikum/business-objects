@@ -483,18 +483,6 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
       }));
     }
 
-    function insertChildren( connection ) {
-      return saveChildren( connection );
-    }
-
-    function updateChildren( connection ) {
-      return saveChildren( connection );
-    }
-
-    function removeChildren( connection ) {
-      return saveChildren( connection );
-    }
-
     function saveChildren( connection ) {
       return Promise.all( properties.children().map( property => {
         var child = getPropertyValue( property );
@@ -536,82 +524,30 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Helper
 
-    function getDataContext (connection) {
+    function getDataContext( connection ) {
       if (!dataContext)
         dataContext = new DataPortalContext(
             dao, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setState(connection, isDirty);
+      return dataContext.setState( connection, isDirty );
     }
 
-    function raiseEvent (event, methodName, error) {
+    function raiseEvent( event, methodName, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, null, methodName, error )
       );
     }
 
-    function raiseSave (event, action, error) {
+    function raiseSave( event, action, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, action, null, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, action, null, error )
       );
     }
 
-    function wrapError (action, error) {
-      return new DataPortalError(MODEL_DESC, name, action, error);
-    }
-
-    function runStatements (main, action, callback) {
-      // Open connection.
-      config.connectionManager.openConnection(
-          extensions.dataSource, function (errOpen, connection) {
-            if (errOpen)
-              callback(wrapError(action, errOpen));
-            else
-              main(connection, function (err, result) {
-                // Close connection.
-                config.connectionManager.closeConnection(
-                    extensions.dataSource, connection, function (errClose, connClosed) {
-                      connection = connClosed;
-                      if (err)
-                        callback(wrapError(action, err));
-                      else if (errClose)
-                        callback(wrapError(action, errClose));
-                      else
-                        callback(null, result);
-                    });
-              });
-          });
-    }
-
-    function runTransaction (main, action, callback) {
-      // Start transaction.
-      config.connectionManager.beginTransaction(
-          extensions.dataSource, function (errBegin, connection) {
-            if (errBegin)
-              callback(wrapError(action, errBegin));
-            else
-              main(connection, function (err, result) {
-                if (err)
-                // Undo transaction.
-                  config.connectionManager.rollbackTransaction(
-                      extensions.dataSource, connection, function (errRollback, connClosed) {
-                        connection = connClosed;
-                        callback(wrapError(action, err));
-                      });
-                else
-                // Finish transaction.
-                  config.connectionManager.commitTransaction(
-                      extensions.dataSource, connection, function (errCommit, connClosed) {
-                        connection = connClosed;
-                        if (errCommit)
-                          callback(wrapError(action, errCommit));
-                        else
-                          callback(null, result);
-                      });
-              });
-          });
+    function wrapError( action, error ) {
+      return new DataPortalError( MODEL_DESC, name, action, error );
     }
 
     //endregion
@@ -662,7 +598,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Close connection.
               config.connectionManager.closeConnection( extensions.dataSource, connection )
                 .then( none => {
-                  // Return the new object.
+                  // Return the new editable root object.
                   fulfill( self );
                 })
             })
@@ -735,7 +671,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Close connection.
               config.connectionManager.closeConnection( extensions.dataSource, connection )
                 .then( none => {
-                  // Return the editable root object.
+                  // Return the fetched editable root object.
                   fulfill( self );
                 });
             })
@@ -790,7 +726,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
             })
             .then( none => {
               // Insert children as well.
-              return insertChildren( connection );
+              return saveChildren( connection );
             })
             .then( none => {
               markAsPristine();
@@ -806,7 +742,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Finish transaction.
               return config.connectionManager.commitTransaction( extensions.dataSource, connection )
                 .then( none => {
-                  // Return the object created.
+                  // Return the created editable root object.
                   fulfill( self );
                 });
             })
@@ -863,7 +799,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
             })
             .then( none => {
               // Update children as well.
-              return updateChildren( connection );
+              return saveChildren( connection );
             })
             .then( none => {
               markAsPristine();
@@ -879,7 +815,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Finish transaction.
               return config.connectionManager.commitTransaction( extensions.dataSource, connection )
                 .then( none => {
-                  // Return the updated object.
+                  // Return the updated editable root object.
                   fulfill( self );
                 });
             })
@@ -925,7 +861,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
                */
               raiseEvent( DataPortalEvent.preRemove );
               // Remove children first.
-              return removeChildren( connection );
+              return saveChildren( connection );
             })
             .then( none => {
               // Execute removal.
@@ -984,7 +920,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *
      * @function EditableRootObject#create
      * @protected
-     * @returns {promise<EditableRootObject>} Returns a promise to a new editable business object.
+     * @returns {Promise<EditableRootObject>} Returns a promise to
+     *      the new editable root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -1005,7 +942,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {promise<EditableRootObject>} Returns a promise to the required editable business object.
+     * @returns {Promise<EditableRootObject>} Returns a promise to
+     *      the required editable root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -1025,8 +963,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * Saves the changes of the business object to the repository.
      *
      * @function EditableRootObject#save
-     * @returns {promise<EditableRootObject>} Returns a promise to
-     *      the business object with the new state after the save.
+     * @returns {Promise<EditableRootObject>} Returns a promise to
+     *      the saved editable root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -1160,18 +1098,6 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     //region Properties
 
-    var wait = 0;
-    this.onReady = function() {};
-
-    function freeze() {
-      if (wait === 0) {
-        var onReady = self.onReady;
-        delete self.onReady;
-        Object.freeze( self );
-        onReady( self );
-      }
-    }
-
     function getPropertyValue( property ) {
       return store.getValue( property );
     }
@@ -1232,24 +1158,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
       }
       else
       {
-        // Determine child element type.
-        if (property.type.create) {
-          store.initValue( property, new property.type( self, eventHandlers ));
-
-          //wait++;
-          //// Create child object.
-          //property.type.create( self, eventHandlers )
-          //.then( item => {
-          //
-          //  // Initialize child object property.
-          //  store.initValue( property, item );
-          //  wait--;
-          //  freeze();
-          //});
-        }
-        else
-          // Create child collection and initialize property.
-          store.initValue( property, new property.type( self, eventHandlers ));
+        // Create child element and initialize property value.
+        store.initValue( property, new property.type( self, eventHandlers ));
 
         // Create child element property.
         Object.defineProperty( self, property.name, {
@@ -1267,7 +1177,6 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
     //endregion
 
     // Immutable object.
-    //freeze();
     Object.freeze( self );
   };
   util.inherits(EditableRootObject, ModelBase);
@@ -1294,22 +1203,13 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
   //region Factory methods
 
-  function instantiate( eventHandlers ) {
-    return new Promise( (fulfill, reject) => {
-      var instance = new EditableRootObject( eventHandlers );
-      //if (instance.onReady)
-      //  instance.onReady = fulfill;
-      //else
-        fulfill( instance );
-    });
-  }
-
   /**
-   * Creates a new editable business object instance.
+   * Creates a new editable root object instance.
    *
    * @function EditableRootObject.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise<EditableRootObject>} Returns a promise to a new editable business object.
+   * @returns {Promise<EditableRootObject>} Returns a promise to
+   *      the new editable root object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The event handlers must be an EventHandlerList object or null.
@@ -1318,23 +1218,22 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    * @throws {@link bo.shared.DataPortalError Data portal error}:
-   *      Creating the business object has failed.
+   *      Creating the root object has failed.
    */
   EditableRootObject.create = function( eventHandlers ) {
-    return instantiate( eventHandlers )
-      .then( instance => {
-        return instance.create();
-      });
+    var instance = new EditableRootObject( eventHandlers );
+    return instance.create();
   };
 
   /**
-   * Retrieves an editable business object from the repository.
+   * Retrieves an editable root object from the repository.
    *
    * @function EditableRootObject.fetch
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {promise<EditableRootObject>} Returns a promise to the required editable business object.
+   * @returns {Promise<EditableRootObject>} Returns a promise to
+   *      the required editable root object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.
@@ -1348,10 +1247,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    *      Fetching the business object has failed.
    */
   EditableRootObject.fetch = function( filter, method, eventHandlers ) {
-    return instantiate( eventHandlers )
-      .then( instance => {
-        return instance.fetch( filter, method );
-      });
+    var instance = new EditableRootObject( eventHandlers );
+    return instance.fetch( filter, method );
   };
 
   //endregion

@@ -197,7 +197,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#create
      * @param {number} index - The index of the new item.
-     * @returns {promise<EditableChildObject>} Returns a promise to
+     * @returns {Promise<EditableChildObject>} Returns a promise to
      *      the newly created editable business object.
      */
     this.createItem = function( index ) {
@@ -217,7 +217,8 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @function EditableChildCollection#fetch
      * @protected
      * @param {Array.<object>} [data] - The data to load into the business object collection.
-     * @returns {promise<EditableChildCollection>} Returns a promise to the end of load.
+     * @returns {Promise<EditableChildCollection>} Returns a promise to
+     *      indicate the end of load.
      */
     this.fetch = function ( data ) {
       return data instanceof Array && data.length ?
@@ -242,7 +243,8 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @function EditableChildCollection#save
      * @protected
      * @param {object} connection - The connection data.
-     * @param {external.cbDataPortal} callback - Returns the eventual error.
+     * @return {Promise<EditableChildCollection>} Returns a promise to
+     *      the editable child collection.
      */
     this.save = function( connection ) {
       return Promise.all( items.filter( item => {

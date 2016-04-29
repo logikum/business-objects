@@ -37,7 +37,7 @@ var DaoBase = function (name) {
  * @function bo.dataAccess.DaoBase#$runMethod
  * @param {string} methodName - The name of the method to check.
  * @param {...*} [methodArg] - The arguments of the method to execute.
- * @returns {promise<*>} The result of the method.
+ * @returns {Promise<*>} Returns a promise to the result of the method.
  *
  * @throws {@link bo.dataAccess.DaoError Dao error}: The method name must be a non-empty string.
  * @throws {@link bo.dataAccess.DaoError Dao error}: Data access object has no method with the requested name.

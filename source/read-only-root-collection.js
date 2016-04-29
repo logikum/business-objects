@@ -208,51 +208,28 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
 
     //region Helper
 
-    function getDataContext (connection) {
+    function getDataContext( connection ) {
       if (!dataContext)
-        dataContext = new DataPortalContext(dao);
-      return dataContext.setState(connection, false);
+        dataContext = new DataPortalContext( dao );
+      return dataContext.setState( connection, false );
     }
 
-    function raiseEvent (event, methodName, error) {
+    function raiseEvent( event, methodName, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, null, methodName, error )
       );
     }
 
-    function wrapError (error) {
-      return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
-    }
-
-    function runStatements (main, callback) {
-      // Open connection.
-      config.connectionManager.openConnection(
-          extensions.dataSource, function (errOpen, connection) {
-            if (errOpen)
-              callback(wrapError(errOpen));
-            else
-              main(connection, function (err, result) {
-                // Close connection.
-                config.connectionManager.closeConnection(
-                    extensions.dataSource, connection, function (errClose, connClosed) {
-                      connection = connClosed;
-                      if (err)
-                        callback(wrapError(err));
-                      else if (errClose)
-                        callback(wrapError(errClose));
-                      else
-                        callback(null, result);
-                    });
-              });
-          });
+    function wrapError( error ) {
+      return new DataPortalError( MODEL_DESC, name, DataPortalAction.fetch, error );
     }
 
     //endregion
 
     //region Fetch
 
-    function data_fetch ( filter, method ) {
+    function data_fetch( filter, method ) {
       return new Promise( (fulfill, reject) => {
         if (method === M_FETCH ? canDo( AuthorizationAction.fetchObject ) : canExecute( method )) {
           var connection = null;
@@ -305,8 +282,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
               // Close connection.
               config.connectionManager.closeConnection(extensions.dataSource, connection)
                 .then( none => {
-                  // Nothing to return.
-                  fulfill( null );
+                  // Return the fetched read-only root collection.
+                  fulfill( self );
                 });
             })
             .catch( reason => {
@@ -339,8 +316,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {promise<ReadOnlyRootCollection>} Returns a promise to
-     *      the required read-only collection.
+     * @returns {Promise<ReadOnlyRootCollection>} Returns a promise to
+     *      the required read-only root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -352,14 +329,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      *      Fetching the business object has failed.
      */
     this.fetch = function( filter, method ) {
-      return new Promise( (fulfill, reject) => {
-        method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
-
-        data_fetch( filter, method || M_FETCH )
-          .then( none => {
-            fulfill( self );
-          });
-      });
+      method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
+      return data_fetch( filter, method || M_FETCH );
     };
 
     //endregion
@@ -547,8 +518,8 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {promise<ReadOnlyRootCollection>} Returns a promise to
-   *      the required read-only collection.
+   * @returns {Promise<ReadOnlyRootCollection>} Returns a promise to
+   *      the required read-only root collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.
