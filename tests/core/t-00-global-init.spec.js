@@ -4,14 +4,14 @@ var configuration = require('../../source/shared/configuration-reader.js');
 configuration.initialize('/config/business-objects.js');
 //i18n.initialize(configuration.pathOfLocales, configuration.getLocale);
 
-describe('Test repository', function () {
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Initializing test environment...' );
+  console.log('--------------------------------------------------');
+}
 
-  function showTitle() {
-    console.log('');
-    console.log('--------------------------------------------------');
-    console.log('Initializing test environment...' );
-    console.log('--------------------------------------------------');
-  }
+describe('Test repository', function () {
 
   it('initialization', function () {
     showTitle();

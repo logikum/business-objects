@@ -5,14 +5,14 @@ var BlanketOrder_C = require('../../data/custom-core/models/blanket-order.js');
 
 //endregion
 
-describe( 'Using fromCto method', () => {
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Testing fromCto methods...');
+  console.log('--------------------------------------------------');
+}
 
-  function showTitle() {
-    console.log('');
-    console.log('--------------------------------------------------');
-    console.log('Testing fromCto methods...');
-    console.log('--------------------------------------------------');
-  }
+describe( 'Using fromCto method', () => {
 
   //region Data
 

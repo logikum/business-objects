@@ -9,14 +9,14 @@ var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
 //endregion
 
-describe('Data portal method', () => {
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Testing data portal methods of custom models...');
+  console.log('--------------------------------------------------');
+}
 
-  function showTitle() {
-    console.log('');
-    console.log('--------------------------------------------------');
-    console.log('Testing data portal methods of custom models...');
-    console.log('--------------------------------------------------');
-  }
+describe('Data portal method', () => {
 
   //region Data
 

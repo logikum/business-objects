@@ -662,6 +662,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Close connection.
               config.connectionManager.closeConnection( extensions.dataSource, connection )
                 .then( none => {
+                  // Return the new object.
                   fulfill( self );
                 })
             })
@@ -674,6 +675,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Close connection.
               return config.connectionManager.closeConnection( extensions.dataSource, connection )
                 .then( none => {
+                  // Pass the error.
                   reject( dpe );
                 })
             })
@@ -733,8 +735,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Close connection.
               config.connectionManager.closeConnection( extensions.dataSource, connection )
                 .then( none => {
-                  // Nothing to return.
-                  fulfill( null );
+                  // Return the editable root object.
+                  fulfill( self );
                 });
             })
             .catch( reason => {
@@ -804,6 +806,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Finish transaction.
               return config.connectionManager.commitTransaction( extensions.dataSource, connection )
                 .then( none => {
+                  // Return the object created.
                   fulfill( self );
                 });
             })
@@ -818,6 +821,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Undo transaction.
               return config.connectionManager.rollbackTransaction(extensions.dataSource, connection)
                 .then( none => {
+                  // Pass the error.
                   reject( dpe );
                 })
             });
@@ -875,7 +879,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
               // Finish transaction.
               return config.connectionManager.commitTransaction( extensions.dataSource, connection )
                 .then( none => {
-                  // Return the result.
+                  // Return the updated object.
                   fulfill( self );
                 });
             })
@@ -1013,14 +1017,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *      Fetching the business object has failed.
      */
     this.fetch = function( filter, method ) {
-      return new Promise( (fulfill, reject) => {
-        method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
-
-        data_fetch( filter, method || M_FETCH )
-          .then( none => {
-            fulfill( self );
-          });
-      });
+      method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
+      return data_fetch( filter, method || M_FETCH );
     };
 
     /**
@@ -1311,7 +1309,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    *
    * @function EditableRootObject.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {promise<EditableRootObject>} Returns a promise to a new editable business object.
+   * @returns {Promise<EditableRootObject>} Returns a promise to a new editable business object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The event handlers must be an EventHandlerList object or null.

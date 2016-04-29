@@ -1,13 +1,13 @@
 var bo = require('../../source/index.js');
 
-describe('Business object index', function() {
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Testing index.js...' );
+  console.log('--------------------------------------------------');
+}
 
-  function showTitle() {
-    console.log('');
-    console.log('--------------------------------------------------');
-    console.log('Testing index.js...' );
-    console.log('--------------------------------------------------');
-  }
+describe('Business object index', function() {
 
   it('returns correct data types', function() {
     showTitle();
