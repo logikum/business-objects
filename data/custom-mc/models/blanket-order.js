@@ -63,76 +63,76 @@ function fromCto (ctx, dto) {
 
 //region Data portal methods
 
-function dataCreate (ctx, callback) {
-  ctx.dao.create(ctx.connection).then( dto => {
-    ctx.setValue('vendorName',   dto.vendorName);
-    ctx.setValue('contractDate', dto.contractDate);
-    ctx.setValue('totalPrice',   dto.totalPrice);
-    ctx.setValue('schedules',    dto.schedules);
-    ctx.setValue('enabled',      dto.enabled);
-    callback(null);
+function dataCreate ( ctx ) {
+  ctx.dao.create( ctx.connection ).then( dto => {
+    ctx.setValue( 'vendorName',   dto.vendorName );
+    ctx.setValue( 'contractDate', dto.contractDate );
+    ctx.setValue( 'totalPrice',   dto.totalPrice );
+    ctx.setValue( 'schedules',    dto.schedules );
+    ctx.setValue( 'enabled',      dto.enabled );
+    ctx.fulfill( null );
   });
 }
 
-function dataFetch (ctx, filter, method, callback) {
-  function cb (dto) {
-    ctx.setValue('orderKey',     dto.orderKey);
-    ctx.setValue('vendorName',   dto.vendorName);
-    ctx.setValue('contractDate', dto.contractDate);
-    ctx.setValue('totalPrice',   dto.totalPrice);
-    ctx.setValue('schedules',    dto.schedules);
-    ctx.setValue('enabled',      dto.enabled);
-    ctx.setValue('createdDate',  dto.createdDate);
-    ctx.setValue('modifiedDate', dto.modifiedDate);
-    callback(null, dto);
+function dataFetch ( ctx, filter, method ) {
+  function finish ( dto ) {
+    ctx.setValue( 'orderKey',     dto.orderKey );
+    ctx.setValue( 'vendorName',   dto.vendorName );
+    ctx.setValue( 'contractDate', dto.contractDate );
+    ctx.setValue( 'totalPrice',   dto.totalPrice );
+    ctx.setValue( 'schedules',    dto.schedules );
+    ctx.setValue( 'enabled',      dto.enabled );
+    ctx.setValue( 'createdDate',  dto.createdDate );
+    ctx.setValue( 'modifiedDate', dto.modifiedDate );
+    ctx.fulfill( dto );
   }
   if (method === 'fetchByName') {
     // filter: vendorName
-    ctx.dao.fetchByName(ctx.connection, filter).then( cb );
+    ctx.dao.fetchByName( ctx.connection, filter ).then( finish );
   } else {
     // filter: primaryKey
-    ctx.dao.fetch(ctx.connection, filter).then( cb );
+    ctx.dao.fetch( ctx.connection, filter ).then( finish );
   }
   // or:
-  // ctx.dao[method](ctx.connection, filter).then( cb );
+  // ctx.dao[method]( ctx.connection, filter ).then( finish );
 }
 
-function dataInsert (ctx, callback) {
+function dataInsert ( ctx ) {
   var dto = {
-    vendorName:   ctx.getValue('vendorName'),
-    contractDate: ctx.getValue('contractDate'),
-    totalPrice:   ctx.getValue('totalPrice'),
-    schedules:    ctx.getValue('schedules'),
-    enabled:      ctx.getValue('enabled')
+    vendorName:   ctx.getValue( 'vendorName' ),
+    contractDate: ctx.getValue( 'contractDate' ),
+    totalPrice:   ctx.getValue( 'totalPrice' ),
+    schedules:    ctx.getValue( 'schedules' ),
+    enabled:      ctx.getValue( 'enabled' )
   };
-  ctx.dao.insert(ctx.connection, dto).then( dto => {
-    ctx.setValue('orderKey', dto.orderKey);
-    ctx.setValue('createdDate', dto.createdDate);
-    callback(null);
+  ctx.dao.insert( ctx.connection, dto ).then( dto => {
+    ctx.setValue( 'orderKey', dto.orderKey );
+    ctx.setValue( 'createdDate', dto.createdDate );
+    ctx.fulfill( null );
   });
 }
 
-function dataUpdate (ctx, callback) {
+function dataUpdate ( ctx ) {
   if (ctx.isSelfDirty) {
     var dto = {
-      orderKey:     ctx.getValue('orderKey'),
-      vendorName:   ctx.getValue('vendorName'),
-      contractDate: ctx.getValue('contractDate'),
-      totalPrice:   ctx.getValue('totalPrice'),
-      schedules:    ctx.getValue('schedules'),
-      enabled:      ctx.getValue('enabled')
+      orderKey:     ctx.getValue( 'orderKey' ),
+      vendorName:   ctx.getValue( 'vendorName' ),
+      contractDate: ctx.getValue( 'contractDate' ),
+      totalPrice:   ctx.getValue( 'totalPrice' ),
+      schedules:    ctx.getValue( 'schedules' ),
+      enabled:      ctx.getValue( 'enabled' )
     };
-    ctx.dao.update(ctx.connection, dto).then( dto => {
-      ctx.setValue('modifiedDate', dto.modifiedDate);
-      callback(null);
+    ctx.dao.update( ctx.connection, dto ).then( dto => {
+      ctx.setValue( 'modifiedDate', dto.modifiedDate );
+      ctx.fulfill( null );
     });
   }
 }
 
-function dataRemove (ctx, callback) {
-  var primaryKey = ctx.getValue('orderKey');
-  ctx.dao.remove(ctx.connection, primaryKey).then( dto => {
-    callback(null);
+function dataRemove ( ctx ) {
+  var primaryKey = ctx.getValue( 'orderKey' );
+  ctx.dao.remove( ctx.connection, primaryKey ).then( dto => {
+    ctx.fulfill( null );
   });
 }
 

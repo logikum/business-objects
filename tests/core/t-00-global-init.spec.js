@@ -11,9 +11,9 @@ function showTitle() {
   console.log('--------------------------------------------------');
 }
 
-describe('Test repository', function () {
+describe('Test repository', () => {
 
-  it('initialization', function () {
+  it('initialization', () => {
     showTitle();
 
     global.orderKey = 0;

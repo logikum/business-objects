@@ -1,5 +1,3 @@
-console.log( 'Testing data portal methods of asynchronous commands...' );
-
 //region Imports
 
 var ClearScheduleCommand = require('../../data/simple-mc/clear-schedule-command.js');
@@ -10,6 +8,13 @@ var DataPortalEvent = require('../../source/shared/data-portal-event.js');
 var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
 //endregion
+
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Testing data portal methods of commands...' );
+  console.log('--------------------------------------------------');
+}
 
 describe( 'Asynchronous data portal method', () => {
 
@@ -32,17 +37,18 @@ describe( 'Asynchronous data portal method', () => {
 
   //endregion
 
-  it( 'execute of sample command', done => {
-    console.log( '\n*** Asynchronous EXECUTE' );
+  it( 'EXECUTE of simple command', done => {
+    showTitle();
+    console.log( '\n*** Method EXECUTE' );
 
     var cmd = ClearScheduleCommand.create(ehClearScheduleCommand);
 
-    cmd.on('preExecute', function (eventArgs) {
-      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
-    });
-    cmd.on('postExecute', function (eventArgs) {
-      console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
-    });
+    //cmd.on('preExecute', function (eventArgs) {
+    //  console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
+    //});
+    //cmd.on('postExecute', function (eventArgs) {
+    //  console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
+    //});
 
     cmd.orderKey = 1;
     cmd.orderItemKey = 2;
@@ -57,8 +63,8 @@ describe( 'Asynchronous data portal method', () => {
     });
   });
 
-  it( 'execute of custom command', done => {
-    console.log( '\n*** Asynchronous RESCHEDULE' );
+  it( 'RESCHEDULE of custom command', done => {
+    console.log( '\n*** Method RESCHEDULE' );
 
     var cmd = RescheduleShippingCommand.create(ehRescheduleShippingCommand);
 

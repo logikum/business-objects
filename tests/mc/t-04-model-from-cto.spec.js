@@ -1,5 +1,3 @@
-console.log( 'Testing fromCto methods of asynchronous models...' );
-
 //region Imports
 
 var BlanketOrder_S = require('../../data/simple-mc/blanket-order.js');
@@ -7,7 +5,14 @@ var BlanketOrder_C = require('../../data/custom-mc/models/blanket-order.js');
 
 //endregion
 
-describe('Asynchronous fromCto method', function () {
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Testing fromCto methods...');
+  console.log('--------------------------------------------------');
+}
+
+describe( 'Using fromCto method', () => {
 
   //region Data
 
@@ -70,8 +75,9 @@ describe('Asynchronous fromCto method', function () {
 
   //endregion
 
-  it( 'for creating sample editable model', done => {
-    console.log( '\n*** Asynchronous rebuild for sample CREATE' );
+  it( 'to create a simple editable model', done => {
+    showTitle();
+    console.log( '\n*** Rebuild a simple model to be created' );
 
     BlanketOrder_S.create().then( order => {
 
@@ -155,74 +161,8 @@ describe('Asynchronous fromCto method', function () {
     });
   });
 
-  it( 'for updating sample editable model', done => {
-    console.log( '\n*** Asynchronous rebuild for sample UPDATE' );
-/*
-    //region Compose data for update
-
-    var data2 = {
-      orderKey: 7,
-      vendorName: 'Summit Ltd.',
-      contractDate: contractDate_u,
-      totalPrice: 672.5,
-      schedules: 3,
-      enabled: false
-    };
-    data2.address = {
-      addressKey: 7,
-      orderKey: 7,
-      country: 'Ireland',
-      state: '',
-      city: 'Dublin',
-      line1: '79-81 Iona Rd',
-      line2: '',
-      postalCode: '9'
-    };
-    data2.items = [];
-    data2.items.push({
-      orderItemKey: 20,
-      orderKey: 7,
-      productName: 'USB 3.0 hub',
-      obsolete: true,
-      expiry: expiry1,
-      quantity: 11,
-      unitPrice: 49.5
-    });
-    data2.items.push({
-      productName: 'DataExpert 32GB pen drive',
-      obsolete: false,
-      expiry: expiry2,
-      quantity: 4,
-      unitPrice: 32.0
-    });
-    data2.items[0].schedules = [];
-    data2.items[0].schedules.push({
-      orderScheduleKey: 26,
-      orderItemKey: 20,
-      quantity: 4,
-      totalMass: 0.48,
-      required: false,
-      shipTo: 'Stockholm',
-      shipDate: shipDate1
-    });
-    data2.items[0].schedules.push({
-      quantity: 7,
-      totalMass: 0.84,
-      required: true,
-      shipTo: 'Vienna',
-      shipDate: shipDate2
-    });
-    data2.items[1].schedules = [];
-    data2.items[1].schedules.push({
-      quantity: 4,
-      totalMass: 0.06,
-      required: true,
-      shipTo: 'Vienna',
-      shipDate: shipDate2
-    });
-
-    //endregion
-*/
+  it( 'to update a simple editable model', done => {
+    console.log( '\n*** Rebuild a simple model to be updated' );
 
     //region Compose data for update
 
@@ -370,8 +310,8 @@ describe('Asynchronous fromCto method', function () {
     });
   });
 
-  it( 'for creating custom editable model', done => {
-    console.log( '\n*** Asynchronous rebuild for custom CREATE' );
+  it( 'to create a custom editable model', done => {
+    console.log( '\n*** Rebuild a custom model to be created' );
 
     BlanketOrder_C.create().then( order => {
 
@@ -458,8 +398,8 @@ describe('Asynchronous fromCto method', function () {
     });
   });
 
-  it('for updating custom editable model', function (done) {
-    console.log('\n*** Asynchronous rebuild for custom UPDATE');
+  it( 'to update a custom editable model', done => {
+    console.log( '\n*** Rebuild a custom model to be updated' );
 
     //region Compose data for update
 

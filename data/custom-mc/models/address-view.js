@@ -34,16 +34,16 @@ function toCto (ctx) {
 
 //region Data portal methods
 
-function dataFetch (ctx, dto, method, callback) {
-    ctx.setValue('addressKey', dto.addressKey);
-    ctx.setValue('orderKey',   dto.orderKey);
-    ctx.setValue('country',    dto.country);
-    ctx.setValue('state',      dto.state);
-    ctx.setValue('city',       dto.city);
-    ctx.setValue('line1',      dto.line1);
-    ctx.setValue('line2',      dto.line2);
-    ctx.setValue('postalCode', dto.postalCode);
-    callback(null, dto);
+function dataFetch( ctx, dto, method ) {
+    ctx.setValue( 'addressKey', dto.addressKey );
+    ctx.setValue( 'orderKey',   dto.orderKey );
+    ctx.setValue( 'country',    dto.country );
+    ctx.setValue( 'state',      dto.state );
+    ctx.setValue( 'city',       dto.city );
+    ctx.setValue( 'line1',      dto.line1 );
+    ctx.setValue( 'line2',      dto.line2 );
+    ctx.setValue( 'postalCode', dto.postalCode );
+    ctx.fulfill( dto );
 }
 
 //endregion

@@ -39,27 +39,27 @@ function toCto (ctx) {
 
 //region Data portal methods
 
-function dataFetch (ctx, filter, method, callback) {
-  function cb (dto) {
-    ctx.setValue('orderKey',     dto.orderKey);
-    ctx.setValue('vendorName',   dto.vendorName);
-    ctx.setValue('contractDate', dto.contractDate);
-    ctx.setValue('totalPrice',   dto.totalPrice);
-    ctx.setValue('schedules',    dto.schedules);
-    ctx.setValue('enabled',      dto.enabled);
-    ctx.setValue('createdDate',  dto.createdDate);
-    ctx.setValue('modifiedDate', dto.modifiedDate);
-    callback(null, dto);
+function dataFetch( ctx, filter, method ) {
+  function finish( dto ) {
+    ctx.setValue( 'orderKey',     dto.orderKey );
+    ctx.setValue( 'vendorName',   dto.vendorName );
+    ctx.setValue( 'contractDate', dto.contractDate );
+    ctx.setValue( 'totalPrice',   dto.totalPrice );
+    ctx.setValue( 'schedules',    dto.schedules );
+    ctx.setValue( 'enabled',      dto.enabled );
+    ctx.setValue( 'createdDate',  dto.createdDate );
+    ctx.setValue( 'modifiedDate', dto.modifiedDate );
+    ctx.fulfill( dto );
   }
   if (method === 'fetchByName') {
     // filter: vendorName
-    ctx.dao.fetchByName(ctx.connection, filter).then( cb );
+    ctx.dao.fetchByName( ctx.connection, filter ).then( finish );
   } else {
     // filter: primaryKey
-    ctx.dao.fetch(ctx.connection, filter).then( cb );
+    ctx.dao.fetch( ctx.connection, filter ).then( finish );
   }
   // or:
-  // ctx.dao[method](ctx.connection, filter).then( cb );
+  // ctx.dao[method]( ctx.connection, filter ).then( finish );
 }
 
 //endregion

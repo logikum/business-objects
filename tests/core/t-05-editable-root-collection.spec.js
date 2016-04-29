@@ -15,7 +15,7 @@ function showTitle() {
   console.log('--------------------------------------------------');
 }
 
-describe('Asynchronous data portal method', () => {
+describe('Data portal method', () => {
 
   //region Data
 

@@ -34,15 +34,15 @@ function toCto (ctx) {
 
 //region Data portal methods
 
-function dataFetch (ctx, dto, method, callback) {
-    ctx.setValue('orderItemKey', dto.orderItemKey);
-    ctx.setValue('orderKey',     dto.orderKey);
-    ctx.setValue('productName',  dto.productName);
-    ctx.setValue('obsolete',     dto.obsolete);
-    ctx.setValue('expiry',       dto.expiry);
-    ctx.setValue('quantity',     dto.quantity);
-    ctx.setValue('unitPrice',    dto.unitPrice);
-    callback(null, dto);
+function dataFetch( ctx, dto, method ) {
+    ctx.setValue( 'orderItemKey', dto.orderItemKey );
+    ctx.setValue( 'orderKey',     dto.orderKey );
+    ctx.setValue( 'productName',  dto.productName );
+    ctx.setValue( 'obsolete',     dto.obsolete );
+    ctx.setValue( 'expiry',       dto.expiry );
+    ctx.setValue( 'quantity',     dto.quantity );
+    ctx.setValue( 'unitPrice',    dto.unitPrice );
+    ctx.fulfill( dto );
 }
 
 //endregion

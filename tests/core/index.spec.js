@@ -7,9 +7,9 @@ function showTitle() {
   console.log('--------------------------------------------------');
 }
 
-describe('Business object index', function() {
+describe('Business object index', () => {
 
-  it('returns correct data types', function() {
+  it('returns correct data types', () => {
     showTitle();
 
     expect(bo.ModelComposer).toEqual(jasmine.any(Function));

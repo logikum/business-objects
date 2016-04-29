@@ -1,5 +1,3 @@
-console.log( 'Testing data portal methods of custom asynchronous models...' );
-
 //region Imports
 
 var BlanketOrder = require('../../data/custom-mc/models/blanket-order.js');
@@ -10,6 +8,13 @@ var DataPortalEvent = require('../../source/shared/data-portal-event.js');
 var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
 //endregion
+
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Testing data portal methods of custom models...');
+  console.log('--------------------------------------------------');
+}
 
 describe( 'Asynchronous data portal method', () => {
 
@@ -96,8 +101,9 @@ describe( 'Asynchronous data portal method', () => {
 
   //endregion
 
-  it( 'create of custom editable model', done => {
-    console.log( '\n*** Asynchronous CREATE' );
+  it( 'CREATE of custom editable model', done => {
+    showTitle();
+    console.log( '\n*** Method CREATE' );
 
     BlanketOrder.create( ehBlanketOrder )
     .then( order => {
@@ -244,8 +250,8 @@ describe( 'Asynchronous data portal method', () => {
     });
   });
 
-  it( 'special fetch of custom editable model', done => {
-    console.log( '\n*** Asynchronous GET_BY_NAME' );
+  it( 'GET_BY_NAME of custom editable model', done => {
+    console.log( '\n*** Method GET_BY_NAME' );
 
     BlanketOrder.getByName( 'Acme Corp.', ehBlanketOrder )
     .then( order => {
@@ -380,8 +386,8 @@ describe( 'Asynchronous data portal method', () => {
     });
   });
 
-  it( 'fetch of custom read-only model', done => {
-    console.log( '\n*** Asynchronous GET' );
+  it( 'GET of custom read-only model', done => {
+    console.log( '\n*** Method GET' );
 
     BlanketOrderView.get( 2, ehBlanketOrderView )
     .then( orderView => {
@@ -588,8 +594,8 @@ describe( 'Asynchronous data portal method', () => {
     });
   });
 
-  it( 'fetch of custom read-only collection', done => {
-    console.log( '\n*** Asynchronous GET_ALL' );
+  it( 'GET_ALL of custom read-only collection', done => {
+    console.log( '\n*** Method GET_ALL' );
 
     BlanketOrderList.getAll( ehBlanketOrderList )
     .then( orderList => {
@@ -661,8 +667,8 @@ describe( 'Asynchronous data portal method', () => {
     });
   });
 
-  it( 'update of custom editable model', done => {
-    console.log( '\n*** Asynchronous SAVE' );
+  it( 'SAVE of custom editable model', done => {
+    console.log( '\n*** Method SAVE' );
 
     BlanketOrder.get( 2, ehBlanketOrder )
     .then( order => {
@@ -811,8 +817,8 @@ describe( 'Asynchronous data portal method', () => {
     });
   });
 
-  it( 'delete of custom editable model', done => {
-    console.log( '\n*** Asynchronous REMOVE' );
+  it( 'REMOVE of custom editable model', done => {
+    console.log( '\n*** Method REMOVE' );
 
     BlanketOrder.get( 2, ehBlanketOrder )
     .then( order => {

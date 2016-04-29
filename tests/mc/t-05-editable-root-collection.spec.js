@@ -1,5 +1,3 @@
-console.log( 'Testing data portal methods of sample asynchronous root collection...' );
-
 //region Imports
 
 var BlanketOrders = require('../../data/simple-mc/blanket-orders.js');
@@ -10,7 +8,14 @@ var EventHandlerList = require('../../source/shared/event-handler-list.js');
 
 //endregion
 
-describe('Asynchronous data portal method', () => {
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Testing methods of simple collections...' );
+  console.log('--------------------------------------------------');
+}
+
+describe('Data portal method', () => {
 
   //region Data
 
@@ -108,8 +113,9 @@ describe('Asynchronous data portal method', () => {
 
   //endregion
 
-  it( 'create of sample editable collection', done => {
-    console.log( '\n*** Asynchronous collection CREATE' );
+  it( 'CREATE of simple editable collection', done => {
+    showTitle();
+    console.log( '\n*** Method CREATE' );
 
     //region Load data
 
@@ -133,8 +139,8 @@ describe('Asynchronous data portal method', () => {
         address1.postalCode = '20133';
 
         return Promise.all([
-          createItem2( order1.items ),
-          createItem1( order1.items )
+          createItem1( order1.items ),
+          createItem2( order1.items )
         ]).then( items => {
           return order1;
         });
@@ -174,8 +180,8 @@ describe('Asynchronous data portal method', () => {
         item1.unitPrice = 30;
 
         return Promise.all([
-          createSchedule2( item1.schedules ),
-          createSchedule1( item1.schedules )
+          createSchedule1( item1.schedules ),
+          createSchedule2( item1.schedules )
         ]).then( schedules => {
           return item1;
         });
@@ -250,8 +256,8 @@ describe('Asynchronous data portal method', () => {
     BlanketOrders.create( ehBlanketOrders )
     .then( list => {
       return Promise.all([
-        createOrder2( list ),
-        createOrder1( list )
+        createOrder1( list ),
+        createOrder2( list )
       ]).then( orders => {
         return list;
       });
@@ -387,8 +393,8 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'update of sample editable collection', done => {
-    console.log( '\n*** Asynchronous collection UPDATE' );
+  it( 'UPDATE of simple editable collection', done => {
+    console.log( '\n*** Method UPDATE' );
 
     //region Update data
 
@@ -711,8 +717,8 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'client conversion of sample editable collection', done => {
-    console.log( '\n*** Asynchronous collection TO_FROM_CTO' );
+  it( 'TO_FROM_CTO of simple editable collection', done => {
+    console.log( '\n*** Method TO_FROM_CTO' );
 
     console.log('    < Fetch order collection >');
     BlanketOrders.getFromTo( 5, 7, ehBlanketOrders )
@@ -873,8 +879,8 @@ describe('Asynchronous data portal method', () => {
     });
   });
 
-  it( 'delete of sample editable collection', done => {
-    console.log( '\n*** Asynchronous collection REMOVE' );
+  it( 'REMOVE of simple editable collection', done => {
+    console.log( '\n*** Method REMOVE' );
 
     console.log('    < Fetch order collection >');
     BlanketOrders.getFromTo( 5, 7, ehBlanketOrders )
