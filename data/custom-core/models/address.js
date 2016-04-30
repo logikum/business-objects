@@ -93,7 +93,7 @@ function fromCto( ctx, dto ) {
 //region Data portal methods
 
 function dataCreate( ctx ) {
-  ctx.dao.create( ctx.connection ).then( dto => {
+  ctx.create().then( dto => {
     ctx.setValue( 'country',    dto.country );
     ctx.setValue( 'state',      dto.state );
     ctx.setValue( 'city',       dto.city );
@@ -126,7 +126,7 @@ function dataInsert( ctx ) {
     line2:      ctx.getValue( 'line2' ),
     postalCode: ctx.getValue( 'postalCode' )
   };
-  ctx.dao.insert( ctx.connection, dto ).then( dto => {
+  ctx.insert( dto ).then( dto => {
     ctx.setValue( 'addressKey', dto.addressKey );
     ctx.fulfill( null );
   });
@@ -143,7 +143,7 @@ function dataUpdate( ctx ) {
       line2:      ctx.getValue( 'line2' ),
       postalCode: ctx.getValue( 'postalCode' )
     };
-    ctx.dao.update( ctx.connection, dto ).then( dto => {
+    ctx.update( dto ).then( dto => {
       ctx.fulfill( null );
     });
   }
@@ -151,7 +151,7 @@ function dataUpdate( ctx ) {
 
 function dataRemove( ctx ) {
   var primaryKey = ctx.getValue( 'addressKey' );
-  ctx.dao.remove( ctx.connection, primaryKey ).then( dto => {
+  ctx.remove( primaryKey ).then( dto => {
     ctx.fulfill( null );
   });
 }

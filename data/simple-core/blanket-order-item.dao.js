@@ -8,60 +8,52 @@ var BlanketOrderItemDao = function() {
 };
 util.inherits(BlanketOrderItemDao, DaoBase);
 
-BlanketOrderItemDao.prototype.create = function(connection) {
+BlanketOrderItemDao.prototype.create = function( ctx ) {
   console.log('--- Blanket order item DAO.create');
 
-  return Promise.resolve( {} );
+  ctx.fulfill( {} );
 };
 
 /* Special fetch method for test circumstances. */
-BlanketOrderItemDao.prototype.fetchForOrder = function(connection, filter) {
+BlanketOrderItemDao.prototype.fetchForOrder = function( ctx, filter ) {
   console.log('--- Blanket order item DAO.fetchForOrder');
 
-  return new Promise( (fulfill, reject) => {
-    var items = [];
-    for (var key in global.items) {
-      if (global.items.hasOwnProperty(key)) {
-        var item = global.items[key];
-        if (item.orderKey === filter)
-          items.push(item);
-      }
+  var items = [];
+  for (var key in global.items) {
+    if (global.items.hasOwnProperty(key)) {
+      var item = global.items[key];
+      if (item.orderKey === filter)
+        items.push(item);
     }
-    fulfill( items );
-  });
+  }
+  ctx.fulfill( items );
 };
 
-BlanketOrderItemDao.prototype.insert = function(connection, data) {
+BlanketOrderItemDao.prototype.insert = function( ctx, data ) {
   console.log('--- Blanket order item DAO.insert');
 
-  return new Promise( (fulfill, reject) => {
-    data.orderItemKey = ++global.itemKey;
-    global.items[data.orderItemKey] = data;
-    fulfill( data );
-  });
+  data.orderItemKey = ++global.itemKey;
+  global.items[data.orderItemKey] = data;
+  ctx.fulfill( data );
 };
 
-BlanketOrderItemDao.prototype.update = function(connection, data) {
+BlanketOrderItemDao.prototype.update = function( ctx, data ) {
   console.log('--- Blanket order item DAO.update');
 
-  return new Promise( (fulfill, reject) => {
-    if (!global.items[data.orderItemKey])
-      reject(new Error('Blanket order item not found.'));
-    else {
-      global.items[data.orderItemKey] = data;
-      fulfill( data );
-    }
-  });
+  if (!global.items[data.orderItemKey])
+    ctx.reject( new Error('Blanket order item not found.' ));
+  else {
+    global.items[data.orderItemKey] = data;
+    ctx.fulfill( data );
+  }
 };
 
-BlanketOrderItemDao.prototype.remove = function(connection, filter) {
+BlanketOrderItemDao.prototype.remove = function( ctx, filter ) {
   console.log('--- Blanket order item DAO.remove');
 
-  return new Promise( (fulfill, reject) => {
-    if (global.items[filter])
-      delete global.items[filter];
-    fulfill( null );
-  });
+  if (global.items[filter])
+    delete global.items[filter];
+  ctx.fulfill( null );
 };
 
 module.exports = BlanketOrderItemDao;

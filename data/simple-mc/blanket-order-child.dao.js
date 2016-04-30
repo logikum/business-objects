@@ -8,48 +8,42 @@ var BlanketOrderChildDao = function() {
 };
 util.inherits(BlanketOrderChildDao, DaoBase);
 
-BlanketOrderChildDao.prototype.create = function(connection) {
+BlanketOrderChildDao.prototype.create = function( ctx ) {
   console.log('--- Blanket order child DAO.create');
 
-  return Promise.resolve( {} );
+  ctx.fulfill( {} );
 };
 
-BlanketOrderChildDao.prototype.insert = function(connection, data) {
+BlanketOrderChildDao.prototype.insert = function( ctx, data ) {
   console.log('--- Blanket order child DAO.insert');
 
-  return new Promise( (fulfill, reject) => {
-    data.orderKey = ++global.orderKey;
-    data.createdDate = new Date();
-    var key = data.orderKey;
-    global.orders[key] = data;
-    fulfill( data );
-  });
+  data.orderKey = ++global.orderKey;
+  data.createdDate = new Date();
+  var key = data.orderKey;
+  global.orders[key] = data;
+  ctx.fulfill( data );
 };
 
-BlanketOrderChildDao.prototype.update = function(connection, data) {
+BlanketOrderChildDao.prototype.update = function( ctx, data ) {
   console.log('--- Blanket order child DAO.update');
 
-  return new Promise( (fulfill, reject) => {
-    var key = data.orderKey;
-    if (!global.orders[key])
-      reject(new Error('Blanket order child not found.'));
-    else {
-      data.modifiedDate = new Date();
-      global.orders[key] = data;
-      fulfill( data );
-    }
-  });
+  var key = data.orderKey;
+  if (!global.orders[key])
+    ctx.reject( new Error('Blanket order child not found.' ));
+  else {
+    data.modifiedDate = new Date();
+    global.orders[key] = data;
+    ctx.fulfill( data );
+  }
 };
 
-BlanketOrderChildDao.prototype.remove = function(connection, filter) {
+BlanketOrderChildDao.prototype.remove = function( ctx, filter ) {
   console.log('--- Blanket order child DAO.remove');
 
-  return new Promise( (fulfill, reject) => {
-    var key = filter;
-    if (global.orders[key])
-      delete global.orders[key];
-    fulfill( null );
-  });
+  var key = filter;
+  if (global.orders[key])
+    delete global.orders[key];
+  ctx.fulfill( null );
 };
 
 module.exports = BlanketOrderChildDao;

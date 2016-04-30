@@ -64,7 +64,7 @@ function fromCto (ctx, dto) {
 //region Data portal methods
 
 function dataCreate ( ctx ) {
-  ctx.dao.create( ctx.connection ).then( dto => {
+  ctx.create().then( dto => {
     ctx.setValue( 'vendorName',   dto.vendorName );
     ctx.setValue( 'contractDate', dto.contractDate );
     ctx.setValue( 'totalPrice',   dto.totalPrice );
@@ -88,13 +88,13 @@ function dataFetch ( ctx, filter, method ) {
   }
   if (method === 'fetchByName') {
     // filter: vendorName
-    ctx.dao.fetchByName( ctx.connection, filter ).then( finish );
+    ctx.call( 'fetchByName', filter ).then( finish );
   } else {
     // filter: primaryKey
-    ctx.dao.fetch( ctx.connection, filter ).then( finish );
+    ctx.fetch( filter ).then( finish );
   }
   // or:
-  // ctx.dao[method]( ctx.connection, filter ).then( finish );
+  // ctx.call( method, filter ).then( finish );
 }
 
 function dataInsert ( ctx ) {
@@ -105,7 +105,7 @@ function dataInsert ( ctx ) {
     schedules:    ctx.getValue( 'schedules' ),
     enabled:      ctx.getValue( 'enabled' )
   };
-  ctx.dao.insert( ctx.connection, dto ).then( dto => {
+  ctx.insert( dto ).then( dto => {
     ctx.setValue( 'orderKey', dto.orderKey );
     ctx.setValue( 'createdDate', dto.createdDate );
     ctx.fulfill( null );
@@ -122,7 +122,7 @@ function dataUpdate ( ctx ) {
       schedules:    ctx.getValue( 'schedules' ),
       enabled:      ctx.getValue( 'enabled' )
     };
-    ctx.dao.update( ctx.connection, dto ).then( dto => {
+    ctx.update( dto ).then( dto => {
       ctx.setValue( 'modifiedDate', dto.modifiedDate );
       ctx.fulfill( null );
     });
@@ -131,7 +131,7 @@ function dataUpdate ( ctx ) {
 
 function dataRemove ( ctx ) {
   var primaryKey = ctx.getValue( 'orderKey' );
-  ctx.dao.remove( ctx.connection, primaryKey ).then( dto => {
+  ctx.remove( primaryKey ).then( dto => {
     ctx.fulfill( null );
   });
 }

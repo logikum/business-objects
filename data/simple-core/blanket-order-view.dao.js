@@ -3,149 +3,84 @@
 var util = require('util');
 var DaoBase = require('../../source/data-access/dao-base.js');
 
-//region Helper methods
+var daoAddressCtor = require('./address.dao.js');
+var daoOrderItemCtor = require('./blanket-order-item.dao.js');
+var daoOrderScheduleCtor = require('./blanket-order-schedule.dao.js');
 
-function fetchAddress (connection, filter, callback) {
-  console.log('--- Blanket order address view DAO.fetch');
-
-  for (var key in global.addresses) {
-    if (global.addresses.hasOwnProperty(key)) {
-      var data = global.addresses[key];
-      if (data.orderKey === filter){
-        callback(null, data);
-        return;
-      }
-    }
-  }
-  callback(null, {});
-}
-
-function fetchItemsOfOrder (connection, filter, callback) {
-  console.log('--- Blanket order item view DAO.fetchForOrder');
-
-  var items = [];
-  for (var key in global.items) {
-    if (global.items.hasOwnProperty(key)) {
-      var item = global.items[key];
-      if (item.orderKey === filter)
-        items.push(item);
-    }
-  }
-  callback(null, items);
-}
-
-function fetchSchedulesOfItem (connection, filter, callback) {
-  console.log('--- Blanket order schedule view DAO.fetchForItem');
-
-  var schedules = [];
-  for (var key in global.schedules) {
-    if (global.schedules.hasOwnProperty(key)) {
-      var schedule = global.schedules[key];
-      if (schedule.orderItemKey === filter)
-        schedules.push(schedule);
-    }
-  }
-  callback(null, schedules);
-}
-
-//endregion
+var daoAddress = new daoAddressCtor();
+var daoOrderItem = new daoOrderItemCtor();
+var daoOrderSchedule = new daoOrderScheduleCtor();
 
 var BlanketOrderViewDao = function() {
   BlanketOrderViewDao.super_.call(this, 'BlanketOrderViewDao');
 };
 util.inherits(BlanketOrderViewDao, DaoBase);
 
-BlanketOrderViewDao.prototype.fetch = function(connection, filter) {
+BlanketOrderViewDao.prototype.fetch = function( ctx, filter ) {
   console.log('--- Blanket order view DAO.fetch');
 
-  return new Promise( (fulfill, reject) => {
-    var key = filter;
-    if (!global.orders[key]) {
-      reject(new Error('Blanket order not found.'));
-      return;
-    }
+  var key = filter;
+  if (!global.orders[key]) {
+    ctx.reject( new Error('Blanket order not found.' ));
+    return;
+  }
 
-    var order = global.orders[key];
-    fetchAddress(connection, order.orderKey, function (err, address) {
-      if (err) {
-        reject(err);
-        return;
-      }
+  var order = global.orders[key];
+  return daoAddress.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
+    .then( address => {
       order.address = address;
 
-      fetchItemsOfOrder(connection, order.orderKey, function (err, items) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        order.items = items;
+      return daoOrderItem.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
+        .then( items => {
+          order.items = items;
 
-        var count = 0;
-        for (var i = 0; i < order.items.length; i++) {
-          var item = order.items[i];
-          fetchSchedulesOfItem(connection, item.orderItemKey, function (err, schedules) {
-            if (err) {
-              reject(err);
-              return;
-            }
-            item.schedules = schedules;
-            if (++count === order.items.length) {
-              fulfill( order );
-            }
-          });
-        }
-      });
+          return Promise.all(items.map(item => {
+            return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
+          }))
+            .then( values => {
+              for (var i = 0; i < values.length; i++) {
+                order.items[i].schedules = values[i];
+              }
+              ctx.fulfill( order );
+            });
+        });
     });
-  });
 };
 
-BlanketOrderViewDao.prototype.fetchByName = function(connection, filter) {
+BlanketOrderViewDao.prototype.fetchByName = function( ctx, filter ) {
   console.log('--- Blanket order view DAO.fetchByName');
 
-  return new Promise( (fulfill, reject) => {
-    var found = false;
-    for (var key in global.orders) {
-      if (global.orders.hasOwnProperty(key)) {
-        var order = global.orders[key];
-        if (order.vendorName === filter) {
-          found = true;
+  var found = false;
+  for (var key in global.orders) {
+    if (global.orders.hasOwnProperty(key)) {
+      var order = global.orders[key];
+      if (order.vendorName === filter) {
+        found = true;
 
-          fetchAddress(connection, order.orderKey, function (err, address) {
-            if (err) {
-              reject(err);
-              return;
-            }
+        return daoAddress.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
+          .then( address => {
             order.address = address;
 
-            fetchItemsOfOrder(connection, order.orderKey, function (err, items) {
-              if (err) {
-                reject(err);
-                return;
-              }
-              order.items = items;
+            return daoOrderItem.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
+              .then( items => {
+                order.items = items;
 
-              var count = 0;
-              for (var i = 0; i < order.items.length; i++) {
-                var item = order.items[i];
-                fetchSchedulesOfItem(connection, item.orderItemKey, function (err, schedules) {
-                  if (err) {
-                    reject(err);
-                    return;
-                  }
-                  item.schedules = schedules;
-                  if (++count === order.items.length) {
-                    fulfill( order );
-                  }
-                });
-              }
-            });
+                return Promise.all(items.map(item => {
+                  return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
+                }))
+                  .then( values => {
+                    for (var i = 0; i < values.length; i++) {
+                      order.items[i].schedules = values[i];
+                    }
+                    ctx.fulfill( order );
+                  });
+              });
           });
-        }
       }
     }
-    if (!found)
-      reject(new Error('Blanket order not found.'));
-  });
+  }
+  if (!found)
+    ctx.reject( new Error('Blanket order not found.' ));
 };
 
 module.exports = BlanketOrderViewDao;

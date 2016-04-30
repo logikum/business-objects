@@ -11,7 +11,7 @@ var NotImplementedError = require('../system/not-implemented-error.js');
  * @memberof bo.dataAccess
  * @constructor
  */
-var ConnectionManagerBase = function () {
+var ConnectionManagerBase = function() {
 };
 
 /**
@@ -22,8 +22,8 @@ var ConnectionManagerBase = function () {
  * @param {string} dataSource - The name of the data source.
  * @returns {Promise<object>} A promise to the new connection.
  */
-ConnectionManagerBase.prototype.openConnection = function (dataSource) {
-  throw new NotImplementedError('method', CLASS_NAME, 'openConnection');
+ConnectionManagerBase.prototype.openConnection = function( dataSource ) {
+  throw new NotImplementedError( 'method', CLASS_NAME, 'openConnection' );
 };
 
 /**
@@ -35,8 +35,8 @@ ConnectionManagerBase.prototype.openConnection = function (dataSource) {
  * @param {object} connection - The connection to be closed.
  * @returns {Promise<object>} A promise to the closed connection.
  */
-ConnectionManagerBase.prototype.closeConnection = function (dataSource, connection) {
-  throw new NotImplementedError('method', CLASS_NAME, 'closeConnection');
+ConnectionManagerBase.prototype.closeConnection = function( dataSource, connection ) {
+  throw new NotImplementedError( 'method', CLASS_NAME, 'closeConnection' );
 };
 
 /**
@@ -48,8 +48,8 @@ ConnectionManagerBase.prototype.closeConnection = function (dataSource, connecti
  * @param {string} dataSource - The name of the data source.
  * @returns {Promise<object>} A promise to the new connection with initiated transaction.
  */
-ConnectionManagerBase.prototype.beginTransaction = function (dataSource) {
-  return this.openConnection(dataSource);
+ConnectionManagerBase.prototype.beginTransaction = function( dataSource ) {
+  return this.openConnection( dataSource );
 };
 
 /**
@@ -62,8 +62,8 @@ ConnectionManagerBase.prototype.beginTransaction = function (dataSource) {
  * @param {object} connection - The connection to be closed.
  * @returns {Promise<object>} A promise to the closed connection.
  */
-ConnectionManagerBase.prototype.commitTransaction = function (dataSource, connection) {
-  return this.closeConnection(dataSource, connection);
+ConnectionManagerBase.prototype.commitTransaction = function( dataSource, connection ) {
+  return this.closeConnection( dataSource, connection );
 };
 
 /**
@@ -76,8 +76,8 @@ ConnectionManagerBase.prototype.commitTransaction = function (dataSource, connec
  * @param {object} connection - The connection to be closed.
  * @returns {Promise<object>} A promise to the closed connection.
  */
-ConnectionManagerBase.prototype.rollbackTransaction = function (dataSource, connection) {
-  return this.closeConnection(dataSource, connection);
+ConnectionManagerBase.prototype.rollbackTransaction = function( dataSource, connection ) {
+  return this.closeConnection( dataSource, connection );
 };
 
 module.exports = ConnectionManagerBase;

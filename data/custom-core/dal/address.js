@@ -8,10 +8,10 @@ var AddressDao = function() {
 };
 util.inherits(AddressDao, DaoBase);
 
-AddressDao.prototype.create = function(connection) {
+AddressDao.prototype.create = function( ctx ) {
   console.log('--- Blanket order address DAO.create');
 
-  return Promise.resolve( {
+  ctx.fulfill( {
     country:    '',
     state:      '',
     city:       '',
@@ -22,57 +22,49 @@ AddressDao.prototype.create = function(connection) {
 };
 
 /* Special fetch method for test circumstances. */
-AddressDao.prototype.fetchForOrder = function(connection, filter) {
+AddressDao.prototype.fetchForOrder = function( ctx, filter ) {
   console.log('--- Blanket order address DAO.fetch');
 
-  return new Promise( (fulfill, reject) => {
-    for (var key in global.addresses) {
-      if (global.addresses.hasOwnProperty(key)) {
-        var data = global.addresses[key];
-        if (data.orderKey === filter) {
-          fulfill( data );
-          return;
-        }
+  for (var key in global.addresses) {
+    if (global.addresses.hasOwnProperty(key)) {
+      var data = global.addresses[key];
+      if (data.orderKey === filter){
+        ctx.fulfill( data );
+        return;
       }
     }
-    fulfill( {} );
-  });
+  }
+  ctx.reject( {} );
 };
 
-AddressDao.prototype.insert = function(connection, data) {
+AddressDao.prototype.insert = function( ctx, data ) {
   console.log('--- Blanket order address DAO.insert');
 
-  return new Promise( (fulfill, reject) => {
-    data.addressKey = ++global.addressKey;
-    var key = data.addressKey;
-    global.addresses[key] = data;
-    fulfill( data );
-  });
+  data.addressKey = ++global.addressKey;
+  var key = data.addressKey;
+  global.addresses[key] = data;
+  ctx.fulfill( data );
 };
 
-AddressDao.prototype.update = function(connection, data) {
+AddressDao.prototype.update = function( ctx, data ) {
   console.log('--- Blanket order address DAO.update');
 
-  return new Promise( (fulfill, reject) => {
-    var key = data.addressKey;
-    if (!global.addresses[key])
-      reject(new Error('Blanket order address not found.'));
-    else {
-      global.addresses[key] = data;
-      fulfill( data );
-    }
-  });
+  var key = data.addressKey;
+  if (!global.addresses[key])
+    ctx.reject( new Error('Blanket order address not found.' ));
+  else {
+    global.addresses[key] = data;
+    ctx.fulfill( data );
+  }
 };
 
-AddressDao.prototype.remove = function(connection, filter) {
+AddressDao.prototype.remove = function( ctx, filter ) {
   console.log('--- Blanket order address DAO.remove');
 
-  return new Promise( (fulfill, reject) => {
-    var key = filter;
-    if (global.addresses[key])
-      delete global.addresses[key];
-    fulfill( null );
-  });
+  var key = filter;
+  if (global.addresses[key])
+    delete global.addresses[key];
+  ctx.fulfill( null );
 };
 
 module.exports = AddressDao;

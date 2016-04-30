@@ -9,7 +9,7 @@ var RescheduleShippingResult = require('./reschedule-shipping-result.js');
 
 //region Data portal methods
 
-function dataExecute ( ctx, method ) {
+function dataExecute( ctx, method ) {
   function finish( dto ) {
     ctx.setValue( 'success', dto.success );
     ctx.fulfill( dto );
@@ -20,11 +20,11 @@ function dataExecute ( ctx, method ) {
     orderScheduleKey: ctx.getValue( 'orderScheduleKey' )
   };
   if (method === 'reschedule')
-    ctx.dao.reschedule( ctx.connection, dto ).then( finish );
+    ctx.call( 'reschedule', dto ).then( finish );
   else
-    dto = ctx.dao.execute( ctx.connection, dto ).then( finish );
+    ctx.execute( dto ).then( finish );
   // or:
-  // ctx.dao[method]( ctx.connection, dto ).then( finish );
+  // ctx.call( method, dto ).then( finish );
 }
 
 //endregion

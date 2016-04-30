@@ -58,7 +58,7 @@ function fromCto (ctx, cto) {
 //region Data portal methods
 
 function dataCreate( ctx ) {
-  ctx.dao.create( ctx.connection ).then( dto => {
+  ctx.create().then( dto => {
     ctx.setValue( 'productName', dto.productName );
     ctx.setValue( 'obsolete',    dto.obsolete );
     ctx.setValue( 'expiry',      dto.expiry );
@@ -88,7 +88,7 @@ function dataInsert( ctx ) {
     quantity:     ctx.getValue( 'quantity' ),
     unitPrice:    ctx.getValue( 'unitPrice' )
   };
-  ctx.dao.insert( ctx.connection, dto ).then( dto => {
+  ctx.insert( dto ).then( dto => {
     ctx.setValue( 'orderItemKey', dto.orderItemKey );
     ctx.fulfill( null );
   });
@@ -104,7 +104,7 @@ function dataUpdate( ctx ) {
       quantity:     ctx.getValue( 'quantity' ),
       unitPrice:    ctx.getValue( 'unitPrice' )
     };
-    ctx.dao.update( ctx.connection, dto ).then( dto => {
+    ctx.update( dto ).then( dto => {
       ctx.fulfill( null );
     });
   }
@@ -112,7 +112,7 @@ function dataUpdate( ctx ) {
 
 function dataRemove( ctx ) {
   var primaryKey = ctx.getValue( 'orderItemKey' );
-  ctx.dao.remove( ctx.connection, primaryKey ).then( dto => {
+  ctx.remove( primaryKey ).then( dto => {
     ctx.fulfill( null );
   });
 }

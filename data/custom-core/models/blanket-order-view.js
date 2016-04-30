@@ -89,13 +89,13 @@ function dataFetch( ctx, filter, method ) {
   }
   if (method === 'fetchByName') {
     // filter: vendorName
-    ctx.dao.fetchByName( ctx.connection, filter ).then( finish );
+    ctx.call( 'fetchByName', filter ).then( finish );
   } else {
     // filter: primaryKey
-    ctx.dao.fetch( ctx.connection, filter ).then( finish );
+    ctx.fetch( filter ).then( finish );
   }
   // or:
-  // ctx.dao[method]( ctx.connection, filter ).then( finish );
+  // ctx.call( method, filter ).then( finish );
 }
 
 //endregion
