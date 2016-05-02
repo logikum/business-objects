@@ -1,14 +1,20 @@
-console.log('Initializing test environment for model composer tests...');
-
 var configuration = require('../../source/shared/configuration-reader.js');
 //var i18n = require('../../source/locales/i18n.js');
 
 configuration.initialize('/config/business-objects.js');
 //i18n.initialize(configuration.pathOfLocales, configuration.getLocale);
 
-describe('Test repository', function () {
+function showTitle() {
+  console.log('');
+  console.log('--------------------------------------------------');
+  console.log('Initializing test environment...' );
+  console.log('--------------------------------------------------');
+}
 
-  it('initialization', function () {
+describe('Test repository', () => {
+
+  it('initialization', () => {
+    showTitle();
 
     global.orderKey = 0;
     global.orders = {};

@@ -4,7 +4,6 @@ var shared = require('../../../source/shared/index.js');
 var Text = require('../../../source/data-types/text.js');
 
 var ExtensionManager = require('../../../source/shared/extension-manager.js');
-var ExtensionManagerSync = require('../../../source/shared/extension-manager-sync.js');
 var EventHandlerList = require('../../../source/shared/event-handler-list.js');
 var DataStore = require('../../../source/shared/data-store.js');
 //var ModelState = require('../../../source/shared/model-state.js');
@@ -39,7 +38,6 @@ describe('Shared component index', function () {
   it('properties return correct components', function() {
 
     expect(new shared.ExtensionManager('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManager));
-    expect(new shared.ExtensionManagerSync('data_source', '/model/path')).toEqual(jasmine.any(ExtensionManagerSync));
     expect(new shared.EventHandlerList()).toEqual(jasmine.any(EventHandlerList));
     expect(new shared.DataStore()).toEqual(jasmine.any(DataStore));
     expect(shared.ModelState).toEqual(jasmine.any(Enumeration));

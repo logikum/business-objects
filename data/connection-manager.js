@@ -32,47 +32,32 @@ var ConnectionManager = function() {
 };
 util.inherits(ConnectionManager, ConnectionManagerBase);
 
-ConnectionManager.prototype.openConnection = function (dataSource, callback) {
+ConnectionManager.prototype.openConnection = function (dataSource) {
   var connection = new Connection(dataSource);
-  if (callback)
-    callback(null, connection);
-  else
-    return connection;
+  return Promise.resolve(connection);
 };
 
-ConnectionManager.prototype.closeConnection = function (dataSource, connection, callback) {
+ConnectionManager.prototype.closeConnection = function (dataSource, connection) {
   connection.close();
-  if (callback)
-    callback(null, null);
-  else
-    return null;
+  return Promise.resolve(null);
 };
 
-ConnectionManager.prototype.beginTransaction = function (dataSource, callback) {
+ConnectionManager.prototype.beginTransaction = function (dataSource) {
   var connection = new Connection(dataSource);
   connection.begin();
-  if (callback)
-    callback(null, connection);
-  else
-    return connection;
+  return Promise.resolve(connection);
 };
 
-ConnectionManager.prototype.commitTransaction = function (dataSource, connection, callback) {
+ConnectionManager.prototype.commitTransaction = function (dataSource, connection) {
   connection.commit();
   connection.close();
-  if (callback)
-    callback(null, null);
-  else
-    return null;
+  return Promise.resolve(null);
 };
 
-ConnectionManager.prototype.rollbackTransaction = function (dataSource, connection, callback) {
+ConnectionManager.prototype.rollbackTransaction = function (dataSource, connection) {
   connection.rollback();
   connection.close();
-  if (callback)
-    callback(null, null);
-  else
-    return null;
+  return Promise.resolve(null);
 };
 
 module.exports = ConnectionManager;

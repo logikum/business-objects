@@ -3,7 +3,6 @@
 
 //var ExtensionManagerBase = require('./extension-manager-base.js');
 var ExtensionManager = require('./extension-manager.js');
-var ExtensionManagerSync = require('./extension-manager-sync.js');
 var EventHandlerList = require('./event-handler-list.js');
 var DataStore = require('./data-store.js');
 var ModelState = require('./model-state.js');
@@ -29,9 +28,7 @@ var DataPortalError = require('./data-portal-error.js');
  * @namespace bo.shared
  *
  * @property {function} ExtensionManager - {@link bo.shared.ExtensionManager Extension manager}
- *      constructor to create new a new extension manager object for an asynchronous model.
- * @property {function} ExtensionManagerSync - {@link bo.shared.ExtensionManagerSync Extension manager}
- *      constructor to create new a new extension manager object for a synchronous model.
+ *      constructor to create new a new extension manager object.
  * @property {function} EventHandlerList - {@link bo.shared.EventHandlerList Event handler list}
  *      constructor to create a new event handler collection.
  * @property {function} DataStore - {@link bo.shared.DataStore DataStore}
@@ -70,7 +67,6 @@ var DataPortalError = require('./data-portal-error.js');
 var index = {
   //ExtensionManagerBase: ExtensionManagerBase,
   ExtensionManager: ExtensionManager,
-  ExtensionManagerSync: ExtensionManagerSync,
   EventHandlerList: EventHandlerList,
   DataStore: DataStore,
   ModelState: ModelState,

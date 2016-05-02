@@ -14,7 +14,7 @@ var UserInfo = require('../system/user-info.js');
  * @description
  *    Creates a new data context object.
  *      </br></br>
- *    <i><b>Warning:</b> Data context objects are created in models internally.
+ *    <i><b>Warning:</b> Data portal context objects are created in models internally.
  *    They are intended only to make publicly available the context
  *    for custom data portal actions.</i>
  *
@@ -31,11 +31,20 @@ var UserInfo = require('../system/user-info.js');
  * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function.
  * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
  */
-function DataPortalContext (dao, properties, getValue, setValue) {
+function DataPortalContext( dao, properties, getValue, setValue ) {
+
+  //region Variables
+
   var self = this;
   var isDirty = false;
   var daConnection = null;
+  var fnFulfill = null;
+  var fnReject = null;
   var check = Argument.inConstructor(CLASS_NAME);
+
+  //endregion
+
+  //region Properties
 
   /**
    * The data access object of the current model.
@@ -43,6 +52,7 @@ function DataPortalContext (dao, properties, getValue, setValue) {
    * @readonly
    */
   this.dao = check(dao || {}).forMandatory('dao').asObject();
+
   /**
    * Array of property definitions that may appear on the data transfer object.
    * @type {Array.<bo.shared.PropertyInfo>}
@@ -59,6 +69,7 @@ function DataPortalContext (dao, properties, getValue, setValue) {
    * @readonly
    */
   this.user = config.getUser();
+
   /**
    * The current locale.
    * @type {string}
@@ -93,6 +104,38 @@ function DataPortalContext (dao, properties, getValue, setValue) {
   });
 
   /**
+   * The fulfilling function of the promise when extension manager
+   * calls a custom data portal method.
+   * @name bo.shared.DataPortalContext#fulfill
+   * @type {function}
+   * @readonly
+   */
+  Object.defineProperty(self, 'fulfill', {
+    get: function () {
+      return fnFulfill;
+    },
+    enumerable: true
+  });
+
+  /**
+   * The rejecting function of the promise when extension manager
+   * calls a custom data portal method.
+   * @name bo.shared.DataPortalContext#reject
+   * @type {function}
+   * @readonly
+   */
+  Object.defineProperty(self, 'reject', {
+    get: function () {
+      return fnReject;
+    },
+    enumerable: true
+  });
+
+  //endregion
+
+  //region Methods
+
+  /**
    * Sets the current state of the model.
    *
    * @param {object} [connection] - The current connection for the data store.
@@ -103,6 +146,18 @@ function DataPortalContext (dao, properties, getValue, setValue) {
     daConnection = connection || null;
     isDirty = isSelfDirty === true;
     return this;
+  };
+
+  /**
+   * Sets the state setting functions of the promise when
+   * extension manager calls a custom data portal method.
+   *
+   * @param {function} fulfill - The fulfill argument of the promise factory.
+   * @param {function} reject - The reject argument of the promise factory.
+   */
+  this.setPromise = function( fulfill, reject ) {
+    fnFulfill = typeof fulfill === 'function' ? fulfill : null;
+    fnReject = typeof reject === 'function' ? reject : null;
   };
 
   function getByName (name) {
@@ -152,6 +207,89 @@ function DataPortalContext (dao, properties, getValue, setValue) {
     } else
       throw new ModelError('writeCollection', properties.name, propertyName);
   };
+
+  //endregion
+
+  //region Call DAO methods
+
+  /**
+   * Calls a method on the data access object with current context.
+   * The method is a shorthand for `dpContext.dao.$runMethod( methodName, dpContext.connection, methodArg )`.
+   *
+   * @param {string} methodName - The name of the method to call.
+   * @param {*} methodArg - Additional argument of the method to call.
+   * @returns {Promise.<*>} Returns a promise to the result of the method.
+   */
+  this.call = function( methodName, methodArg ) {
+    return dao.$runMethod( methodName, this.connection, methodArg );
+  };
+
+  /**
+   * Calls the create method on the data access object with current context.
+   * The method is a shorthand for `dpContext.dao.$runMethod( 'create', dpContext.connection )`.
+   *
+   * @returns {Promise.<*>} Returns a promise to the result of the create method.
+   */
+  this.create = function() {
+    return dao.$runMethod( 'create', this.connection );
+  };
+
+  /**
+   * Calls the fetch method on the data access object with current context.
+   * The method is a shorthand for `dpContext.dao.$runMethod( 'fetch', dpContext.connection, filter )`.
+   *
+   * @param {*} filter - The search conditions of the retrieval.
+   * @returns {Promise.<*>} Returns a promise to the result of the fetch method.
+   */
+  this.fetch = function( filter ) {
+    return dao.$runMethod( 'fetch', this.connection, filter );
+  };
+
+  /**
+   * Calls the insert method on the data access object with current context.
+   * The method is a shorthand for `dpContext.dao.$runMethod( 'insert', dpContext.connection, data )`.
+   *
+   * @param {*} data - The data transfer object.
+   * @returns {Promise.<*>} Returns a promise to the result of the insert method.
+   */
+  this.insert = function( data ) {
+    return dao.$runMethod( 'insert', this.connection, data );
+  };
+
+  /**
+   * Calls the update method on the data access object with current context.
+   * The method is a shorthand for `dpContext.dao.$runMethod( 'update', dpContext.connection, data )`.
+   *
+   * @param {*} data - The data transfer object.
+   * @returns {Promise.<*>} Returns a promise to the result of the update method.
+   */
+  this.update = function( data ) {
+    return dao.$runMethod( 'update', this.connection, data );
+  };
+
+  /**
+   * Calls the remove method on the data access object with current context.
+   * The method is a shorthand for `dpContext.dao.$runMethod( 'remove', dpContext.connection, filter )`.
+   *
+   * @param {*} filter - The search conditions of the removal.
+   * @returns {Promise.<null>} Returns a promise to the result of the remove method, i.e. to a null.
+   */
+  this.remove = function( filter ) {
+    return dao.$runMethod( 'remove', this.connection, filter );
+  };
+
+  /**
+   * Calls the execute method on the data access object with current context.
+   * The method is a shorthand for `dpContext.dao.$runMethod( 'execute', dpContext.connection, data )`.
+   *
+   * @param {*} data - The data transfer object.
+   * @returns {Promise.<*>} Returns a promise to the result of the execute method.
+   */
+  this.execute = function( data ) {
+    return dao.$runMethod( 'execute', this.connection, data );
+  };
+
+  //endregion
 
   // Immutable object.
   Object.freeze(this);

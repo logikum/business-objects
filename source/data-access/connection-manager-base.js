@@ -11,7 +11,7 @@ var NotImplementedError = require('../system/not-implemented-error.js');
  * @memberof bo.dataAccess
  * @constructor
  */
-var ConnectionManagerBase = function () {
+var ConnectionManagerBase = function() {
 };
 
 /**
@@ -20,13 +20,10 @@ var ConnectionManagerBase = function () {
  * @abstract
  * @function bo.dataAccess.ConnectionManagerBase#openConnection
  * @param {string} dataSource - The name of the data source.
- * @param {external.cbConnectionManager} callback - The callback function (for asynchronous models).
- * @returns {object} The new connection (for synchronous models).
+ * @returns {Promise.<object>} A promise to the new connection.
  */
-ConnectionManagerBase.prototype.openConnection = function (dataSource, callback) {
-  //var connection = ...
-  //return connection;
-  throw new NotImplementedError('method', CLASS_NAME, 'openConnection');
+ConnectionManagerBase.prototype.openConnection = function( dataSource ) {
+  throw new NotImplementedError( 'method', CLASS_NAME, 'openConnection' );
 };
 
 /**
@@ -36,13 +33,10 @@ ConnectionManagerBase.prototype.openConnection = function (dataSource, callback)
  * @function bo.dataAccess.ConnectionManagerBase#openConnection
  * @param {string} dataSource - The name of the data source.
  * @param {object} connection - The connection to be closed.
- * @param {external.cbConnectionManager} callback - The callback function (for asynchronous models).
- * @returns {object} The closed connection (for synchronous models).
+ * @returns {Promise.<object>} A promise to the closed connection.
  */
-ConnectionManagerBase.prototype.closeConnection = function (dataSource, connection, callback) {
-  //connection.close();
-  //return null;
-  throw new NotImplementedError('method', CLASS_NAME, 'closeConnection');
+ConnectionManagerBase.prototype.closeConnection = function( dataSource, connection ) {
+  throw new NotImplementedError( 'method', CLASS_NAME, 'closeConnection' );
 };
 
 /**
@@ -52,11 +46,10 @@ ConnectionManagerBase.prototype.closeConnection = function (dataSource, connecti
  * @abstract
  * @function bo.dataAccess.ConnectionManagerBase#beginTransaction
  * @param {string} dataSource - The name of the data source.
- * @param {external.cbConnectionManager} callback - The callback function (for asynchronous models).
- * @returns {object} The new connection with initiated transaction (for synchronous models).
+ * @returns {Promise.<object>} A promise to the new connection with initiated transaction.
  */
-ConnectionManagerBase.prototype.beginTransaction = function (dataSource, callback) {
-  return this.openConnection(dataSource);
+ConnectionManagerBase.prototype.beginTransaction = function( dataSource ) {
+  return this.openConnection( dataSource );
 };
 
 /**
@@ -67,11 +60,10 @@ ConnectionManagerBase.prototype.beginTransaction = function (dataSource, callbac
  * @function bo.dataAccess.ConnectionManagerBase#commitTransaction
  * @param {string} dataSource - The name of the data source.
  * @param {object} connection - The connection to be closed.
- * @param {external.cbConnectionManager} callback - The callback function (for asynchronous models).
- * @returns {object} The closed connection (for synchronous models).
+ * @returns {Promise.<object>} A promise to the closed connection.
  */
-ConnectionManagerBase.prototype.commitTransaction = function (dataSource, connection, callback) {
-  return this.closeConnection(dataSource, connection);
+ConnectionManagerBase.prototype.commitTransaction = function( dataSource, connection ) {
+  return this.closeConnection( dataSource, connection );
 };
 
 /**
@@ -82,11 +74,10 @@ ConnectionManagerBase.prototype.commitTransaction = function (dataSource, connec
  * @function bo.dataAccess.ConnectionManagerBase#rollbackTransaction
  * @param {string} dataSource - The name of the data source.
  * @param {object} connection - The connection to be closed.
- * @param {external.cbConnectionManager} callback - The callback function (for asynchronous models).
- * @returns {object} The closed connection (for synchronous models).
+ * @returns {Promise.<object>} A promise to the closed connection.
  */
-ConnectionManagerBase.prototype.rollbackTransaction = function (dataSource, connection, callback) {
-  return this.closeConnection(dataSource, connection);
+ConnectionManagerBase.prototype.rollbackTransaction = function( dataSource, connection ) {
+  return this.closeConnection( dataSource, connection );
 };
 
 module.exports = ConnectionManagerBase;

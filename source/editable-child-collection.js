@@ -131,83 +131,61 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * <br/>_This method is usually called by the parent object._
      *
      * @function EditableChildCollection#fromCto
-     * @param {Array.<object>} data - The array of client transfer objects.
-     * @param {external.cbFromCto} callback - Returns the eventual error.
+     * @param {Array.<object>} cto - The array of client transfer objects.
+     * @returns {Promise <EditableChildCollection>} Returns a promise to
+     *      the child collection rebuilt.
      */
-    this.fromCto = function (data, callback) {
-      if (!(data instanceof Array))
-        callback(null);
+    this.fromCto = function( cto ) {
+      return new Promise( (fulfill, reject) => {
+        if (cto instanceof Array) {
+          var ctoNew = cto.filter( d => { return true; }); // Deep copy.
+          var itemsLive = [];
+          var itemsLate = [];
+          var index;
 
-      var dataNew = data.filter(function () { return true; });
-      var itemsLive = [];
-      var itemsLate = [];
-      var count = 0;
-      var error = null;
-      var index;
-
-      function finish() {
-        if (++count == dataNew.length) {
-          return callback(error);
-        }
-      }
-      function handleOldNew() {
-        count = 0;
-
-        // Remove non existing items.
-        for (index = 0; index < itemsLate.length; index++) {
-          items[itemsLate[index]].remove();
-        }
-        // Insert non existing data.
-        if (dataNew.length) {
-          dataNew.forEach(function (cto) {
-            itemType.create(parent, eventHandlers, function (err, item) {
-              if (err) {
-                error = error || err;
-                finish();
-              } else {
-                item.fromCto(cto, function (err) {
-                  if (err)
-                    error = error || err;
-                  else
-                    items.push(item);
-                  finish();
-                });
+          // Discover changed items.
+          for (index = 0; index < items.length; index++) {
+            var dataFound = false;
+            var i = 0;
+            for (; i < ctoNew.length; i++) {
+              if (items[ index ].keyEquals( cto[i] )) {
+                itemsLive.push( { item: index, cto: i } );
+                dataFound = true;
+                break;
               }
-            });
-          });
-        } else
-          return callback(null);
-      }
-
-      // Discover changed items.
-      for (index = 0; index < items.length; index++) {
-        var dataFound = false;
-        var i = 0;
-        for (; i < dataNew.length; i++) {
-          if (items[index].keyEquals(data[i])) {
-            itemsLive.push({ item: index, cto: i });
-            dataFound = true;
-            break;
+            }
+            dataFound ?
+              ctoNew.splice(i, 1) :
+              itemsLate.push(index);
           }
-        }
-        if (dataFound)
-          dataNew.splice(i, 1);
-        else
-          itemsLate.push(index);
-      }
-      // Update existing items.
-      if (itemsLive.length)
-        for (index = 0; index < itemsLive.length; index++) {
-          var ix = itemsLive[index];
-          items[ix.item].fromCto(data[ix.cto], function (err) {
-            if (err)
-              error = error || err;
-            if (++count == itemsLive.length)
-              handleOldNew();
-          });
-        }
-      else
-        handleOldNew();
+          // Update existing items.
+          Promise.all( itemsLive.map( live => {
+            return items[ live.item ].fromCto( cto[ live.cto ] );
+          }))
+            .then( values => {
+              // Remove non existing items.
+              for (index = 0; index < itemsLate.length; index++) {
+                items[ itemsLate[ index ]].remove();
+              }
+              // Insert non existing items.
+              Promise.all( ctoNew.map( cto => {
+                return itemType.create( parent, eventHandlers )
+              }))
+                .then( newItems => {
+                  items.push.apply( items, newItems );
+                  Promise.all( newItems.map( (newItem, j) => {
+                    return newItem.fromCto( ctoNew[j] );
+                  }))
+                    .then( values => {
+                      // Finished.
+                      fulfill( self );
+                    })
+                });
+            });
+        } else
+          // Nothing to do.
+          fulfill( self );
+      });
     };
 
     //endregion
@@ -219,22 +197,16 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#create
      * @param {number} index - The index of the new item.
-     * @param {external.cbDataPortal} callback - Returns the newly created editable business object.
+     * @returns {Promise.<EditableChildObject>} Returns a promise to
+     *      the newly created editable business object.
      */
-    this.createItem = function (index) {
-      return new Promise( (fulfill, reject) => {
-        index = index || items.length;
-
-        itemType.create(parent, eventHandlers, function (err, item) {
-          if (err)
-            reject( err );
-          else {
-            var ix = parseInt(index, 10);
-            ix = isNaN(ix) ? items.length : ix;
-            items.splice(ix, 0, item);
-            fulfill( item );
-          }
-        });
+    this.createItem = function( index ) {
+      return itemType.create( parent, eventHandlers )
+        .then( item => {
+          var ix = parseInt( index || items.length, 10 );
+          ix = isNaN( ix ) ? items.length : ix;
+          items.splice( ix, 0, item );
+          return item;
       });
     };
 
@@ -245,27 +217,23 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @function EditableChildCollection#fetch
      * @protected
      * @param {Array.<object>} [data] - The data to load into the business object collection.
-     * @param {external.cbDataPortal} callback - Returns the eventual error.
+     * @returns {Promise.<EditableChildCollection>} Returns a promise to
+     *      indicate the end of load.
      */
-    this.fetch = function (data, callback) {
-      if (data instanceof Array && data.length) {
-        var count = 0;
-        var error = null;
-
-        data.forEach(function (dto) {
-          itemType.load(parent, dto, eventHandlers, function (err, item) {
-            if (err)
-              error = error || err;
-            else
-              items.push(item);
-            // Check if all items are done.
-            if (++count === data.length) {
-              callback(error);
-            }
-          });
-        });
-      } else
-        callback(null);
+    this.fetch = function ( data ) {
+      return data instanceof Array && data.length ?
+        Promise.all( data.map( dto => {
+          return itemType.load( parent, dto, eventHandlers )
+        }))
+          .then( list => {
+            // Add loaded items to the collection.
+            list.forEach( item => {
+              items.push( item );
+            });
+            // Nothing to return.
+            return null;
+          }) :
+        Promise.resolve( null );
     };
 
     /**
@@ -275,26 +243,21 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @function EditableChildCollection#save
      * @protected
      * @param {object} connection - The connection data.
-     * @param {external.cbDataPortal} callback - Returns the eventual error.
+     * @return {Promise.<EditableChildCollection>} Returns a promise to
+     *      the editable child collection.
      */
-    this.save = function (connection, callback) {
-      var count = 0;
-      var error = null;
-      if (items.length) {
-        items.forEach(function (item) {
-          item.save(connection, function (err) {
-            error = error || err;
-            // Check if all items are done.
-            if (++count === items.length) {
-              items = items.filter(function (item) {
-                return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
-              });
-              callback(error);
-            }
+    this.save = function( connection ) {
+      return Promise.all( items.filter( item => {
+          return item.isDirty();
+        }).map( item => {
+          return item.save( connection );
+        }))
+          .then( values => {
+            // Store updated items.
+            items = items.filter( item => {
+              return item.getModelState() !== MODEL_STATE.getName( MODEL_STATE.removed );
+            });
           });
-        });
-      } else
-        callback(null);
     };
 
     /**

@@ -39,14 +39,9 @@ $ grunt baseline
 
 ### Features
 
-| Asynchronous models | Synchronous models |
-| ------------------- | ------------------ |
-| [Editable root object](https://bo.logikum.hu/api/v1.2.0/docstrap/EditableRootObject.html) | [Editable root object](https://bo.logikum.hu/api/v1.2.0/docstrap/EditableRootObjectSync.html) |
-| [Editable root collection](https://bo.logikum.hu/api/v1.2.0/docstrap/EditableRootCollection.html) | [Editable root collection](https://bo.logikum.hu/api/v1.2.0/docstrap/EditableRootCollectionSync.html) |
-| [Editable child object](https://bo.logikum.hu/api/v1.2.0/docstrap/EditableChildObject.html) | [Editable child object](https://bo.logikum.hu/api/v1.2.0/docstrap/EditableChildObjectSync.html) |
-| [Editable child collection](https://bo.logikum.hu/api/v1.2.0/docstrap/EditableChildCollection.html) | [Editable child collection](https://bo.logikum.hu/api/v1.2.0/docstrap/EditableChildCollectionSync.html) |
-| [Read-only root object](https://bo.logikum.hu/api/v1.2.0/docstrap/ReadOnlyRootObject.html) | [Read-only root object](https://bo.logikum.hu/api/v1.2.0/docstrap/ReadOnlyRootObjectSync.html) |
-| [Read-only root collection](https://bo.logikum.hu/api/v1.2.0/docstrap/ReadOnlyRootCollection.html) | [Read-only root collection](https://bo.logikum.hu/api/v1.2.0/docstrap/ReadOnlyRootCollectionSync.html) |
-| [Read-only child object](https://bo.logikum.hu/api/v1.2.0/docstrap/ReadOnlyChildObject.html) | [Read-only child object](https://bo.logikum.hu/api/v1.2.0/docstrap/ReadOnlyChildObjectSync.html) |
-| [Read-only child collection](https://bo.logikum.hu/api/v1.2.0/docstrap/ReadOnlyChildCollection.html) | [Read-only child collection](https://bo.logikum.hu/api/v1.2.0/docstrap/ReadOnlyChildCollectionSync.html) |
-| [Command object](https://bo.logikum.hu/api/v1.2.0/docstrap/CommandObject.html) | [Command object](https://bo.logikum.hu/api/v1.2.0/docstrap/CommandObjectSync.html) |
+| Editable models | Read-only models | Other models |
+| ----------------| ---------------- | ------------ |
+| [Editable root object](https://bo.logikum.hu/api/v1.5.0/docstrap/EditableRootObject.html) | [Read-only root object](https://bo.logikum.hu/api/v1.5.0/docstrap/ReadOnlyRootObject.html) | [Command object](https://bo.logikum.hu/api/v1.5.0/docstrap/CommandObject.html) |  
+| [Editable root collection](https://bo.logikum.hu/api/v1.5.0/docstrap/EditableRootCollection.html) | [Read-only root collection](https://bo.logikum.hu/api/v1.5.0/docstrap/ReadOnlyRootCollection.html) | 
+| [Editable child object](https://bo.logikum.hu/api/v1.5.0/docstrap/EditableChildObject.html) | [Read-only child object](https://bo.logikum.hu/api/v1.5.0/docstrap/ReadOnlyChildObject.html) | 
+| [Editable child collection](https://bo.logikum.hu/api/v1.5.0/docstrap/EditableChildCollection.html) | [Read-only child collection](https://bo.logikum.hu/api/v1.5.0/docstrap/ReadOnlyChildCollection.html) | 

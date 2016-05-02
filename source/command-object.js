@@ -195,27 +195,16 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
 
     //region Child methods
 
-    function loadChildren(dto, callback) {
-      var count = 0;
-      var error = null;
-
-      function finish (err) {
-        error = error || err;
-        // Check if all children are done.
-        if (++count === properties.childCount()) {
-          callback(error);
-        }
-      }
-      if (properties.childCount()) {
-        properties.children().forEach(function(property) {
-          var child = getPropertyValue(property);
-          if (child instanceof ModelBase)
-            child.fetch(dto[property.name], undefined, finish);
-          else
-            child.fetch(dto[property.name], finish);
-        });
-      } else
-        callback(null);
+    function fetchChildren( dto ) {
+      return Promise.all( properties.children().map( property => {
+        var child = getPropertyValue( property );
+        /*
+         return child instanceof ModelBase ?
+         child.fetch( dto[ property.name ], undefined ) :
+         child.fetch( dto[ property.name ] );
+         */
+        return child.fetch( dto[ property.name ] );
+      }));
     }
 
     function childrenAreValid() {
@@ -252,153 +241,98 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
 
     //region Helper
 
-    function getDataContext (connection) {
+    function getDataContext( connection ) {
       if (!dataContext)
         dataContext = new DataPortalContext(
             dao, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setState(connection, false);
+      return dataContext.setState( connection, false );
     }
 
-    function raiseEvent (event, methodName, error) {
+    function raiseEvent( event, methodName, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, null, methodName, error )
       );
     }
 
-    function wrapError (error) {
-      return new DataPortalError(MODEL_DESC, name, DataPortalAction.execute, error);
-    }
-
-    function runStatements (main, callback) {
-      // Open connection.
-      config.connectionManager.openConnection(
-          extensions.dataSource, function (errOpen, connection) {
-            if (errOpen)
-              callback(wrapError(errOpen));
-            else
-              main(connection, function (err, result) {
-                // Close connection.
-                config.connectionManager.closeConnection(
-                    extensions.dataSource, connection, function (errClose, connClosed) {
-                      connection = connClosed;
-                      if (err)
-                        callback(wrapError(err));
-                      else if (errClose)
-                        callback(wrapError(errClose));
-                      else
-                        callback(null, result);
-                    });
-              });
-          });
-    }
-
-    function runTransaction (main, callback) {
-      // Start transaction.
-      config.connectionManager.beginTransaction(
-          extensions.dataSource, function (errBegin, connection) {
-            if (errBegin)
-              callback(wrapError(errBegin));
-            else
-              main(connection, function (err, result) {
-                if (err)
-                // Undo transaction.
-                  config.connectionManager.rollbackTransaction(
-                      extensions.dataSource, connection, function (errRollback, connClosed) {
-                        connection = connClosed;
-                        callback(wrapError(err));
-                      });
-                else
-                // Finish transaction.
-                  config.connectionManager.commitTransaction(
-                      extensions.dataSource, connection, function (errCommit, connClosed) {
-                        connection = connClosed;
-                        if (errCommit)
-                          callback(wrapError(errCommit));
-                        else
-                          callback(null, result);
-                      });
-              });
-          });
+    function wrapError( error ) {
+      return new DataPortalError( MODEL_DESC, name, DataPortalAction.execute, error );
     }
 
     //endregion
 
     //region Execute
 
-    function data_execute (method, isTransaction, callback) {
-      var hasConnection = false;
-      // Helper function for post-execute actions.
-      function finish (dto, cb) {
-        // Fetch children as well.
-        loadChildren(dto, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            // Launch finish event.
-            /**
-             * The event arises after the command object has been executed in the repository.
-             * @event CommandObject#postExecute
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {CommandObject} newObject - The instance of the model after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postExecute, method);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(err);
-          raiseEvent(DataPortalEvent.postExecute, method, dpError);
+    function data_execute( method, isTransaction ) {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (method === M_EXECUTE ? canDo( AuthorizationAction.executeCommand ) : canExecute( method )) {
+          var connection = null;
+          (isTransaction ?
+              config.connectionManager.beginTransaction( extensions.dataSource ) :
+              config.connectionManager.openConnection( extensions.dataSource ))
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              /**
+               * The event arises before the command object will be executed in the repository.
+               * @event CommandObject#preExecute
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {CommandObject} oldObject - The instance of the model before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preExecute, method );
+              // Execute command.
+              return extensions.dataExecute ?
+                // *** Custom execute.
+                extensions.$runMethod( 'execute', self, getDataContext( connection ), method ) :
+                // *** Standard execute.
+                dao.$runMethod( method, connection, /* dto = */ toDto.call( self ))
+                  .then( dto => {
+                    // Load property values.
+                    fromDto.call( self, dto );
+                    return dto;
+                  });
+            })
+            .then( dto => {
+              // Fetch children as well.
+              return fetchChildren( dto );
+            })
+            .then( none => {
+              // Launch finish event.
+              /**
+               * The event arises after the command object has been executed in the repository.
+               * @event CommandObject#postExecute
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {CommandObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postExecute, method );
+              // Close connection/Finish transaction.
+              (isTransaction ?
+                  config.connectionManager.commitTransaction( extensions.dataSource, connection ) :
+                  config.connectionManager.closeConnection( extensions.dataSource, connection ))
+                .then( none => {
+                  // Returns the executed command object.
+                  fulfill( self );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( reason );
+              // Launch finish event.
+              if (connection)
+                raiseEvent( DataPortalEvent.postExecute, method, dpe );
+              // Close connection/Undo transaction.
+              (isTransaction ?
+                  config.connectionManager.rollbackTransaction( extensions.dataSource, connection ) :
+                  config.connectionManager.closeConnection( extensions.dataSource, connection ))
+                .then( none => {
+                  // Pass the error.
+                  reject( dpe );
+                });
+            });
         }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        /**
-         * The event arises before the command object will be executed in the repository.
-         * @event CommandObject#preExecute
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {CommandObject} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preExecute, method);
-        // Execute command.
-        if (extensions.dataExecute) {
-          // *** Custom execute.
-          extensions.dataExecute.call(self, getDataContext(connection), method, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else
-              finish(dto, cb);
-          });
-        } else {
-          // *** Standard execute.
-          var dto = toDto.call(self);
-          dao.$runMethod(method, connection, dto, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else {
-              fromDto.call(self, dto);
-              finish(dto, cb);
-            }
-          });
-        }
-      }
-      // Check permissions.
-      if (method === M_EXECUTE ? canDo(AuthorizationAction.executeCommand) : canExecute(method)) {
-        if (isTransaction)
-          runTransaction(main, callback);
-        else
-          runStatements(main, callback);
-      }
-      else
-        callback(null, self);
+      });
     }
 
     //endregion
@@ -415,7 +349,8 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
      * @function CommandObject#execute
      * @param {string} [method] - An alternative execute method of the data access object.
      * @param {boolean} [isTransaction] - Indicates whether transaction is required.
-     * @param {external.cbDataPortal} callback - Returns the command object with the result.
+     * @returns {Promise.<CommandObject>} callback - Returns a promise to
+     *      the command object with the result.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -426,23 +361,18 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
      */
-    this.execute = function(method, isTransaction) {
-      return new Promise( (fulfill, reject) => {
-        var check = Argument.inMethod(name, 'execute');
+    this.execute = function( method, isTransaction ) {
+      var check = Argument.inMethod( name, 'execute' );
 
-        if (typeof method === 'boolean' || method instanceof Boolean) {
-          isTransaction = method;
-          method = M_EXECUTE;
-        }
+      if (typeof method === 'boolean' || method instanceof Boolean) {
+        isTransaction = method;
+        method = M_EXECUTE;
+      }
 
-        method = check(method).forOptional('method').asString();
-        isTransaction = check(isTransaction).forOptional('isTransaction').asBoolean();
+      method = check( method ).forOptional( 'method' ).asString();
+      isTransaction = check( isTransaction ).forOptional( 'isTransaction' ).asBoolean();
 
-        data_execute( method || M_EXECUTE, function( err, res ) {
-          if (err) reject( err );
-          else fulfill( res );
-        });
-      });
+      return data_execute( method || M_EXECUTE, isTransaction);
     };
 
     //endregion
@@ -567,14 +497,10 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
         rules.add(new DataTypeRule(property));
 
       } else {
-        // Child item/collection
-        if (property.type.create) // Item
-          property.type.create(self, eventHandlers, function (err, item) {
-            store.initValue(property, item);
-          });
-        else                      // Collection
-          store.initValue(property, new property.type(self, eventHandlers));
+        // Create child element and initialize property value.
+        store.initValue(property, new property.type(self, eventHandlers));
 
+        // Create child element property.
         Object.defineProperty(self, property.name, {
           get: function () {
             return readPropertyValue(property);
@@ -588,12 +514,12 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
     });
 
     // Add other execute methods to the instance.
-    extensions.buildOtherMethods(self, false);
+    extensions.buildOtherMethods( self, false );
 
     //endregion
 
     // Immutable object.
-    Object.freeze(this);
+    Object.freeze( this );
   };
   util.inherits(CommandObject, ModelBase);
 
@@ -624,15 +550,15 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
    *
    * @function CommandObject.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns a new command object.
+   * @returns {CommandObject} Returns a new command object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The event handlers must be an EventHandlerList object or null.
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The callback must be a function.
    */
-  CommandObject.create = function(eventHandlers) {
-    return new CommandObject(eventHandlers);
+  CommandObject.create = function( eventHandlers ) {
+    return new CommandObject( eventHandlers );
   };
 
   //endregion

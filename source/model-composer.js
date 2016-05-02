@@ -885,7 +885,6 @@ function ModelComposer (modelName) {
    *      * {@link EditableChildObject}
    *
    * @function ModelComposer#canCreate
-   * @protected
    * @param {function} ruleFactory - A factory function that returns the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
@@ -917,7 +916,6 @@ function ModelComposer (modelName) {
    *      * {@link ReadOnlyChildObject}
    *
    * @function ModelComposer#canFetch
-   * @protected
    * @param {function} ruleFactory - A factory function that returns the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
@@ -946,7 +944,6 @@ function ModelComposer (modelName) {
    *      * {@link EditableChildObject}
    *
    * @function ModelComposer#canUpdate
-   * @protected
    * @param {function} ruleFactory - A factory function that returns the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
@@ -975,7 +972,6 @@ function ModelComposer (modelName) {
    *      * {@link EditableChildObject}
    *
    * @function ModelComposer#canRemove
-   * @protected
    * @param {function} ruleFactory - A factory function that returns the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
@@ -1002,7 +998,6 @@ function ModelComposer (modelName) {
    *      * {@link CommandObject}
    *
    * @function ModelComposer#canExecute
-   * @protected
    * @param {function} ruleFactory - A factory function that returns the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
    * @param {*} [&hellip;params] - Optional parameters depending on the authorization rule.
@@ -1043,7 +1038,6 @@ function ModelComposer (modelName) {
    *      * {@link CommandObject}
    *
    * @function ModelComposer#canCall
-   * @protected
    * @param {string} methodName - The name of the custom method to execute.
    * @param {function} ruleFactory - A factory function that returns the
    *    {@link bo.rules.AuthorizationRule authorization rule} to add.
@@ -1087,7 +1081,6 @@ function ModelComposer (modelName) {
    *      * {@link CommandObject}
    *
    * @function ModelComposer#daoBuilder
-   * @protected
    * @param {function} daoBuilder - A factory function that returns the
    *    {@link bo.dataAccess.daoBuilder data access object} for the model instance.
    * @returns {ModelComposer}
@@ -1115,7 +1108,6 @@ function ModelComposer (modelName) {
    *      * {@link CommandObject}
    *
    * @function ModelComposer#toDto
-   * @protected
    * @param {function} toDto - A factory function that converts
    *    the model instance to data transfer object.
    * @returns {ModelComposer}
@@ -1142,7 +1134,6 @@ function ModelComposer (modelName) {
    *      * {@link CommandObject}
    *
    * @function ModelComposer#fromDto
-   * @protected
    * @param {function} fromDto - A factory function that converts
    *    the data transfer object to model instance.
    * @returns {ModelComposer}
@@ -1170,7 +1161,6 @@ function ModelComposer (modelName) {
    *      * {@link ReadOnlyChildObject}
    *
    * @function ModelComposer#toCto
-   * @protected
    * @param {function} toCto - A factory function that converts
    *    the model instance to client transfer object.
    * @returns {ModelComposer}
@@ -1195,7 +1185,6 @@ function ModelComposer (modelName) {
    *      * {@link EditableChildObject}
    *
    * @function ModelComposer#fromCto
-   * @protected
    * @param {function} fromCto - A factory function that converts
    *    the client transfer object to model instance.
    * @returns {ModelComposer}
@@ -1219,7 +1208,6 @@ function ModelComposer (modelName) {
    *      * {@link EditableChildObject}
    *
    * @function ModelComposer#dataCreate
-   * @protected
    * @param {function} dataCreate - A factory function that returns
    *    the property values of a new instance from the data source.
    * @returns {ModelComposer}
@@ -1247,7 +1235,6 @@ function ModelComposer (modelName) {
    *      * {@link ReadOnlyChildObject}
    *
    * @function ModelComposer#dataFetch
-   * @protected
    * @param {function} dataFetch - A factory function that returns
    *    the property values of an existing instance from the data source.
    * @returns {ModelComposer}
@@ -1271,7 +1258,6 @@ function ModelComposer (modelName) {
    *      * {@link EditableChildObject}
    *
    * @function ModelComposer#dataInsert
-   * @protected
    * @param {function} dataInsert - A factory function that saves
    *    a new instance into the data source.
    * @returns {ModelComposer}
@@ -1295,7 +1281,6 @@ function ModelComposer (modelName) {
    *      * {@link EditableChildObject}
    *
    * @function ModelComposer#dataUpdate
-   * @protected
    * @param {function} dataUpdate - A factory function that saves
    *    an existing instance into the data source.
    * @returns {ModelComposer}
@@ -1319,7 +1304,6 @@ function ModelComposer (modelName) {
    *      * {@link EditableChildObject}
    *
    * @function ModelComposer#dataRemove
-   * @protected
    * @param {function} dataRemove - A factory function that deletes
    *    an existing instance from the data source.
    * @returns {ModelComposer}
@@ -1342,7 +1326,6 @@ function ModelComposer (modelName) {
    *      * {@link CommandObject}
    *
    * @function ModelComposer#dataExecute
-   * @protected
    * @param {function} dataExecute - A factory function that executes
    *    a command on the data source.
    * @returns {ModelComposer}
@@ -1367,7 +1350,6 @@ function ModelComposer (modelName) {
    *      * {@link CommandObject}
    *
    * @function ModelComposer#addMethod
-   * @protected
    * @param {string} methodName - The name of the method on the data access object to be called.
    * @returns {ModelComposer}
    *

@@ -140,26 +140,23 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * @function ReadOnlyChildCollection#fetch
      * @protected
      * @param {Array.<object>} [data] - The data to load into the business object collection.
-     * @param {external.cbDataPortal} callback - Returns the eventual error.
+     * @returns {Promise.<ReadOnlyChildCollection>} Returns a promise to
+     *      indicate the end of load.
      */
-    this.fetch = function (data, callback) {
-      if (data instanceof Array && data.length) {
-        var count = 0;
-        var error = null;
-        data.forEach(function (dto) {
-          itemType.load(parent, dto, eventHandlers, function (err, item) {
-            if (err)
-              error = error || err;
-            else
-              items.push(item);
-            // Check if all items are done.
-            if (++count === data.length) {
-              callback(error);
-            }
-          });
-        });
-      } else
-        callback(null);
+    this.fetch = function ( data ) {
+      return data instanceof Array && data.length ?
+        Promise.all( data.map( dto => {
+          return itemType.load( parent, dto, eventHandlers )
+        }))
+          .then( list => {
+            // Add loaded items to the collection.
+            list.forEach( item => {
+              items.push( item );
+            });
+            // Nothing to return.
+            return null;
+          }) :
+        Promise.resolve( null );
     };
 
     /**

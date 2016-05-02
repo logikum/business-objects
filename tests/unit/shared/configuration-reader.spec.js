@@ -10,29 +10,54 @@ describe('Business objects configuration reader object', function() {
   // Initialize the test environment.
   configuration.initialize('/config/business-objects.js');
 
-  it('has a connection manager object', function() {
+  it('has a connection manager object', done => {
 
     expect(configuration.connectionManager).toEqual(jasmine.any(ConnectionManager));
 
-    var connection = configuration.connectionManager.openConnection('db');
+    configuration.connectionManager.openConnection('db')
+    .then( connection => {
 
-    expect(connection.dataSource).toBe('db');
-    expect(connection.connectionId).toBe(1);
-    expect(connection.transactionId).toBeNull();
+      expect(connection.dataSource).toBe('db');
+      expect(connection.connectionId).toBe(1);
+      expect(connection.transactionId).toBeNull();
 
-    connection = configuration.connectionManager.closeConnection('db', connection);
+      return connection;
+    })
+    .then( connection => {
 
-    expect(connection).toBeNull();
+      return configuration.connectionManager.closeConnection('db', connection)
+      .then( connection => {
 
-    var connection = configuration.connectionManager.beginTransaction('db');
+        expect(connection).toBeNull();
 
-    expect(connection.dataSource).toBe('db');
-    expect(connection.connectionId).toBe(2);
-    expect(connection.transactionId).toBe(1);
+        return null;
+      });
+    })
+    .then( none => {
 
-    connection = configuration.connectionManager.commitTransaction('db', connection);
+      return configuration.connectionManager.beginTransaction('db')
+      .then( connection => {
 
-    expect(connection).toBeNull();
+        expect(connection.dataSource).toBe('db');
+        expect(connection.connectionId).toBe(2);
+        expect(connection.transactionId).toBe(1);
+
+        return connection;
+      });
+    })
+    .then( connection => {
+
+      return configuration.connectionManager.commitTransaction('db', connection)
+      .then( connection => {
+
+        expect(connection).toBeNull();
+
+        done();
+      });
+    })
+    .catch( reason => {
+      console.log( reason );
+    });
   });
 
   it('has a data access object builder method', function() {

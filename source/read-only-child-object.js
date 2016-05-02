@@ -34,6 +34,7 @@ var DataPortalEventArgs = require('./shared/data-portal-event-args.js');
 var DataPortalError = require('./shared/data-portal-error.js');
 
 var CLASS_NAME = 'ReadOnlyChildObject';
+var MODEL_DESC = 'Read-only child object';
 var M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
 
 //endregion
@@ -222,26 +223,17 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
     //region Child methods
 
     function fetchChildren(dto, callback) {
-      var count = 0;
-      var error = null;
-
-      function finish (err) {
-        error = error || err;
-        // Check if all children are done.
-        if (++count === properties.childCount()) {
-          callback(error);
-        }
-      }
-      if (properties.childCount()) {
-        properties.children().forEach(function(property) {
-          var child = getPropertyValue(property);
-          if (child instanceof ModelBase)
-            child.fetch(dto[property.name], undefined, finish);
-          else
-            child.fetch(dto[property.name], finish);
-        });
-      } else
-        callback(null);
+      return properties.childCount() ?
+        Promise.all( properties.children().map( property => {
+          var child = getPropertyValue( property );
+          /*
+           return child instanceof ModelBase ?
+           child.fetch( dto[ property.name ], undefined ) :
+           child.fetch( dto[ property.name ] );
+           */
+          return child.fetch( dto[ property.name ] );
+        })) :
+        Promise.resolve( [] );
     }
 
     function childrenAreValid() {
@@ -278,83 +270,75 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Helper
 
-    function getDataContext () {
+    function getDataContext() {
       if (!dataContext)
         dataContext = new DataPortalContext(
           null, properties.toArray(), getPropertyValue, setPropertyValue
         );
-      return dataContext.setState(null, false);
+      return dataContext.setState( null, false );
     }
 
-    function raiseEvent (event, methodName, error) {
+    function raiseEvent( event, methodName, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, null, methodName, error )
       );
     }
 
-    function wrapError (error) {
-      return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
+    function wrapError( error ) {
+      return new DataPortalError( MODEL_DESC, name, DataPortalAction.fetch, error );
     }
 
     //endregion
 
     //region Fetch
 
-    function data_fetch (data, method, callback) {
-      // Helper function for post-fetch actions.
-      function finish (dto, cb) {
-        // Fetch children as well.
-        fetchChildren(dto, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            // Launch finish event.
-            /**
-             * The event arises after the business object instance has been retrieved from the repository.
-             * @event ReadOnlyChildObject#postFetch
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {ReadOnlyChildObject} newObject - The instance of the model after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postFetch, method);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        // Launch finish event.
-        var dpError = wrapError(err);
-        raiseEvent(DataPortalEvent.postFetch, method, dpError);
-        cb(err);
-      }
-      // Check permissions.
-      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method)) {
-        // Launch start event.
-        /**
-         * The event arises before the business object instance will be retrieved from the repository.
-         * @event ReadOnlyChildObject#preFetch
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {ReadOnlyChildObject} oldObject - The instance of the model before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preFetch, method);
-        // Execute fetch.
-        if (extensions.dataFetch) {
-          // Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(), data, method, function (err, dto) {
-            if (err)
-              failed(err, callback);
-            else
-              finish(dto, callback);
-          });
-        } else {
-          // Standard fetch.
-          // Child element gets data from parent.
-          fromDto.call(self, data);
-          finish(data, callback);
+    function data_fetch ( data, method ) {
+      return new Promise( (fulfill, reject) => {
+        if (method === M_FETCH ? canDo( AuthorizationAction.fetchObject ) : canExecute( method )) {
+          // Launch start event.
+          /**
+           * The event arises before the business object instance will be retrieved from the repository.
+           * @event ReadOnlyChildObject#preFetch
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {ReadOnlyChildObject} oldObject - The instance of the model before the data portal action.
+           */
+          raiseEvent( DataPortalEvent.preFetch, method );
+          // Execute fetch.
+          (extensions.dataFetch ?
+              // *** Custom fetch.
+              extensions.$runMethod( 'fetch', self, getDataContext(), data, method ) :
+              // *** Standard fetch.
+              new Promise( (f, r) => {
+                fromDto.call(self, data);
+                f(data);
+            }))
+            .then( none => {
+              // Fetch children as well.
+              return fetchChildren( data );
+            })
+            .then( none => {
+              // Launch finish event.
+              /**
+               * The event arises after the business object instance has been retrieved from the repository.
+               * @event ReadOnlyChildObject#postFetch
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {ReadOnlyChildObject} newObject - The instance of the model after the data portal action.
+               */
+              raiseEvent(DataPortalEvent.postFetch, method);
+              // Return the fetched read-only child object.
+              fulfill( self );
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( reason );
+              // Launch finish event.
+              raiseEvent( DataPortalEvent.postFetch, method, dpe );
+              // Pass the error.
+              reject( dpe );
+            });
         }
-      } else
-        callback(null, self);
+      });
     }
 
     //endregion
@@ -371,10 +355,11 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
      * @protected
      * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
-     * @param {external.cbDataPortal} callback - Returns the required read-only business object.
+     * @returns {Promise.<ReadOnlyChildObject>} Returns a promise to
+     *      the required read-only child object.
      */
-    this.fetch = function(data, method, callback) {
-      data_fetch(data, method || M_FETCH, callback);
+    this.fetch = function( data, method ) {
+      return data_fetch( data, method || M_FETCH );
     };
 
     //endregion
@@ -492,9 +477,10 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
       } else {
         // Child item/collection
         if (property.type.create) // Item
-          property.type.create(self, eventHandlers, function (err, item) {
-            store.initValue(property, item);
-          });
+          //property.type.create(self, eventHandlers, function (err, item) {
+          //  store.initValue(property, item);
+          //});
+          store.initValue(property, new property.type(self, eventHandlers));
         else                      // Collection
           store.initValue(property, new property.type(self, eventHandlers));
 
@@ -540,21 +526,6 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
   //region Factory methods
 
   /**
-   * Creates a new read-only business object instance.
-   * <br/>_This method is called by the parent object._
-   *
-   * @function ReadOnlyChildObject.create
-   * @protected
-   * @param {object} parent - The parent business object.
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns a new read-only business object.
-   */
-  ReadOnlyChildObject.create = function(parent, eventHandlers, callback) {
-    var instance = new ReadOnlyChildObject(parent, eventHandlers);
-    callback(null, instance);
-  };
-
-  /**
    * Initializes a read-only business object width data retrieved from the repository.
    * <br/>_This method is called by the parent object._
    *
@@ -563,19 +534,15 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
    * @param {object} parent - The parent business object.
    * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns the required read-only business object.
+   * @returns {Promise.<ReadOnlyChildObject>} Returns a promise to
+   *      the required read-only child object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
    */
-  ReadOnlyChildObject.load = function(parent, data, eventHandlers, callback) {
-    var instance = new ReadOnlyChildObject(parent, eventHandlers);
-    instance.fetch(data, undefined, function (err) {
-      if (err)
-        callback(err);
-      else
-        callback(null, instance);
-    });
+  ReadOnlyChildObject.load = function( parent, data, eventHandlers ) {
+    var instance = new ReadOnlyChildObject( parent, eventHandlers );
+    return instance.fetch( data );
   };
 
   //endregion

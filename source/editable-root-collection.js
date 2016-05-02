@@ -362,89 +362,64 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#fromCto
      * @param {object[]} cto - The client transfer object.
-     * @param {external.cbFromCto} callback - Returns the eventual error.
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to
+     *      the root collection rebuilt.
      */
-    this.fromCto = function (cto) {
+    this.fromCto = function( cto ) {
       return new Promise( (fulfill, reject) => {
         if (extensions.fromCto)
-          extensions.fromCto.call(self, getTransferContext(true), cto);
+          extensions.fromCto.call( self, getTransferContext( true ), cto );
         else
-          baseFromCto(cto);
+          baseFromCto( cto );
 
-        // Build children.
-        if (!(cto instanceof Array))
-          fulfill(null);
+        if (cto instanceof Array) {
+          var ctoNew = cto.filter( d => { return true; }); // Deep copy.
+          var itemsLive = [];
+          var itemsLate = [];
+          var index;
 
-        var dataNew = cto.filter(function () { return true; });
-        var itemsLive = [];
-        var itemsLate = [];
-        var count = 0;
-        var error = null;
-        var index;
-
-        function finish() {
-          if (++count == dataNew.length) {
-            return error ? reject(error) : fulfill(null);
-          }
-        }
-        function handleOldNew() {
-          count = 0;
-
-          // Remove non existing items.
-          for (index = 0; index < itemsLate.length; index++) {
-            items[itemsLate[index]].remove();
-          }
-          // Insert non existing data.
-          if (dataNew.length) {
-            dataNew.forEach(function (cto) {
-              itemType.create(self, eventHandlers, function (err, item) {
-                if (err) {
-                  error = error || err;
-                  finish();
-                } else {
-                  item.fromCto(cto, function (err) {
-                    if (err)
-                      error = error || err;
-                    else
-                      items.push(item);
-                    finish();
-                  });
-                }
-              });
-            });
-          } else
-            return fulfill(null);
-        }
-
-        // Discover changed items.
-        for (index = 0; index < items.length; index++) {
-          var dataFound = false;
-          var i = 0;
-          for (; i < dataNew.length; i++) {
-            if (items[index].keyEquals(cto[i])) {
-              itemsLive.push({ item: index, cto: i });
-              dataFound = true;
-              break;
+          // Discover changed items.
+          for (index = 0; index < items.length; index++) {
+            var dataFound = false;
+            var i = 0;
+            for (; i < ctoNew.length; i++) {
+              if (items[ index ].keyEquals( cto[i] )) {
+                itemsLive.push( { item: index, cto: i } );
+                dataFound = true;
+                break;
+              }
             }
+            dataFound ?
+              ctoNew.splice(i, 1) :
+              itemsLate.push(index);
           }
-          if (dataFound)
-            dataNew.splice(i, 1);
-          else
-            itemsLate.push(index);
-        }
-        // Update existing items.
-        if (itemsLive.length)
-          for (index = 0; index < itemsLive.length; index++) {
-            var ix = itemsLive[index];
-            items[ix.item].fromCto(cto[ix.cto], function (err) {
-              if (err)
-                error = error || err;
-              if (++count == itemsLive.length)
-                handleOldNew();
+          // Update existing items.
+          Promise.all( itemsLive.map( live => {
+            return items[ live.item ].fromCto( cto[ live.cto ] );
+          }))
+            .then( values => {
+              // Remove non existing items.
+              for (index = 0; index < itemsLate.length; index++) {
+                items[ itemsLate[ index ]].remove();
+              }
+              // Insert non existing items.
+              Promise.all( ctoNew.map( cto => {
+                return itemType.create( self, eventHandlers )
+              }))
+                .then( newItems => {
+                  items.push.apply( items, newItems );
+                  Promise.all( newItems.map( (newItem, i) => {
+                    return newItem.fromCto( ctoNew[i] );
+                  }))
+                    .then( values => {
+                      // Finished.
+                      fulfill( self );
+                    })
+                });
             });
-          }
-        else
-          handleOldNew();
+        } else
+          // Nothing to do.
+          fulfill( self );
       });
     };
 
@@ -472,54 +447,26 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
 
     //region Child methods
 
-    function fetchChildren (dto, callback) {
-      if (dto instanceof Array && dto.length) {
-        var count = 0;
-        var error = null;
-
-        dto.forEach(function (data) {
-          itemType.safeLoad(self, data, eventHandlers, function (err, item) {
-            if (err)
-              error = error || err;
-            else
-              items.push(item);
-            // Check if all items are done.
-            if (++count === dto.length)
-              callback(error);
-          });
-        });
-      } else
-        callback(null);
+    function fetchChildren( data ) {
+      return data instanceof Array && data.length ?
+        Promise.all( data.map( dto => {
+          return itemType.load( self, dto, eventHandlers )
+        }))
+          .then( list => {
+            // Add loaded items to the collection.
+            list.forEach( item => {
+              items.push( item );
+            });
+            // Nothing to return.
+            return null;
+          }) :
+        Promise.resolve( null );
     }
 
-    function insertChildren(connection, callback) {
-      saveChildren(connection, callback);
-    }
-
-    function updateChildren(connection, callback) {
-      saveChildren(connection, callback);
-    }
-
-    function removeChildren(connection, callback) {
-      saveChildren(connection, callback);
-    }
-
-    function saveChildren(connection, callback) {
-      if (items.length) {
-        var count = 0;
-        var error = null;
-
-        items.forEach(function (item) {
-          item.save(connection, function (err) {
-            error = error || err;
-            // Check if all items are done.
-            if (++count === items.length) {
-              callback(error);
-            }
-          });
-        });
-      } else
-        callback(null);
+    function saveChildren( connection ) {
+      return Promise.all( items.map( item => {
+        return item.save( connection );
+      }));
     }
 
     function childrenAreValid () {
@@ -540,367 +487,335 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
 
     //region Helper
 
-    function getDataContext (connection) {
+    function getDataContext( connection ) {
       if (!dataContext)
-        dataContext = new DataPortalContext(dao);
-      return dataContext.setState(connection, false);
+        dataContext = new DataPortalContext( dao );
+      return dataContext.setState( connection, false );
     }
 
-    function raiseEvent (event, methodName, error) {
+    function raiseEvent( event, methodName, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, null, methodName, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, null, methodName, error )
       );
     }
 
-    function raiseSave (event, action, error) {
+    function raiseSave( event, action, error ) {
       self.emit(
-          DataPortalEvent.getName(event),
-          new DataPortalEventArgs(event, name, action, null, error)
+          DataPortalEvent.getName( event ),
+          new DataPortalEventArgs( event, name, action, null, error )
       );
     }
 
-    function wrapError (error) {
-      return new DataPortalError(MODEL_DESC, name, DataPortalAction.fetch, error);
-    }
-
-    function runStatements (main, action, callback) {
-      // Open connection.
-      config.connectionManager.openConnection(
-          extensions.dataSource, function (errOpen, connection) {
-            if (errOpen)
-              callback(wrapError(action, errOpen));
-            else
-              main(connection, function (err, result) {
-                // Close connection.
-                config.connectionManager.closeConnection(
-                    extensions.dataSource, connection, function (errClose, connClosed) {
-                      connection = connClosed;
-                      if (err)
-                        callback(wrapError(action, err));
-                      else if (errClose)
-                        callback(wrapError(action, errClose));
-                      else
-                        callback(null, result);
-                    });
-              });
-          });
-    }
-
-    function runTransaction (main, action, callback) {
-      // Start transaction.
-      config.connectionManager.beginTransaction(
-          extensions.dataSource, function (errBegin, connection) {
-            if (errBegin)
-              callback(wrapError(action, errBegin));
-            else
-              main(connection, function (err, result) {
-                if (err)
-                // Undo transaction.
-                  config.connectionManager.rollbackTransaction(
-                      extensions.dataSource, connection, function (errRollback, connClosed) {
-                        connection = connClosed;
-                        callback(wrapError(action, err));
-                      });
-                else
-                // Finish transaction.
-                  config.connectionManager.commitTransaction(
-                      extensions.dataSource, connection, function (errCommit, connClosed) {
-                        connection = connClosed;
-                        if (errCommit)
-                          callback(wrapError(action, errCommit));
-                        else
-                          callback(null, result);
-                      });
-              });
-          });
+    function wrapError( error ) {
+      return new DataPortalError( MODEL_DESC, name, DataPortalAction.fetch, error );
     }
 
     //endregion
 
     //region Create
 
-    function data_create (callback) {
-      var hasConnection = false;
-      // Helper callback for post-creation actions.
-      function finish (cb) {
-        markAsCreated();
-        // Launch finish event.
-        /**
-         * The event arises after the business object collection has been initialized in the repository.
-         * @event EditableRootCollection#postCreate
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
-         */
-        raiseEvent(DataPortalEvent.postCreate);
-        cb(null, self);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        /**
-         * The event arises before the business object collection will be initialized in the repository.
-         * @event EditableRootCollection#preCreate
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preCreate);
-        // Execute creation - nothing to do.
-        finish(cb);
-      }
-      runStatements(main, DataPortalAction.create, callback);
+    function data_create() {
+      return new Promise( (fulfill, reject) => {
+        var connection = null;
+        // Open connection.
+        config.connectionManager.openConnection( extensions.dataSource )
+          .then( dsc => {
+            connection = dsc;
+            // Launch start event.
+            /**
+             * The event arises before the business object collection will be initialized in the repository.
+             * @event EditableRootCollection#preCreate
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
+             */
+            raiseEvent( DataPortalEvent.preCreate );
+            // Execute creation - nothing to do.
+            markAsCreated();
+            // Launch finish event.
+            /**
+             * The event arises after the business object collection has been initialized in the repository.
+             * @event EditableRootCollection#postCreate
+             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+             * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
+             */
+            raiseEvent( DataPortalEvent.postCreate );
+            // Close connection.
+            return config.connectionManager.closeConnection( extensions.dataSource, connection )
+              .then( none => {
+                // Return the new editable root collection.
+                fulfill( self );
+              });
+          })
+          .catch( reason => {
+            // Wrap the intercepted error.
+            var dpe = wrapError( DataPortalAction.create, reason );
+            // Launch finish event.
+            if (connection)
+              raiseEvent( DataPortalEvent.postCreate, null, dpe );
+            // Close connection.
+            config.connectionManager.closeConnection( extensions.dataSource, connection )
+              .then( none => {
+                // Pass the error.
+                reject( dpe );
+              });
+          });
+      });
     }
 
     //endregion
 
     //region Fetch
 
-    function data_fetch (filter, method, callback) {
-      var hasConnection = false;
-      // Helper function for post-fetch actions.
-      function finish (dto, cb) {
-        // Load children.
-        fetchChildren(dto, function (err) {
-          if (err)
-            cb(err);
-          else {
-            markAsPristine();
-            // Launch finish event.
-            /**
-             * The event arises after the collection instance has been retrieved from the repository.
-             * @event EditableRootCollection#postFetch
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableRootCollection} newObject - The collection instance after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postFetch, method);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(DataPortalAction.fetch, err);
-          raiseEvent(DataPortalEvent.postFetch, method, dpError);
+    function data_fetch( filter, method ) {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (method === M_FETCH ? canDo( AuthorizationAction.fetchObject ) : canExecute( method )) {
+          var connection = null;
+          // Open connection.
+          config.connectionManager.openConnection( extensions.dataSource )
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              /**
+               * The event arises before the collection instance will be retrieved from the repository.
+               * @event EditableRootCollection#preFetch
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootCollection} oldObject - The collection instance before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preFetch, method );
+              // Execute fetch.
+              return extensions.dataFetch ?
+                // *** Custom fetch.
+                extensions.$runMethod( 'fetch', self, getDataContext( connection ), filter, method ) :
+                // *** Standard fetch.
+                // Root element fetches all data from repository.
+                dao.$runMethod( method, connection, filter );
+            })
+            .then( dto => {
+              // Load children.
+              return fetchChildren( dto );
+            })
+            .then( none => {
+              markAsPristine();
+              // Launch finish event.
+              /**
+               * The event arises after the collection instance has been retrieved from the repository.
+               * @event EditableRootCollection#postFetch
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootCollection} newObject - The collection instance after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postFetch, method );
+              // Close connection.
+              config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  // Return the fetched editable root collection.
+                  fulfill( self );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( reason );
+              // Launch finish event.
+              raiseEvent( DataPortalEvent.postFetch, method, dpe );
+              // Close connection.
+              config.connectionManager.closeConnection( extensions.dataSource, connection )
+                .then( none => {
+                  // Paa the error.
+                  reject( dpe );
+                });
+            });
         }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        /**
-         * The event arises before the collection instance will be retrieved from the repository.
-         * @event EditableRootCollection#preFetch
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} oldObject - The collection instance before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preFetch, method);
-        // Execute fetch.
-        if (extensions.dataFetch) {
-          // *** Custom fetch.
-          extensions.dataFetch.call(self, getDataContext(connection), filter, method, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else
-              finish(dto, cb);
-          });
-        } else {
-          // *** Standard fetch.
-          // Root element fetches data from repository.
-          dao.$runMethod(method, connection, filter, function (err, dto) {
-            if (err)
-              failed(err, cb);
-            else {
-              finish(dto, cb);
-            }
-          });
-        }
-      }
-      // Check permissions.
-      if (method === M_FETCH ? canDo(AuthorizationAction.fetchObject) : canExecute(method))
-        runStatements(main, DataPortalAction.fetch, callback);
-      else
-        callback(null, self);
+      });
     }
 
     //endregion
 
     //region Insert
 
-    function data_insert (callback) {
-      var hasConnection = false;
-      // Helper function for post-insert actions.
-      function finish (connection, cb) {
-        // Insert children as well.
-        insertChildren(connection, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            markAsPristine();
-            // Launch finish event.
-            /**
-             * The event arises after the business object collection has been created in the repository.
-             * @event EditableRootCollection#postInsert
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postInsert);
-            raiseSave(DataPortalEvent.postSave, DataPortalAction.insert);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(DataPortalAction.insert, err);
-          raiseEvent(DataPortalEvent.postInsert, null, dpError);
-          raiseSave(DataPortalEvent.postSave, DataPortalAction.insert, dpError);
+    function data_insert() {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (canDo( AuthorizationAction.createObject )) {
+          var connection = null;
+          // Start transaction.
+          config.connectionManager.beginTransaction( extensions.dataSource )
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              raiseSave( DataPortalEvent.preSave, DataPortalAction.insert );
+              /**
+               * The event arises before the business object collection will be created in the repository.
+               * @event EditableRootCollection#preInsert
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preInsert );
+              // Execute insert - nothing to do.
+              // Insert children as well.
+              return saveChildren( connection );
+            })
+            .then( none => {
+              markAsPristine();
+              // Launch finish event.
+              /**
+               * The event arises after the business object collection has been created in the repository.
+               * @event EditableRootCollection#postInsert
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postInsert );
+              raiseSave( DataPortalEvent.postSave, DataPortalAction.insert );
+              // Finish transaction.
+              return config.connectionManager.commitTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Return the created editable root collection.
+                  fulfill( self );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.insert, reason );
+              // Launch finish event.
+              if (connection) {
+                raiseEvent( DataPortalEvent.postInsert, null, dpe );
+                raiseSave( DataPortalEvent.postSave, DataPortalAction.insert, dpe );
+              }
+              // Undo transaction.
+              config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Pass the error.
+                  reject( dpe );
+                });
+            });
         }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        raiseSave(DataPortalEvent.preSave, DataPortalAction.insert);
-        /**
-         * The event arises before the business object collection will be created in the repository.
-         * @event EditableRootCollection#preInsert
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preInsert);
-        // Execute insert - nothing to do.
-        finish(connection, cb);
-      }
-      // Check permissions.
-      if (canDo(AuthorizationAction.createObject))
-        runTransaction(main, DataPortalAction.insert, callback);
-      else
-        callback(null, self);
+      });
     }
 
     //endregion
 
     //region Update
 
-    function data_update (callback) {
-      var hasConnection = false;
-      // Helper function for post-update actions.
-      function finish (connection, cb) {
-        // Update children as well.
-        updateChildren(connection, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            markAsPristine();
-            // Launch finish event.
-            /**
-             * The event arises after the business object collection has been updated in the repository.
-             * @event EditableRootCollection#postUpdate
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
-             */
-            raiseEvent(DataPortalEvent.postUpdate);
-            raiseSave(DataPortalEvent.postSave, DataPortalAction.update);
-            cb(null, self);
-          }
-        });
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(DataPortalAction.update, err);
-          raiseEvent(DataPortalEvent.postUpdate, null, dpError);
-          raiseSave(DataPortalEvent.postSave, DataPortalAction.update, dpError);
+    function data_update() {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (canDo( AuthorizationAction.updateObject )) {
+          var connection = null;
+          // Start transaction.
+          config.connectionManager.beginTransaction(extensions.dataSource)
+            .then(dsc => {
+              connection = dsc;
+              // Launch start event.
+              raiseSave( DataPortalEvent.preSave, DataPortalAction.update );
+              /**
+               * The event arises before the business object collection will be updated in the repository.
+               * @event EditableRootCollection#preUpdate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preUpdate );
+              // Execute update - nothing to do.
+              // Update children as well.
+              return saveChildren( connection );
+            })
+            .then( none => {
+              markAsPristine();
+              // Launch finish event.
+              /**
+               * The event arises after the business object collection has been updated in the repository.
+               * @event EditableRootCollection#postUpdate
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postUpdate );
+              raiseSave( DataPortalEvent.postSave, DataPortalAction.update );
+              // Finish transaction.
+              config.connectionManager.commitTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Return the updated editable root collection.
+                  fulfill( self );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.update, reason );
+              // Launch finish event.
+              if (connection) {
+                raiseEvent( DataPortalEvent.postUpdate, null, dpe );
+                raiseSave( DataPortalEvent.postSave, DataPortalAction.update, dpe );
+              }
+              // Undo transaction.
+              config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Pass the error.
+                  reject( dpe );
+                });
+            });
         }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        raiseSave(DataPortalEvent.preSave, DataPortalAction.update);
-        /**
-         * The event arises before the business object collection will be updated in the repository.
-         * @event EditableRootCollection#preUpdate
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preUpdate);
-        // Execute update - nothing to do.
-        finish(connection, cb);
-      }
-      // Check permissions.
-      if (canDo(AuthorizationAction.updateObject))
-        runTransaction(main, DataPortalAction.update, callback);
-      else
-        callback(null, self);
+      });
     }
 
     //endregion
 
     //region Remove
 
-    function data_remove (callback) {
-      var hasConnection = false;
-      // Helper callback for post-removal actions.
-      function finish (cb) {
-        markAsRemoved();
-        // Launch finish event.
-        /**
-         * The event arises after the business object collection has been removed from the repository.
-         * @event EditableRootCollection#postRemove
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
-         */
-        raiseEvent(DataPortalEvent.postRemove);
-        raiseSave(DataPortalEvent.postSave, DataPortalAction.remove);
-        cb(null, null);
-      }
-      // Helper callback for failure.
-      function failed (err, cb) {
-        if (hasConnection) {
-          // Launch finish event.
-          var dpError = wrapError(DataPortalAction.remove, err);
-          raiseEvent(DataPortalEvent.postRemove, null, dpError);
-          raiseSave(DataPortalEvent.postSave, DataPortalAction.remove, dpError);
+    function data_remove () {
+      return new Promise( (fulfill, reject) => {
+        // Check permissions.
+        if (canDo( AuthorizationAction.removeObject )) {
+          var connection = null;
+          // Start transaction.
+          config.connectionManager.beginTransaction( extensions.dataSource )
+            .then( dsc => {
+              connection = dsc;
+              // Launch start event.
+              raiseSave( DataPortalEvent.preSave, DataPortalAction.remove );
+              /**
+               * The event arises before the business object collection will be removed from the repository.
+               * @event EditableRootCollection#preRemove
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
+               */
+              raiseEvent( DataPortalEvent.preRemove );
+              // Remove children first.
+              return saveChildren( connection );
+            })
+            .then( none => {
+              // Execute removal - nothing to do.
+              markAsRemoved();
+              // Launch finish event.
+              /**
+               * The event arises after the business object collection has been removed from the repository.
+               * @event EditableRootCollection#postRemove
+               * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+               * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
+               */
+              raiseEvent( DataPortalEvent.postRemove );
+              raiseSave( DataPortalEvent.postSave, DataPortalAction.remove );
+              // Finish transaction.
+              config.connectionManager.commitTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Nothing to return;
+                  fulfill( null );
+                });
+            })
+            .catch( reason => {
+              // Wrap the intercepted error.
+              var dpe = wrapError( DataPortalAction.remove, reason );
+              // Launch finish event.
+              if (connection) {
+                raiseEvent( DataPortalEvent.postRemove, null, dpe );
+                raiseSave( DataPortalEvent.postSave, DataPortalAction.remove, dpe );
+              }
+              // Undo transaction.
+              config.connectionManager.rollbackTransaction( extensions.dataSource, connection )
+                .then( none => {
+                  // Pass the error.
+                  reject( dpe );
+                });
+            });
         }
-        cb(err);
-      }
-      // Main activity.
-      function main (connection, cb) {
-        hasConnection = connection !== null;
-        // Launch start event.
-        raiseSave(DataPortalEvent.preSave, DataPortalAction.remove);
-        /**
-         * The event arises before the business object collection will be removed from the repository.
-         * @event EditableRootCollection#preRemove
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-         * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
-         */
-        raiseEvent(DataPortalEvent.preRemove);
-        // Remove children first.
-        removeChildren(connection, function (err) {
-          if (err)
-            failed(err, cb);
-          else {
-            // Execute removal - nothing to do.
-            finish(cb);
-          }
-        });
-      }
-      // Check permissions.
-      if (canDo(AuthorizationAction.removeObject))
-        runTransaction(main, DataPortalAction.remove, callback);
-      else
-        callback(null, null);
+      });
     }
 
     //endregion
@@ -915,7 +830,8 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#create
      * @protected
-     * @param {external.cbDataPortal} callback - Returns a new editable business object collection.
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to
+     *      the new editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -925,37 +841,25 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *      Creating the business object collection has failed.
      */
     this.create = function() {
-      return new Promise( (fulfill, reject) => {
-        data_create( function( err, res ) {
-          if (err) reject( err );
-          else fulfill( res );
-        });
-      });
+      return data_create();
     };
 
     /**
      * Creates a new item and adds it to the collection at the specified index.
      *
      * @function EditableRootCollection#create
-     * @param {number} index - The index of the new item.
-     * @param {external.cbDataPortal} callback - Returns the newly created business object
-     *      of the collection.
+     * @param {number} [index] - The index of the new item.
+     * @returns {Promise.<EditableChildObject>} Returns a promise to
+     *      the created editable root collection.
      */
-    this.createItem = function (index) {
-      return new Promise( (fulfill, reject) => {
-        index = index || items.length;
-
-        itemType.create(self, eventHandlers, function (err, item) {
-          if (err)
-            reject(err);
-          else {
-            var ix = parseInt(index, 10);
-            ix = isNaN(ix) ? items.length : ix;
-            items.splice(ix, 0, item);
-            fulfill(item);
-          }
+    this.createItem = function( index ) {
+      return itemType.create( self, eventHandlers )
+        .then( item => {
+          var ix = parseInt( index, 10 );
+          ix = isNaN( ix ) ? items.length : ix;
+          items.splice( ix, 0, item );
+          return item;
         });
-      });
     };
 
     /**
@@ -966,7 +870,8 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {external.cbDataPortal} callback - Returns the required editable business object collection.
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to
+     *      the required editable business object collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -978,22 +883,16 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *      Fetching the business object collection has failed.
      */
     this.fetch = function( filter, method ) {
-      return new Promise( (fulfill, reject) => {
-        method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
-
-        data_fetch( filter, method || M_FETCH, function ( err, res ) {
-          if (err) reject( err );
-          else fulfill ( res );
-        });
-      });
+      method = Argument.inMethod( name, 'fetch' ).check( method ).forOptional( 'method' ).asString();
+      return data_fetch( filter, method || M_FETCH );
     };
 
     /**
      * Saves the changes of the business object collection to the repository.
      *
      * @function EditableRootCollection#save
-     * @param {external.cbDataPortal} callback - Returns the business object
-     *      collection with the new state after the save.
+     * @return {Promise.<EditableRootCollection>} Returns a promise to
+     *      the saved editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -1009,9 +908,9 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
     this.save = function() {
       return new Promise( (fulfill, reject) => {
 
-        function clearRemovedItems() {
-          items = items.filter(function (item) {
-            return item.getModelState() !== MODEL_STATE.getName(MODEL_STATE.removed);
+        function expelRemovedItems() {
+          items = items.filter( item => {
+            return item.getModelState() !== MODEL_STATE.getName( MODEL_STATE.removed );
           });
         }
         if (self.isValid()) {
@@ -1025,30 +924,24 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
            */
           switch (state) {
             case MODEL_STATE.created:
-              data_insert(function (err, inserted) {
-                if (err) reject( err );
-                else fulfill( inserted );
-              });
+              data_insert()
+                .then( inserted => {
+                  fulfill( inserted );
+                });
               break;
             case MODEL_STATE.changed:
-              data_update(function (err, updated) {
-                if (err)
-                  reject( err );
-                else {
-                  clearRemovedItems();
+              data_update()
+                .then( updated => {
+                  expelRemovedItems();
                   fulfill( updated );
-                }
-              });
+                });
               break;
             case MODEL_STATE.markedForRemoval:
-              data_remove(function (err, removed) {
-                if (err)
-                  reject( err );
-                else {
-                  clearRemovedItems();
+              data_remove()
+                .then( removed => {
+                  expelRemovedItems();
                   fulfill( removed );
-                }
-              });
+                });
               break;
             default:
               fulfill( self );
@@ -1062,8 +955,6 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
            * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
            */
         }
-        else
-          reject(new Error('Invalid!'));
       });
     };
 
@@ -1250,7 +1141,8 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    *
    * @function EditableRootCollection.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns a new editable business object collection.
+   * @returns {Promise.<EditableRootCollection>} Returns a promise to
+   *      the new editable business object collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The event handlers must be an EventHandlerList object or null.
@@ -1271,7 +1163,8 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @param {external.cbDataPortal} callback - Returns the required editable business object collection.
+   * @returns {Promise.<EditableRootCollection>} Returns a promise to
+   *      the required editable business object collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.

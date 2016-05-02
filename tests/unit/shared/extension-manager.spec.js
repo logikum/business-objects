@@ -1,6 +1,10 @@
 console.log('Testing shared/extension-methods.js...');
 
+var path = require('path');
 var ExtensionManager = require('../../../source/shared/extension-manager.js');
+var DaoBase = require('../../../source/data-access/dao-base.js');
+var DaoBuilder = require('../../../data/custom-core/dao-builder.js');
+var DataProtalContext = require('../../../source/shared/data-portal-context.js');
 
 describe('Extension manager', function() {
   var em = new ExtensionManager('data_source', '/model/path');
@@ -137,8 +141,8 @@ describe('Extension manager', function() {
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).toThrow();
-    expect(set4).not.toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
     expect(set5).toThrow();
   });
 
@@ -155,8 +159,8 @@ describe('Extension manager', function() {
     expect(set2).toThrow();
     expect(set3).toThrow();
     expect(set4).toThrow();
-    expect(set5).toThrow();
-    expect(set6).not.toThrow();
+    expect(set5).not.toThrow();
+    expect(set6).toThrow();
     expect(set7).toThrow();
   });
 
@@ -169,8 +173,8 @@ describe('Extension manager', function() {
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).toThrow();
-    expect(set4).not.toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
     expect(set5).toThrow();
   });
 
@@ -183,8 +187,8 @@ describe('Extension manager', function() {
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).toThrow();
-    expect(set4).not.toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
     expect(set5).toThrow();
   });
 
@@ -197,8 +201,8 @@ describe('Extension manager', function() {
 
     expect(set1).toThrow();
     expect(set2).toThrow();
-    expect(set3).toThrow();
-    expect(set4).not.toThrow();
+    expect(set3).not.toThrow();
+    expect(set4).toThrow();
     expect(set5).toThrow();
   });
 
@@ -213,8 +217,37 @@ describe('Extension manager', function() {
     expect(set1).toThrow();
     expect(set2).toThrow();
     expect(set3).toThrow();
-    expect(set4).toThrow();
-    expect(set5).not.toThrow();
+    expect(set4).not.toThrow();
+    expect(set5).toThrow();
     expect(set6).toThrow();
+  });
+
+  it('getDataAccessObject method works', () => {
+
+    var name1 = 'ClearScheduleCommand';
+    var path1 = '../../../data/simple-core/clear-schedule-command.js';
+    var filename1 = path.join(__dirname, path1);
+    var em1 = new ExtensionManager('dao', filename1);
+    var dao1 = em1.getDataAccessObject(name1);
+
+    expect(dao1).toEqual(jasmine.any(DaoBase));
+    expect(dao1.name).toEqual(name1 + 'Dao');
+
+    var name2 = 'RescheduleShippingCommand';
+    var path2 = '../../../data/custom-core/models/reschedule-shipping-command.js';
+    var filename2 = path.join(__dirname, path2);
+    var em2 = new ExtensionManager('dal', filename2);
+    em2.daoBuilder = DaoBuilder;
+    var dao2 = em2.getDataAccessObject(name2);
+
+    expect(dao2).toEqual(jasmine.any(DaoBase));
+    expect(dao2.name).toEqual(name2 + 'Dao');
+  });
+
+  it('$runMethod method works', () => {
+
+    expect(em.$runMethod).toBeDefined();
+    expect(em.$runMethod).toEqual(jasmine.any(Function));
+    expect(em.$runMethod('method', {}, new DataProtalContext(), null)).toEqual(undefined);
   });
 });
