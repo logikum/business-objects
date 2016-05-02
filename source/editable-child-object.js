@@ -411,7 +411,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      *
      * @function EditableChildObject#fromCto
      * @param {object} cto - The client transfer object.
-     * @returns {Promise<EditableChildObject>} Returns a promise to the child object rebuilt.
+     * @returns {Promise.<EditableChildObject>} Returns a promise to the child object rebuilt.
      */
     this.fromCto = function( cto ) {
       return new Promise( (fulfill, reject) => {
@@ -876,7 +876,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      * @function EditableChildObject#create
      * @protected
      * @param {object} connection - The connection data.
-     * @returns {Promise<EditableChildObject>} Returns a promise to
+     * @returns {Promise.<EditableChildObject>} Returns a promise to
      *      the new editable child object.
      */
     this.create = function( connection ) {
@@ -891,7 +891,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      * @protected
      * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
-     * @returns {Promise<EditableChildObject>} Returns a promise to
+     * @returns {Promise.<EditableChildObject>} Returns a promise to
      *      the required editable child object.
      */
     this.fetch = function( data, method ) {
@@ -905,7 +905,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
      * @function EditableChildObject#save
      * @protected
      * @param {object} connection - The connection data.
-     * @returns {Promise<EditableChildObject>} Returns a promise to
+     * @returns {Promise.<EditableChildObject>} Returns a promise to
      *      the business object with the new state after the save.
      */
     this.save = function( connection ) {
@@ -1122,7 +1122,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
    * @protected
    * @param {object} parent - The parent business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise<EditableChildObject>} Returns a promise to
+   * @returns {Promise.<EditableChildObject>} Returns a promise to
    *      a new editable child object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
@@ -1144,7 +1144,7 @@ var EditableChildObjectFactory = function (name, properties, rules, extensions) 
    * @param {object} parent - The parent business object.
    * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise<EditableChildObject>} Returns a promise to
+   * @returns {Promise.<EditableChildObject>} Returns a promise to
    *      the required editable child object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:

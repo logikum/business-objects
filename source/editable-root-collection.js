@@ -362,7 +362,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#fromCto
      * @param {object[]} cto - The client transfer object.
-     * @returns {Promise<EditableRootCollection>} Returns a promise to
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to
      *      the root collection rebuilt.
      */
     this.fromCto = function( cto ) {
@@ -830,7 +830,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#create
      * @protected
-     * @returns {Promise<EditableRootCollection>} Returns a promise to
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to
      *      the new editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
@@ -849,7 +849,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#create
      * @param {number} [index] - The index of the new item.
-     * @returns {Promise<EditableChildObject>} Returns a promise to
+     * @returns {Promise.<EditableChildObject>} Returns a promise to
      *      the created editable root collection.
      */
     this.createItem = function( index ) {
@@ -870,7 +870,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {Promise<EditableRootCollection>} Returns a promise to
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to
      *      the required editable business object collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
@@ -891,7 +891,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * Saves the changes of the business object collection to the repository.
      *
      * @function EditableRootCollection#save
-     * @return {Promise<EditableRootCollection>} Returns a promise to
+     * @return {Promise.<EditableRootCollection>} Returns a promise to
      *      the saved editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
@@ -1141,7 +1141,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    *
    * @function EditableRootCollection.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise<EditableRootCollection>} Returns a promise to
+   * @returns {Promise.<EditableRootCollection>} Returns a promise to
    *      the new editable business object collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
@@ -1163,7 +1163,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise<EditableRootCollection>} Returns a promise to
+   * @returns {Promise.<EditableRootCollection>} Returns a promise to
    *      the required editable business object collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:

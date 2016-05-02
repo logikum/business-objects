@@ -140,7 +140,7 @@ var ReadOnlyChildCollectionFactory = function (name, itemType) {
      * @function ReadOnlyChildCollection#fetch
      * @protected
      * @param {Array.<object>} [data] - The data to load into the business object collection.
-     * @returns {Promise<ReadOnlyChildCollection>} Returns a promise to
+     * @returns {Promise.<ReadOnlyChildCollection>} Returns a promise to
      *      indicate the end of load.
      */
     this.fetch = function ( data ) {

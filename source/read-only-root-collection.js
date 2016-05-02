@@ -316,7 +316,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {Promise<ReadOnlyRootCollection>} Returns a promise to
+     * @returns {Promise.<ReadOnlyRootCollection>} Returns a promise to
      *      the required read-only root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
@@ -518,7 +518,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise<ReadOnlyRootCollection>} Returns a promise to
+   * @returns {Promise.<ReadOnlyRootCollection>} Returns a promise to
    *      the required read-only root collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:

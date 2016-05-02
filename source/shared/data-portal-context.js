@@ -218,7 +218,7 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    *
    * @param {string} methodName - The name of the method to call.
    * @param {*} methodArg - Additional argument of the method to call.
-   * @returns {Promise.<Object>|Promise.<*>} Returns a promise to the result of the method.
+   * @returns {Promise.<*>} Returns a promise to the result of the method.
    */
   this.call = function( methodName, methodArg ) {
     return dao.$runMethod( methodName, this.connection, methodArg );
@@ -228,7 +228,7 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * Calls the create method on the data access object with current context.
    * The method is a shorthand for `dpContext.dao.$runMethod( 'create', dpContext.connection )`.
    *
-   * @returns {Promise.<Object>|Promise.<*>} Returns a promise to the result of the create method.
+   * @returns {Promise.<*>} Returns a promise to the result of the create method.
    */
   this.create = function() {
     return dao.$runMethod( 'create', this.connection );
@@ -239,7 +239,7 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * The method is a shorthand for `dpContext.dao.$runMethod( 'fetch', dpContext.connection, filter )`.
    *
    * @param {*} filter - The search conditions of the retrieval.
-   * @returns {Promise.<Object>|Promise.<*>} Returns a promise to the result of the fetch method.
+   * @returns {Promise.<*>} Returns a promise to the result of the fetch method.
    */
   this.fetch = function( filter ) {
     return dao.$runMethod( 'fetch', this.connection, filter );
@@ -250,7 +250,7 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * The method is a shorthand for `dpContext.dao.$runMethod( 'insert', dpContext.connection, data )`.
    *
    * @param {*} data - The data transfer object.
-   * @returns {Promise.<Object>|Promise.<*>} Returns a promise to the result of the insert method.
+   * @returns {Promise.<*>} Returns a promise to the result of the insert method.
    */
   this.insert = function( data ) {
     return dao.$runMethod( 'insert', this.connection, data );
@@ -261,7 +261,7 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * The method is a shorthand for `dpContext.dao.$runMethod( 'update', dpContext.connection, data )`.
    *
    * @param {*} data - The data transfer object.
-   * @returns {Promise.<Object>|Promise.<*>} Returns a promise to the result of the update method.
+   * @returns {Promise.<*>} Returns a promise to the result of the update method.
    */
   this.update = function( data ) {
     return dao.$runMethod( 'update', this.connection, data );
@@ -272,7 +272,7 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * The method is a shorthand for `dpContext.dao.$runMethod( 'remove', dpContext.connection, filter )`.
    *
    * @param {*} filter - The search conditions of the removal.
-   * @returns {Promise.<Object>|Promise.<*>} Returns a promise to the result of the remove method, i.e. to a null.
+   * @returns {Promise.<null>} Returns a promise to the result of the remove method, i.e. to a null.
    */
   this.remove = function( filter ) {
     return dao.$runMethod( 'remove', this.connection, filter );
@@ -283,7 +283,7 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * The method is a shorthand for `dpContext.dao.$runMethod( 'execute', dpContext.connection, data )`.
    *
    * @param {*} data - The data transfer object.
-   * @returns {Promise.<Object>|Promise.<*>} Returns a promise to the result of the execute method.
+   * @returns {Promise.<*>} Returns a promise to the result of the execute method.
    */
   this.execute = function( data ) {
     return dao.$runMethod( 'execute', this.connection, data );

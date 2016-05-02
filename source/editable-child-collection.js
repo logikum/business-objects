@@ -132,7 +132,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#fromCto
      * @param {Array.<object>} cto - The array of client transfer objects.
-     * @returns {Promise<EditableChildCollection>} Returns a promise to
+     * @returns {Promise <EditableChildCollection>} Returns a promise to
      *      the child collection rebuilt.
      */
     this.fromCto = function( cto ) {
@@ -197,7 +197,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#create
      * @param {number} index - The index of the new item.
-     * @returns {Promise<EditableChildObject>} Returns a promise to
+     * @returns {Promise.<EditableChildObject>} Returns a promise to
      *      the newly created editable business object.
      */
     this.createItem = function( index ) {
@@ -217,7 +217,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @function EditableChildCollection#fetch
      * @protected
      * @param {Array.<object>} [data] - The data to load into the business object collection.
-     * @returns {Promise<EditableChildCollection>} Returns a promise to
+     * @returns {Promise.<EditableChildCollection>} Returns a promise to
      *      indicate the end of load.
      */
     this.fetch = function ( data ) {
@@ -243,7 +243,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @function EditableChildCollection#save
      * @protected
      * @param {object} connection - The connection data.
-     * @return {Promise<EditableChildCollection>} Returns a promise to
+     * @return {Promise.<EditableChildCollection>} Returns a promise to
      *      the editable child collection.
      */
     this.save = function( connection ) {

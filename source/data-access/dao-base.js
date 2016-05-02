@@ -39,7 +39,7 @@ var DaoBase = function (name) {
  * @param {string} methodName - The name of the method to call.
  * @param {object} [connection] - The connection of the data source.
  * @param {object} [methodArg] - Additional argument of the method to execute.
- * @returns {Promise<*>} Returns a promise to the result of the method.
+ * @returns {Promise.<*>} Returns a promise to the result of the method.
  *
  * @throws {@link bo.dataAccess.DaoError Dao error}: The method name must be a non-empty string.
  * @throws {@link bo.dataAccess.DaoError Dao error}: Data access object has no method with the requested name.
