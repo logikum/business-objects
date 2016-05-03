@@ -211,7 +211,7 @@ function ExtensionManager( dataSource, modelPath ) {
    * @param {bo.shared.DataPortalContext} dpContext - Tha data portal context
    *      of the custom data portal method.
    * @param {...*} [dpParams] - More optional parameters of the data portal method.
-   * @returns {Promise.<object>} A promise to the result of the custom data portal method.
+   * @returns {Promise.<object>} Returns a promise to the result of the custom data portal method.
    */
   this.$runMethod = function( methodName, thisArg, dpContext, dpParams) {
     var check = Argument.inMethod( CLASS_NAME, '$runMethod' );

@@ -1,5 +1,15 @@
 # Release History
 
+* __v1.5.0__  
+  2016.05.03.  
+  The library uses promises instead of callback functions.  
+  Synchronous models are removed.  
+  Requires Node.js v4.2.0 (LTS) or newer.
+  
+* __v1.2.2__  
+  2016.04.21.  
+  Fixing a bug in data portal update methods.
+    
 * __v1.2.1__  
   2016.04.07.  
   Fixing a bug in ExtensionManagerBase.addOtherMethod().

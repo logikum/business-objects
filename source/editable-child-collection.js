@@ -132,8 +132,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#fromCto
      * @param {Array.<object>} cto - The array of client transfer objects.
-     * @returns {Promise <EditableChildCollection>} Returns a promise to
-     *      the child collection rebuilt.
+     * @returns {Promise.<EditableChildCollection>} Returns a promise to the child collection rebuilt.
      */
     this.fromCto = function( cto ) {
       return new Promise( (fulfill, reject) => {
@@ -197,8 +196,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      *
      * @function EditableChildCollection#create
      * @param {number} index - The index of the new item.
-     * @returns {Promise.<EditableChildObject>} Returns a promise to
-     *      the newly created editable business object.
+     * @returns {Promise.<EditableChildObject>} Returns a promise to the editable child object created.
      */
     this.createItem = function( index ) {
       return itemType.create( parent, eventHandlers )
@@ -217,8 +215,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @function EditableChildCollection#fetch
      * @protected
      * @param {Array.<object>} [data] - The data to load into the business object collection.
-     * @returns {Promise.<EditableChildCollection>} Returns a promise to
-     *      indicate the end of load.
+     * @returns {Promise.<EditableChildCollection>} Returns a promise to the retrieved editable child collection.
      */
     this.fetch = function ( data ) {
       return data instanceof Array && data.length ?
@@ -243,8 +240,7 @@ var EditableChildCollectionFactory = function (name, itemType) {
      * @function EditableChildCollection#save
      * @protected
      * @param {object} connection - The connection data.
-     * @return {Promise.<EditableChildCollection>} Returns a promise to
-     *      the editable child collection.
+     * @returns {Promise.<EditableChildCollection>} Returns a promise to the saved editable child collection.
      */
     this.save = function( connection ) {
       return Promise.all( items.filter( item => {

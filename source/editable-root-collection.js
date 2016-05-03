@@ -362,8 +362,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#fromCto
      * @param {object[]} cto - The client transfer object.
-     * @returns {Promise.<EditableRootCollection>} Returns a promise to
-     *      the root collection rebuilt.
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to the editable root collection rebuilt.
      */
     this.fromCto = function( cto ) {
       return new Promise( (fulfill, reject) => {
@@ -517,49 +516,71 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
 
     function data_create() {
       return new Promise( (fulfill, reject) => {
-        var connection = null;
-        // Open connection.
-        config.connectionManager.openConnection( extensions.dataSource )
-          .then( dsc => {
-            connection = dsc;
-            // Launch start event.
-            /**
-             * The event arises before the business object collection will be initialized in the repository.
-             * @event EditableRootCollection#preCreate
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
-             */
-            raiseEvent( DataPortalEvent.preCreate );
-            // Execute creation - nothing to do.
-            markAsCreated();
-            // Launch finish event.
-            /**
-             * The event arises after the business object collection has been initialized in the repository.
-             * @event EditableRootCollection#postCreate
-             * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-             * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
-             */
-            raiseEvent( DataPortalEvent.postCreate );
-            // Close connection.
-            return config.connectionManager.closeConnection( extensions.dataSource, connection )
-              .then( none => {
-                // Return the new editable root collection.
-                fulfill( self );
-              });
-          })
-          .catch( reason => {
-            // Wrap the intercepted error.
-            var dpe = wrapError( DataPortalAction.create, reason );
-            // Launch finish event.
-            if (connection)
-              raiseEvent( DataPortalEvent.postCreate, null, dpe );
-            // Close connection.
-            config.connectionManager.closeConnection( extensions.dataSource, connection )
-              .then( none => {
-                // Pass the error.
-                reject( dpe );
-              });
-          });
+
+        //var connection = null;
+        //// Open connection.
+        //config.connectionManager.openConnection( extensions.dataSource )
+        //  .then( dsc => {
+        //    connection = dsc;
+        //    // Launch start event.
+        //    /**
+        //     * The event arises before the business object collection will be initialized in the repository.
+        //     * @event EditableRootCollection#preCreate
+        //     * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+        //     * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
+        //     */
+        //    raiseEvent( DataPortalEvent.preCreate );
+        //    // Execute creation - nothing to do.
+        //    markAsCreated();
+        //    // Launch finish event.
+        //    /**
+        //     * The event arises after the business object collection has been initialized in the repository.
+        //     * @event EditableRootCollection#postCreate
+        //     * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+        //     * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
+        //     */
+        //    raiseEvent( DataPortalEvent.postCreate );
+        //    // Close connection.
+        //    return config.connectionManager.closeConnection( extensions.dataSource, connection )
+        //      .then( none => {
+        //        // Return the new editable root collection.
+        //        fulfill( self );
+        //      });
+        //  })
+        //  .catch( reason => {
+        //    // Wrap the intercepted error.
+        //    var dpe = wrapError( DataPortalAction.create, reason );
+        //    // Launch finish event.
+        //    if (connection)
+        //      raiseEvent( DataPortalEvent.postCreate, null, dpe );
+        //    // Close connection.
+        //    config.connectionManager.closeConnection( extensions.dataSource, connection )
+        //      .then( none => {
+        //        // Pass the error.
+        //        reject( dpe );
+        //      });
+        //  });
+
+        // Launch start event.
+        /**
+         * The event arises before the business object collection will be initialized in the repository.
+         * @event EditableRootCollection#preCreate
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
+         */
+        raiseEvent( DataPortalEvent.preCreate );
+        // Execute creation - nothing to do.
+        markAsCreated();
+        // Launch finish event.
+        /**
+         * The event arises after the business object collection has been initialized in the repository.
+         * @event EditableRootCollection#postCreate
+         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
+         */
+        raiseEvent( DataPortalEvent.postCreate );
+        // Return the new editable root collection.
+        fulfill( self );
       });
     }
 
@@ -830,8 +851,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#create
      * @protected
-     * @returns {Promise.<EditableRootCollection>} Returns a promise to
-     *      the new editable root collection.
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to the new editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -849,8 +869,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      *
      * @function EditableRootCollection#create
      * @param {number} [index] - The index of the new item.
-     * @returns {Promise.<EditableChildObject>} Returns a promise to
-     *      the created editable root collection.
+     * @returns {Promise.<EditableChildObject>} Returns a promise to the editable child object created.
      */
     this.createItem = function( index ) {
       return itemType.create( self, eventHandlers )
@@ -870,8 +889,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {Promise.<EditableRootCollection>} Returns a promise to
-     *      the required editable business object collection.
+     * @returns {Promise.<EditableRootCollection>} Returns a promise to the retrieved editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -891,8 +909,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
      * Saves the changes of the business object collection to the repository.
      *
      * @function EditableRootCollection#save
-     * @return {Promise.<EditableRootCollection>} Returns a promise to
-     *      the saved editable root collection.
+     * @return {Promise.<EditableRootCollection>} Returns a promise to the saved editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -1141,8 +1158,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    *
    * @function EditableRootCollection.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise.<EditableRootCollection>} Returns a promise to
-   *      the new editable business object collection.
+   * @returns {Promise.<EditableRootCollection>} Returns a promise to the new editable root collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The event handlers must be an EventHandlerList object or null.
@@ -1163,8 +1179,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise.<EditableRootCollection>} Returns a promise to
-   *      the required editable business object collection.
+   * @returns {Promise.<EditableRootCollection>} Returns a promise to the retrieved editable root collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.

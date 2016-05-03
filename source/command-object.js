@@ -349,8 +349,7 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
      * @function CommandObject#execute
      * @param {string} [method] - An alternative execute method of the data access object.
      * @param {boolean} [isTransaction] - Indicates whether transaction is required.
-     * @returns {Promise.<CommandObject>} callback - Returns a promise to
-     *      the command object with the result.
+     * @returns {Promise.<CommandObject>} Returns a promise to the command object with the result.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.

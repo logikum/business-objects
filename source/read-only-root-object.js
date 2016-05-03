@@ -354,8 +354,7 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {Promise.<ReadOnlyRootObject>} Returns a promise to
-     *      the required read-only root object.
+     * @returns {Promise.<ReadOnlyRootObject>} Returns a promise to the retrieved read-only root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -549,8 +548,7 @@ var ReadOnlyRootObjectFactory = function (name, properties, rules, extensions) {
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise.<ReadOnlyRootObject>} Returns a promise to
-   *      the required read-only root object.
+   * @returns {Promise.<ReadOnlyRootObject>} Returns a promise to the retrieved read-only root object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.

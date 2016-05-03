@@ -402,7 +402,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *
      * @function EditableRootObject#fromCto
      * @param {object} cto - The client transfer object.
-     * @returns {Promise.<EditableRootObject>} Returns a promise to the business object rebuilt.
+     * @returns {Promise.<EditableRootObject>} Returns a promise to the editable root object rebuilt.
      */
     this.fromCto = function( cto ) {
       return new Promise( (fulfill, reject) => {
@@ -920,8 +920,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      *
      * @function EditableRootObject#create
      * @protected
-     * @returns {Promise.<EditableRootObject>} Returns a promise to
-     *      the new editable root object.
+     * @returns {Promise.<EditableRootObject>} Returns a promise to the new editable root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -942,8 +941,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * @protected
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @returns {Promise.<EditableRootObject>} Returns a promise to
-     *      the required editable root object.
+     * @returns {Promise.<EditableRootObject>} Returns a promise to the retrieved editable root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The method must be a string or null.
@@ -963,8 +961,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
      * Saves the changes of the business object to the repository.
      *
      * @function EditableRootObject#save
-     * @returns {Promise.<EditableRootObject>} Returns a promise to
-     *      the saved editable root object.
+     * @returns {Promise.<EditableRootObject>} Returns a promise to the saved editable root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The callback must be a function.
@@ -1208,8 +1205,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    *
    * @function EditableRootObject.create
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise.<EditableRootObject>} Returns a promise to
-   *      the new editable root object.
+   * @returns {Promise.<EditableRootObject>} Returns a promise to the new editable root object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The event handlers must be an EventHandlerList object or null.
@@ -1232,8 +1228,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
    * @param {*} [filter] - The filter criteria.
    * @param {string} [method] - An alternative fetch method of the data access object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise.<EditableRootObject>} Returns a promise to
-   *      the required editable root object.
+   * @returns {Promise.<EditableRootObject>} Returns a promise to the retrieved editable root object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *      The method must be a string or null.

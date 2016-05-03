@@ -355,8 +355,7 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
      * @protected
      * @param {object} [data] - The data to load into the business object.
      * @param {string} [method] - An alternative fetch method to check for permission.
-     * @returns {Promise.<ReadOnlyChildObject>} Returns a promise to
-     *      the required read-only child object.
+     * @returns {Promise.<ReadOnlyChildObject>} Returns a promise to the retrieved read-only child object.
      */
     this.fetch = function( data, method ) {
       return data_fetch( data, method || M_FETCH );
@@ -534,8 +533,7 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
    * @param {object} parent - The parent business object.
    * @param {object} data - The data to load into the business object.
    * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-   * @returns {Promise.<ReadOnlyChildObject>} Returns a promise to
-   *      the required read-only child object.
+   * @returns {Promise.<ReadOnlyChildObject>} Returns a promise to the retrieved read-only child object.
    *
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
