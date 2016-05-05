@@ -45,3 +45,4 @@ $ grunt baseline
 | [Editable root collection](https://bo.logikum.hu/api/v1.5.0/docstrap/EditableRootCollection.html) | [Read-only root collection](https://bo.logikum.hu/api/v1.5.0/docstrap/ReadOnlyRootCollection.html) | 
 | [Editable child object](https://bo.logikum.hu/api/v1.5.0/docstrap/EditableChildObject.html) | [Read-only child object](https://bo.logikum.hu/api/v1.5.0/docstrap/ReadOnlyChildObject.html) | 
 | [Editable child collection](https://bo.logikum.hu/api/v1.5.0/docstrap/EditableChildCollection.html) | [Read-only child collection](https://bo.logikum.hu/api/v1.5.0/docstrap/ReadOnlyChildCollection.html) | 
+
