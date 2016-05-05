@@ -4,7 +4,6 @@ var DataStore = require('../../../source/shared/data-store.js');
 var PropertyInfo = require('../../../source/shared/property-info.js');
 var F = require('../../../source/shared/property-flag.js');
 var Text = require('../../../source/data-types/text.js');
-var util = require('util');
 var ModelBase = require('../../../source/model-base.js');
 
 describe('Data store', function () {
@@ -18,12 +17,15 @@ describe('Data store', function () {
   it('initValue method works', function() {
     var pm = new DataStore();
     var property = new PropertyInfo('name', new Text(), F.key);
-    var model = {
-      name: 'name',
-      type: new Text(),
-      writable: true
-    };
-    util.inherits(model, ModelBase);
+    class TestModel extends ModelBase {
+      constructor() {
+        super();
+        this.name = 'name';
+        this.type = new Text();
+        this.writable = true;
+      }
+    }
+    var model = new TestModel();
 
     function initValue1() { pm.initValue(); }
     function initValue2() { pm.initValue(property); }

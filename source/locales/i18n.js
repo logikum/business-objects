@@ -312,9 +312,8 @@ i18n.prototype.get = function (messageId, messageParams) {
   }
 
   // Format message with optional arguments.
-  if (found && messageArgs.length > 1) {
+  if (messageArgs.length > 1)
     message = message.replace(/{\d+}/g, replacer);
-  }
 
   return message;
 };
