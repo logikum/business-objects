@@ -1,5 +1,9 @@
 # Release History
 
+* __v1.2.3__  
+  2016.05.06.  
+  Fixing a bug in localization.
+  
 * __v1.2.2__  
   2016.04.21.  
   Fixing a bug in data portal update methods.
