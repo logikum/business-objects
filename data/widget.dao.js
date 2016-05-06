@@ -1,15 +1,14 @@
 'use strict';
 
-var util = require('util');
-var DaoBase = require('../source/data-access/dao-base.js');
+const DaoBase = require( '../source/data-access/dao-base.js' );
 
-var WidgetDao = function() {
-  WidgetDao.super_.call(this, 'WidgetDao');
-};
-util.inherits(WidgetDao, DaoBase);
-
-WidgetDao.prototype.select = function(connection, data) {
-  return 'Hello, world!';
-};
+class WidgetDao extends DaoBase {
+  constructor() {
+    super( 'WidgetDao' );
+  }
+  select( ctx, data ) {
+    return 'Hello, world!';
+  }
+}
 
 module.exports = WidgetDao;

@@ -1,6 +1,6 @@
 console.log( 'Testing data-access/dao-context.js...' );
 
-var DaoContext = require( '../../../source/data-access/dao-context.js' );
+const DaoContext = require( '../../../source/data-access/dao-context.js' );
 
 describe( 'DAO context', () => {
 
@@ -10,7 +10,7 @@ describe( 'DAO context', () => {
   function reject( reason ) {
     return reason;
   }
-  var connection = { name: 'Connection' };
+  const connection = { name: 'Connection' };
 
   it( 'constructor expects three arguments', () => {
     function create01() { return new DaoContext(); }
@@ -35,7 +35,7 @@ describe( 'DAO context', () => {
   });
 
   it( 'has three read-only properties', () => {
-    var ctx = new DaoContext( fulfill, reject, connection );
+    const ctx = new DaoContext( fulfill, reject, connection );
 
     expect( ctx.fulfill ).toBe( fulfill );
     expect( ctx.reject ).toBe( reject );

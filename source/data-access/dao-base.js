@@ -1,72 +1,74 @@
 'use strict';
 
-var DaoContext = require('./dao-context.js');
-var DaoError = require('./dao-error.js');
+const DaoContext = require( './dao-context.js' );
+const DaoError = require( './dao-error.js' );
 
 /**
- * @classdesc Serves as the base class for data access objects.
- * @description Creates a new data access object.
+ * Serves as the base class for data access objects.
  *
  * @memberof bo.dataAccess
- * @constructor
- * @param {string} name - The name of the data access object.
- *
- * @throws {@link bo.dataAccess.DaoError Dao error}: The data access object name must be a non-empty string.
  */
-var DaoBase = function (name) {
-
-  if (typeof name !== 'string' && !(name instanceof String) || name.trim().length === 0)
-    throw new DaoError('c_manString', 'name');
+class DaoBase {
 
   /**
-   * The name of the data access object.
-   * @name bo.dataAccess.DaoBase#name
-   * @type {string}
-   * @readonly
+   * Creates a new data access object.
+   *
+   * @param {string} name - The name of the data access object.
+   *
+   * @throws {@link bo.dataAccess.DaoError Dao error}:
+   *      The data access object name must be a non-empty string.
    */
-  Object.defineProperty(this, 'name', {
-    get: function () {
-      return name;
-    },
-    enumeration: true
-  });
-};
+  constructor( name ) {
 
-/**
- * Executes the named method on the data access object.
- *
- * @function bo.dataAccess.DaoBase#$runMethod
- * @param {string} methodName - The name of the method to call.
- * @param {object} [connection] - The connection of the data source.
- * @param {object} [methodArg] - Additional argument of the method to execute.
- * @returns {Promise.<*>} Returns a promise to the result of the method.
- *
- * @throws {@link bo.dataAccess.DaoError Dao error}: The method name must be a non-empty string.
- * @throws {@link bo.dataAccess.DaoError Dao error}: Data access object has no method with the requested name.
- */
-DaoBase.prototype.$runMethod = function (methodName, connection, methodArg) {
+    if (typeof name !== 'string' && !(name instanceof String) || name.trim().length === 0)
+      throw new DaoError( 'c_manString', 'name' );
 
-  if (typeof methodName !== 'string' || methodName.trim().length === 0)
-    throw new DaoError('m_manString', 'checkMethod', 'methodName');
-  if (!this[methodName] || typeof this[methodName] !== 'function')
-    throw new DaoError('noMethod', this.name, methodName);
+    Object.defineProperty(this, 'name', {
+      get: function() {
+        return name;
+      },
+      enumeration: true
+    });
+  }
 
-  return new Promise( (fulfill, reject) => {
-    var ctx = new DaoContext( fulfill, reject, connection );
-    this[ methodName ]( ctx, methodArg );
-  });
-};
+  /**
+   * Executes the named method on the data access object.
+   *
+   * @function bo.dataAccess.DaoBase#$runMethod
+   * @param {string} methodName - The name of the method to call.
+   * @param {object} [connection] - The connection of the data source.
+   * @param {object} [methodArg] - Additional argument of the method to execute.
+   * @returns {Promise.<*>} Returns a promise to the result of the method.
+   *
+   * @throws {@link bo.dataAccess.DaoError Dao error}:
+   *      The method name must be a non-empty string.
+   * @throws {@link bo.dataAccess.DaoError Dao error}:
+   *      Data access object has no method with the requested name.
+   */
+  $runMethod( methodName, connection, methodArg ) {
 
-/**
- * Determines if create method exists.
- *
- * @function bo.dataAccess.DaoBase#$hasCreate
- * @returns {boolean} True when create method exists, otherwise false.
- */
-DaoBase.prototype.$hasCreate = function () {
-  return this['create'] !== undefined && typeof this['create'] === 'function';
-};
+    if (typeof methodName !== 'string' || methodName.trim().length === 0)
+      throw new DaoError( 'm_manString', 'checkMethod', 'methodName' );
+    if (!this[ methodName ] || typeof this[ methodName ] !== 'function')
+      throw new DaoError( 'noMethod', this.name, methodName );
 
-Object.seal(DaoBase.prototype);
+    return new Promise( (fulfill, reject) => {
+      const ctx = new DaoContext( fulfill, reject, connection );
+      this[ methodName ]( ctx, methodArg );
+    });
+  }
+
+  /**
+   * Determines if create method exists.
+   *
+   * @function bo.dataAccess.DaoBase#$hasCreate
+   * @returns {boolean} True when create method exists, otherwise false.
+   */
+  $hasCreate() {
+    return this['create'] !== undefined && typeof this['create'] === 'function';
+  }
+}
+
+Object.seal( DaoBase.prototype );
 
 module.exports = DaoBase;

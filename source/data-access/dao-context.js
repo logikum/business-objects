@@ -1,8 +1,8 @@
 'use strict';
 
-var Argument = require( '../system/argument-check.js' );
+const Argument = require( '../system/argument-check.js' );
 
-var CLASS_NAME = 'DaoContext';
+const CLASS_NAME = 'DaoContext';
 
 /**
  * Represents the context for the methods of data access objects.
@@ -10,6 +10,7 @@ var CLASS_NAME = 'DaoContext';
  * @memberof bo.dataAccess
  */
 class DaoContext {
+
   /**
    *  Creates a new context object for a data access object.
    *
@@ -22,7 +23,7 @@ class DaoContext {
    * @param {object} connection - The connection to the data source.
    */
   constructor( fulfill, reject, connection ) {
-    var check = Argument.inConstructor( CLASS_NAME );
+    const check = Argument.inConstructor( CLASS_NAME );
 
     /**
      * The success handler of the promise executor.

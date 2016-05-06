@@ -1,8 +1,8 @@
 'use strict';
 
-var CLASS_NAME = 'DaoError';
+const CLASS_NAME = 'DaoError';
 
-var t = require( '../locales/i18n-bo.js' )( CLASS_NAME );
+const t = require( '../locales/i18n-bo.js' )( CLASS_NAME );
 
 /**
  * Represents a data access error.
@@ -12,6 +12,7 @@ var t = require( '../locales/i18n-bo.js' )( CLASS_NAME );
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
 class DaoError extends Error {
+
   /**
    * Creates a data access error object.
    *
@@ -32,7 +33,7 @@ class DaoError extends Error {
      * Human-readable description of the error.
      * @type {string}
      */
-    this.message = t.apply( this, arguments );
+    this.message = t( ...arguments );
   }
 }
 

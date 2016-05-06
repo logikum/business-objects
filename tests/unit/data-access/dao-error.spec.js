@@ -1,14 +1,14 @@
 console.log( 'Testing data-access/data-type-error.js...' );
 
-var DaoError = require( '../../../source/data-access/dao-error.js' );
+const DaoError = require( '../../../source/data-access/dao-error.js' );
 
 describe( 'Data access object error', () => {
 
   it( 'constructor expects optional arguments', () => {
-    var de1 = new DaoError();
-    var de2 = new DaoError( 'The data access object is wrong.' );
-    var de3 = new DaoError( 'default' );
-    var de4 = new DaoError( 'Test failed: {0} != {1}', 13, 1024 );
+    const de1 = new DaoError();
+    const de2 = new DaoError( 'The data access object is wrong.' );
+    const de3 = new DaoError( 'default' );
+    const de4 = new DaoError( 'Test failed: {0} != {1}', 13, 1024 );
 
     expect( de1 ).toEqual( jasmine.any( Error ));
     expect( de1.name ).toBe( 'DaoError' );
