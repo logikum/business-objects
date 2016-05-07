@@ -1,86 +1,87 @@
 'use strict';
 
-var util = require('util');
-var DaoBase = require('../../../source/data-access/dao-base.js');
+const DaoBase = require( '../../../source/data-access/dao-base.js' );
 
-var daoAddressCtor = require('./address.js');
-var daoOrderItemCtor = require('./blanket-order-item.js');
-var daoOrderScheduleCtor = require('./blanket-order-schedule.js');
+const daoAddressCtor = require( './address.js' );
+const daoOrderItemCtor = require( './blanket-order-item.js' );
+const daoOrderScheduleCtor = require( './blanket-order-schedule.js' );
 
-var daoAddress = new daoAddressCtor();
-var daoOrderItem = new daoOrderItemCtor();
-var daoOrderSchedule = new daoOrderScheduleCtor();
+const daoAddress = new daoAddressCtor();
+const daoOrderItem = new daoOrderItemCtor();
+const daoOrderSchedule = new daoOrderScheduleCtor();
 
-var BlanketOrderViewDao = function() {
-  BlanketOrderViewDao.super_.call(this, 'BlanketOrderViewDao');
-};
-util.inherits(BlanketOrderViewDao, DaoBase);
+class BlanketOrderViewDao extends DaoBase {
 
-BlanketOrderViewDao.prototype.fetch = function( ctx, filter ) {
-  console.log('--- Blanket order view DAO.fetch');
-
-  var key = filter;
-  if (!global.orders[key]) {
-    ctx.reject( new Error('Blanket order not found.' ));
-    return;
+  constructor() {
+    super( 'BlanketOrderViewDao' );
   }
 
-  var order = global.orders[key];
-  return daoAddress.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
-    .then( address => {
-      order.address = address;
+  fetch( ctx, filter ) {
+    console.log( '--- Blanket order view DAO.fetch' );
 
-      return daoOrderItem.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
-        .then( items => {
-          order.items = items;
+    const key = filter;
+    if (!global.orders[ key ]) {
+      ctx.reject( new Error( 'Blanket order not found.' ) );
+      return;
+    }
 
-          return Promise.all(items.map(item => {
-            return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
-          }))
-            .then( values => {
-              for (var i = 0; i < values.length; i++) {
-                order.items[i].schedules = values[i];
-              }
-              ctx.fulfill( order );
-            });
-        });
-    });
-};
+    const order = global.orders[ key ];
+    return daoAddress.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
+      .then( address => {
+        order.address = address;
 
-BlanketOrderViewDao.prototype.fetchByName = function( ctx, filter ) {
-  console.log('--- Blanket order view DAO.fetchByName');
+        return daoOrderItem.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
+          .then( items => {
+            order.items = items;
 
-  var found = false;
-  for (var key in global.orders) {
-    if (global.orders.hasOwnProperty(key)) {
-      var order = global.orders[key];
-      if (order.vendorName === filter) {
-        found = true;
+            return Promise.all( items.map( item => {
+                return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
+              } ) )
+              .then( values => {
+                for (let i = 0; i < values.length; i++) {
+                  order.items[ i ].schedules = values[ i ];
+                }
+                ctx.fulfill( order );
+              } );
+          } );
+      } );
+  }
 
-        return daoAddress.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
-          .then( address => {
-            order.address = address;
+  fetchByName( ctx, filter ) {
+    console.log( '--- Blanket order view DAO.fetchByName' );
 
-            return daoOrderItem.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
-              .then( items => {
-                order.items = items;
+    let found = false;
+    for (const key in global.orders) {
+      if (global.orders.hasOwnProperty( key )) {
+        let order = global.orders[ key ];
+        if (order.vendorName === filter) {
+          found = true;
 
-                return Promise.all(items.map(item => {
-                  return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
-                }))
-                  .then( values => {
-                    for (var i = 0; i < values.length; i++) {
-                      order.items[i].schedules = values[i];
-                    }
-                    ctx.fulfill( order );
-                  });
-              });
-          });
+          return daoAddress.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
+            .then( address => {
+              order.address = address;
+
+              return daoOrderItem.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
+                .then( items => {
+                  order.items = items;
+
+                  return Promise.all( items.map( item => {
+                      return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
+                    } ) )
+                    .then( values => {
+                      for (let i = 0; i < values.length; i++) {
+                        order.items[ i ].schedules = values[ i ];
+                      }
+                      ctx.fulfill( order );
+                    } );
+                } );
+            } );
+        }
       }
     }
+    if (!found)
+      ctx.reject( new Error( 'Blanket order not found.' ) );
   }
-  if (!found)
-    ctx.reject( new Error('Blanket order not found.' ));
-};
+}
 
 module.exports = BlanketOrderViewDao;

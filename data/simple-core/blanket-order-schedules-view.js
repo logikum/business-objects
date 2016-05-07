@@ -1,10 +1,9 @@
 'use strict';
 
-var bo = require('../../source/index.js');
+const bo = require( '../../source/index.js' );
+const BlanketOrderScheduleView = require( './blanket-order-schedule-view.js' );
 
-var BlanketOrderScheduleView = require('./blanket-order-schedule-view.js');
-
-var BlanketOrderSchedulesView = bo.ReadOnlyChildCollection(
+const BlanketOrderSchedulesView = bo.ReadOnlyChildCollection(
     'BlanketOrderSchedulesView',
     BlanketOrderScheduleView
 );

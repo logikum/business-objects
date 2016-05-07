@@ -3,9 +3,11 @@
 const DaoBase = require( '../../../source/data-access/dao-base.js' );
 
 class RescheduleShippingCommandDao extends DaoBase {
+
   constructor() {
     super( 'RescheduleShippingCommandDao' );
   }
+
   execute( ctx, data ) {
     console.log('--- Reschedule shipping command DAO.execute');
 
@@ -21,6 +23,7 @@ class RescheduleShippingCommandDao extends DaoBase {
 
     ctx.fulfill( data );
   }
+
   reschedule( ctx, data ) {
     console.log('--- Reschedule shipping command DAO.reschedule');
 
