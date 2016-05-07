@@ -1,14 +1,14 @@
 'use strict';
 
-var DaoBase = require('../../source/data-access/dao-base.js');
+const DaoBase = require( '../../source/data-access/dao-base.js' );
 
-var daoAddressCtor = require('./address.dao.js');
-var daoOrderItemCtor = require('./blanket-order-item.dao.js');
-var daoOrderScheduleCtor = require('./blanket-order-schedule.dao.js');
+const daoAddressCtor = require( './address.dao.js' );
+const daoOrderItemCtor = require( './blanket-order-item.dao.js' );
+const daoOrderScheduleCtor = require( './blanket-order-schedule.dao.js' );
 
-var daoAddress = new daoAddressCtor();
-var daoOrderItem = new daoOrderItemCtor();
-var daoOrderSchedule = new daoOrderScheduleCtor();
+const daoAddress = new daoAddressCtor();
+const daoOrderItem = new daoOrderItemCtor();
+const daoOrderSchedule = new daoOrderScheduleCtor();
 
 class BlanketOrderDao extends DaoBase {
 
@@ -25,13 +25,13 @@ class BlanketOrderDao extends DaoBase {
   fetch( ctx, filter ) {
     console.log( '--- Blanket order DAO.fetch' );
 
-    var key = filter;
+    const key = filter;
     if (!global.orders[ key ]) {
       ctx.reject( new Error( 'Blanket order not found.' ) );
       return;
     }
 
-    var order = global.orders[ key ];
+    const order = global.orders[ key ];
     return daoAddress.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
       .then( address => {
         order.address = address;
@@ -44,7 +44,7 @@ class BlanketOrderDao extends DaoBase {
                 return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
               } ) )
               .then( values => {
-                for (var i = 0; i < values.length; i++) {
+                for (let i = 0; i < values.length; i++) {
                   order.items[ i ].schedules = values[ i ];
                 }
                 ctx.fulfill( order );
@@ -56,10 +56,10 @@ class BlanketOrderDao extends DaoBase {
   fetchByName( ctx, filter ) {
     console.log( '--- Blanket order DAO.fetchByName' );
 
-    var found = false;
-    for (var key in global.orders) {
+    let found = false;
+    for (const key in global.orders) {
       if (global.orders.hasOwnProperty( key )) {
-        var order = global.orders[ key ];
+        const order = global.orders[ key ];
         if (order.vendorName === filter) {
           found = true;
 
@@ -75,7 +75,7 @@ class BlanketOrderDao extends DaoBase {
                       return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
                     } ) )
                     .then( values => {
-                      for (var i = 0; i < values.length; i++) {
+                      for (let i = 0; i < values.length; i++) {
                         order.items[ i ].schedules = values[ i ];
                       }
                       ctx.fulfill( order );
@@ -94,7 +94,7 @@ class BlanketOrderDao extends DaoBase {
 
     data.orderKey = ++global.orderKey;
     data.createdDate = new Date();
-    var key = data.orderKey;
+    const key = data.orderKey;
     global.orders[ key ] = data;
     ctx.fulfill( data );
   }
@@ -102,7 +102,7 @@ class BlanketOrderDao extends DaoBase {
   update( ctx, data ) {
     console.log( '--- Blanket order DAO.update' );
 
-    var key = data.orderKey;
+    const key = data.orderKey;
     if (!global.orders[ key ])
       ctx.reject( new Error( 'Blanket order not found.' ) );
     else {
@@ -112,10 +112,10 @@ class BlanketOrderDao extends DaoBase {
     }
   }
 
-  remove = function ( ctx, filter ) {
+  remove( ctx, filter ) {
     console.log( '--- Blanket order DAO.remove' );
 
-    var key = filter;
+    const key = filter;
     if (global.orders[ key ])
       delete global.orders[ key ];
     ctx.fulfill( null );

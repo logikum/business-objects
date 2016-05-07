@@ -29,7 +29,7 @@ class BlanketOrderListDao extends DaoBase {
       if (global.orders.hasOwnProperty( key )) {
         const order = global.orders[ key ];
         if (order.vendorName === filter)
-          orderList.push();
+          orderList.push( order );
       }
     }
     ctx.fulfill( orderList );

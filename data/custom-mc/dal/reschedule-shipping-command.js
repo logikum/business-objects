@@ -1,43 +1,44 @@
 'use strict';
 
-var util = require('util');
-var DaoBase = require('../../../source/data-access/dao-base.js');
+const DaoBase = require( '../../../source/data-access/dao-base.js' );
 
-var RescheduleShippingCommandDao = function() {
-  RescheduleShippingCommandDao.super_.call(this, 'RescheduleShippingCommandDao');
-};
-util.inherits(RescheduleShippingCommandDao, DaoBase);
+class RescheduleShippingCommandDao extends DaoBase {
 
-RescheduleShippingCommandDao.prototype.execute = function( ctx, data ) {
-  console.log('--- Reschedule shipping command DAO.execute');
+  constructor() {
+    super( 'RescheduleShippingCommandDao' );
+  }
 
-  data.success = false;
+  execute( ctx, data ) {
+    console.log( '--- Reschedule shipping command DAO.execute' );
 
-  data.result = {};
+    data.success = false;
 
-  data.result.quantity = null;
-  data.result.totalMass = null;
-  data.result.required = null;
-  data.result.shipTo = null;
-  data.result.shipDate = null;
+    data.result = {};
 
-  ctx.fulfill( data );
-};
+    data.result.quantity = null;
+    data.result.totalMass = null;
+    data.result.required = null;
+    data.result.shipTo = null;
+    data.result.shipDate = null;
 
-RescheduleShippingCommandDao.prototype.reschedule = function( ctx, data ) {
-  console.log('--- Reschedule shipping command DAO.reschedule');
+    ctx.fulfill( data );
+  }
 
-  data.success = true;
+  reschedule( ctx, data ) {
+    console.log( '--- Reschedule shipping command DAO.reschedule' );
 
-  data.result = {};
+    data.success = true;
 
-  data.result.quantity = 2;
-  data.result.totalMass = 0.21;
-  data.result.required = false;
-  data.result.shipTo = 'Berlin';
-  data.result.shipDate = new Date(2015, 1, 3);
+    data.result = {};
 
-  ctx.fulfill( data );
-};
+    data.result.quantity = 2;
+    data.result.totalMass = 0.21;
+    data.result.required = false;
+    data.result.shipTo = 'Berlin';
+    data.result.shipDate = new Date( 2015, 1, 3 );
+
+    ctx.fulfill( data );
+  }
+}
 
 module.exports = RescheduleShippingCommandDao;

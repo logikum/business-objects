@@ -1,6 +1,6 @@
 'use strict';
 
-const DaoBase = require('../../source/data-access/dao-base.js');
+const DaoBase = require( '../../source/data-access/dao-base.js' );
 
 class BlanketOrderScheduleDao extends DaoBase {
 

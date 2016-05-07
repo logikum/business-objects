@@ -1,38 +1,39 @@
 'use strict';
 
-var util = require('util');
-var DaoBase = require('../../../source/data-access/dao-base.js');
+const DaoBase = require( '../../../source/data-access/dao-base.js' );
 
-var BlanketOrderListDao = function() {
-  BlanketOrderListDao.super_.call(this, 'BlanketOrderListDao');
-};
-util.inherits(BlanketOrderListDao, DaoBase);
+class BlanketOrderListDao extends DaoBase {
 
-BlanketOrderListDao.prototype.fetch = function( ctx, filter ) {
-  console.log('--- Blanket order list DAO.fetch');
-
-  var orderList = [];
-  for (var key in global.orders) {
-    if (global.orders.hasOwnProperty(key)) {
-      orderList.push(global.orders[key]);
-    }
+  constructor() {
+    super( 'BlanketOrderListDao' );
   }
-  orderList.totalItems = 2015;
-  ctx.fulfill( orderList );
-};
 
-BlanketOrderListDao.prototype.fetchByName = function( ctx, filter ) {
-  console.log('--- Blanket order list DAO.fetchByName');
+  fetch( ctx, filter ) {
+    console.log( '--- Blanket order list DAO.fetch' );
 
-  var orderList = [];
-  for (var key in global.orders) {
-    if (global.orders.hasOwnProperty(key)) {
-      var order = global.orders[key];
-      if (order.vendorName === filter)
-        orderList.push();
+    const orderList = [];
+    for (const key in global.orders) {
+      if (global.orders.hasOwnProperty( key )) {
+        orderList.push( global.orders[ key ] );
+      }
     }
+    orderList.totalItems = 2015;
+    ctx.fulfill( orderList );
+  };
+
+  fetchByName( ctx, filter ) {
+    console.log( '--- Blanket order list DAO.fetchByName' );
+
+    const orderList = [];
+    for (const key in global.orders) {
+      if (global.orders.hasOwnProperty( key )) {
+        const order = global.orders[ key ];
+        if (order.vendorName === filter)
+          orderList.push();
+      }
+    }
+    ctx.fulfill( orderList );
   }
-  ctx.fulfill( orderList );
-};
+}
 
 module.exports = BlanketOrderListDao;

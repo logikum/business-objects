@@ -1,49 +1,50 @@
 'use strict';
 
-var util = require('util');
-var DaoBase = require('../../source/data-access/dao-base.js');
+const DaoBase = require( '../../source/data-access/dao-base.js' );
 
-var BlanketOrderChildDao = function() {
-  BlanketOrderChildDao.super_.call(this, 'BlanketOrderChildDao');
-};
-util.inherits(BlanketOrderChildDao, DaoBase);
+class BlanketOrderChildDao extends DaoBase {
 
-BlanketOrderChildDao.prototype.create = function( ctx ) {
-  console.log('--- Blanket order child DAO.create');
+  constructor() {
+    super( 'BlanketOrderChildDao' );
+  }
 
-  ctx.fulfill( {} );
-};
+  create( ctx ) {
+    console.log( '--- Blanket order child DAO.create' );
 
-BlanketOrderChildDao.prototype.insert = function( ctx, data ) {
-  console.log('--- Blanket order child DAO.insert');
+    ctx.fulfill( {} );
+  }
 
-  data.orderKey = ++global.orderKey;
-  data.createdDate = new Date();
-  var key = data.orderKey;
-  global.orders[key] = data;
-  ctx.fulfill( data );
-};
+  insert( ctx, data ) {
+    console.log( '--- Blanket order child DAO.insert' );
 
-BlanketOrderChildDao.prototype.update = function( ctx, data ) {
-  console.log('--- Blanket order child DAO.update');
-
-  var key = data.orderKey;
-  if (!global.orders[key])
-    ctx.reject( new Error('Blanket order child not found.' ));
-  else {
-    data.modifiedDate = new Date();
-    global.orders[key] = data;
+    data.orderKey = ++global.orderKey;
+    data.createdDate = new Date();
+    const key = data.orderKey;
+    global.orders[ key ] = data;
     ctx.fulfill( data );
   }
-};
 
-BlanketOrderChildDao.prototype.remove = function( ctx, filter ) {
-  console.log('--- Blanket order child DAO.remove');
+  update( ctx, data ) {
+    console.log( '--- Blanket order child DAO.update' );
 
-  var key = filter;
-  if (global.orders[key])
-    delete global.orders[key];
-  ctx.fulfill( null );
-};
+    const key = data.orderKey;
+    if (!global.orders[ key ])
+      ctx.reject( new Error( 'Blanket order child not found.' ) );
+    else {
+      data.modifiedDate = new Date();
+      global.orders[ key ] = data;
+      ctx.fulfill( data );
+    }
+  }
+
+  remove( ctx, filter ) {
+    console.log( '--- Blanket order child DAO.remove' );
+
+    const key = filter;
+    if (global.orders[ key ])
+      delete global.orders[ key ];
+    ctx.fulfill( null );
+  }
+}
 
 module.exports = BlanketOrderChildDao;
