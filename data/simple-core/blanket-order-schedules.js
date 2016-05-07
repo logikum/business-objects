@@ -1,12 +1,12 @@
 'use strict';
 
-var bo = require('../../source/index.js');
+const bo = require( '../../source/index.js' );
 
-var BlanketOrderSchedule = require('./blanket-order-schedule.js');
+const BlanketOrderSchedule = require( './blanket-order-schedule.js' );
 
-var BlanketOrderSchedules = bo.EditableChildCollection(
-    'BlanketOrderSchedules',
-    BlanketOrderSchedule
+const BlanketOrderSchedules = bo.EditableChildCollection(
+  'BlanketOrderSchedules',
+  BlanketOrderSchedule
 );
 
 module.exports = BlanketOrderSchedules;

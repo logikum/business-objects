@@ -1,59 +1,59 @@
 'use strict';
 
-var bo = require('../../source/index.js');
+const bo = require( '../../source/index.js' );
 
-var Properties = bo.shared.PropertyManager;
-var Rules = bo.rules.RuleManager;
-var Action = bo.rules.AuthorizationAction;
-var Extensions = bo.shared.ExtensionManager;
-var Property = bo.shared.PropertyInfo;
-var F = bo.shared.PropertyFlag;
-var dt = bo.dataTypes;
-var cr = bo.commonRules;
+const Properties = bo.shared.PropertyManager;
+const Rules = bo.rules.RuleManager;
+const Action = bo.rules.AuthorizationAction;
+const Extensions = bo.shared.ExtensionManager;
+const Property = bo.shared.PropertyInfo;
+const F = bo.shared.PropertyFlag;
+const dt = bo.dataTypes;
+const cr = bo.commonRules;
 
-var AddressView = require('./address-view.js');
-var BlanketOrderItemsView = require('./blanket-order-items-view.js');
+const AddressView = require( './address-view.js' );
+const BlanketOrderItemsView = require( './blanket-order-items-view.js' );
 
-var orderKey = new Property('orderKey', dt.Integer, F.key);
-var vendorName = new Property('vendorName', dt.Text);
-var contractDate = new Property('contractDate', dt.DateTime);
-var totalPrice = new Property('totalPrice', dt.Decimal);
-var schedules = new Property('schedules', dt.Integer);
-var enabled = new Property('enabled', dt.Boolean);
-var address = new Property('address', AddressView);
-var items = new Property('items', BlanketOrderItemsView);
-var createdDate = new Property('createdDate', dt.DateTime);
-var modifiedDate = new Property('modifiedDate', dt.DateTime);
+const orderKey = new Property( 'orderKey', dt.Integer, F.key );
+const vendorName = new Property( 'vendorName', dt.Text );
+const contractDate = new Property( 'contractDate', dt.DateTime );
+const totalPrice = new Property( 'totalPrice', dt.Decimal );
+const schedules = new Property( 'schedules', dt.Integer );
+const enabled = new Property( 'enabled', dt.Boolean );
+const address = new Property( 'address', AddressView );
+const items = new Property( 'items', BlanketOrderItemsView );
+const createdDate = new Property( 'createdDate', dt.DateTime );
+const modifiedDate = new Property( 'modifiedDate', dt.DateTime );
 
-var properties = new Properties(
-    orderKey,
-    vendorName,
-    contractDate,
-    totalPrice,
-    schedules,
-    enabled,
-    address,
-    items,
-    createdDate,
-    modifiedDate
+const properties = new Properties(
+  orderKey,
+  vendorName,
+  contractDate,
+  totalPrice,
+  schedules,
+  enabled,
+  address,
+  items,
+  createdDate,
+  modifiedDate
 );
 
-var rules = new Rules(
-    cr.isInRole(Action.fetchObject, null, 'designers', 'You are not authorized to retrieve blanket order.'),
-    cr.isInAnyRole(Action.readProperty, totalPrice, ['salesmen', 'administrators'],
-        'You are not authorized to view the totalPrice of the blanket order.')
+const rules = new Rules(
+  cr.isInRole( Action.fetchObject, null, 'designers', 'You are not authorized to retrieve blanket order.' ),
+  cr.isInAnyRole( Action.readProperty, totalPrice, [ 'salesmen', 'administrators' ],
+    'You are not authorized to view the totalPrice of the blanket order.' )
 );
 
-var extensions = new Extensions('dao', __filename);
+const extensions = new Extensions( 'dao', __filename );
 
-var BlanketOrderView = bo.ReadOnlyRootObject('BlanketOrderView', properties, rules, extensions);
+const BlanketOrderView = bo.ReadOnlyRootObject( 'BlanketOrderView', properties, rules, extensions );
 
-var BlanketOrderViewFactory = {
-  get: function (key, eventHandlers) {
-    return BlanketOrderView.fetch(key, null, eventHandlers);
+const BlanketOrderViewFactory = {
+  get: function ( key, eventHandlers ) {
+    return BlanketOrderView.fetch( key, null, eventHandlers );
   },
-  getByName: function (name, eventHandlers) {
-    return BlanketOrderView.fetch(name, 'fetchByName', eventHandlers);
+  getByName: function ( name, eventHandlers ) {
+    return BlanketOrderView.fetch( name, 'fetchByName', eventHandlers );
   }
 };
 

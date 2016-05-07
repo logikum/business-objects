@@ -1,12 +1,12 @@
 'use strict';
 
-var bo = require('../../source/index.js');
+const bo = require( '../../source/index.js' );
 
-var BlanketOrderItem = require('./blanket-order-item.js');
+const BlanketOrderItem = require( './blanket-order-item.js' );
 
-var BlanketOrderItems = bo.EditableChildCollection(
-    'BlanketOrderItems',
-    BlanketOrderItem
+const BlanketOrderItems = bo.EditableChildCollection(
+  'BlanketOrderItems',
+  BlanketOrderItem
 );
 
 module.exports = BlanketOrderItems;

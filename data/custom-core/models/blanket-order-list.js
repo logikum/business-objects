@@ -1,24 +1,24 @@
 'use strict';
 
-var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
+const bo = require( '../../../source/index.js' );
+const daoBuilder = require( '../dao-builder.js' );
 
-var Rules = bo.rules.RuleManager;
-var Extensions = bo.shared.ExtensionManager;
-var cr = bo.commonRules;
+const Rules = bo.rules.RuleManager;
+const Extensions = bo.shared.ExtensionManager;
+const cr = bo.commonRules;
 
-var BlanketOrderListItem = require('./blanket-order-list-item.js');
+const BlanketOrderListItem = require( './blanket-order-list-item.js' );
 
-var rules = new Rules(
+const rules = new Rules(
 );
 
 //region Transfer object methods
 
 function toCto( ctx ) {
-  var list = [];
+  const list = [];
   this.forEach( item => {
     list.push( item.toCto() );
-  });
+  } );
   return {
     list: list,
     totalItems: this.totalItems
@@ -33,6 +33,7 @@ function dataFetch( ctx, filter, method ) {
   function finish( dto ) {
     ctx.fulfill( dto );
   }
+
   if (method === 'fetchByName') {
     // filter: vendorName
     ctx.call( 'fetchByName', filter ).then( finish );
@@ -46,23 +47,23 @@ function dataFetch( ctx, filter, method ) {
 
 //endregion
 
-var extensions = new Extensions('dal', __filename);
+const extensions = new Extensions( 'dal', __filename );
 extensions.daoBuilder = daoBuilder;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-var BlanketOrderList = bo.ReadOnlyRootCollection(
-    'BlanketOrderList',
-    BlanketOrderListItem,
-    rules,
-    extensions
+const BlanketOrderList = bo.ReadOnlyRootCollection(
+  'BlanketOrderList',
+  BlanketOrderListItem,
+  rules,
+  extensions
 );
 
-var BlanketOrderListFactory = {
-  getAll: function( eventHandlers ) {
+const BlanketOrderListFactory = {
+  getAll: function ( eventHandlers ) {
     return BlanketOrderList.fetch( null, null, eventHandlers );
   },
-  getByName: function( name, eventHandlers ) {
+  getByName: function ( name, eventHandlers ) {
     return BlanketOrderList.fetch( name, 'fetchByName', eventHandlers );
   }
 };

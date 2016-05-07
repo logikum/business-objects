@@ -1,53 +1,53 @@
 'use strict';
 
-var bo = require('../../../source/index.js');
+const bo = require( '../../../source/index.js' );
 
-var Properties = bo.shared.PropertyManager;
-var Rules = bo.rules.RuleManager;
-var Extensions = bo.shared.ExtensionManager;
-var Property = bo.shared.PropertyInfo;
-//var F = bo.shared.PropertyFlag;
-var dt = bo.dataTypes;
-var cr = bo.commonRules;
+const Properties = bo.shared.PropertyManager;
+const Rules = bo.rules.RuleManager;
+const Extensions = bo.shared.ExtensionManager;
+const Property = bo.shared.PropertyInfo;
+//const F = bo.shared.PropertyFlag;
+const dt = bo.dataTypes;
+const cr = bo.commonRules;
 
-var quantity = new Property( 'quantity', dt.Integer );
-var totalMass = new Property( 'totalMass', dt.Decimal );
-var required = new Property( 'required', dt.Boolean );
-var shipTo = new Property( 'shipTo', dt.Text );
-var shipDate = new Property( 'shipDate', dt.DateTime );
+const quantity = new Property( 'quantity', dt.Integer );
+const totalMass = new Property( 'totalMass', dt.Decimal );
+const required = new Property( 'required', dt.Boolean );
+const shipTo = new Property( 'shipTo', dt.Text );
+const shipDate = new Property( 'shipDate', dt.DateTime );
 
-var properties = new Properties(
-    quantity,
-    totalMass,
-    required,
-    shipTo,
-    shipDate
+const properties = new Properties(
+  quantity,
+  totalMass,
+  required,
+  shipTo,
+  shipDate
 );
 
-var rules = new Rules(
-    cr.required( quantity ),
-    cr.required( totalMass ),
-    cr.required( required ),
-    cr.required( shipTo ),
-    cr.required( shipDate )
+const rules = new Rules(
+  cr.required( quantity ),
+  cr.required( totalMass ),
+  cr.required( required ),
+  cr.required( shipTo ),
+  cr.required( shipDate )
 );
 
 //region Data portal methods
 
 function dataFetch( ctx, dto, method ) {
-  ctx.setValue( 'quantity',  dto.quantity );
+  ctx.setValue( 'quantity', dto.quantity );
   ctx.setValue( 'totalMass', dto.totalMass );
-  ctx.setValue( 'required',  dto.required );
-  ctx.setValue( 'shipTo',    dto.shipTo );
-  ctx.setValue( 'shipDate',  dto.shipDate );
+  ctx.setValue( 'required', dto.required );
+  ctx.setValue( 'shipTo', dto.shipTo );
+  ctx.setValue( 'shipDate', dto.shipDate );
   ctx.fulfill( dto );
 }
 
 //endregion
 
-var extensions = new Extensions( 'dal', __filename );
+const extensions = new Extensions( 'dal', __filename );
 extensions.dataFetch = dataFetch;
 
-var RescheduleShippingResult = bo.ReadOnlyChildObject( 'RescheduleShippingResult', properties, rules, extensions );
+const RescheduleShippingResult = bo.ReadOnlyChildObject( 'RescheduleShippingResult', properties, rules, extensions );
 
 module.exports = RescheduleShippingResult;

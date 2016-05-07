@@ -1,31 +1,31 @@
 'use strict';
 
-var bo = require('../../source/index.js');
+const bo = require( '../../source/index.js' );
 
-var Rules = bo.rules.RuleManager;
-var Extensions = bo.shared.ExtensionManager;
-var cr = bo.commonRules;
+const Rules = bo.rules.RuleManager;
+const Extensions = bo.shared.ExtensionManager;
+const cr = bo.commonRules;
 
-var BlanketOrderListItem = require('./blanket-order-list-item.js');
+const BlanketOrderListItem = require( './blanket-order-list-item.js' );
 
-var rules = new Rules(
+const rules = new Rules(
 );
 
-var extensions = new Extensions('dao', __filename);
+const extensions = new Extensions( 'dao', __filename );
 
-var BlanketOrderList = bo.ReadOnlyRootCollection(
-    'BlanketOrderList',
-    BlanketOrderListItem,
-    rules,
-    extensions
+const BlanketOrderList = bo.ReadOnlyRootCollection(
+  'BlanketOrderList',
+  BlanketOrderListItem,
+  rules,
+  extensions
 );
 
-var BlanketOrderListFactory = {
-  getAll: function (eventHandlers) {
-    return BlanketOrderList.fetch(null, null, eventHandlers);
+const BlanketOrderListFactory = {
+  getAll: function ( eventHandlers ) {
+    return BlanketOrderList.fetch( null, null, eventHandlers );
   },
-  getByName: function (name, eventHandlers) {
-    return BlanketOrderList.fetch(name, 'fetchByName', eventHandlers);
+  getByName: function ( name, eventHandlers ) {
+    return BlanketOrderList.fetch( name, 'fetchByName', eventHandlers );
   }
 };
 
