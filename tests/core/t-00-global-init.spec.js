@@ -1,19 +1,19 @@
-var configuration = require('../../source/shared/configuration-reader.js');
-//var i18n = require('../../source/locales/i18n.js');
+const configuration = require( '../../source/shared/configuration-reader.js' );
+//const i18n = require( '../../source/locales/i18n.js' );
 
-configuration.initialize('/config/business-objects.js');
-//i18n.initialize(configuration.pathOfLocales, configuration.getLocale);
+configuration.initialize( '/config/business-objects.js' );
+//i18n.initialize( configuration.pathOfLocales, configuration.getLocale );
 
 function showTitle() {
-  console.log('');
-  console.log('--------------------------------------------------');
-  console.log('Initializing test environment...' );
-  console.log('--------------------------------------------------');
+  console.log( '' );
+  console.log( '--------------------------------------------------' );
+  console.log( 'Initializing test environment...' );
+  console.log( '--------------------------------------------------' );
 }
 
-describe('Test repository', () => {
+describe( 'Test repository', () => {
 
-  it('initialization', () => {
+  it( 'initialization', () => {
     showTitle();
 
     global.orderKey = 0;
@@ -28,6 +28,6 @@ describe('Test repository', () => {
     global.scheduleKey = 0;
     global.schedules = {};
 
-    expect(true).toBe(true);
-  });
-});
+    expect( true ).toBe( true );
+  } );
+} );

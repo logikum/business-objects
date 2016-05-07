@@ -1,39 +1,39 @@
 //region Imports
 
-var ClearScheduleCommand = require('../../data/simple-mc/clear-schedule-command.js');
-var RescheduleShippingCommand = require('../../data/custom-mc/models/reschedule-shipping-command.js');
-var RescheduleShippingResult = require('../../data/custom-mc/models/reschedule-shipping-result.js');
+const ClearScheduleCommand = require( '../../data/simple-mc/clear-schedule-command.js' );
+const RescheduleShippingCommand = require( '../../data/custom-mc/models/reschedule-shipping-command.js' );
+const RescheduleShippingResult = require( '../../data/custom-mc/models/reschedule-shipping-result.js' );
 
-var DataPortalEvent = require('../../source/shared/data-portal-event.js');
-var EventHandlerList = require('../../source/shared/event-handler-list.js');
+const DataPortalEvent = require( '../../source/shared/data-portal-event.js' );
+const EventHandlerList = require( '../../source/shared/event-handler-list.js' );
 
 //endregion
 
 function showTitle() {
-  console.log('');
-  console.log('--------------------------------------------------');
-  console.log('Testing data portal methods of commands...' );
-  console.log('--------------------------------------------------');
+  console.log( '' );
+  console.log( '--------------------------------------------------' );
+  console.log( 'Testing data portal methods of commands...' );
+  console.log( '--------------------------------------------------' );
 }
 
 describe( 'Asynchronous data portal method', () => {
 
   //region Event handlers
 
-  function logEvent (eventArgs) {
-    var id = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName;
-    console.log('  : ' + id + ' event.');
+  function logEvent( eventArgs ) {
+    const id = eventArgs.modelName + '.' + eventArgs.methodName + ':' + eventArgs.eventName;
+    console.log( '  : ' + id + ' event.' );
   }
 
-  var ehClearScheduleCommand = new EventHandlerList();
-  ehClearScheduleCommand.add('ClearScheduleCommand', DataPortalEvent.preExecute, logEvent);
-  ehClearScheduleCommand.add('ClearScheduleCommand', DataPortalEvent.postExecute, logEvent);
+  const ehClearScheduleCommand = new EventHandlerList();
+  ehClearScheduleCommand.add( 'ClearScheduleCommand', DataPortalEvent.preExecute, logEvent );
+  ehClearScheduleCommand.add( 'ClearScheduleCommand', DataPortalEvent.postExecute, logEvent );
 
-  var ehRescheduleShippingCommand = new EventHandlerList();
-  ehRescheduleShippingCommand.add('RescheduleShippingCommand', DataPortalEvent.preExecute, logEvent);
-  ehRescheduleShippingCommand.add('RescheduleShippingCommand', DataPortalEvent.postExecute, logEvent);
-  ehRescheduleShippingCommand.add('RescheduleShippingResult', DataPortalEvent.preFetch, logEvent);
-  ehRescheduleShippingCommand.add('RescheduleShippingResult', DataPortalEvent.postFetch, logEvent);
+  const ehRescheduleShippingCommand = new EventHandlerList();
+  ehRescheduleShippingCommand.add( 'RescheduleShippingCommand', DataPortalEvent.preExecute, logEvent );
+  ehRescheduleShippingCommand.add( 'RescheduleShippingCommand', DataPortalEvent.postExecute, logEvent );
+  ehRescheduleShippingCommand.add( 'RescheduleShippingResult', DataPortalEvent.preFetch, logEvent );
+  ehRescheduleShippingCommand.add( 'RescheduleShippingResult', DataPortalEvent.postFetch, logEvent );
 
   //endregion
 
@@ -41,13 +41,13 @@ describe( 'Asynchronous data portal method', () => {
     showTitle();
     console.log( '\n*** Method EXECUTE' );
 
-    var cmd = ClearScheduleCommand.create(ehClearScheduleCommand);
+    const cmd = ClearScheduleCommand.create( ehClearScheduleCommand );
 
-    //cmd.on('preExecute', function (eventArgs) {
-    //  console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.');
+    //cmd.on( 'preExecute', function (eventArgs) {
+    //  console.log( '  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':preExecute event.' );
     //});
-    //cmd.on('postExecute', function (eventArgs) {
-    //  console.log('  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.');
+    //cmd.on( 'postExecute', function (eventArgs) {
+    //  console.log( '  : ' + eventArgs.modelName + '.' + eventArgs.methodName + ':postExecute event.' );
     //});
 
     cmd.orderKey = 1;
@@ -55,36 +55,36 @@ describe( 'Asynchronous data portal method', () => {
     cmd.orderScheduleKey = 3;
 
     cmd.execute()
-    .then( value => {
+      .then( value => {
 
-      expect(cmd.result).toBe(true);
+        expect( cmd.result ).toBe( true );
 
-      done();
-    });
-  });
+        done();
+      } );
+  } );
 
   it( 'RESCHEDULE of custom command', done => {
     console.log( '\n*** Method RESCHEDULE' );
 
-    var cmd = RescheduleShippingCommand.create(ehRescheduleShippingCommand);
+    const cmd = RescheduleShippingCommand.create( ehRescheduleShippingCommand );
 
     cmd.orderKey = 1;
     cmd.orderItemKey = 2;
     cmd.orderScheduleKey = 3;
 
     cmd.reschedule()
-    .then( value => {
+      .then( value => {
 
-      expect(cmd.success).toBe(true);
-      expect(cmd.result).toEqual(jasmine.any(RescheduleShippingResult));
+        expect( cmd.success ).toBe( true );
+        expect( cmd.result ).toEqual( jasmine.any( RescheduleShippingResult ) );
 
-      expect(cmd.result.quantity).toBe(2);
-      expect(cmd.result.totalMass).toBe(0.21);
-      expect(cmd.result.required).toBe(false);
-      expect(cmd.result.shipTo).toBe('Berlin');
-      expect(cmd.result.shipDate).toEqual(new Date(2015, 1, 3));
+        expect( cmd.result.quantity ).toBe( 2 );
+        expect( cmd.result.totalMass ).toBe( 0.21 );
+        expect( cmd.result.required ).toBe( false );
+        expect( cmd.result.shipTo ).toBe( 'Berlin' );
+        expect( cmd.result.shipDate ).toEqual( new Date( 2015, 1, 3 ) );
 
-      done();
-    });
-  });
-});
+        done();
+      } );
+  } );
+} );

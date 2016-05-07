@@ -1,63 +1,70 @@
 'use strict';
 
-var util = require('util');
-var ConnectionManagerBase = require('../source/data-access/connection-manager-base.js');
+const ConnectionManagerBase = require( '../source/data-access/connection-manager-base.js' );
 
-var connectionId = 0;
-var transactionId = 0;
+let connectionId = 0;
+let transactionId = 0;
 
-// Connection constructor.
-var Connection = function (dataSource) {
-  this.dataSource = dataSource;
-  this.connectionId = ++connectionId;
-  this.transactionId = null;
+// Connection class.
+class Connection {
 
-  this.close = function () {
+  constructor( dataSource ) {
+    this.dataSource = dataSource;
+    this.connectionId = ++connectionId;
+    this.transactionId = null;
+  }
+
+  close() {
     this.connectionId = null;
-  };
-  this.begin = function () {
+  }
+
+  begin() {
     this.transactionId = ++transactionId;
-  };
-  this.commit = function () {
+  }
+
+  commit() {
     this.transactionId = null;
-  };
-  this.rollback = function () {
+  }
+
+  rollback() {
     this.transactionId = null;
-  };
-};
+  }
+}
 
-// Connection manager constructor.
-var ConnectionManager = function() {
-  ConnectionManager.super_.call(this);
-};
-util.inherits(ConnectionManager, ConnectionManagerBase);
+// Connection manager class.
+class ConnectionManager extends ConnectionManagerBase {
 
-ConnectionManager.prototype.openConnection = function (dataSource) {
-  var connection = new Connection(dataSource);
-  return Promise.resolve(connection);
-};
+  constructor() {
+    super();
+  }
 
-ConnectionManager.prototype.closeConnection = function (dataSource, connection) {
-  connection.close();
-  return Promise.resolve(null);
-};
+  openConnection( dataSource ) {
+    const connection = new Connection( dataSource );
+    return Promise.resolve( connection );
+  }
 
-ConnectionManager.prototype.beginTransaction = function (dataSource) {
-  var connection = new Connection(dataSource);
-  connection.begin();
-  return Promise.resolve(connection);
-};
+  closeConnection( dataSource, connection ) {
+    connection.close();
+    return Promise.resolve( null );
+  }
 
-ConnectionManager.prototype.commitTransaction = function (dataSource, connection) {
-  connection.commit();
-  connection.close();
-  return Promise.resolve(null);
-};
+  beginTransaction( dataSource ) {
+    const connection = new Connection( dataSource );
+    connection.begin();
+    return Promise.resolve( connection );
+  }
 
-ConnectionManager.prototype.rollbackTransaction = function (dataSource, connection) {
-  connection.rollback();
-  connection.close();
-  return Promise.resolve(null);
-};
+  commitTransaction( dataSource, connection ) {
+    connection.commit();
+    connection.close();
+    return Promise.resolve( null );
+  }
+
+  rollbackTransaction( dataSource, connection ) {
+    connection.rollback();
+    connection.close();
+    return Promise.resolve( null );
+  }
+}
 
 module.exports = ConnectionManager;
