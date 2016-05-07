@@ -1,9 +1,9 @@
 'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var DaoBase = require('./dao-base.js');
-var DaoError = require('./dao-error.js');
+const fs = require( 'fs' );
+const path = require( 'path' );
+const DaoBase = require( './dao-base.js' );
+const DaoError = require( './dao-error.js' );
 
 /**
  * Factory method to create the data access object for a model instance.
@@ -29,36 +29,36 @@ var DaoError = require('./dao-error.js');
  * daoBuilder('oracle', '/path/to/model.js')
  * // returns require('/path/to/model.oracle.js')
  */
-var daoBuilder = function (dataSource, modelPath, modelName) {
+const daoBuilder = function ( dataSource, modelPath, modelName ) {
 
   if (typeof dataSource !== 'string' || dataSource.trim().length === 0)
-    throw new DaoError('f_manString', 'dataSource');
+    throw new DaoError( 'f_manString', 'dataSource' );
   if (typeof modelPath !== 'string' || modelPath.trim().length === 0)
-    throw new DaoError('f_manString', 'modelPath');
+    throw new DaoError( 'f_manString', 'modelPath' );
   if (typeof modelName !== 'string' || modelName.trim().length === 0)
-    throw new DaoError('f_manString', 'modelName');
+    throw new DaoError( 'f_manString', 'modelName' );
 
-  var modelStats = fs.statSync(modelPath);
+  const modelStats = fs.statSync( modelPath );
   if (!modelStats.isFile())
-    throw new DaoError('filePath', 'modelPath', modelPath);
+    throw new DaoError( 'filePath', 'modelPath', modelPath );
 
-  var daoPath = path.join(
-    path.dirname(modelPath),
-    path.basename(modelPath, path.extname(modelPath)) + '.' + dataSource + path.extname(modelPath)
+  const daoPath = path.join(
+    path.dirname( modelPath ),
+    path.basename( modelPath, path.extname( modelPath ) ) + '.' + dataSource + path.extname( modelPath )
   );
 
-  var daoStats = fs.statSync(daoPath);
+  const daoStats = fs.statSync( daoPath );
   if (!daoStats.isFile())
-    throw new DaoError('noDaoFile', daoPath);
+    throw new DaoError( 'noDaoFile', daoPath );
 
-  var daoConstructor = require(daoPath);
+  const daoConstructor = require( daoPath );
 
   if (typeof daoConstructor !== 'function')
-    throw new DaoError('daoCtor', daoPath);
+    throw new DaoError( 'daoCtor', daoPath );
 
-  var daoInstance = new daoConstructor();
+  const daoInstance = new daoConstructor();
   if (!(daoInstance instanceof DaoBase) && daoInstance.super_ !== DaoBase)
-    throw new DaoError('daoType', daoPath);
+    throw new DaoError( 'daoType', daoPath );
   return daoInstance;
 };
 

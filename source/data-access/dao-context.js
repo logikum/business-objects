@@ -27,21 +27,21 @@ class DaoContext {
 
     /**
      * The success handler of the promise executor.
-     * @type {function}
+     * @member {function} bo.dataAccess.DaoContext#fulfill
      * @readonly
      */
     this.fulfill = check( fulfill ).forMandatory( 'fulfill' ).asFunction();
 
     /**
      * The failure handler of the promise executor.
-     * @type {function}
+     * @member {function} bo.dataAccess.DaoContext#reject
      * @readonly
      */
     this.reject = check( reject ).forMandatory( 'reject' ).asFunction();
 
     /**
      * The connection to the data source.
-     * @type {object}
+     * @member {object} bo.dataAccess.DaoContext#connection
      * @readonly
      */
     this.connection = check( connection ).forOptional( 'connection' ).asObject();
