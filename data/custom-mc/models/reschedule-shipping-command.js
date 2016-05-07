@@ -1,11 +1,11 @@
 'use strict';
 
-var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
-var Model = bo.ModelComposer;
-var cr = bo.commonRules;
+const bo = require( '../../../source/index.js' );
+const daoBuilder = require( '../dao-builder.js' );
+const Model = bo.ModelComposer;
+const cr = bo.commonRules;
 
-var RescheduleShippingResult = require('./reschedule-shipping-result.js');
+const RescheduleShippingResult = require( './reschedule-shipping-result.js' );
 
 //region Data portal methods
 
@@ -14,9 +14,10 @@ function dataExecute( ctx, method ) {
     ctx.setValue( 'success', dto.success );
     ctx.fulfill( dto );
   }
-  var dto = {
-    orderKey:         ctx.getValue( 'orderKey' ),
-    orderItemKey:     ctx.getValue( 'orderItemKey' ),
+
+  const dto = {
+    orderKey: ctx.getValue( 'orderKey' ),
+    orderItemKey: ctx.getValue( 'orderItemKey' ),
     orderScheduleKey: ctx.getValue( 'orderScheduleKey' )
   };
   if (method === 'reschedule')
@@ -29,24 +30,24 @@ function dataExecute( ctx, method ) {
 
 //endregion
 
-var RescheduleShippingCommand = Model('RescheduleShippingCommand')
-    .commandObject('dal', __filename)
-    // --- Properties
-    .integer('orderKey')
-        .required()
-    .integer('orderItemKey')
-        .required()
-    .integer('orderScheduleKey')
-        .required()
-    .boolean('success')
-    .property('result', RescheduleShippingResult)
-    // --- Permissions
-    .canCall('reschedule', cr.isInRole, 'developers', 'You are not authorized to execute the command.')
-    // --- Customization
-    .daoBuilder(daoBuilder)
-    .dataExecute(dataExecute)
-    .addMethod('reschedule')
-    // --- Build model class
-    .compose();
+const RescheduleShippingCommand = Model( 'RescheduleShippingCommand' )
+  .commandObject( 'dal', __filename )
+  // --- Properties
+  .integer( 'orderKey' )
+    .required()
+  .integer( 'orderItemKey' )
+    .required()
+  .integer( 'orderScheduleKey' )
+    .required()
+  .boolean( 'success' )
+  .property( 'result', RescheduleShippingResult )
+  // --- Permissions
+  .canCall( 'reschedule', cr.isInRole, 'developers', 'You are not authorized to execute the command.' )
+  // --- Customization
+  .daoBuilder( daoBuilder )
+  .dataExecute( dataExecute )
+  .addMethod( 'reschedule' )
+  // --- Build model class
+  .compose();
 
 module.exports = RescheduleShippingCommand;

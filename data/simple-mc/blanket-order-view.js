@@ -1,38 +1,38 @@
 'use strict';
 
-var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
-var F = bo.shared.PropertyFlag;
-var cr = bo.commonRules;
+const bo = require( '../../source/index.js' );
+const Model = bo.ModelComposer;
+const F = bo.shared.PropertyFlag;
+const cr = bo.commonRules;
 
-var AddressView = require('./address-view.js');
-var BlanketOrderItemsView = require('./blanket-order-items-view.js');
+const AddressView = require( './address-view.js' );
+const BlanketOrderItemsView = require( './blanket-order-items-view.js' );
 
-var BlanketOrderView = Model('BlanketOrderView')
-    .readOnlyRootObject('dao', __filename)
-    // --- Properties
-    .integer('orderKey', F.key)
-    .text('vendorName')
-    .dateTime('contractDate')
-    .decimal('totalPrice')
-        .canRead(cr.isInAnyRole, ['salesmen', 'administrators'], 'You are not authorized to view the totalPrice of the blanket order.')
-    .integer('schedules')
-    .boolean('enabled')
-    .property('address', AddressView)
-    .property('items', BlanketOrderItemsView)
-    .dateTime('createdDate')
-    .dateTime('modifiedDate')
-    // --- Permissions
-    .canFetch(cr.isInRole, 'designers', 'You are not authorized to retrieve blanket order.')
-    // --- Build model class
-    .compose();
+const BlanketOrderView = Model( 'BlanketOrderView' )
+  .readOnlyRootObject( 'dao', __filename )
+  // --- Properties
+  .integer( 'orderKey', F.key )
+  .text( 'vendorName' )
+  .dateTime( 'contractDate' )
+  .decimal( 'totalPrice' )
+    .canRead( cr.isInAnyRole, [ 'salesmen', 'administrators' ], 'You are not authorized to view the totalPrice of the blanket order.' )
+  .integer( 'schedules' )
+  .boolean( 'enabled' )
+  .property( 'address', AddressView )
+  .property( 'items', BlanketOrderItemsView )
+  .dateTime( 'createdDate' )
+  .dateTime( 'modifiedDate' )
+  // --- Permissions
+  .canFetch( cr.isInRole, 'designers', 'You are not authorized to retrieve blanket order.' )
+  // --- Build model class
+  .compose();
 
-var BlanketOrderViewFactory = {
-  get: function (key, eventHandlers) {
-    return BlanketOrderView.fetch(key, null, eventHandlers);
+const BlanketOrderViewFactory = {
+  get: function ( key, eventHandlers ) {
+    return BlanketOrderView.fetch( key, null, eventHandlers );
   },
-  getByName: function (name, eventHandlers) {
-    return BlanketOrderView.fetch(name, 'fetchByName', eventHandlers);
+  getByName: function ( name, eventHandlers ) {
+    return BlanketOrderView.fetch( name, 'fetchByName', eventHandlers );
   }
 };
 

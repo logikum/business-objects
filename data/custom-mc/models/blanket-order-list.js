@@ -1,18 +1,18 @@
 'use strict';
 
-var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
-var Model = bo.ModelComposer;
+const bo = require( '../../../source/index.js' );
+const daoBuilder = require( '../dao-builder.js' );
+const Model = bo.ModelComposer;
 
-var BlanketOrderListItem = require('./blanket-order-list-item.js');
+const BlanketOrderListItem = require( './blanket-order-list-item.js' );
 
 //region Transfer object methods
 
-function toCto (ctx) {
-  var list = [];
-  this.forEach(function (item) {
-    list.push(item.toCto());
-  });
+function toCto( ctx ) {
+  const list = [];
+  this.forEach( function ( item ) {
+    list.push( item.toCto() );
+  } );
   return {
     list: list,
     totalItems: this.totalItems
@@ -27,6 +27,7 @@ function dataFetch( ctx, filter, method ) {
   function finish( dto ) {
     ctx.fulfill( dto );
   }
+
   if (method === 'fetchByName') {
     // filter: vendorName
     ctx.call( 'fetchByName', filter ).then( finish );
@@ -40,23 +41,23 @@ function dataFetch( ctx, filter, method ) {
 
 //endregion
 
-var BlanketOrderList = Model('BlanketOrderList')
-    .readOnlyRootCollection('dal', __filename)
-    // --- Collection elements
-    .itemType(BlanketOrderListItem)
-    // --- Customization
-    .daoBuilder(daoBuilder)
-    .toCto(toCto)
-    .dataFetch(dataFetch)
-    // --- Build model class
-    .compose();
+const BlanketOrderList = Model( 'BlanketOrderList' )
+  .readOnlyRootCollection( 'dal', __filename )
+  // --- Collection elements
+  .itemType( BlanketOrderListItem )
+  // --- Customization
+  .daoBuilder( daoBuilder )
+  .toCto( toCto )
+  .dataFetch( dataFetch )
+  // --- Build model class
+  .compose();
 
-var BlanketOrderListFactory = {
-  getAll: function (eventHandlers) {
-    return BlanketOrderList.fetch(null, null, eventHandlers);
+const BlanketOrderListFactory = {
+  getAll: function ( eventHandlers ) {
+    return BlanketOrderList.fetch( null, null, eventHandlers );
   },
-  getByName: function (name, eventHandlers) {
-    return BlanketOrderList.fetch(name, 'fetchByName', eventHandlers);
+  getByName: function ( name, eventHandlers ) {
+    return BlanketOrderList.fetch( name, 'fetchByName', eventHandlers );
   }
 };
 

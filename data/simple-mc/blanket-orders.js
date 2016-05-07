@@ -1,26 +1,26 @@
 'use strict';
 
-var bo = require('../../source/index.js');
-var Model = bo.ModelComposer;
+const bo = require( '../../source/index.js' );
+const Model = bo.ModelComposer;
 
-var BlanketOrderChild = require('./blanket-order-child.js');
+const BlanketOrderChild = require( './blanket-order-child.js' );
 
-var BlanketOrders = Model('BlanketOrders')
-    .editableRootCollection('dao', __filename)
-    // --- Collection elements
-    .itemType(BlanketOrderChild)
-    // --- Build model class
-    .compose();
+const BlanketOrders = Model( 'BlanketOrders' )
+  .editableRootCollection( 'dao', __filename )
+  // --- Collection elements
+  .itemType( BlanketOrderChild )
+  // --- Build model class
+  .compose();
 
-var BlanketOrdersFactory = {
-  create: function (eventHandlers) {
-    return BlanketOrders.create(eventHandlers);
+const BlanketOrdersFactory = {
+  create: function ( eventHandlers ) {
+    return BlanketOrders.create( eventHandlers );
   },
-  getAll: function (eventHandlers) {
-    return BlanketOrders.fetch(null, null, eventHandlers);
+  getAll: function ( eventHandlers ) {
+    return BlanketOrders.fetch( null, null, eventHandlers );
   },
-  getFromTo: function (from, to, eventHandlers) {
-    return BlanketOrders.fetch({ from: from, to: to }, 'fetchFromTo', eventHandlers);
+  getFromTo: function ( from, to, eventHandlers ) {
+    return BlanketOrders.fetch( { from: from, to: to }, 'fetchFromTo', eventHandlers );
   }
 };
 

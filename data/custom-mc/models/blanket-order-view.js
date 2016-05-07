@@ -1,36 +1,36 @@
 'use strict';
 
-var bo = require('../../../source/index.js');
-var daoBuilder = require('../dao-builder.js');
-var Model = bo.ModelComposer;
-var F = bo.shared.PropertyFlag;
-var cr = bo.commonRules;
+const bo = require( '../../../source/index.js' );
+const daoBuilder = require( '../dao-builder.js' );
+const Model = bo.ModelComposer;
+const F = bo.shared.PropertyFlag;
+const cr = bo.commonRules;
 
-var AddressView = require('./address-view.js');
-var BlanketOrderItemsView = require('./blanket-order-items-view.js');
+const AddressView = require( './address-view.js' );
+const BlanketOrderItemsView = require( './blanket-order-items-view.js' );
 
 //region Transfer object methods
 
-function fromDto (ctx, dto) {
-  ctx.setValue('orderKey',     dto.orderKey);
-  ctx.setValue('vendorName',   dto.vendorName);
-  ctx.setValue('contractDate', dto.contractDate);
-  ctx.setValue('totalPrice',   dto.totalPrice);
-  ctx.setValue('schedules',    dto.schedules);
-  ctx.setValue('enabled',      dto.enabled);
-  ctx.setValue('createdDate',  dto.createdDate);
-  ctx.setValue('modifiedDate', dto.modifiedDate);
+function fromDto( ctx, dto ) {
+  ctx.setValue( 'orderKey', dto.orderKey );
+  ctx.setValue( 'vendorName', dto.vendorName );
+  ctx.setValue( 'contractDate', dto.contractDate );
+  ctx.setValue( 'totalPrice', dto.totalPrice );
+  ctx.setValue( 'schedules', dto.schedules );
+  ctx.setValue( 'enabled', dto.enabled );
+  ctx.setValue( 'createdDate', dto.createdDate );
+  ctx.setValue( 'modifiedDate', dto.modifiedDate );
 }
 
-function toCto (ctx) {
+function toCto( ctx ) {
   return {
-    orderKey:     this.orderKey,
-    vendorName:   this.vendorName,
+    orderKey: this.orderKey,
+    vendorName: this.vendorName,
     contractDate: this.contractDate,
-    totalPrice:   this.totalPrice,
-    schedules:    this.schedules,
-    enabled:      this.enabled,
-    createdDate:  this.createdDate,
+    totalPrice: this.totalPrice,
+    schedules: this.schedules,
+    enabled: this.enabled,
+    createdDate: this.createdDate,
     modifiedDate: this.modifiedDate
   };
 }
@@ -41,16 +41,17 @@ function toCto (ctx) {
 
 function dataFetch( ctx, filter, method ) {
   function finish( dto ) {
-    ctx.setValue( 'orderKey',     dto.orderKey );
-    ctx.setValue( 'vendorName',   dto.vendorName );
+    ctx.setValue( 'orderKey', dto.orderKey );
+    ctx.setValue( 'vendorName', dto.vendorName );
     ctx.setValue( 'contractDate', dto.contractDate );
-    ctx.setValue( 'totalPrice',   dto.totalPrice );
-    ctx.setValue( 'schedules',    dto.schedules );
-    ctx.setValue( 'enabled',      dto.enabled );
-    ctx.setValue( 'createdDate',  dto.createdDate );
+    ctx.setValue( 'totalPrice', dto.totalPrice );
+    ctx.setValue( 'schedules', dto.schedules );
+    ctx.setValue( 'enabled', dto.enabled );
+    ctx.setValue( 'createdDate', dto.createdDate );
     ctx.setValue( 'modifiedDate', dto.modifiedDate );
     ctx.fulfill( dto );
   }
+
   if (method === 'fetchByName') {
     // filter: vendorName
     ctx.call( 'fetchByName', filter ).then( finish );
@@ -64,36 +65,36 @@ function dataFetch( ctx, filter, method ) {
 
 //endregion
 
-var BlanketOrderView = Model('BlanketOrderView')
-    .readOnlyRootObject('dal', __filename)
-    // --- Properties
-    .integer('orderKey', F.key)
-    .text('vendorName')
-    .dateTime('contractDate')
-    .decimal('totalPrice')
-        .canRead(cr.isInAnyRole, ['salesmen', 'administrators'], 'You are not authorized to view the totalPrice of the blanket order.')
-    .integer('schedules')
-    .boolean('enabled')
-    .property('address', AddressView)
-    .property('items', BlanketOrderItemsView)
-    .dateTime('createdDate')
-    .dateTime('modifiedDate')
-    // --- Permissions
-    .canFetch(cr.isInRole, 'designers', 'You are not authorized to retrieve blanket order.')
-    // --- Customization
-    .daoBuilder(daoBuilder)
-    .fromDto(fromDto)
-    .toCto(toCto)
-    .dataFetch(dataFetch)
-    // --- Build model class
-    .compose();
+const BlanketOrderView = Model( 'BlanketOrderView' )
+  .readOnlyRootObject( 'dal', __filename )
+  // --- Properties
+  .integer( 'orderKey', F.key )
+  .text( 'vendorName' )
+  .dateTime( 'contractDate' )
+  .decimal( 'totalPrice' )
+    .canRead( cr.isInAnyRole, [ 'salesmen', 'administrators' ], 'You are not authorized to view the totalPrice of the blanket order.' )
+  .integer( 'schedules' )
+  .boolean( 'enabled' )
+  .property( 'address', AddressView )
+  .property( 'items', BlanketOrderItemsView )
+  .dateTime( 'createdDate' )
+  .dateTime( 'modifiedDate' )
+  // --- Permissions
+  .canFetch( cr.isInRole, 'designers', 'You are not authorized to retrieve blanket order.' )
+  // --- Customization
+  .daoBuilder( daoBuilder )
+  .fromDto( fromDto )
+  .toCto( toCto )
+  .dataFetch( dataFetch )
+  // --- Build model class
+  .compose();
 
-var BlanketOrderViewFactory = {
-  get: function (key, eventHandlers) {
-    return BlanketOrderView.fetch(key, null, eventHandlers);
+const BlanketOrderViewFactory = {
+  get: function ( key, eventHandlers ) {
+    return BlanketOrderView.fetch( key, null, eventHandlers );
   },
-  getByName: function (name, eventHandlers) {
-    return BlanketOrderView.fetch(name, 'fetchByName', eventHandlers);
+  getByName: function ( name, eventHandlers ) {
+    return BlanketOrderView.fetch( name, 'fetchByName', eventHandlers );
   }
 };
 

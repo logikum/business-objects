@@ -1,15 +1,15 @@
 'use strict';
 
-var bo = require('../../../source/index.js');
-var Model = bo.ModelComposer;
+const bo = require( '../../../source/index.js' );
+const Model = bo.ModelComposer;
 
-var BlanketOrderItem = require('./blanket-order-item.js');
+const BlanketOrderItem = require( './blanket-order-item.js' );
 
-var BlanketOrderItems = Model('BlanketOrderItems')
-    .editableChildCollection()
-    // --- Collection elements
-    .itemType(BlanketOrderItem)
-    // --- Build model class
-    .compose();
+const BlanketOrderItems = Model( 'BlanketOrderItems' )
+  .editableChildCollection()
+  // --- Collection elements
+  .itemType( BlanketOrderItem )
+  // --- Build model class
+  .compose();
 
 module.exports = BlanketOrderItems;
