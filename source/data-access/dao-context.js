@@ -1,8 +1,8 @@
 'use strict';
 
-const Argument = require( '../system/argument-check.js' );
-
 const CLASS_NAME = 'DaoContext';
+
+const Argument = require( '../system/argument-check.js' );
 
 /**
  * Represents the context for the methods of data access objects.

@@ -2,74 +2,75 @@
 
 var CLASS_NAME = 'Enum';
 
-var util = require('util');
 var DataType = require('./data-type.js');
 var Enumeration = require('../system/enumeration.js');
 var Argument = require('../system/argument-check.js');
 
 /**
- * @classdesc Provide methods to work with enumeration data.
- * @description Creates enumeration data type definition.
+ * Provide methods to work with enumeration data.
  *
  * @memberof bo.dataTypes
- * @param {bo.system.Enumeration} enumType - The type of the enumeration.
- * @constructor
- *
  * @extends bo.dataTypes.DataType
  */
-function Enum (enumType) {
-  /**
-   * Gets the type of the enumeration.
-   *
-   * @type {bo.system.Enumeration}
-   * @readonly
-   */
-  this.type = Argument.inConstructor(CLASS_NAME)
-      .check(enumType).forMandatory('enumType').asType(Enumeration);
-
-  // Immutable object with overwritten name.
-  DataType.call(this, enumType.$name);
+class Enum extends DataType {
 
   /**
-   * The name of the {@link bo.system.Enumeration enumeration} type.
+   * Creates enumeration data type definition.
    *
-   * @name bo.dataTypes.Enum#name
-   * @type {string}
-   * @readonly
+   * @param {bo.system.Enumeration} enumType - The type of the enumeration.
    */
+  constructor( enumType ) {
+    super( enumType.$name );
+
+    /**
+     * The name of the {@link bo.system.Enumeration enumeration} type.
+     * @member {string} bo.dataTypes.Enum#name
+     * @readonly
+     */
+
+    /**
+     * Gets the type of the enumeration.
+     * @member {bo.system.Enumeration} bo.dataTypes.Enum#type
+     * @readonly
+     */
+    this.type = Argument.inConstructor( CLASS_NAME )
+      .check( enumType ).forMandatory( 'enumType' ).asType( Enumeration );
+
+    // Immutable object.
+    Object.freeze( this );
+  }
+
+  /**
+   * Checks if value is a Enum data.
+   * Its value must be one of the defined enumeration values or null.
+   *
+   * @function bo.dataTypes.Enum#parse
+   * @param {*} value - The value to check.
+   * @returns {*} The Enum value or null when the input value is valid, otherwise undefined.
+   */
+  parse( value ) {
+
+    if (value === null)
+      return value;
+    if (value === undefined)
+      return null;
+
+    var member = value instanceof Number ? value.valueOf() : Number( value );
+    return this.type.hasMember( member ) ? member : undefined;
+  }
+
+  /**
+   * Checks if value is the defined enumeration and is not null.
+   *
+   * @function bo.dataTypes.Enum#hasValue
+   * @param {*} value - The value to check.
+   * @returns {boolean} True if the value is the defined enumeration and not null, otherwise false.
+   */
+  hasValue( value ) {
+
+    var parsed = this.parse( value );
+    return parsed !== undefined && parsed !== null;
+  }
 }
-util.inherits(Enum, DataType);
-
-/**
- * Checks if value is a Enum data.
- * Its value must be one of the defined enumeration values or null.
- *
- * @function bo.dataTypes.Enum#parse
- * @param {*} value - The value to check.
- * @returns {*} The Enum value or null when the input value is valid, otherwise undefined.
- */
-Enum.prototype.parse = function (value) {
-
-  if (value === null)
-    return value;
-  if (value === undefined)
-    return null;
-
-  var member = value instanceof Number ? value.valueOf() : Number(value);
-  return this.type.hasMember(member) ? member : undefined;
-};
-
-/**
- * Checks if value is the defined enumeration and is not null.
- *
- * @function bo.dataTypes.Enum#hasValue
- * @param {*} value - The value to check.
- * @returns {boolean} True if the value is the defined enumeration and not null, otherwise false.
- */
-Enum.prototype.hasValue = function (value) {
-
-  var parsed = this.parse(value);
-  return parsed !== undefined && parsed !== null;
-};
 
 module.exports = Enum;

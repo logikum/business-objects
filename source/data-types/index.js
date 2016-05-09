@@ -1,13 +1,13 @@
 'use strict';
 
-var DataType = require('./data-type.js');
-var Boolean = require('./boolean.js');
-var Text = require('./text.js');
-var Email = require('./email.js');
-var Integer = require('./integer.js');
-var Decimal = require('./decimal.js');
-var Enum = require('./enum.js');
-var DateTime = require('./date-time.js');
+var DataType = require( './data-type.js' );
+var Boolean = require( './boolean.js' );
+var Text = require( './text.js' );
+var Email = require( './email.js' );
+var Integer = require( './integer.js' );
+var Decimal = require( './decimal.js' );
+var Enum = require( './enum.js' );
+var DateTime = require( './date-time.js' );
 
 /**
  * Contains data type components and definitions.
@@ -35,6 +35,6 @@ var index = {
 };
 
 // Immutable object.
-Object.freeze(index);
+Object.freeze( index );
 
 module.exports = index;
