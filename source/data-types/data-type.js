@@ -26,6 +26,10 @@ class DataType {
     this.name = name || DataType.name;
   }
 
+  // get name() {
+  //   return this.constructor.name;
+  // }
+
   /**
    * Abstract method to check if the value conforms to the data type definition.
    * Returns the value when it has the required data type. If not, but it can be
