@@ -1,6 +1,6 @@
 'use strict';
 
-var DataType = require('./data-type.js');
+const DataType = require('./data-type.js');
 
 /**
  * Provide methods to work with DateTime data.
@@ -14,7 +14,7 @@ class DateTime extends DataType {
    * Creates DateTime data type definition.
    */
   constructor() {
-    super( DateTime.name );
+    super();
 
     // Immutable object.
     Object.freeze( this );
@@ -34,7 +34,7 @@ class DateTime extends DataType {
     if (value === undefined)
       return null;
 
-    var datetime = value instanceof Date ? value : new Date( value );
+    const datetime = value instanceof Date ? value : new Date( value );
     return isNaN( datetime.valueOf() ) ? undefined : datetime;
   }
 
@@ -47,7 +47,7 @@ class DateTime extends DataType {
    */
   hasValue( value ) {
 
-    var parsed = this.parse( value );
+    const parsed = this.parse( value );
     return parsed !== undefined && parsed !== null;
   }
 }

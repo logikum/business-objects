@@ -22,7 +22,7 @@ class ConnectionManagerBase {
    * @returns {Promise.<object>} Returns a promise to the new connection.
    */
   openConnection( dataSource ) {
-    throw new NotImplementedError( 'method', CLASS_NAME, 'openConnection' );
+    throw new NotImplementedError( 'method', this.constructor.name, 'openConnection' );
   }
 
   /**
@@ -35,7 +35,7 @@ class ConnectionManagerBase {
    * @returns {Promise.<object>} Returns a promise to the closed connection.
    */
   closeConnection( dataSource, connection ) {
-    throw new NotImplementedError( 'method', CLASS_NAME, 'closeConnection' );
+    throw new NotImplementedError( 'method', this.constructor.name, 'closeConnection' );
   }
 
   /**
@@ -48,7 +48,7 @@ class ConnectionManagerBase {
    * @returns {Promise.<object>} Returns a promise to the new connection with initiated transaction.
    */
   beginTransaction( dataSource ) {
-    return this.openConnection( dataSource );
+    throw new NotImplementedError( 'method', this.constructor.name, 'beginTransaction' );
   }
 
   /**
@@ -62,7 +62,7 @@ class ConnectionManagerBase {
    * @returns {Promise.<object>} Returns a promise to the closed connection.
    */
   commitTransaction( dataSource, connection ) {
-    return this.closeConnection( dataSource, connection );
+    throw new NotImplementedError( 'method', this.constructor.name, 'commitTransaction' );
   }
 
   /**
@@ -76,7 +76,7 @@ class ConnectionManagerBase {
    * @returns {Promise.<object>} Returns a promise to the closed connection.
    */
   rollbackTransaction( dataSource, connection ) {
-    return this.closeConnection( dataSource, connection );
+    throw new NotImplementedError( 'method', this.constructor.name, 'rollbackTransaction' );
   }
 }
 

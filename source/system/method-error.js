@@ -1,38 +1,38 @@
 'use strict';
 
-var CLASS_NAME = 'MethodError';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+const t = require( '../locales/i18n-bo.js' )( 'MethodError' );
 
 /**
- * @classdesc Represents a method argument error.
- * @description Creates a method argument error object.
+ * Represents a method argument error.
  *
  * @memberof bo.system
- * @constructor
- * @param {string} [message] - Human-readable description of the error.
- * @param {...*} [messageParams] - Optional interpolation parameters of the message.
- *
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function MethodError () {
-  Error.call(this);
+class MethodError extends Error {
 
   /**
-   * The name of the error type.
-   * @type {string}
-   * @default MethodError
+   * Creates a method argument error object.
+   *
+   * @param {string} [message] - Human-readable description of the error.
+   * @param {...*} [params] - Optional interpolation parameters of the message.
    */
-  this.name = this.constructor.name;
+  constructor( message, ...params ) {
+    super();
 
-  /**
-   * Human-readable description of the error.
-   * @type {string}
-   */
-  this.message = t.apply(this, arguments);
+    /**
+     * The name of the error type.
+     * @member {string} bo.system.MethodError#name
+     * @default ArgumentError
+     */
+    this.name = this.constructor.name;
+
+    /**
+     * Human-readable description of the error.
+     * @member {string} bo.system.MethodError#message
+     */
+    this.message = t( ...arguments );
+  }
 }
-util.inherits(MethodError, Error);
 
 module.exports = MethodError;

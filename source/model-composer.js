@@ -1388,18 +1388,18 @@ function ModelComposer (modelName) {
   function checkCurrentProperty(methodName) {
     if (!currentProperty) {
       var error = new ComposerError('property', modelName, methodName);
-      error.model = modelName;
+      error.modelName = modelName;
       error.modelType = modelTypeName;
-      error.method = methodName;
+      error.methodName = methodName;
       throw error;
     }
   }
 
   function invalid(methodName) {
     var error = new ComposerError('invalid', modelName, methodName, modelTypeName);
-    error.model = modelName;
+    error.modelName = modelName;
     error.modelType = modelTypeName;
-    error.method = methodName;
+    error.methodName = methodName;
     throw error;
   }
 

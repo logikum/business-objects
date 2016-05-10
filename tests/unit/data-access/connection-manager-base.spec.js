@@ -27,10 +27,10 @@ describe( 'Base connection manager', () => {
     expect( cm.commitTransaction ).toEqual( jasmine.any( Function ) );
     expect( cm.rollbackTransaction ).toEqual( jasmine.any( Function ) );
 
-    expect( call1 ).toThrow();
-    expect( call2 ).toThrow();
-    expect( call3 ).toThrow();
-    expect( call4 ).toThrow();
-    expect( call5 ).toThrow();
+    expect( call1 ).toThrow( 'The ConnectionManagerBase.openConnection method is not implemented.' );
+    expect( call2 ).toThrow( 'The ConnectionManagerBase.closeConnection method is not implemented.' );
+    expect( call3 ).toThrow( 'The ConnectionManagerBase.beginTransaction method is not implemented.' );
+    expect( call4 ).toThrow( 'The ConnectionManagerBase.commitTransaction method is not implemented.' );
+    expect( call5 ).toThrow( 'The ConnectionManagerBase.rollbackTransaction method is not implemented.' );
   } );
 } );

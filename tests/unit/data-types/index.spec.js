@@ -1,14 +1,14 @@
 console.log( 'Testing data-types/index.js...' );
 
-var dt = require( '../../../source/data-types/index.js' );
-//var DataType = require('../../../source/data-types/data-type.js');
-var Boolean = require( '../../../source/data-types/boolean.js' );
-var Text = require( '../../../source/data-types/text.js' );
-var Email = require( '../../../source/data-types/email.js' );
-var Integer = require( '../../../source/data-types/integer.js' );
-var Decimal = require( '../../../source/data-types/decimal.js' );
-//var Enum = require('../../../source/data-types/enum.js');
-var DateTime = require( '../../../source/data-types/date-time.js' );
+const dt = require( '../../../source/data-types/index.js' );
+//const DataType = require('../../../source/data-types/data-type.js');
+const Boolean = require( '../../../source/data-types/boolean.js' );
+const Text = require( '../../../source/data-types/text.js' );
+const Email = require( '../../../source/data-types/email.js' );
+const Integer = require( '../../../source/data-types/integer.js' );
+const Decimal = require( '../../../source/data-types/decimal.js' );
+//const Enum = require('../../../source/data-types/enum.js');
+const DateTime = require( '../../../source/data-types/date-time.js' );
 
 describe( 'Data type index', function () {
 

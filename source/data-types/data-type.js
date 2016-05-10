@@ -1,6 +1,6 @@
 'use strict';
 
-var NotImplementedError = require('../system/not-implemented-error.js');
+const NotImplementedError = require('../system/not-implemented-error.js');
 
 /**
  * Serves as the base class for data type definitions.
@@ -10,25 +10,13 @@ var NotImplementedError = require('../system/not-implemented-error.js');
 class DataType {
 
   /**
-   /**
-   * Creates a new data type definition.
-   * The data type instances should be frozen.
-   *
-   * @param {string} [name] - The name of the data type.
+   * The name of the data type. The default value is the name of the constructor.
+   * @member {string} bo.dataTypes.DataType#name
+   * @readonly
    */
-  constructor( name ) {
-
-    /**
-     * The name of the data type. The default value is the name of the constructor.
-     * @member {string} bo.dataTypes.DataType#name
-     * @readonly
-     */
-    this.name = name || DataType.name;
+  get name() {
+    return this.constructor.name;
   }
-
-  // get name() {
-  //   return this.constructor.name;
-  // }
 
   /**
    * Abstract method to check if the value conforms to the data type definition.

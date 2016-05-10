@@ -1,11 +1,11 @@
 console.log( 'Testing data-types/enum.js...' );
 
-var Enum = require( '../../../source/data-types/enum.js' );
-var DataType = require( '../../../source/data-types/data-type.js' );
-var ModelState = require( '../../../source/shared/model-state.js' );
+const Enum = require( '../../../source/data-types/enum.js' );
+const DataType = require( '../../../source/data-types/data-type.js' );
+const ModelState = require( '../../../source/shared/model-state.js' );
 
 describe( 'Enum type', function () {
-  var dt = new Enum( ModelState );
+  const dt = new Enum( ModelState );
 
   it( 'constructor returns a data type', function () {
 
@@ -16,7 +16,7 @@ describe( 'Enum type', function () {
     dt.name = '---';
     dt.type = null;
 
-    expect( dt.name ).toBe( 'ModelState' );
+    expect( dt.name ).toBe( 'Enum' );
     expect( dt.type ).toBe( ModelState );
   } );
 

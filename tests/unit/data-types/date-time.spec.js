@@ -1,10 +1,10 @@
 console.log( 'Testing data-types/date-time.js...' );
 
-var DateTime = require( '../../../source/data-types/date-time.js' );
-var DataType = require( '../../../source/data-types/data-type.js' );
+const DateTime = require( '../../../source/data-types/date-time.js' );
+const DataType = require( '../../../source/data-types/data-type.js' );
 
 describe( 'DateTime type', function () {
-  var dt = new DateTime();
+  const dt = new DateTime();
 
   it( 'constructor returns a data type', function () {
 

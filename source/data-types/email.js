@@ -1,8 +1,8 @@
 'use strict';
 
-var DataType = require('./data-type.js');
+const DataType = require('./data-type.js');
 
-var reEmail = /^(([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+)?$/;
+const reEmail = /^(([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+)?$/;
 
 /**
  * Provide methods to work with Email data.
@@ -16,7 +16,7 @@ class Email extends DataType {
    * Creates Email data type definition.
    */
   constructor() {
-    super( Email.name );
+    super();
 
     // Immutable object.
     Object.freeze( this );
@@ -36,7 +36,7 @@ class Email extends DataType {
     if (value === undefined)
       return null;
 
-    var email;
+    let email;
     if (typeof value === 'string')
       email = value;
     else if (value instanceof String)
@@ -56,7 +56,7 @@ class Email extends DataType {
    */
   hasValue( value ) {
 
-    var parsed = this.parse( value );
+    const parsed = this.parse( value );
     return parsed !== undefined && parsed !== null;
   }
 }

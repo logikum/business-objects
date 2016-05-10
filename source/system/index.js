@@ -1,16 +1,17 @@
 'use strict';
 
-var ArgumentError = require('./argument-error.js');
-var ConstructorError = require('./constructor-error.js');
-var MethodError = require('./method-error.js');
-var PropertyError = require('./property-error.js');
-var EnumerationError = require('./enumeration-error.js');
-var NotImplementedError = require('./not-implemented-error.js');
+const ArgumentError = require( './argument-error.js' );
+const ComposerError = require( './composer-error.js' );
+const ConstructorError = require( './constructor-error.js' );
+const MethodError = require( './method-error.js' );
+const PropertyError = require( './property-error.js' );
+const EnumerationError = require( './enumeration-error.js' );
+const NotImplementedError = require( './not-implemented-error.js' );
 
-var Enumeration = require('./enumeration.js');
-var Argument = require('./argument-check.js');
-var UserInfo = require('./user-info.js');
-var Utility = require('./utility.js');
+const Enumeration = require( './enumeration.js' );
+const Argument = require( './argument-check.js' );
+const UserInfo = require( './user-info.js' );
+const Utility = require( './utility.js' );
 
 /**
  * Contains general components.
@@ -19,6 +20,8 @@ var Utility = require('./utility.js');
  *
  * @property {function} ArgumentError - {@link bo.system.ArgumentError Argument error}
  *      constructor to create a new error related to an argument.
+ * @property {function} ComposerError - {@link bo.system.ComposerError Composer error}
+ *      constructor to create a new error related to model composer.
  * @property {function} ConstructorError - {@link bo.system.ConstructorError Constructor error}
  *      constructor to create a new error related to a constructor argument.
  * @property {function} MethodError - {@link bo.system.MethodError Method error}
@@ -41,6 +44,7 @@ var Utility = require('./utility.js');
  */
 var index = {
   ArgumentError: ArgumentError,
+  ComposerError: ComposerError,
   ConstructorError: ConstructorError,
   MethodError: MethodError,
   PropertyError: PropertyError,
@@ -54,6 +58,6 @@ var index = {
 };
 
 // Immutable object.
-Object.freeze(index);
+Object.freeze( index );
 
 module.exports = index;

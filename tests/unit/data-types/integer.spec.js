@@ -1,10 +1,10 @@
 console.log( 'Testing data-types/integer.js...' );
 
-var Integer = require( '../../../source/data-types/integer.js' );
-var DataType = require( '../../../source/data-types/data-type.js' );
+const Integer = require( '../../../source/data-types/integer.js' );
+const DataType = require( '../../../source/data-types/data-type.js' );
 
 describe( 'Integer type', function () {
-  var dt = new Integer();
+  const dt = new Integer();
 
   it( 'constructor returns a data type', function () {
 

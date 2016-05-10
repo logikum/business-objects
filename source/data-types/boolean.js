@@ -1,6 +1,6 @@
 'use strict';
 
-var DataType = require('./data-type.js');
+const DataType = require('./data-type.js');
 
 /**
  * Provide methods to work with Boolean data.
@@ -14,7 +14,7 @@ class Boolean extends DataType {
    * Creates Boolean data type definition.
    */
   constructor() {
-    super( Boolean.name );
+    super();
 
     // Immutable object.
     Object.freeze( this );
@@ -50,7 +50,7 @@ class Boolean extends DataType {
    */
   hasValue( value ) {
 
-    var parsed = this.parse( value );
+    const parsed = this.parse( value );
     return parsed !== undefined && parsed !== null;
   }
 }

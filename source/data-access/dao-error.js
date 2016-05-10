@@ -1,8 +1,6 @@
 'use strict';
 
-const CLASS_NAME = 'DaoError';
-
-const t = require( '../locales/i18n-bo.js' )( CLASS_NAME );
+const t = require( '../locales/i18n-bo.js' )( 'DaoError' );
 
 /**
  * Represents a data access error.
@@ -20,18 +18,18 @@ class DaoError extends Error {
    * @param {...*} [params] - Optional interpolation parameters of the message.
    */
   constructor( message, ...params ) {
-    super( message );
+    super();
 
     /**
      * The name of the error type.
-     * @type {string}
+     * @member {string} bo.dataAccess.DaoError#name
      * @default DaoError
      */
     this.name = this.constructor.name;
 
     /**
      * Human-readable description of the error.
-     * @type {string}
+     * @member {string} bo.dataAccess.DaoError#message
      */
     this.message = t( ...arguments );
   }

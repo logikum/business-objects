@@ -23,6 +23,11 @@ class DaoBase {
     if (typeof name !== 'string' && !(name instanceof String) || name.trim().length === 0)
       throw new DaoError( 'c_manString', 'name' );
 
+    /**
+     * The name of the data access object.
+     * @member {string} bo.dataAccess.DaoBase#name
+     * @readonly
+     */
     Object.defineProperty(this, 'name', {
       get: function() {
         return name;

@@ -1,10 +1,10 @@
 console.log( 'Testing data-types/text.js...' );
 
-var Text = require( '../../../source/data-types/text.js' );
-var DataType = require( '../../../source/data-types/data-type.js' );
+const Text = require( '../../../source/data-types/text.js' );
+const DataType = require( '../../../source/data-types/data-type.js' );
 
 describe( 'Text type', function () {
-  var dt = new Text();
+  const dt = new Text();
 
   it( 'constructor returns a data type', function () {
 

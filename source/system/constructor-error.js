@@ -1,38 +1,38 @@
 'use strict';
 
-var CLASS_NAME = 'ConstructorError';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+const t = require( '../locales/i18n-bo.js' )( 'ConstructorError' );
 
 /**
- * @classdesc Represents a constructor argument error.
- * @description Creates a constructor argument error object.
+ * Represents a constructor argument error.
  *
  * @memberof bo.system
- * @constructor
- * @param {string} [message] - Human-readable description of the error.
- * @param {...*} [messageParams] - Optional interpolation parameters of the message.
- *
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function ConstructorError () {
-  Error.call(this);
+class ConstructorError extends Error {
 
   /**
-   * The name of the error type.
-   * @type {string}
-   * @default ConstructorError
+   * Creates a constructor argument error object.
+   *
+   * @param {string} [message] - Human-readable description of the error.
+   * @param {...*} [params] - Optional interpolation parameters of the message.
    */
-  this.name = this.constructor.name;
+  constructor( message, ...params ) {
+    super();
 
-  /**
-   * Human-readable description of the error.
-   * @type {string}
-   */
-  this.message = t.apply(this, arguments);
+    /**
+     * The name of the error type.
+     * @member {string} bo.system.ConstructorError#name
+     * @default ArgumentError
+     */
+    this.name = this.constructor.name;
+
+    /**
+     * Human-readable description of the error.
+     * @member {string} bo.system.ConstructorError#message
+     */
+    this.message = t( ...arguments );
+  }
 }
-util.inherits(ConstructorError, Error);
 
 module.exports = ConstructorError;

@@ -1,6 +1,6 @@
 'use strict';
 
-var DataType = require('./data-type.js');
+const DataType = require('./data-type.js');
 
 /**
  * Provide methods to work with Integer data.
@@ -14,7 +14,7 @@ class Integer extends DataType {
    * Creates Integer data type definition.
    */
   constructor() {
-    super( Integer.name );
+    super();
 
     // Immutable object.
     Object.freeze( this );
@@ -34,7 +34,7 @@ class Integer extends DataType {
     if (value === undefined)
       return null;
 
-    var integer;
+    let integer;
     if (typeof value === 'number')
       integer = value;
     else if (value instanceof Number)
@@ -54,7 +54,7 @@ class Integer extends DataType {
    */
   hasValue( value ) {
 
-    var parsed = this.parse( value );
+    const parsed = this.parse( value );
     return parsed !== undefined && parsed !== null;
   }
 }

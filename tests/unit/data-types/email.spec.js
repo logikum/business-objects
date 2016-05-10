@@ -1,10 +1,10 @@
 console.log( 'Testing data-types/email.js...' );
 
-var Email = require( '../../../source/data-types/email.js' );
-var DataType = require( '../../../source/data-types/data-type.js' );
+const Email = require( '../../../source/data-types/email.js' );
+const DataType = require( '../../../source/data-types/data-type.js' );
 
 describe( 'Email type', function () {
-  var dt = new Email();
+  const dt = new Email();
 
   it( 'constructor returns a data type', function () {
 

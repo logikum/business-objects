@@ -1,6 +1,6 @@
 'use strict';
 
-var DataType = require('./data-type.js');
+const DataType = require('./data-type.js');
 
 /**
  * Provide methods to work with Text data.
@@ -14,7 +14,7 @@ class Decimal extends DataType {
    * Creates Text data type definition.
    */
   constructor() {
-    super( Decimal.name );
+    super();
 
     // Immutable object.
     Object.freeze( this );
@@ -33,8 +33,8 @@ class Decimal extends DataType {
       return value;
     if (value === undefined)
       return null;
-  
-    var number = value instanceof Number ? value.valueOf() : Number(value);
+
+    const number = value instanceof Number ? value.valueOf() : Number(value);
     return isNaN(number) ? undefined : number;
   }
 
@@ -47,7 +47,7 @@ class Decimal extends DataType {
    */
   hasValue(value) {
 
-    var parsed = this.parse(value);
+    const parsed = this.parse(value);
     return parsed !== undefined && parsed !== null;
   }
 }

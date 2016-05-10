@@ -1,6 +1,6 @@
 'use strict';
 
-var DataType = require('./data-type.js');
+const DataType = require('./data-type.js');
 
 /**
  * Provide methods to work with Text data.
@@ -14,7 +14,7 @@ class Text extends DataType {
    * Creates Text data type definition.
    */
   constructor() {
-    super( Text.name );
+    super();
 
     // Immutable object.
     Object.freeze( this );
@@ -48,7 +48,7 @@ class Text extends DataType {
    */
   hasValue( value ) {
 
-    var parsed = this.parse( value );
+    const parsed = this.parse( value );
     return parsed !== undefined && parsed !== null && parsed.length > 0;
   }
 }

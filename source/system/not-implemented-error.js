@@ -1,38 +1,38 @@
 'use strict';
 
-var CLASS_NAME = 'NotImplementedError';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+const t = require( '../locales/i18n-bo.js' )( 'NotImplementedError' );
 
 /**
- * @classdesc Represents an error of not implemented function.
- * @description Creates a not implemented error object.
+ * Represents the error of a not implemented function.
  *
  * @memberof bo.system
- * @constructor
- * @param {string} [message] - Human-readable description of the error.
- * @param {...*} [messageParams] - Optional interpolation parameters of the message.
- *
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function NotImplementedError () {
-  Error.call(this);
+class NotImplementedError extends Error {
 
   /**
-   * The name of the error type.
-   * @type {string}
-   * @default NotImplementedError
+   * Creates a not implemented error object.
+   *
+   * @param {string} [message] - Human-readable description of the error.
+   * @param {...*} [params] - Optional interpolation parameters of the message.
    */
-  this.name = this.constructor.name;
+  constructor( message, ...params ) {
+    super();
 
-  /**
-   * Human-readable description of the error.
-   * @type {string}
-   */
-  this.message = t.apply(this, arguments);
+    /**
+     * The name of the error type.
+     * @member {string} bo.system.NotImplementedError#name
+     * @default ArgumentError
+     */
+    this.name = this.constructor.name;
+
+    /**
+     * Human-readable description of the error.
+     * @member {string} bo.system.NotImplementedError#message
+     */
+    this.message = t( ...arguments );
+  }
 }
-util.inherits(NotImplementedError, Error);
 
 module.exports = NotImplementedError;

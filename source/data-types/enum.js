@@ -1,8 +1,8 @@
 'use strict';
 
-var DataType = require('./data-type.js');
-var Enumeration = require('../system/enumeration.js');
-var Argument = require('../system/argument-check.js');
+const DataType = require('./data-type.js');
+const Enumeration = require('../system/enumeration.js');
+const Argument = require('../system/argument-check.js');
 
 /**
  * Provide methods to work with enumeration data.
@@ -18,13 +18,7 @@ class Enum extends DataType {
    * @param {bo.system.Enumeration} enumType - The type of the enumeration.
    */
   constructor( enumType ) {
-    super( enumType.$name );
-
-    /**
-     * The name of the {@link bo.system.Enumeration enumeration} type.
-     * @member {string} bo.dataTypes.Enum#name
-     * @readonly
-     */
+    super();
 
     /**
      * Gets the type of the enumeration.
@@ -53,7 +47,7 @@ class Enum extends DataType {
     if (value === undefined)
       return null;
 
-    var member = value instanceof Number ? value.valueOf() : Number( value );
+    const member = value instanceof Number ? value.valueOf() : Number( value );
     return this.type.hasMember( member ) ? member : undefined;
   }
 
@@ -66,7 +60,7 @@ class Enum extends DataType {
    */
   hasValue( value ) {
 
-    var parsed = this.parse( value );
+    const parsed = this.parse( value );
     return parsed !== undefined && parsed !== null;
   }
 }

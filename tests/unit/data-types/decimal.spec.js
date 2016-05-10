@@ -1,10 +1,10 @@
 console.log( 'Testing data-types/decimal.js...' );
 
-var Decimal = require( '../../../source/data-types/decimal.js' );
-var DataType = require( '../../../source/data-types/data-type.js' );
+const Decimal = require( '../../../source/data-types/decimal.js' );
+const DataType = require( '../../../source/data-types/data-type.js' );
 
 describe( 'Decimal type', function () {
-  var dt = new Decimal();
+  const dt = new Decimal();
 
   it( 'constructor returns a data type', function () {
 

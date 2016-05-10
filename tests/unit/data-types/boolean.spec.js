@@ -1,10 +1,10 @@
 console.log( 'Testing data-types/boolean.js...' );
 
-var Boolean = require( '../../../source/data-types/boolean.js' );
-var DataType = require( '../../../source/data-types/data-type.js' );
+const Boolean = require( '../../../source/data-types/boolean.js' );
+const DataType = require( '../../../source/data-types/data-type.js' );
 
 describe( 'Boolean type', function () {
-  var dt = new Boolean();
+  const dt = new Boolean();
 
   it( 'constructor returns a data type', function () {
 

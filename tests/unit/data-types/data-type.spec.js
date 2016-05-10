@@ -1,9 +1,9 @@
 console.log( 'Testing data-types/data-type.js...' );
 
-var DataType = require( '../../../source/data-types/data-type.js' );
+const DataType = require( '../../../source/data-types/data-type.js' );
 
 describe( 'Base data type', function () {
-  var dt = null;
+  let dt = null;
 
   it( 'constructor expects no argument', function () {
     var build01 = function () { dt = new DataType(); };

@@ -1,56 +1,56 @@
 'use strict';
 
-var CLASS_NAME = 'ComposerError';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+const t = require( '../locales/i18n-bo.js' )( 'ComposerError' );
 
 /**
- * @classdesc Represents the improper use of model composer.
- * @description Creates a composer error object.
+ * Represents an improper use of model composer.
  *
  * @memberof bo.system
- * @constructor
- * @param {string} [message] - Human-readable description of the error.
- * @param {...*} [messageParams] - Optional interpolation parameters of the message.
- *
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function ComposerError () {
-  Error.call(this);
+class ComposerError extends Error {
 
   /**
-   * The name of the error type.
-   * @type {string}
-   * @default ComposerError
+   * Creates a composer error object.
+   *
+   * @param {string} [message] - Human-readable description of the error.
+   * @param {...*} [params] - Optional interpolation parameters of the message.
    */
-  this.name = this.constructor.name;
+  constructor( message, ...params ) {
+    super();
 
-  /**
-   * Human-readable description of the error.
-   * @type {string}
-   */
-  this.message = t.apply(this, arguments);
+    /**
+     * The name of the error type.
+     * @member {string} bo.system.ComposerError#name
+     * @default ComposerError
+     */
+    this.name = this.constructor.name;
 
-  /**
-   * The name of the model that contains the definition error.
-   * @type {string}
-   */
-  this.model = '';
+    /**
+     * Human-readable description of the error.
+     * @member {string} bo.system.ComposerError#message
+     */
+    this.message = t( ...arguments );
 
-  /**
-   * The name of the model type of the model that contains the definition error.
-   * @type {string}
-   */
-  this.modelType = '';
+    /**
+     * The name of the model that contains the definition error.
+     * @member {string} bo.system.ComposerError#model
+     */
+    this.modelName = '';
 
-  /**
-   * The name of the method of the model composer that found the definition error.
-   * @type {string}
-   */
-  this.method = '';
+    /**
+     * The name of the model type of the model that contains the definition error.
+     * @member {string} bo.system.ComposerError#modelType
+     */
+    this.modelType = '';
+
+    /**
+     * The name of the method of the model composer that found the definition error.
+     * @member {string} bo.system.ComposerError#method
+     */
+    this.methodName = '';
+  }
 }
-util.inherits(ComposerError, Error);
 
 module.exports = ComposerError;

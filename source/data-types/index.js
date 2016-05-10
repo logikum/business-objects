@@ -1,13 +1,13 @@
 'use strict';
 
-var DataType = require( './data-type.js' );
-var Boolean = require( './boolean.js' );
-var Text = require( './text.js' );
-var Email = require( './email.js' );
-var Integer = require( './integer.js' );
-var Decimal = require( './decimal.js' );
-var Enum = require( './enum.js' );
-var DateTime = require( './date-time.js' );
+const DataType = require( './data-type.js' );
+const Boolean = require( './boolean.js' );
+const Text = require( './text.js' );
+const Email = require( './email.js' );
+const Integer = require( './integer.js' );
+const Decimal = require( './decimal.js' );
+const Enum = require( './enum.js' );
+const DateTime = require( './date-time.js' );
 
 /**
  * Contains data type components and definitions.
@@ -23,7 +23,7 @@ var DateTime = require( './date-time.js' );
  * @property {function} Enum - {@link bo.dataTypes.Enum Enum} constructor to create new enumeration data type.
  * @property {object} DateTime - Data type instance that defines {@link bo.dataTypes.DateTime DateTime} data.
  */
-var index = {
+const index = {
   DataType: DataType,
   Boolean: new Boolean(),
   Text: new Text(),
