@@ -1,7 +1,5 @@
 'use strict';
 
-var CLASS_NAME = 'DataType';
-
 var NotImplementedError = require('../system/not-implemented-error.js');
 
 /**
@@ -25,7 +23,7 @@ class DataType {
      * @member {string} bo.dataTypes.DataType#name
      * @readonly
      */
-    this.name = name || CLASS_NAME;
+    this.name = name || DataType.name;
   }
 
   /**
@@ -42,7 +40,7 @@ class DataType {
    * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.check method is not implemented.
    */
   parse( value ) {
-    throw new NotImplementedError( 'method', CLASS_NAME, 'parse' );
+    throw new NotImplementedError( 'method', this.name, 'parse' );
   }
 
   /**
@@ -57,7 +55,7 @@ class DataType {
    * @throws {@link bo.system.NotImplementedError Not implemented error}: The DataType.hasValue method is not implemented.
    */
   hasValue( value ) {
-    throw new NotImplementedError( 'method', CLASS_NAME, 'hasValue' );
+    throw new NotImplementedError( 'method', this.name, 'hasValue' );
   }
 }
 

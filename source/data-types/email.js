@@ -16,7 +16,7 @@ class Email extends DataType {
    * Creates Email data type definition.
    */
   constructor() {
-    super( 'Email' );
+    super( Email.name );
 
     // Immutable object.
     Object.freeze( this );

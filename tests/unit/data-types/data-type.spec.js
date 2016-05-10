@@ -20,7 +20,7 @@ describe( 'Base data type', function () {
     function call1() { dt.parse( 1 ); }
     function call2() { dt.hasValue( 2 ); }
 
-    expect( call1 ).toThrow();
-    expect( call2 ).toThrow();
+    expect( call1 ).toThrow( 'The DataType.parse method is not implemented.' );
+    expect( call2 ).toThrow( 'The DataType.hasValue method is not implemented.' );
   } );
 } );

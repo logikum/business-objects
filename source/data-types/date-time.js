@@ -14,7 +14,7 @@ class DateTime extends DataType {
    * Creates DateTime data type definition.
    */
   constructor() {
-    super( 'DateTime' );
+    super( DateTime.name );
 
     // Immutable object.
     Object.freeze( this );

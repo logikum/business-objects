@@ -14,7 +14,7 @@ class Decimal extends DataType {
    * Creates Text data type definition.
    */
   constructor() {
-    super( 'Decimal' );
+    super( Decimal.name );
 
     // Immutable object.
     Object.freeze( this );

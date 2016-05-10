@@ -14,7 +14,7 @@ class Text extends DataType {
    * Creates Text data type definition.
    */
   constructor() {
-    super( 'Text' );
+    super( Text.name );
 
     // Immutable object.
     Object.freeze( this );

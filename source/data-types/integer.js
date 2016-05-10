@@ -14,7 +14,7 @@ class Integer extends DataType {
    * Creates Integer data type definition.
    */
   constructor() {
-    super( 'Integer' );
+    super( Integer.name );
 
     // Immutable object.
     Object.freeze( this );

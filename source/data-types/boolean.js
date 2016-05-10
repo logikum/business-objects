@@ -14,7 +14,7 @@ class Boolean extends DataType {
    * Creates Boolean data type definition.
    */
   constructor() {
-    super( 'Boolean' );
+    super( Boolean.name );
 
     // Immutable object.
     Object.freeze( this );
@@ -28,7 +28,7 @@ class Boolean extends DataType {
    * @returns {*} The Boolean value or null when the input value is valid, otherwise undefined.
    */
   parse( value ) {
-
+  
     if (value === null || typeof value === 'boolean')
       return value;
     if (value === undefined)
@@ -37,7 +37,7 @@ class Boolean extends DataType {
       return value.valueOf();
     if (value.toString().trim().toLowerCase() === 'false')
       return false;
-
+  
     return global.Boolean( value ).valueOf();
   }
 

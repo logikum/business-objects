@@ -1,7 +1,5 @@
 'use strict';
 
-var CLASS_NAME = 'Enum';
-
 var DataType = require('./data-type.js');
 var Enumeration = require('../system/enumeration.js');
 var Argument = require('../system/argument-check.js');
@@ -33,7 +31,7 @@ class Enum extends DataType {
      * @member {bo.system.Enumeration} bo.dataTypes.Enum#type
      * @readonly
      */
-    this.type = Argument.inConstructor( CLASS_NAME )
+    this.type = Argument.inConstructor( Enum.name )
       .check( enumType ).forMandatory( 'enumType' ).asType( Enumeration );
 
     // Immutable object.
