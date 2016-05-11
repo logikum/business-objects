@@ -469,7 +469,8 @@ function asEnumMember () {
   var defaultValue = args.shift();
 
   if (!(type && type.hasMember && type.constructor &&
-      type.constructor.super_ && type.constructor.super_.name === 'Enumeration'))
+    Object.getPrototypeOf(type.constructor) &&
+    Object.getPrototypeOf(type.constructor).name === 'Enumeration'))
     this.exception('enumType', type, args);
   if ((this.value === null || this.value === undefined) && typeof defaultValue === 'number')
     this.value = defaultValue;

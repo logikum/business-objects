@@ -1,6 +1,6 @@
 console.log('Testing system/argument-check.js...');
 
-var util = require('util');
+// var util = require('util');
 var Argument = require('../../../source/system/argument-check.js');
 var ArgumentError = require('../../../source/system/argument-error.js');
 var ConstructorError = require('../../../source/system/constructor-error.js');
@@ -767,14 +767,15 @@ describe('Argument checking function', function () {
   //region Enumeration
 
   it('asEnumMember method works', function () {
-    function Numbers1() {
-      Enumeration.call(this);
-      this.one = 0;
-      this.two = 1;
-      this.three = 2;
-      Object.freeze(this);
+    class Numbers1 extends Enumeration {
+      constructor() {
+        super();
+        this.one = 0;
+        this.two = 1;
+        this.three = 2;
+        Object.freeze(this);
+      }
     }
-    util.inherits(Numbers1, Enumeration);
     var Numbers = new Numbers1();
 
     function call01() { return Argument.check(undefined).for().asEnumMember(Numbers); }

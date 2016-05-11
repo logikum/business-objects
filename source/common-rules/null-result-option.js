@@ -1,48 +1,44 @@
 'use strict';
 
-var util = require('util');
-var Enumeration = require('../system/enumeration.js');
+var Enumeration = require( '../system/enumeration.js' );
 
 /**
- * @classdesc
- *      Represents the eligible actions when an
- *      {@link bo.commonRules.ExpressionRule expression rule} is executed on a null value.
- * @description
- *      Creates a new object containing null result options.
+ * Represents the eligible actions when an
+ * {@link bo.commonRules.ExpressionRule expression rule} is executed on a null value.
  *
  * @memberof bo.commonRules
- * @constructor
- *
  * @extends bo.system.Enumeration
  */
-function NullResultOption () {
-  Enumeration.call(this);
+class NullResultOption extends Enumeration {
 
   /**
-   * The result of the rule will be success.
-   * @constant
-   * @readonly
-   * @default 0
+   * Creates a new object containing null result options.
    */
-  this.returnTrue = 0;
-  /**
-   * The result of the rule will be failure.
-   * @constant
-   * @readonly
-   * @default 1
-   */
-  this.returnFalse = 1;
-  /**
-   * The value will be replaced by an empty string.
-   * @constant
-   * @readonly
-   * @default 2
-   */
-  this.convertToEmptyString = 2;
+  constructor() {
+    super();
 
-  // Immutable object.
-  Object.freeze(this);
+    /**
+     * The result of the rule will be success.
+     * @constant {number} bo.commonRules.NullResultOption#returnTrue
+     * @default 0
+     */
+    this.returnTrue = 0;
+    /**
+     * The result of the rule will be failure.
+     * @constant {number} bo.commonRules.NullResultOption#returnFalse
+     * @default 1
+     */
+    this.returnFalse = 1;
+    /**
+     * The value will be replaced by an empty string.
+     * @constant {number} bo.commonRules.NullResultOption#convertToEmptyString
+     * @default 2
+     */
+    this.convertToEmptyString = 2;
+
+    // Immutable object.
+    Object.freeze( this );
+  }
 }
-util.inherits(NullResultOption, Enumeration);
 
 module.exports = new NullResultOption();

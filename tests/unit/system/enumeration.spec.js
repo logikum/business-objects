@@ -1,39 +1,33 @@
 console.log('Testing system/enumeration.js...');
 
-var util = require('util');
 var Enumeration = require('../../../source/system/enumeration.js');
 
 //region Test enumerations
 
-function Numbers1() {
-  Enumeration.call(this);
-
-  this.one = 0;
-
-  Object.freeze(this);
+class Numbers1 extends Enumeration {
+  constructor() {
+    super();
+    this.one = 0;
+    Object.freeze(this);
+  }
 }
-util.inherits(Numbers1, Enumeration);
-
-function Numbers2() {
-  Enumeration.call(this);
-
-  this.one = 0;
-  this.two = 1;
-
-  Object.freeze(this);
+class Numbers2 extends Enumeration {
+  constructor() {
+    super();
+    this.one = 0;
+    this.two = 1;
+    Object.freeze(this);
+  }
 }
-util.inherits(Numbers2, Enumeration);
-
-function Numbers3() {
-  Enumeration.call(this);
-
-  this.one = 0;
-  this.two = 1;
-  this.three = 2;
-
-  Object.freeze(this);
+class Numbers3 extends Enumeration {
+  constructor() {
+    super();
+    this.one = 0;
+    this.two = 1;
+    this.three = 2;
+    Object.freeze(this);
+  }
 }
-util.inherits(Numbers3, Enumeration);
 
 //endregion
 

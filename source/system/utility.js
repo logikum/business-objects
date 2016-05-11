@@ -90,7 +90,8 @@ Utility.getDirectory = function (relativePath, name, errorType) {
 Utility.isEnumMember = function (value, enumType, name, errorType) {
 
   if (!(enumType && enumType.hasMember && enumType.constructor &&
-      enumType.constructor.super_ && enumType.constructor.super_.name === 'Enumeration'))
+    Object.getPrototypeOf(enumType.constructor) &&
+    Object.getPrototypeOf(enumType.constructor).name === 'Enumeration'))
     throw new errorType('enumType', enumType);
 
   if (typeof value === 'string' && enumType.isMemberName(value))
