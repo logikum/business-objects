@@ -1,9 +1,9 @@
 'use strict';
 
-var CLASS_NAME = 'Enumeration';
+const CLASS_NAME = 'Enumeration';
 
-var Argument = require( './argument-check.js' );
-var EnumerationError = require( './enumeration-error.js' );
+const Argument = require( './argument-check.js' );
+const EnumerationError = require( './enumeration-error.js' );
 
 /**
  * Serves as the base class for enumerations.
@@ -32,8 +32,8 @@ class Enumeration {
    * @returns {number} The count of the enumeration items.
    */
   count() {
-    var count = 0;
-    for (var propertyName in this) {
+    let count = 0;
+    for (const propertyName in this) {
       if (this.hasOwnProperty( propertyName ) && typeof this[ propertyName ] === 'number') {
         count++;
       }
@@ -54,7 +54,7 @@ class Enumeration {
   getName( value ) {
     value = Argument.inMethod( CLASS_NAME, 'getName' ).check( value ).forMandatory( 'value' ).asNumber();
 
-    for (var propertyName in this) {
+    for (const propertyName in this) {
       if (this.hasOwnProperty( propertyName ) && typeof this[ propertyName ] === 'number') {
         if (this[ propertyName ] === value)
           return propertyName;
@@ -76,7 +76,7 @@ class Enumeration {
   getValue( name ) {
     name = Argument.inMethod( CLASS_NAME, 'getValue' ).check( name ).forMandatory( 'name' ).asString();
 
-    for (var propertyName in this) {
+    for (const propertyName in this) {
       if (this.hasOwnProperty( propertyName ) && typeof this[ propertyName ] === 'number') {
         if (propertyName === name)
           return this[ propertyName ];
@@ -93,7 +93,7 @@ class Enumeration {
    * @returns {boolean} True if the name is an enumeration item, otherwise false.
    */
   isMemberName( name ) {
-    for (var propertyName in this) {
+    for (const propertyName in this) {
       if (this.hasOwnProperty( propertyName ) && typeof this[ propertyName ] === 'number') {
         if (propertyName === name)
           return true;
@@ -114,7 +114,7 @@ class Enumeration {
    * @throws {@link bo.system.EnumerationError Enumeration error}: The passed value is not an enumeration item.
    */
   check( value, message ) {
-    for (var propertyName in this) {
+    for (const propertyName in this) {
       if (this.hasOwnProperty( propertyName ) && typeof this[ propertyName ] === 'number') {
         if (this[ propertyName ] === value)
           return;
@@ -131,7 +131,7 @@ class Enumeration {
    * @returns {boolean} True if the value is an enumeration item, otherwise false.
    */
   hasMember( value ) {
-    for (var propertyName in this) {
+    for (const propertyName in this) {
       if (this.hasOwnProperty( propertyName ) && typeof this[ propertyName ] === 'number') {
         if (this[ propertyName ] === value)
           return true;

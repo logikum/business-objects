@@ -1,42 +1,42 @@
 /*
  * USAGE
  *
- * var Argument = require('./argument-check.js');
+ * const Argument = require( './argument-check.js' );
  *
- * var check;
- * var value = ...;
- * var msg = 'Wrong argument!';
+ * const check;
+ * let value = ...;
+ * const msg = 'Wrong argument!';
  *
  * // Single usage:
- * value = Argument.check(value).for(VALUE_NAME).asString(msg);
- * value = Argument.inConstructor(CLASS_NAME).check(value).for(VALUE_NAME).asString(msg);
- * value = Argument.inMethod(CLASS_NAME, METHOD_NAME).check(value).for(VALUE_NAME).asString(msg);
- * value = Argument.inProperty(CLASS_NAME, PROPERTY_NAME).check(value).for(VALUE_NAME).asString(msg);
+ * value = Argument.check( value ).for( VALUE_NAME ).asString( msg );
+ * value = Argument.inConstructor( CLASS_NAME ).check( value ).for( VALUE_NAME ).asString( msg );
+ * value = Argument.inMethod( CLASS_NAME, METHOD_NAME ).check( value ).for( VALUE_NAME ).asString( msg );
+ * value = Argument.inProperty( CLASS_NAME, PROPERTY_NAME ).check( value ).for( VALUE_NAME ).asString( msg );
  *
  * // Multiple usage:
- * check = Argument();                                      // generic arguments
- * check = Argument.inConstructor(CLASS_NAME);              // constructor arguments
- * check = Argument.inMethod(CLASS_NAME, METHOD_NAME);      // method arguments
- * check = Argument.inProperty(CLASS_NAME, PROPERTY_NAME);  // property arguments
+ * check = Argument();                                        // generic arguments
+ * check = Argument.inConstructor( CLASS_NAME );              // constructor arguments
+ * check = Argument.inMethod( CLASS_NAME, METHOD_NAME );      // method arguments
+ * check = Argument.inProperty( CLASS_NAME, PROPERTY_NAME );  // property arguments
  *
- * value = check(value).for(VALUE_NAME).asString(msg);           // any or special argument
- * value = check(value).forOptional(VALUE_NAME).asString(msg);   // optional argument
- * value = check(value).forMandatory(VALUE_NAME).asString(msg);  // mandatory argument
+ * value = check( value ).for( VALUE_NAME ).asString( msg );           // any or special argument
+ * value = check( value ).forOptional( VALUE_NAME ).asString( msg );   // optional argument
+ * value = check( value ).forMandatory( VALUE_NAME ).asString( msg );  // mandatory argument
  *
- * value = check(value).forOptional(VALUE_NAME).asType([ CollectionBase, ModelBase ], msg); // additional attribute
- * value = check(value).forMandatory(VALUE_NAME).asType(UserInfo, msg); // additional attribute
+ * value = check( value ).forOptional( VALUE_NAME ).asType([ CollectionBase, ModelBase ], msg ); // additional attribute
+ * value = check( value ).forMandatory( VALUE_NAME ).asType( UserInfo, msg ); // additional attribute
  *
- * value = check(value).for(VALUE_NAME).asEnumMember(Action, Action.Save, msg);  // two additional attributes
+ * value = check( value ).for( VALUE_NAME ).asEnumMember( Action, Action.Save, msg ); // two additional attributes
  */
 
-var ArgumentError = require('./argument-error.js');
-var ConstructorError = require('./constructor-error.js');
-var MethodError = require('./method-error.js');
-var PropertyError = require('./property-error.js');
+const ArgumentError = require( './argument-error.js' );
+const ConstructorError = require( './constructor-error.js' );
+const MethodError = require( './method-error.js' );
+const PropertyError = require( './property-error.js' );
 
 //region Argument group
 
-var ArgumentGroup = {
+const ArgumentGroup = {
   General: 0,
   Constructor: 1,
   Method: 2,
@@ -55,7 +55,7 @@ var ArgumentGroup = {
  * @param {*} [value] - The value to check.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
-function ArgumentCheck (value) {
+function ArgumentCheck( value ) {
   this.value = value;
   return this;
 }
@@ -73,7 +73,7 @@ function ArgumentCheck (value) {
  * @param {string} [argumentName] - The name of the argument.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
-function forGeneric (argumentName) {
+function forGeneric( argumentName ) {
   this.argumentName = argumentName || '';
   this.isMandatory = undefined;
   return this;
@@ -86,7 +86,7 @@ function forGeneric (argumentName) {
  * @param {string} [argumentName] - The name of the optional argument.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
-function forOptional (argumentName) {
+function forOptional( argumentName ) {
   this.argumentName = argumentName || '';
   this.isMandatory = false;
   return this;
@@ -99,7 +99,7 @@ function forOptional (argumentName) {
  * @param {string} [argumentName] - The name of the mandatory argument.
  * @returns {bo.system.ArgumentCheck} The argument check instance.
  */
-function forMandatory (argumentName) {
+function forMandatory( argumentName ) {
   this.argumentName = argumentName || '';
   this.isMandatory = true;
   return this;
@@ -109,43 +109,36 @@ function forMandatory (argumentName) {
 
 //region Exception
 
-function exception (defaultMessage, typeArgument, userArguments) {
-  var error, type;
-  var message = defaultMessage;
-  var parameters = [];
-  if (userArguments && userArguments.length) {
-    parameters = Array.prototype.slice.call(userArguments);
-    message = parameters.shift() || defaultMessage;
-  }
-  var args = [null, message || 'default'];
-
+function exception( defaultMessage, typeArgument, message, ...parameters ) {
+  const args = [ null, message || defaultMessage || 'default' ];
+  let type;
   switch (this.argumentGroup) {
     case ArgumentGroup.Property:
       type = PropertyError;
-      args.push(this.className || '<class>', this.propertyName || '<property>');
+      args.push( this.className || '<class>', this.propertyName || '<property>' );
       break;
     case ArgumentGroup.Method:
       type = MethodError;
-      args.push(this.className || '<class>', this.methodName || '<method>');
+      args.push( this.className || '<class>', this.methodName || '<method>' );
       break;
     case ArgumentGroup.Constructor:
       type = ConstructorError;
-      args.push(this.className || '<class>');
+      args.push( this.className || '<class>' );
       break;
     case ArgumentGroup.General:
     default:
       type = ArgumentError;
       break;
   }
-  args.push(this.argumentName);
+  args.push( this.argumentName );
   if (typeArgument)
-    args.push(typeArgument);
+    args.push( typeArgument );
   if (parameters.length)
-    parameters.forEach(function (parameter) {
-      args.push(parameter);
-    });
+    parameters.forEach( function ( parameter ) {
+      args.push( parameter );
+    } );
 
-  error = type.bind.apply(type, args);
+  const error = type.bind( ...args );
   throw new error();
 }
 
@@ -163,9 +156,9 @@ function exception (defaultMessage, typeArgument, userArguments) {
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be supplied.
  */
-function asDefined () {
+function asDefined( message, ...messageParams ) {
   if (this.value === undefined)
-    this.exception('defined', null, arguments);
+    this.exception( 'defined', null, message, ...messageParams );
   return this.value;
 }
 
@@ -179,9 +172,9 @@ function asDefined () {
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The argument is required.
  */
-function hasValue () {
+function hasValue( message, ...messageParams ) {
   if (this.value === null || this.value === undefined)
-    this.exception('required', null, arguments);
+    this.exception( 'required', null, message, ...messageParams );
   return this.value;
 }
 
@@ -203,21 +196,21 @@ function hasValue () {
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a string value or null.
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a non-empty string.
  */
-function asString () {
+function asString( message, ...messageParams ) {
   switch (this.isMandatory) {
     case true:
       if (typeof this.value !== 'string' && !(this.value instanceof String) || this.value.trim().length === 0)
-        this.exception('manString', null, arguments);
+        this.exception( 'manString', null, message, ...messageParams );
       break;
     case false:
       if (this.value === undefined)
         this.value = null;
       if (this.value !== null && typeof this.value !== 'string' && !(this.value instanceof String))
-        this.exception('optString', null, arguments);
+        this.exception( 'optString', null, message, ...messageParams );
       break;
     default:
       if (typeof this.value !== 'string' && !(this.value instanceof String))
-        this.exception('string', null, arguments);
+        this.exception( 'string', null, message, ...messageParams );
       break;
   }
   return this.value;
@@ -239,15 +232,15 @@ function asString () {
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a number value or null.
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a number value.
  */
-function asNumber () {
+function asNumber( message, ...messageParams ) {
   if (this.isMandatory) {
     if (typeof this.value !== 'number' && !(this.value instanceof Number))
-      this.exception('manNumber', null, arguments);
+      this.exception( 'manNumber', null, message, ...messageParams );
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && typeof this.value !== 'number' && !(this.value instanceof Number))
-      this.exception('optNumber', null, arguments);
+      this.exception( 'optNumber', null, message, ...messageParams );
   }
   return this.value;
 }
@@ -268,16 +261,15 @@ function asNumber () {
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an integer value or null.
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an integer value.
  */
-function asInteger () {
+function asInteger( message, ...messageParams ) {
   if (this.isMandatory) {
     if (typeof this.value !== 'number' && !(this.value instanceof Number) || this.value % 1 !== 0)
-      this.exception('manInteger', null, arguments);
+      this.exception( 'manInteger', null, message, ...messageParams );
   } else {
     if (this.value === undefined)
       this.value = null;
-    if (this.value !== null && (typeof this.value !== 'number' &&
-        !(this.value instanceof Number) || this.value % 1 !== 0))
-      this.exception('optInteger', null, arguments);
+    if (this.value !== null && (typeof this.value !== 'number' && !(this.value instanceof Number) || this.value % 1 !== 0))
+      this.exception( 'optInteger', null, message, ...messageParams );
   }
   return this.value;
 }
@@ -298,15 +290,15 @@ function asInteger () {
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a Boolean value or null.
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a Boolean value.
  */
-function asBoolean () {
+function asBoolean( message, ...messageParams ) {
   if (this.isMandatory) {
     if (typeof this.value !== 'boolean' && !(this.value instanceof Boolean))
-      this.exception('manBoolean', null, arguments);
+      this.exception( 'manBoolean', null, message, ...messageParams );
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && typeof this.value !== 'boolean' && !(this.value instanceof Boolean))
-      this.exception('optBoolean', null, arguments);
+      this.exception( 'optBoolean', null, message, ...messageParams );
   }
   return this.value;
 }
@@ -327,15 +319,15 @@ function asBoolean () {
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an object or null.
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an object.
  */
-function asObject () {
+function asObject( message, ...messageParams ) {
   if (this.isMandatory) {
     if (typeof this.value !== 'object' || this.value === null)
-      this.exception('manObject', null, arguments);
+      this.exception( 'manObject', null, message, ...messageParams );
   } else {
     if (this.value === undefined)
       this.value = null;
     if (typeof this.value !== 'object')
-      this.exception('optObject', null, arguments);
+      this.exception( 'optObject', null, message, ...messageParams );
   }
   return this.value;
 }
@@ -356,15 +348,15 @@ function asObject () {
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a function or null.
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a function.
  */
-function asFunction () {
+function asFunction( message, ...messageParams ) {
   if (this.isMandatory) {
     if (typeof this.value !== 'function')
-      this.exception('manFunction', null, arguments);
+      this.exception( 'manFunction', null, message, ...messageParams );
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && typeof this.value !== 'function')
-      this.exception('optFunction', null, arguments);
+      this.exception( 'optFunction', null, message, ...messageParams );
   }
   return this.value;
 }
@@ -373,12 +365,12 @@ function asFunction () {
 
 //region Type
 
-function typeNames (types) {
-  var list = '<< no types >>';
+function typeNames( types ) {
+  let list = '<< no types >>';
   if (types.length) {
-    list = types.map(function (type) {
+    list = types.map( function ( type ) {
       return type.name ? type.name : '-unknown-'
-    }).join(' | ');
+    } ).join( ' | ' );
   }
   return list;
 }
@@ -396,24 +388,21 @@ function typeNames (types) {
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a TYPE object or null.
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a TYPE object.
  */
-function asType () {
-  var args = Array.prototype.slice.call(arguments);
-  var type = args.shift();
-  var types = type instanceof Array ? type : [ type ];
-  var self = this;
-
+function asType( type, message, ...messageParams ) {
+  const self = this;
+  const types = type instanceof Array ? type : [ type ];
   if (this.isMandatory) {
-    if (!(types.some(function (option) {
-          return self.value && (self.value instanceof option || self.value.super_ === option);
-        })))
-      this.exception('manType', typeNames(types), args);
+    if (!(types.some( function ( option ) {
+        return self.value && (self.value instanceof option || self.value.super_ === option);
+      } )))
+      this.exception( 'manType', typeNames( types ), message, ...messageParams );
   } else {
     if (this.value === undefined)
       this.value = null;
-    if (this.value !== null && !(types.some(function (option) {
-          return self.value && (self.value instanceof option || self.value.super_ === option);
-        })))
-      this.exception('optType', typeNames(types), args);
+    if (this.value !== null && !(types.some( function ( option ) {
+        return self.value && (self.value instanceof option || self.value.super_ === option);
+      } )))
+      this.exception( 'optType', typeNames( types ), message, ...messageParams );
   }
   return this.value;
 }
@@ -433,16 +422,13 @@ function asType () {
  *
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be a model type.
  */
-function asModelType () {
-  var args = Array.prototype.slice.call(arguments);
-  var model = args.shift();
-  var models = model instanceof Array ? model : [ model ];
-  var self = this;
-
-  if (!(models.some(function (modelType) {
-        return self.value && self.value.constructor && self.value.constructor.modelType === modelType;
-      })))
-    this.exception('modelType', models.join(' | '), args);
+function asModelType( model, message, ...messageParams ) {
+  const self = this;
+  const models = model instanceof Array ? model : [ model ];
+  if (!(models.some( function ( modelType ) {
+      return self.value && self.value.constructor && self.value.constructor.modelType === modelType;
+    } )))
+    this.exception( 'modelType', models.join( ' | ' ), message, ...messageParams );
   return this.value;
 }
 
@@ -463,19 +449,17 @@ function asModelType () {
  * @throws {@link bo.system.ArgumentError Argument error}: Type is not an enumeration type.
  * @throws {@link bo.system.ArgumentError Argument error}: The argument must be an enumeration type item.
  */
-function asEnumMember () {
-  var args = Array.prototype.slice.call(arguments);
-  var type = args.shift();
-  var defaultValue = args.shift();
+function asEnumMember( type, defaultValue, message, ...messageParams ) {
 
   if (!(type && type.hasMember && type.constructor &&
-    Object.getPrototypeOf(type.constructor) &&
-    Object.getPrototypeOf(type.constructor).name === 'Enumeration'))
-    this.exception('enumType', type, args);
+    Object.getPrototypeOf( type.constructor ) &&
+    Object.getPrototypeOf( type.constructor ).name === 'Enumeration'))
+    this.exception( 'enumType', type, message, ...messageParams );
+
   if ((this.value === null || this.value === undefined) && typeof defaultValue === 'number')
     this.value = defaultValue;
-  if (!type.hasMember(this.value))
-    this.exception('enumMember', type.$name, args);
+  if (!type.hasMember( this.value ))
+    this.exception( 'enumMember', type.$name, message, ...messageParams );
 
   return this.value;
 }
@@ -503,43 +487,40 @@ function asEnumMember () {
  * @throws {@link bo.system.ArgumentError Argument error}:
  *      The argument must be an array of TYPE objects, or a single TYPE object.
  */
-function asArray () {
+function asArray( type, message, ...messageParams ) {
   if (!this.isMandatory) {
     if (this.value === undefined || this.value === null)
       return [];
   }
-  var msgKey;
-  var args = Array.prototype.slice.call(arguments);
-  var type = args.shift();
-
+  let msgKey;
   if (type === String || type === Number || type === Boolean) {
     msgKey = this.isMandatory ? 'manArrayPrim' : 'optArrayPrim';
-    var typeName = type.name.toLowerCase();
 
+    const typeName = type.name.toLowerCase();
     if (typeof this.value === typeName || this.value instanceof type)
-      return [this.value];
-    if (this.value instanceof Array && (!this.value.length || this.value.every(function (item) {
-          return typeof item === typeName || item instanceof type;
-        })))
+      return [ this.value ];
+    if (this.value instanceof Array && (!this.value.length || this.value.every( function ( item ) {
+        return typeof item === typeName || item instanceof type;
+      } )))
       return this.value;
   } else {
     msgKey = this.isMandatory ? 'manArray' : 'optArray';
 
     if (this.value instanceof type)
-      return [this.value];
-    if (this.value instanceof Array && (!this.value.length || this.value.every(function (item) {
-          return item instanceof type;
-        })))
+      return [ this.value ];
+    if (this.value instanceof Array && (!this.value.length || this.value.every( function ( item ) {
+        return item instanceof type;
+      } )))
       return this.value;
   }
-  this.exception(msgKey, type, args);
+  this.exception( msgKey, type, message, ...messageParams );
 }
 
 //endregion
 
-function ArgumentCheckBuilder (argumentGroup, className, methodName, propertyName) {
+function ArgumentCheckBuilder( argumentGroup, className, methodName, propertyName ) {
 
-  var builderBase = {
+  const builderBase = {
 
     argumentGroup: argumentGroup || ArgumentGroup.General,
     className: className || '',
@@ -569,10 +550,10 @@ function ArgumentCheckBuilder (argumentGroup, className, methodName, propertyNam
     asArray: asArray
   };
 
-  var fnCheck = ArgumentCheck.bind(builderBase);
+  const fnCheck = ArgumentCheck.bind( builderBase );
 
-  fnCheck.check = function (value) {
-    return this(value);
+  fnCheck.check = function ( value ) {
+    return this( value );
   };
 
   return fnCheck;
@@ -587,7 +568,7 @@ function ArgumentCheckBuilder (argumentGroup, className, methodName, propertyNam
  * @function bo.system.Argument
  */
 function ArgumentCheckFactory() {
-  return ArgumentCheckBuilder(ArgumentGroup.General, '', '', '');
+  return ArgumentCheckBuilder( ArgumentGroup.General, '', '', '' );
 }
 
 /**
@@ -596,8 +577,8 @@ function ArgumentCheckFactory() {
  * @param {*} value - The value to check.
  * @returns {bo.system.ArgumentCheck} - Argument check object.
  */
-ArgumentCheckFactory.check = function(value) {
-  return ArgumentCheckBuilder(ArgumentGroup.General, '', '', '')(value);
+ArgumentCheckFactory.check = function ( value ) {
+  return ArgumentCheckBuilder( ArgumentGroup.General, '', '', '' )( value );
 };
 
 /**
@@ -606,8 +587,8 @@ ArgumentCheckFactory.check = function(value) {
  * @param {string} className - The name of the class of the constructor.
  * @returns {bo.system.ArgumentCheck} - Argument check object.
  */
-ArgumentCheckFactory.inConstructor = function (className) {
-  return ArgumentCheckBuilder(ArgumentGroup.Constructor, className, '', '');
+ArgumentCheckFactory.inConstructor = function ( className ) {
+  return ArgumentCheckBuilder( ArgumentGroup.Constructor, className, '', '' );
 };
 
 /**
@@ -617,8 +598,8 @@ ArgumentCheckFactory.inConstructor = function (className) {
  * @param {string} methodName - The name of the method.
  * @returns {bo.system.ArgumentCheck} - Argument check object.
  */
-ArgumentCheckFactory.inMethod = function (className, methodName) {
-  return ArgumentCheckBuilder(ArgumentGroup.Method, className, methodName, '');
+ArgumentCheckFactory.inMethod = function ( className, methodName ) {
+  return ArgumentCheckBuilder( ArgumentGroup.Method, className, methodName, '' );
 };
 
 /**
@@ -626,11 +607,10 @@ ArgumentCheckFactory.inMethod = function (className, methodName) {
  * @function bo.system.Argument.inProperty
  * @param {string} className - The name of the class of the property.
  * @param {string} propertyName - The name of the property.
- * @param propertyName
  * @returns {bo.system.ArgumentCheck} - Argument check object.
  */
-ArgumentCheckFactory.inProperty = function (className, propertyName) {
-  return ArgumentCheckBuilder(ArgumentGroup.Property, className, '', propertyName);
+ArgumentCheckFactory.inProperty = function ( className, propertyName ) {
+  return ArgumentCheckBuilder( ArgumentGroup.Property, className, '', propertyName );
 };
 
 //endregion
