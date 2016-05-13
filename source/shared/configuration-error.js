@@ -1,38 +1,38 @@
 'use strict';
 
-var CLASS_NAME = 'ConfigurationError';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+const t = require( '../locales/i18n-bo.js' )( 'ConfigurationError' );
 
 /**
- * @classdesc Represents a configuration error.
- * @description Creates a configuration error object.
+ * Represents a configuration error.
  *
  * @memberof bo.shared
- * @constructor
- * @param {string} [message] - Human-readable description of the error.
- * @param {...*} [messageParams] - Optional interpolation parameters of the message.
- *
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function ConfigurationError () {
-  Error.call(this);
+class ConfigurationError extends Error {
 
   /**
-   * The name of the error type.
-   * @type {string}
-   * @default ConfigurationError
+   * Creates a configuration error object.
+   *
+   * @param {string} [message] - Human-readable description of the error.
+   * @param {...*} [params] - Optional interpolation parameters of the message.
    */
-  this.name = this.constructor.name;
+  constructor( message, ...params ) {
+    super();
 
-  /**
-   * Human-readable description of the error.
-   * @type {string}
-   */
-  this.message = t.apply(this, arguments);
+    /**
+     * The name of the error type.
+     * @member {string} bo.shared.ConfigurationError#name
+     * @default ConfigurationError
+     */
+    this.name = this.constructor.name;
+
+    /**
+     * Human-readable description of the error.
+     * @member {string} bo.shared.ConfigurationError#message
+     */
+    this.message = t( ...arguments );
+  }
 }
-util.inherits(ConfigurationError, Error);
 
 module.exports = ConfigurationError;

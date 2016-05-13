@@ -1,22 +1,25 @@
 'use strict';
 
-var CLASS_NAME = 'EventHandlerList';
+const Argument = require( '../system/argument-check.js' );
+const DataPortalEvent = require( './data-portal-event.js' );
+const ModalBase = require( '../model-base.js' );
+const CollectionBase = require( '../collection-base.js' );
 
-var Argument = require('../system/argument-check.js');
-var DataPortalEvent = require('./data-portal-event.js');
-var ModalBase = require('../model-base.js');
-var CollectionBase = require('../collection-base.js');
+const _items = new WeakMap();
 
 /**
- * @classdesc Provides methods to manage the event handlers of a business object instance.
- * @description Creates a new event handler list object.
+ * Provides methods to manage the event handlers of a business object instance.
  *
  * @memberof bo.shared
- * @constructor
  */
-var EventHandlerList = function () {
+class EventHandlerList {
 
-  var items = [];
+  /**
+   * Creates a new event handler list object.
+   */
+  constructor() {
+    _items.set( this, [] );
+  }
 
   /**
    * Adds a new event handler to to list.
@@ -29,14 +32,16 @@ var EventHandlerList = function () {
    * @throws {@link bo.system.ArgumentError Argument error}: The event must be a DataPortalEvent member.
    * @throws {@link bo.system.ArgumentError Argument error}: The handler must be a function.
    */
-  this.add = function (modelName, event, handler) {
-    var check = Argument.inMethod(CLASS_NAME, 'add');
-    items.push({
-      modelName: check(modelName).forMandatory('modelName').asString(),
-      event: check(event).for('event').asEnumMember(DataPortalEvent, null),
-      handler: check(handler).forMandatory('handler').asFunction()
-    });
-  };
+  add( modelName, event, handler ) {
+    var check = Argument.inMethod( this.constructor.name, 'add' );
+    const items = _items.get( this );
+    items.push( {
+      modelName: check( modelName ).forMandatory( 'modelName' ).asString(),
+      event: check( event ).for( 'event' ).asEnumMember( DataPortalEvent, null ),
+      handler: check( handler ).forMandatory( 'handler' ).asFunction()
+    } );
+    _items.set( this, items );
+  }
 
   /**
    * Adds the event handlers with the model name of the target object
@@ -48,16 +53,17 @@ var EventHandlerList = function () {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
    */
-  this.setup = function (target) {
-    target = Argument.inMethod(CLASS_NAME, 'setup')
-        .check(target).forMandatory('target').asType([ ModalBase, CollectionBase ]);
+  setup( target ) {
+    target = Argument.inMethod( this.constructor.name, 'setup' )
+      .check( target ).forMandatory( 'target' ).asType( [ ModalBase, CollectionBase ] );
 
-    items.filter(function (item) {
+    const items = _items.get( this );
+    items.filter( function ( item ) {
       return item.modelName === target.$modelName;
-    }).forEach(function (item) {
-      target.on(DataPortalEvent.getName(item.event), item.handler)
-    })
-  };
-};
+    } ).forEach( function ( item ) {
+      target.on( DataPortalEvent.getName( item.event ), item.handler )
+    } )
+  }
+}
 
 module.exports = EventHandlerList;

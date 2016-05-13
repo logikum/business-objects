@@ -1,6 +1,6 @@
 'use strict';
 
-var Enumeration = require( '../system/enumeration.js' );
+const Enumeration = require( '../system/enumeration.js' );
 
 /**
  * Specifies the events of models' data portal operations. Members:

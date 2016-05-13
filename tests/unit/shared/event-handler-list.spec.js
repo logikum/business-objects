@@ -1,38 +1,44 @@
-console.log('Testing shared/event-handler-list.js...');
+console.log( 'Testing shared/event-handler-list.js...' );
 
-var util = require('util');
-var EventHandlerList = require('../../../source/shared/event-handler-list.js');
-var ModelBase = require('../../../source/model-base.js');
-var DataPortalEventArgs = require('../../../source/shared/data-portal-event-args.js');
-var DataPortalEvent = require('../../../source/shared/data-portal-event.js');
+const EventHandlerList = require( '../../../source/shared/event-handler-list.js' );
+const ModelBase = require( '../../../source/model-base.js' );
+const DataPortalEventArgs = require( '../../../source/shared/data-portal-event-args.js' );
+const DataPortalEvent = require( '../../../source/shared/data-portal-event.js' );
 
-describe('Event handler list', function () {
+describe( 'Event handler list', () => {
 
-  it('constructor expects no arguments', function () {
-    var build01 = function () { return new EventHandlerList(); };
+  it( 'constructor expects no arguments', () => {
+    const build01 = function () { return new EventHandlerList(); };
 
-    expect(build01).not.toThrow();
-  });
+    expect( build01 ).not.toThrow();
+  } );
 
-  it('add and setup methods work', function () {
-    var result = '';
+  it( 'add and setup methods work', () => {
 
-    var Model = function (eventhandlers) {
-      var self = this;
-      this.$modelName = 'model';
-      eventhandlers.setup(self);
-      this.emit('postCreate', new DataPortalEventArgs(DataPortalEvent.postCreate, self.$modelName), self);
-    };
-    util.inherits(Model, ModelBase);
+    class Model extends ModelBase {
+      constructor( eventhandlers ) {
+        super();
+        this.$modelName = 'model';
+        eventhandlers.setup( this );
+        this.emit(
+          'postCreate',
+          new DataPortalEventArgs( DataPortalEvent.postCreate, this.$modelName ),
+          this
+        );
+      }
+    }
+    let result = '';
 
-    function ehCreated (eventArgs, model) {
+    function ehCreated( eventArgs, model ) {
       result = 'Event ' + eventArgs.modelName + '.' + eventArgs.eventName + ': Model has been created.';
     }
-    var ehl = new EventHandlerList();
-    ehl.add('model', DataPortalEvent.postCreate, ehCreated);
-    var model = new Model(ehl);
 
-    expect(result).toBe('Event model.postCreate: Model has been created.');
-  });
+    const ehl = new EventHandlerList();
+    ehl.add( 'model', DataPortalEvent.postCreate, ehCreated );
 
-});
+    const model = new Model( ehl );
+
+    expect( result ).toBe( 'Event model.postCreate: Model has been created.' );
+  } );
+
+} );

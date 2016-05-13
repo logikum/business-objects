@@ -1,6 +1,6 @@
 'use strict';
 
-var Enumeration = require( '../system/enumeration.js' );
+const Enumeration = require( '../system/enumeration.js' );
 
 /**
  * Specifies the behavior when an authorization rule fails. Members:

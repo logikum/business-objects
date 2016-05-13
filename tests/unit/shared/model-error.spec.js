@@ -1,19 +1,20 @@
-console.log('Testing shared/model-error.js...');
+console.log( 'Testing shared/model-error.js...' );
 
-var ArgumentError = require('../../../source/shared/model-error.js');
+const ModelError = require( '../../../source/shared/model-error.js' );
 
-describe('Model error', () => {
+describe( 'Model error', () => {
 
-  it('constructor expects an optional message', () => {
-    var me1 = new ArgumentError();
-    var me2 = new ArgumentError('The model definition is bad.');
+  it( 'constructor expects an optional message', () => {
 
-    expect(me1).toEqual(jasmine.any(Error));
-    expect(me1.name).toBe('ModelError');
-    expect(me1.message).toBe('An error occurred in the model.');
+    const me1 = new ModelError();
+    const me2 = new ModelError( 'The model definition is bad.' );
 
-    expect(me2).toEqual(jasmine.any(Error));
-    expect(me2.name).toBe('ModelError');
-    expect(me2.message).toBe('The model definition is bad.');
-  });
-});
+    expect( me1 ).toEqual( jasmine.any( Error ) );
+    expect( me1.name ).toBe( 'ModelError' );
+    expect( me1.message ).toBe( 'An error occurred in the model.' );
+
+    expect( me2 ).toEqual( jasmine.any( Error ) );
+    expect( me2.name ).toBe( 'ModelError' );
+    expect( me2.message ).toBe( 'The model definition is bad.' );
+  } );
+} );

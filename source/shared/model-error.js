@@ -1,38 +1,38 @@
 'use strict';
 
-var CLASS_NAME = 'ModelError';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+const t = require( '../locales/i18n-bo.js' )( 'ModelError' );
 
 /**
- * @classdesc Represents a model error.
- * @description Creates a model error object.
+ * Represents a model error.
  *
  * @memberof bo.shared
- * @constructor
- * @param {string} [message] - Human-readable description of the error.
- * @param {...*} [messageParams] - Optional interpolation parameters of the message.
- *
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function ModelError (message) {
-  Error.call(this);
+class ModelError extends Error {
 
   /**
-   * The name of the error type.
-   * @type {string}
-   * @default ModelError
+   * Creates a model error object.
+   *
+   * @param {string} [message] - Human-readable description of the error.
+   * @param {...*} [params] - Optional interpolation parameters of the message.
    */
-  this.name = this.constructor.name;
+  constructor( message, ...params ) {
+    super();
 
-  /**
-   * Human-readable description of the error.
-   * @type {string}
-   */
-  this.message = t.apply(this, message ? arguments : ['default']);
+    /**
+     * The name of the error type.
+     * @member {string} bo.shared.ModelError#name
+     * @default ModelError
+     */
+    this.name = this.constructor.name;
+
+    /**
+     * Human-readable description of the error.
+     * @member {string} bo.shared.ModelError#message
+     */
+    this.message = t( ...arguments );
+  }
 }
-util.inherits(ModelError, Error);
 
 module.exports = ModelError;

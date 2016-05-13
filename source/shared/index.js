@@ -1,6 +1,5 @@
 'use strict';
 
-
 //var ExtensionManagerBase = require('./extension-manager-base.js');
 var ExtensionManager = require('./extension-manager.js');
 var EventHandlerList = require('./event-handler-list.js');
