@@ -4,15 +4,15 @@ const Enum = require( '../../../source/data-types/enum.js' );
 const DataType = require( '../../../source/data-types/data-type.js' );
 const ModelState = require( '../../../source/shared/model-state.js' );
 
-describe( 'Enum type', function () {
+describe( 'Enum type', () => {
   const dt = new Enum( ModelState );
 
-  it( 'constructor returns a data type', function () {
+  it( 'constructor returns a data type', () => {
 
     expect( dt ).toEqual( jasmine.any( DataType ) );
   } );
 
-  it( 'has two read-only property', function () {
+  it( 'has two read-only property', () => {
     dt.name = '---';
     dt.type = null;
 
@@ -20,7 +20,7 @@ describe( 'Enum type', function () {
     expect( dt.type ).toBe( ModelState );
   } );
 
-  it( 'parse method expects enumeration item', function () {
+  it( 'parse method expects enumeration item', () => {
     function fn() {}
 
     expect( dt.parse() ).toBeNull();
@@ -35,7 +35,7 @@ describe( 'Enum type', function () {
     expect( dt.parse( '4' ) ).toBe( ModelState.removed );
   } );
 
-  it( 'hasValue method works', function () {
+  it( 'hasValue method works', () => {
 
     expect( dt.hasValue() ).toBe( false );
     expect( dt.hasValue( -45672.78 ) ).toBe( false );

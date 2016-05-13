@@ -2,14 +2,14 @@ console.log( 'Testing rules/authorization-action.js...' );
 
 const AuthorizationAction = require( '../../../source/rules/authorization-action.js' );
 
-describe( 'Authorization action enumeration', function () {
+describe( 'Authorization action enumeration', () => {
 
-  it( '$name property returns the type name', function () {
+  it( '$name property returns the type name', () => {
 
     expect( AuthorizationAction.$name ).toBe( 'AuthorizationAction' );
   } );
 
-  it( 'has the defined items', function () {
+  it( 'has the defined items', () => {
 
     expect( AuthorizationAction.fetchObject ).toBe( 0 );
     expect( AuthorizationAction.createObject ).toBe( 1 );
@@ -21,12 +21,12 @@ describe( 'Authorization action enumeration', function () {
     expect( AuthorizationAction.writeProperty ).toBe( 7 );
   } );
 
-  it( 'count method returns the item count', function () {
+  it( 'count method returns the item count', () => {
 
     expect( AuthorizationAction.count() ).toBe( 8 );
   } );
 
-  it( 'getName method returns the item name', function () {
+  it( 'getName method returns the item name', () => {
 
     expect( AuthorizationAction.getName( 0 ) ).toBe( 'fetchObject' );
     expect( AuthorizationAction.getName( 1 ) ).toBe( 'createObject' );
@@ -38,7 +38,7 @@ describe( 'Authorization action enumeration', function () {
     expect( AuthorizationAction.getName( 7 ) ).toBe( 'writeProperty' );
   } );
 
-  it( 'getValue method returns the item value', function () {
+  it( 'getValue method returns the item value', () => {
 
     expect( AuthorizationAction.getValue( 'fetchObject' ) ).toBe( 0 );
     expect( AuthorizationAction.getValue( 'createObject' ) ).toBe( 1 );
@@ -50,7 +50,7 @@ describe( 'Authorization action enumeration', function () {
     expect( AuthorizationAction.getValue( 'writeProperty' ) ).toBe( 7 );
   } );
 
-  it( 'check method inspects a value', function () {
+  it( 'check method inspects a value', () => {
 
     function check01() {AuthorizationAction.check( -1 ); }
     function check02() {AuthorizationAction.check( AuthorizationAction.fetchObject ); }

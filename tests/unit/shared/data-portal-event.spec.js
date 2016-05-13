@@ -3,14 +3,14 @@ console.log( 'Testing shared/data-portal-event.js...' );
 
 const DataPortalEvent = require( '../../../source/shared/data-portal-event.js' );
 
-describe( 'Data portal event enumeration', function () {
+describe( 'Data portal event enumeration', () => {
 
-  it( '$name property returns the type name', function () {
+  it( '$name property returns the type name', () => {
 
     expect( DataPortalEvent.$name ).toBe( 'DataPortalEvent' );
   } );
 
-  it( 'has the defined items', function () {
+  it( 'has the defined items', () => {
 
     expect( DataPortalEvent.preFetch ).toBe( 0 );
     expect( DataPortalEvent.postFetch ).toBe( 1 );
@@ -28,12 +28,12 @@ describe( 'Data portal event enumeration', function () {
     expect( DataPortalEvent.postSave ).toBe( 13 );
   } );
 
-  it( 'count method returns the item count', function () {
+  it( 'count method returns the item count', () => {
 
     expect( DataPortalEvent.count() ).toBe( 14 );
   } );
 
-  it( 'getName method returns the item name', function () {
+  it( 'getName method returns the item name', () => {
 
     expect( DataPortalEvent.getName( 0 ) ).toBe( 'preFetch' );
     expect( DataPortalEvent.getName( 1 ) ).toBe( 'postFetch' );
@@ -51,7 +51,7 @@ describe( 'Data portal event enumeration', function () {
     expect( DataPortalEvent.getName( 13 ) ).toBe( 'postSave' );
   } );
 
-  it( 'getValue method returns the item value', function () {
+  it( 'getValue method returns the item value', () => {
 
     expect( DataPortalEvent.getValue( 'preFetch' ) ).toBe( 0 );
     expect( DataPortalEvent.getValue( 'postFetch' ) ).toBe( 1 );
@@ -69,7 +69,7 @@ describe( 'Data portal event enumeration', function () {
     expect( DataPortalEvent.getValue( 'postSave' ) ).toBe( 13 );
   } );
 
-  it( 'check method inspects a value', function () {
+  it( 'check method inspects a value', () => {
 
     function check01() {DataPortalEvent.check( -1 ); }
     function check02() {DataPortalEvent.check( DataPortalEvent.preFetch ); }

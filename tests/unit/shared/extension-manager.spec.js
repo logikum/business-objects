@@ -6,7 +6,7 @@ var DaoBase = require('../../../source/data-access/dao-base.js');
 var DaoBuilder = require('../../../data/custom-core/dao-builder.js');
 var DataProtalContext = require('../../../source/shared/data-portal-context.js');
 
-describe('Extension manager', function() {
+describe('Extension manager', () => {
   var em = new ExtensionManager('data_source', '/model/path');
   function fn0 () {}
   function fn1 (a) {}
@@ -15,7 +15,7 @@ describe('Extension manager', function() {
   function fn4 (a, b, c, d) {}
   function fn5 (a, b, c, d, e) {}
 
-  it('constructor expects two non-empty string arguments', function() {
+  it('constructor expects two non-empty string arguments', () => {
     function create01() { return new ExtensionManager(); }
     function create02() { return new ExtensionManager(1987); }
     function create03() { return new ExtensionManager(true); }
@@ -39,7 +39,7 @@ describe('Extension manager', function() {
     expect(create10).not.toThrow();
   });
 
-  it('has the defined properties', function() {
+  it('has the defined properties', () => {
 
     expect(em.dataSource).toBeDefined();
     expect(em.modelPath).toBeDefined();
@@ -56,7 +56,7 @@ describe('Extension manager', function() {
     expect(em.dataExecute).toBeDefined();
   });
 
-  it('has the defined read-only properties', function() {
+  it('has the defined read-only properties', () => {
     em.dataSource = null;
     em.modelPath = null;
 
@@ -64,7 +64,7 @@ describe('Extension manager', function() {
     expect(em.modelPath).toBe('/model/path');
   });
 
-  it('daoBuilder property works', function() {
+  it('daoBuilder property works', () => {
     function set1() { em.daoBuilder = 1987; }
     function set2() { em.daoBuilder = fn0; }
     function set3() { em.daoBuilder = fn1; }
@@ -80,7 +80,7 @@ describe('Extension manager', function() {
     expect(set6).toThrow();
   });
 
-  it('toDto property works', function() {
+  it('toDto property works', () => {
     function set1() { em.toDto = '?'; }
     function set2() { em.toDto = fn0; }
     function set3() { em.toDto = fn1; }
@@ -92,7 +92,7 @@ describe('Extension manager', function() {
     expect(set4).toThrow();
   });
 
-  it('fromDto property works', function() {
+  it('fromDto property works', () => {
     function set1() { em.fromDto = true; }
     function set2() { em.fromDto = fn0; }
     function set3() { em.fromDto = fn1; }
@@ -106,7 +106,7 @@ describe('Extension manager', function() {
     expect(set5).toThrow();
   });
 
-  it('toCto property works', function() {
+  it('toCto property works', () => {
     function set1() { em.toCto = new Date; }
     function set2() { em.toCto = fn0; }
     function set3() { em.toCto = fn1; }
@@ -118,7 +118,7 @@ describe('Extension manager', function() {
     expect(set4).toThrow();
   });
 
-  it('fromCto property works', function() {
+  it('fromCto property works', () => {
     function set1() { em.fromCto = {}; }
     function set2() { em.fromCto = fn0; }
     function set3() { em.fromCto = fn1; }
@@ -132,7 +132,7 @@ describe('Extension manager', function() {
     expect(set5).toThrow();
   });
 
-  it('dataCreate property works', function() {
+  it('dataCreate property works', () => {
     function set1() { em.dataCreate = 0; }
     function set2() { em.dataCreate = fn0; }
     function set3() { em.dataCreate = fn1; }
@@ -146,7 +146,7 @@ describe('Extension manager', function() {
     expect(set5).toThrow();
   });
 
-  it('dataFetch property works', function() {
+  it('dataFetch property works', () => {
     function set1() { em.dataFetch = null; }
     function set2() { em.dataFetch = fn0; }
     function set3() { em.dataFetch = fn1; }
@@ -164,7 +164,7 @@ describe('Extension manager', function() {
     expect(set7).toThrow();
   });
 
-  it('dataInsert property works', function() {
+  it('dataInsert property works', () => {
     function set1() { em.dataInsert = 'data'; }
     function set2() { em.dataInsert = fn0; }
     function set3() { em.dataInsert = fn1; }
@@ -178,7 +178,7 @@ describe('Extension manager', function() {
     expect(set5).toThrow();
   });
 
-  it('dataUpdate property works', function() {
+  it('dataUpdate property works', () => {
     function set1() { em.dataUpdate = 3.14; }
     function set2() { em.dataUpdate = fn0; }
     function set3() { em.dataUpdate = fn1; }
@@ -192,7 +192,7 @@ describe('Extension manager', function() {
     expect(set5).toThrow();
   });
 
-  it('dataRemove property works', function() {
+  it('dataRemove property works', () => {
     function set1() { em.dataRemove = false; }
     function set2() { em.dataRemove = fn0; }
     function set3() { em.dataRemove = fn1; }
@@ -206,7 +206,7 @@ describe('Extension manager', function() {
     expect(set5).toThrow();
   });
 
-  it('dataExecute property works', function() {
+  it('dataExecute property works', () => {
     function set1() { em.dataExecute = null; }
     function set2() { em.dataExecute = fn0; }
     function set3() { em.dataExecute = fn1; }

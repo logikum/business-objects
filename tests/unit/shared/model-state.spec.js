@@ -2,14 +2,14 @@ console.log( 'Testing shared/model-state.js...' );
 
 const ModelState = require( '../../../source/shared/model-state.js' );
 
-describe( 'Model state enumeration', function () {
+describe( 'Model state enumeration', () => {
 
-  it( '$name property returns the type name', function () {
+  it( '$name property returns the type name', () => {
 
     expect( ModelState.$name ).toBe( 'ModelState' );
   } );
 
-  it( 'has the defined items', function () {
+  it( 'has the defined items', () => {
 
     expect( ModelState.pristine ).toBe( 0 );
     expect( ModelState.created ).toBe( 1 );
@@ -18,12 +18,12 @@ describe( 'Model state enumeration', function () {
     expect( ModelState.removed ).toBe( 4 );
   } );
 
-  it( 'count method returns the item count', function () {
+  it( 'count method returns the item count', () => {
 
     expect( ModelState.count() ).toBe( 5 );
   } );
 
-  it( 'getName method returns the item name', function () {
+  it( 'getName method returns the item name', () => {
 
     expect( ModelState.getName( 0 ) ).toBe( 'pristine' );
     expect( ModelState.getName( 1 ) ).toBe( 'created' );
@@ -32,7 +32,7 @@ describe( 'Model state enumeration', function () {
     expect( ModelState.getName( 4 ) ).toBe( 'removed' );
   } );
 
-  it( 'getValue method returns the item value', function () {
+  it( 'getValue method returns the item value', () => {
 
     expect( ModelState.getValue( 'pristine' ) ).toBe( 0 );
     expect( ModelState.getValue( 'created' ) ).toBe( 1 );
@@ -41,7 +41,7 @@ describe( 'Model state enumeration', function () {
     expect( ModelState.getValue( 'removed' ) ).toBe( 4 );
   } );
 
-  it( 'check method inspects a value', function () {
+  it( 'check method inspects a value', () => {
 
     function check1() {ModelState.check( -1 ); }
     function check2() {ModelState.check( ModelState.pristine ); }

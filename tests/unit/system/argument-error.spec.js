@@ -2,9 +2,9 @@ console.log( 'Testing system/argument-error.js...' );
 
 const ArgumentError = require( '../../../source/system/argument-error.js' );
 
-describe( 'Argument error', function () {
+describe( 'Argument error', () => {
 
-  it( 'constructor expects an optional message', function () {
+  it( 'constructor expects an optional message', () => {
     const ae1 = new ArgumentError();
     const ae2 = new ArgumentError( 'The argument is null or invalid.' );
     const ae3 = new ArgumentError( 'default' );

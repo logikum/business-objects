@@ -2,9 +2,9 @@ console.log( 'Testing system/property-error.js...' );
 
 const PropertyError = require( '../../../source/system/property-error.js' );
 
-describe( 'Property error', function () {
+describe( 'Property error', () => {
 
-  it( 'constructor expects an optional message', function () {
+  it( 'constructor expects an optional message', () => {
     const pe1 = new PropertyError();
     const pe2 = new PropertyError( 'The argument is null or invalid.' );
     const pe3 = new PropertyError( 'default' );

@@ -2,9 +2,9 @@ console.log( 'Testing system/composer-error.js...' );
 
 const ComposerError = require( '../../../source/system/composer-error.js' );
 
-describe( 'Composer error', function () {
+describe( 'Composer error', () => {
 
-  it( 'constructor expects an optional message', function () {
+  it( 'constructor expects an optional message', () => {
     const ae1 = new ComposerError();
     const ae2 = new ComposerError( 'The argument is null or invalid.' );
     const ae3 = new ComposerError( 'default' );

@@ -2,9 +2,9 @@ console.log( 'Testing system/not-implemented-error.js...' );
 
 const NotImplementedError = require( '../../../source/system/not-implemented-error.js' );
 
-describe( 'Not implemented error', function () {
+describe( 'Not implemented error', () => {
 
-  it( 'constructor expects one optional argument', function () {
+  it( 'constructor expects one optional argument', () => {
     const nie1 = new NotImplementedError();
     const nie2 = new NotImplementedError( 'Unexpected error occurred.' );
     const nie3 = new NotImplementedError( 'default' );

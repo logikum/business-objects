@@ -3,21 +3,21 @@ console.log( 'Testing data-types/date-time.js...' );
 const DateTime = require( '../../../source/data-types/date-time.js' );
 const DataType = require( '../../../source/data-types/data-type.js' );
 
-describe( 'DateTime type', function () {
+describe( 'DateTime type', () => {
   const dt = new DateTime();
 
-  it( 'constructor returns a data type', function () {
+  it( 'constructor returns a data type', () => {
 
     expect( dt ).toEqual( jasmine.any( DataType ) );
   } );
 
-  it( 'has one read-only property', function () {
+  it( 'has one read-only property', () => {
     dt.name = '---';
 
     expect( dt.name ).toBe( 'DateTime' );
   } );
 
-  it( 'parse method expects DateTime', function () {
+  it( 'parse method expects DateTime', () => {
     function fn() {}
 
     expect( dt.parse() ).toBeNull();
@@ -35,7 +35,7 @@ describe( 'DateTime type', function () {
     expect( dt.parse( 'December 17, 1995 03:24:00' ) ).toEqual( new Date( 1995, 11, 17, 3, 24, 0 ) );
   } );
 
-  it( 'hasValue method works', function () {
+  it( 'hasValue method works', () => {
 
     expect( dt.hasValue() ).toBe( false );
     expect( dt.hasValue( null ) ).toBe( false );

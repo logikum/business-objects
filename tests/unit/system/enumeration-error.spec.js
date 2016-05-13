@@ -2,9 +2,9 @@ console.log( 'Testing system/enumeration-error.js...' );
 
 const EnumerationError = require( '../../../source/system/enumeration-error.js' );
 
-describe( 'Enumeration error', function () {
+describe( 'Enumeration error', () => {
 
-  it( 'constructor expects an optional message', function () {
+  it( 'constructor expects an optional message', () => {
     const ee1 = new EnumerationError();
     const ee2 = new EnumerationError( 'The passed value is not an enumeration member.' );
     const ee3 = new EnumerationError( 'default' );

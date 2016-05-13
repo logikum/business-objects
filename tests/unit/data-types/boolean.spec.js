@@ -3,21 +3,21 @@ console.log( 'Testing data-types/boolean.js...' );
 const Boolean = require( '../../../source/data-types/boolean.js' );
 const DataType = require( '../../../source/data-types/data-type.js' );
 
-describe( 'Boolean type', function () {
+describe( 'Boolean type', () => {
   const dt = new Boolean();
 
-  it( 'constructor returns a data type', function () {
+  it( 'constructor returns a data type', () => {
 
     expect( dt ).toEqual( jasmine.any( DataType ) );
   } );
 
-  it( 'has one read-only property', function () {
+  it( 'has one read-only property', () => {
     dt.name = '---';
 
     expect( dt.name ).toBe( 'Boolean' );
   } );
 
-  it( 'parse method expects Boolean', function () {
+  it( 'parse method expects Boolean', () => {
     function fn() {}
 
     expect( dt.parse() ).toBeNull();
@@ -35,7 +35,7 @@ describe( 'Boolean type', function () {
     expect( dt.parse( 'true' ) ).toBe( true );
   } );
 
-  it( 'hasValue method works', function () {
+  it( 'hasValue method works', () => {
 
     expect( dt.hasValue() ).toBe( false );
     expect( dt.hasValue( null ) ).toBe( false );

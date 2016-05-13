@@ -2,9 +2,9 @@ console.log('Testing shared/model-error.js...');
 
 var ArgumentError = require('../../../source/shared/model-error.js');
 
-describe('Model error', function() {
+describe('Model error', () => {
 
-  it('constructor expects an optional message', function() {
+  it('constructor expects an optional message', () => {
     var me1 = new ArgumentError();
     var me2 = new ArgumentError('The model definition is bad.');
 

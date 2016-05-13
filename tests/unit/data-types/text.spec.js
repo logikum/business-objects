@@ -3,21 +3,21 @@ console.log( 'Testing data-types/text.js...' );
 const Text = require( '../../../source/data-types/text.js' );
 const DataType = require( '../../../source/data-types/data-type.js' );
 
-describe( 'Text type', function () {
+describe( 'Text type', () => {
   const dt = new Text();
 
-  it( 'constructor returns a data type', function () {
+  it( 'constructor returns a data type', () => {
 
     expect( dt ).toEqual( jasmine.any( DataType ) );
   } );
 
-  it( 'has one read-only property', function () {
+  it( 'has one read-only property', () => {
     dt.name = '---';
 
     expect( dt.name ).toBe( 'Text' );
   } );
 
-  it( 'parse method expects string', function () {
+  it( 'parse method expects string', () => {
     function fn() {}
 
     expect( dt.parse() ).toBeNull();
@@ -33,7 +33,7 @@ describe( 'Text type', function () {
     expect( dt.parse( fn ) ).toBe( 'function fn() {}' );
   } );
 
-  it( 'hasValue method works', function () {
+  it( 'hasValue method works', () => {
 
     expect( dt.hasValue() ).toBe( false );
     expect( dt.hasValue( null ) ).toBe( false );

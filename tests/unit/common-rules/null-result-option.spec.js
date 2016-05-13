@@ -2,40 +2,40 @@ console.log( 'Testing common-rules/null-result-option.js...' );
 
 const NullResultOption = require( '../../../source/common-rules/null-result-option.js' );
 
-describe( 'No result option enumeration', function () {
+describe( 'No result option enumeration', () => {
 
-  it( '$name property returns the type name', function () {
+  it( '$name property returns the type name', () => {
 
     expect( NullResultOption.$name ).toBe( 'NullResultOption' );
   } );
 
-  it( 'has the defined items', function () {
+  it( 'has the defined items', () => {
 
     expect( NullResultOption.returnTrue ).toBe( 0 );
     expect( NullResultOption.returnFalse ).toBe( 1 );
     expect( NullResultOption.convertToEmptyString ).toBe( 2 );
   } );
 
-  it( 'count method returns the item count', function () {
+  it( 'count method returns the item count', () => {
 
     expect( NullResultOption.count() ).toBe( 3 );
   } );
 
-  it( 'getName method returns the item name', function () {
+  it( 'getName method returns the item name', () => {
 
     expect( NullResultOption.getName( 0 ) ).toBe( 'returnTrue' );
     expect( NullResultOption.getName( 1 ) ).toBe( 'returnFalse' );
     expect( NullResultOption.getName( 2 ) ).toBe( 'convertToEmptyString' );
   } );
 
-  it( 'getValue method returns the item value', function () {
+  it( 'getValue method returns the item value', () => {
 
     expect( NullResultOption.getValue( 'returnTrue' ) ).toBe( 0 );
     expect( NullResultOption.getValue( 'returnFalse' ) ).toBe( 1 );
     expect( NullResultOption.getValue( 'convertToEmptyString' ) ).toBe( 2 );
   } );
 
-  it( 'check method inspects a value', function () {
+  it( 'check method inspects a value', () => {
 
     function check1() {NullResultOption.check( -1 ); }
     function check2() {NullResultOption.check( NullResultOption.returnTrue ); }

@@ -10,9 +10,9 @@ const Decimal = require( '../../../source/data-types/decimal.js' );
 //const Enum = require('../../../source/data-types/enum.js');
 const DateTime = require( '../../../source/data-types/date-time.js' );
 
-describe( 'Data type index', function () {
+describe( 'Data type index', () => {
 
-  it( 'returns correct data types', function () {
+  it( 'returns correct data types', () => {
 
     expect( dt.DataType ).toEqual( jasmine.any( Function ) );
 

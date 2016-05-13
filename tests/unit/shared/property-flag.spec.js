@@ -2,9 +2,9 @@ console.log( 'Testing shared/property-flag.js...' );
 
 const PropertyFlag = require( '../../../source/shared/property-flag.js' );
 
-describe( 'Property flag', function () {
+describe( 'Property flag', () => {
 
-  it( 'has the defined items', function () {
+  it( 'has the defined items', () => {
 
     expect( PropertyFlag.none ).toBe( 0 );
     expect( PropertyFlag.readOnly ).toBe( 1 );
@@ -14,7 +14,7 @@ describe( 'Property flag', function () {
     expect( PropertyFlag.onDtoOnly ).toBe( 16 );
   } );
 
-  it( 'items are read-only', function () {
+  it( 'items are read-only', () => {
     PropertyFlag.none = 17;
     PropertyFlag.readOnly = 9;
     PropertyFlag.key = 10;

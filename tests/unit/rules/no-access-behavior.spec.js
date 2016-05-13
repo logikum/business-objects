@@ -2,14 +2,14 @@ console.log( 'Testing rules/no-access-behavior.js...' );
 
 const NoAccessBehavior = require( '../../../source/rules/no-access-behavior.js' );
 
-describe( 'No access behavior enumeration', function () {
+describe( 'No access behavior enumeration', () => {
 
-  it( '$name property returns the type name', function () {
+  it( '$name property returns the type name', () => {
 
     expect( NoAccessBehavior.$name ).toBe( 'NoAccessBehavior' );
   } );
 
-  it( 'has the defined items', function () {
+  it( 'has the defined items', () => {
 
     expect( NoAccessBehavior.throwError ).toBe( 0 );
     expect( NoAccessBehavior.showError ).toBe( 1 );
@@ -17,12 +17,12 @@ describe( 'No access behavior enumeration', function () {
     expect( NoAccessBehavior.showInformation ).toBe( 3 );
   } );
 
-  it( 'count method returns the item count', function () {
+  it( 'count method returns the item count', () => {
 
     expect( NoAccessBehavior.count() ).toBe( 4 );
   } );
 
-  it( 'getName method returns the item name', function () {
+  it( 'getName method returns the item name', () => {
 
     expect( NoAccessBehavior.getName( 0 ) ).toBe( 'throwError' );
     expect( NoAccessBehavior.getName( 1 ) ).toBe( 'showError' );
@@ -30,7 +30,7 @@ describe( 'No access behavior enumeration', function () {
     expect( NoAccessBehavior.getName( 3 ) ).toBe( 'showInformation' );
   } );
 
-  it( 'getValue method returns the item value', function () {
+  it( 'getValue method returns the item value', () => {
 
     expect( NoAccessBehavior.getValue( 'throwError' ) ).toBe( 0 );
     expect( NoAccessBehavior.getValue( 'showError' ) ).toBe( 1 );
@@ -38,7 +38,7 @@ describe( 'No access behavior enumeration', function () {
     expect( NoAccessBehavior.getValue( 'showInformation' ) ).toBe( 3 );
   } );
 
-  it( 'check method inspects a value', function () {
+  it( 'check method inspects a value', () => {
 
     function check1() {NoAccessBehavior.check( -1 ); }
     function check2() {NoAccessBehavior.check( NoAccessBehavior.throwError ); }

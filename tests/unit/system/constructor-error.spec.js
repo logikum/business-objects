@@ -2,9 +2,9 @@ console.log( 'Testing system/constructor-error.js...' );
 
 const ConstructorError = require( '../../../source/system/constructor-error.js' );
 
-describe( 'Constructor error', function () {
+describe( 'Constructor error', () => {
 
-  it( 'constructor expects an optional message', function () {
+  it( 'constructor expects an optional message', () => {
     const ce1 = new ConstructorError();
     const ce2 = new ConstructorError( 'The argument is null or invalid.' );
     const ce3 = new ConstructorError( 'default' );

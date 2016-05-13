@@ -2,9 +2,9 @@ console.log('Testing rules/authorization-error.js...');
 
 var AuthorizationError = require('../../../source/rules/authorization-error.js');
 
-describe('Data type error', function() {
+describe('Data type error', () => {
 
-  it('constructor expects one optional argument', function() {
+  it('constructor expects one optional argument', () => {
     var ae1 = new AuthorizationError();
     var ae2 = new AuthorizationError('Only managers are allowed to view these data.');
     var ae3 = new AuthorizationError('default');

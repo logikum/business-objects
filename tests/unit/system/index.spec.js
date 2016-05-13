@@ -15,9 +15,9 @@ const Argument = require( '../../../source/system/argument-check.js' );
 const UserInfo = require( '../../../source/system/user-info.js' );
 //const Utility = require('../../../source/system/utility.js');
 
-describe( 'System component index', function () {
+describe( 'System component index', () => {
 
-  it( 'properties return correct components', function () {
+  it( 'properties return correct components', () => {
 
     expect( new system.ArgumentError( 'message' ) ).toEqual( jasmine.any( ArgumentError ) );
     expect( new system.ComposerError( 'message' ) ).toEqual( jasmine.any( ComposerError ) );

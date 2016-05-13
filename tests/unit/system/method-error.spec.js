@@ -2,9 +2,9 @@ console.log( 'Testing system/method-error.js...' );
 
 const MethodError = require( '../../../source/system/method-error.js' );
 
-describe( 'Method error', function () {
+describe( 'Method error', () => {
 
-  it( 'constructor expects an optional message', function () {
+  it( 'constructor expects an optional message', () => {
     const me1 = new MethodError();
     const me2 = new MethodError( 'The argument is null or invalid.' );
     const me3 = new MethodError( 'default' );

@@ -31,33 +31,33 @@ class Numbers3 extends Enumeration {
 
 //endregion
 
-describe( 'Enumeration', function () {
+describe( 'Enumeration', () => {
   const numbers1 = new Numbers1();
   const numbers2 = new Numbers2();
   const numbers3 = new Numbers3();
 
-  it( 'constructor expects no argument', function () {
+  it( 'constructor expects no argument', () => {
 
     function build01() { const options = new Enumeration(); }
 
     expect( build01 ).not.toThrow();
   } );
 
-  it( '$name property returns the type name', function () {
+  it( '$name property returns the type name', () => {
 
     expect( numbers1.$name ).toBe( 'Numbers1' );
     expect( numbers2.$name ).toBe( 'Numbers2' );
     expect( numbers3.$name ).toBe( 'Numbers3' );
   } );
 
-  it( 'has the defined items', function () {
+  it( 'has the defined items', () => {
 
     expect( numbers3.one ).toBe( 0 );
     expect( numbers3.two ).toBe( 1 );
     expect( numbers3.three ).toBe( 2 );
   } );
 
-  it( 'items are read-only', function () {
+  it( 'items are read-only', () => {
 
     numbers3.one = 100;
     numbers3.two = 200;
@@ -68,14 +68,14 @@ describe( 'Enumeration', function () {
     expect( numbers3.three ).toBe( 2 );
   } );
 
-  it( 'count method returns the item count', function () {
+  it( 'count method returns the item count', () => {
 
     expect( numbers1.count() ).toBe( 1 );
     expect( numbers2.count() ).toBe( 2 );
     expect( numbers3.count() ).toBe( 3 );
   } );
 
-  it( 'getName method returns the item name', function () {
+  it( 'getName method returns the item name', () => {
 
     function getName1() { const n = numbers3.getName(); }
     function getName2() { const n = numbers3.getName( -1 ); }
@@ -90,7 +90,7 @@ describe( 'Enumeration', function () {
     expect( getName3 ).toThrow();
   } );
 
-  it( 'getValue method returns the item value', function () {
+  it( 'getValue method returns the item value', () => {
 
     function getValue1() { const n = numbers3.getName(); }
     function getValue2() { const n = numbers3.getName( '' ); }
@@ -105,7 +105,7 @@ describe( 'Enumeration', function () {
     expect( getValue3 ).toThrow();
   } );
 
-  it( 'check method inspects a value', function () {
+  it( 'check method inspects a value', () => {
 
     function check1() {numbers3.check(); }
     function check2() {numbers3.check( true ); }
@@ -126,7 +126,7 @@ describe( 'Enumeration', function () {
     expect( check8 ).toThrow();
   } );
 
-  it( 'check method sets error message', function () {
+  it( 'check method sets error message', () => {
 
     function check1() {numbers3.check( 10 ); }
     function check2() {numbers3.check( 20, 'Invalid enumeration value!' ); }
@@ -135,7 +135,7 @@ describe( 'Enumeration', function () {
     expect( check2 ).toThrow( 'Invalid enumeration value!' );
   } );
 
-  it( 'hasMember method tests a value', function () {
+  it( 'hasMember method tests a value', () => {
 
     expect( numbers3.hasMember() ).toBe( false );
     expect( numbers3.hasMember( true ) ).toBe( false );

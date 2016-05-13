@@ -2,14 +2,14 @@ console.log( 'Testing rules/rule-severity.js...' );
 
 const RuleSeverity = require( '../../../source/rules/rule-severity.js' );
 
-describe( 'Rule severity enumeration', function () {
+describe( 'Rule severity enumeration', () => {
 
-  it( '$name property returns the type name', function () {
+  it( '$name property returns the type name', () => {
 
     expect( RuleSeverity.$name ).toBe( 'RuleSeverity' );
   } );
 
-  it( 'has the defined items', function () {
+  it( 'has the defined items', () => {
 
     expect( RuleSeverity.success ).toBe( 0 );
     expect( RuleSeverity.information ).toBe( 1 );
@@ -17,12 +17,12 @@ describe( 'Rule severity enumeration', function () {
     expect( RuleSeverity.error ).toBe( 3 );
   } );
 
-  it( 'count method returns the item count', function () {
+  it( 'count method returns the item count', () => {
 
     expect( RuleSeverity.count() ).toBe( 4 );
   } );
 
-  it( 'getName method returns the item name', function () {
+  it( 'getName method returns the item name', () => {
 
     expect( RuleSeverity.getName( 0 ) ).toBe( 'success' );
     expect( RuleSeverity.getName( 1 ) ).toBe( 'information' );
@@ -30,7 +30,7 @@ describe( 'Rule severity enumeration', function () {
     expect( RuleSeverity.getName( 3 ) ).toBe( 'error' );
   } );
 
-  it( 'getValue method returns the item value', function () {
+  it( 'getValue method returns the item value', () => {
 
     expect( RuleSeverity.getValue( 'success' ) ).toBe( 0 );
     expect( RuleSeverity.getValue( 'information' ) ).toBe( 1 );
@@ -38,7 +38,7 @@ describe( 'Rule severity enumeration', function () {
     expect( RuleSeverity.getValue( 'error' ) ).toBe( 3 );
   } );
 
-  it( 'check method inspects a value', function () {
+  it( 'check method inspects a value', () => {
 
     function check1() {RuleSeverity.check( -1 ); }
     function check2() {RuleSeverity.check( RuleSeverity.success ); }

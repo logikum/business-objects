@@ -3,21 +3,21 @@ console.log( 'Testing data-types/integer.js...' );
 const Integer = require( '../../../source/data-types/integer.js' );
 const DataType = require( '../../../source/data-types/data-type.js' );
 
-describe( 'Integer type', function () {
+describe( 'Integer type', () => {
   const dt = new Integer();
 
-  it( 'constructor returns a data type', function () {
+  it( 'constructor returns a data type', () => {
 
     expect( dt ).toEqual( jasmine.any( DataType ) );
   } );
 
-  it( 'has one read-only property', function () {
+  it( 'has one read-only property', () => {
     dt.name = '---';
 
     expect( dt.name ).toBe( 'Integer' );
   } );
 
-  it( 'parse method expects integer', function () {
+  it( 'parse method expects integer', () => {
     function fn() {}
 
     expect( dt.parse() ).toBeNull();
@@ -35,7 +35,7 @@ describe( 'Integer type', function () {
     expect( dt.parse( '0x101' ) ).toBe( 257 );
   } );
 
-  it( 'hasValue method works', function () {
+  it( 'hasValue method works', () => {
 
     expect( dt.hasValue() ).toBe( false );
     expect( dt.hasValue( null ) ).toBe( false );

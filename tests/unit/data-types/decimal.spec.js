@@ -3,21 +3,21 @@ console.log( 'Testing data-types/decimal.js...' );
 const Decimal = require( '../../../source/data-types/decimal.js' );
 const DataType = require( '../../../source/data-types/data-type.js' );
 
-describe( 'Decimal type', function () {
+describe( 'Decimal type', () => {
   const dt = new Decimal();
 
-  it( 'constructor returns a data type', function () {
+  it( 'constructor returns a data type', () => {
 
     expect( dt ).toEqual( jasmine.any( DataType ) );
   } );
 
-  it( 'has one read-only property', function () {
+  it( 'has one read-only property', () => {
     dt.name = '---';
 
     expect( dt.name ).toBe( 'Decimal' );
   } );
 
-  it( 'parse method expects decimal', function () {
+  it( 'parse method expects decimal', () => {
     function fn() {}
 
     expect( dt.parse() ).toBeNull();
@@ -36,7 +36,7 @@ describe( 'Decimal type', function () {
     expect( dt.parse( '0.987' ) ).toBe( 0.987 );
   } );
 
-  it( 'hasValue method works', function () {
+  it( 'hasValue method works', () => {
     function hasValue1() { return dt.hasValue(); }
 
     expect( dt.hasValue() ).toBe( false );

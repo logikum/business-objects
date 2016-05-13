@@ -3,9 +3,9 @@ console.log('Testing shared/data-portal-error.js...');
 var DataPortalError = require('../../../source/shared/data-portal-error.js');
 var DataPortalAction = require('../../../source/shared/data-portal-action.js');
 
-describe('Data portal error', function() {
+describe('Data portal error', () => {
 
-  it('constructor expects three-four arguments', function() {
+  it('constructor expects three-four arguments', () => {
     function build01() { var err = new DataPortalError(); }
     function build02() { var err = new DataPortalError(1, 2, 3); }
     function build03() { var err = new DataPortalError('type', 'model', true); }
@@ -25,7 +25,7 @@ describe('Data portal error', function() {
     expect(build08).not.toThrow();
   });
 
-  it('has six properties', function() {
+  it('has six properties', () => {
     var ie = new Error('Intercepted error');
     var dpe = new DataPortalError('Model type', 'ModelName', DataPortalAction.execute, ie);
 
