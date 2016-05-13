@@ -4,6 +4,7 @@ const system = require( '../../../source/system/index.js' );
 
 const ArgumentError = require( '../../../source/system/argument-error.js' );
 const ComposerError = require( '../../../source/system/composer-error.js' );
+const ConfigurationError = require('../../../source/system/configuration-error.js');
 const ConstructorError = require( '../../../source/system/constructor-error.js' );
 const MethodError = require( '../../../source/system/method-error.js' );
 const PropertyError = require( '../../../source/system/property-error.js' );
@@ -21,6 +22,7 @@ describe( 'System component index', () => {
 
     expect( new system.ArgumentError( 'message' ) ).toEqual( jasmine.any( ArgumentError ) );
     expect( new system.ComposerError( 'message' ) ).toEqual( jasmine.any( ComposerError ) );
+    expect( new system.ConfigurationError( 'message' ) ).toEqual( jasmine.any( ConfigurationError ) );
     expect( new system.ConstructorError( 'message' ) ).toEqual( jasmine.any( ConstructorError ) );
     expect( new system.MethodError( 'message' ) ).toEqual( jasmine.any( MethodError ) );
     expect( new system.PropertyError( 'message' ) ).toEqual( jasmine.any( PropertyError ) );

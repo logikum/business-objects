@@ -1,6 +1,6 @@
 console.log('Testing shared/configuration-reader.js...');
 
-var configuration = require('../../../source/shared/configuration-reader.js');
+var configuration = require('../../../source/system/configuration-reader.js');
 var ConnectionManager = require('../../../data/connection-manager.js');
 var NoAccessBehavior = require('../../../source/rules/no-access-behavior.js');
 var daoBuilder = require('../../../source/data-access/dao-builder.js');

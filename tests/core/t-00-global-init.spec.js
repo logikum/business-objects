@@ -1,4 +1,4 @@
-const configuration = require( '../../source/shared/configuration-reader.js' );
+const configuration = require( '../../source/system/configuration-reader.js' );
 //const i18n = require( '../../source/locales/i18n.js' );
 
 configuration.initialize( '/config/business-objects.js' );

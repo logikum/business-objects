@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'ExtensionManager';
 
-var config = require('./configuration-reader.js');
+var config = require('./../system/configuration-reader.js');
 var Argument = require('../system/argument-check.js');
 var ModelError = require('./model-error.js');
 var DataPortalContext = require('../shared/data-portal-context.js');

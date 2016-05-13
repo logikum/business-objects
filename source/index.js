@@ -21,7 +21,7 @@ var rules = require('./rules/index.js');
 var shared = require('./shared/index.js');
 var system = require('./system/index.js');
 
-var configuration = require('./shared/configuration-reader.js');
+var configuration = require('./system/configuration-reader.js');
 var i18n = require('./locales/i18n.js');
 
 //endregion

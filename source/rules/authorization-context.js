@@ -2,7 +2,7 @@
 
 var CLASS_NAME = 'AuthorizationContext';
 
-var config = require('../shared/configuration-reader.js');
+var config = require('../system/configuration-reader.js');
 var Argument = require('../system/argument-check.js');
 var UserInfo = require('../system/user-info.js');
 var BrokenRuleList = require('./broken-rule-list.js');

@@ -5,7 +5,7 @@ const t = require( '../locales/i18n-bo.js' )( 'ConfigurationError' );
 /**
  * Represents a configuration error.
  *
- * @memberof bo.shared
+ * @memberof bo.system
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
@@ -22,14 +22,14 @@ class ConfigurationError extends Error {
 
     /**
      * The name of the error type.
-     * @member {string} bo.shared.ConfigurationError#name
+     * @member {string} bo.system.ConfigurationError#name
      * @default ConfigurationError
      */
     this.name = this.constructor.name;
 
     /**
      * Human-readable description of the error.
-     * @member {string} bo.shared.ConfigurationError#message
+     * @member {string} bo.system.ConfigurationError#message
      */
     this.message = t( ...arguments );
   }

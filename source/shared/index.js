@@ -1,25 +1,23 @@
 'use strict';
 
-//var ExtensionManagerBase = require('./extension-manager-base.js');
-var ExtensionManager = require('./extension-manager.js');
-var EventHandlerList = require('./event-handler-list.js');
-var DataStore = require('./data-store.js');
-var ModelState = require('./model-state.js');
-var ModelError = require('./model-error.js');
-var ConfigurationError = require('./configuration-error.js');
-//var configuration = require('./configuration-reader.js');
+//const ExtensionManagerBase = require( './extension-manager-base.js' );
+const ExtensionManager = require( './extension-manager.js' );
+const EventHandlerList = require( './event-handler-list.js' );
+const DataStore = require( './data-store.js' );
+const ModelState = require( './model-state.js' );
+const ModelError = require( './model-error.js' );
 
-var PropertyInfo = require('./property-info.js');
-var PropertyFlag = require('./property-flag.js');
-var PropertyManager = require('./property-manager.js');
-var PropertyContext = require('./property-context.js');
-var TransferContext = require('./transfer-context.js');
+const PropertyInfo = require( './property-info.js' );
+const PropertyFlag = require( './property-flag.js' );
+const PropertyManager = require( './property-manager.js' );
+const PropertyContext = require( './property-context.js' );
+const TransferContext = require( './transfer-context.js' );
 
-var DataPortalAction = require('./data-portal-action.js');
-var DataPortalContext = require('./data-portal-context.js');
-var DataPortalEvent = require('./data-portal-event.js');
-var DataPortalEventArgs = require('./data-portal-event-args.js');
-var DataPortalError = require('./data-portal-error.js');
+const DataPortalAction = require( './data-portal-action.js' );
+const DataPortalContext = require( './data-portal-context.js' );
+const DataPortalEvent = require( './data-portal-event.js' );
+const DataPortalEventArgs = require( './data-portal-event-args.js' );
+const DataPortalError = require( './data-portal-error.js' );
 
 /**
  * Contains components used by models, collections and other components.
@@ -36,8 +34,6 @@ var DataPortalError = require('./data-portal-error.js');
  *      object specifies the possible states of the editable models.
  * @property {function} ModelError - {@link bo.shared.ModelError Model error}
  *      constructor to create a new error related to a model.
- * @property {function} ConfigurationError - {@link bo.shared.ConfigurationError Configuration error}
- *      constructor to create a new error related to configuration.
  *
  * @property {function} PropertyInfo - {@link bo.shared.PropertyInfo Property definition}
  *      constructor to create new property definition.
@@ -63,15 +59,13 @@ var DataPortalError = require('./data-portal-error.js');
  *
  *
  */
-var index = {
+const index = {
   //ExtensionManagerBase: ExtensionManagerBase,
   ExtensionManager: ExtensionManager,
   EventHandlerList: EventHandlerList,
   DataStore: DataStore,
   ModelState: ModelState,
   ModelError: ModelError,
-  ConfigurationError: ConfigurationError,
-  //configuration: configuration,
 
   PropertyInfo: PropertyInfo,
   PropertyFlag: PropertyFlag,
@@ -87,6 +81,6 @@ var index = {
 };
 
 // Immutable object.
-Object.freeze(index);
+Object.freeze( index );
 
 module.exports = index;

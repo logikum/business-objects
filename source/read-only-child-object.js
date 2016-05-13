@@ -3,7 +3,7 @@
 //region Imports
 
 var util = require('util');
-var config = require('./shared/configuration-reader.js');
+var config = require('./system/configuration-reader.js');
 var Argument = require('./system/argument-check.js');
 var Enumeration = require('./system/enumeration.js');
 

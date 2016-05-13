@@ -8,7 +8,6 @@ var EventHandlerList = require('../../../source/shared/event-handler-list.js');
 var DataStore = require('../../../source/shared/data-store.js');
 //var ModelState = require('../../../source/shared/model-state.js');
 var ModelError = require('../../../source/shared/model-error.js');
-var ConfigurationError = require('../../../source/shared/configuration-error.js');
 
 var PropertyInfo = require('../../../source/shared/property-info.js');
 var PropertyFlag = require('../../../source/shared/property-flag.js');
@@ -42,7 +41,6 @@ describe('Shared component index', function () {
     expect(new shared.DataStore()).toEqual(jasmine.any(DataStore));
     expect(shared.ModelState).toEqual(jasmine.any(Enumeration));
     expect(new shared.ModelError('message')).toEqual(jasmine.any(ModelError));
-    expect(new shared.ConfigurationError('message')).toEqual(jasmine.any(ConfigurationError));
 
     expect(new shared.PropertyInfo('property', text)).toEqual(jasmine.any(PropertyInfo));
     expect(shared.PropertyFlag).toBe(PropertyFlag);

@@ -6,8 +6,8 @@ var ConfigurationError = require('./configuration-error.js');
 var ConnectionManagerBase = require('../data-access/connection-manager-base.js');
 var daoBuilder = require('../data-access/dao-builder.js');
 var NoAccessBehavior = require('../rules/no-access-behavior.js');
-var UserInfo = require('../system/user-info.js');
-var Utility = require('../system/utility.js');
+var UserInfo = require('./user-info.js');
+var Utility = require('./utility.js');
 
 var isInitialized = false;
 var fnUserReader = null;
@@ -88,7 +88,7 @@ function initialize (cfgPath) {
 /**
  * The configuration object for business objects.
  *
- * @name bo.shared~configuration
+ * @name bo.system~configuration
  * @property {bo.dataAccess.ConnectionManagerBase} connectionManager -
  *    The connection manager instance. It must be set via {@link bo.initialize} or
  *    {@link bo.configuration.initialize}.

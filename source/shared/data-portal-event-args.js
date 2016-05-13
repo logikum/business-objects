@@ -1,6 +1,6 @@
 'use strict';
 
-const config = require( './configuration-reader.js' );
+const config = require( './../system/configuration-reader.js' );
 const Argument = require( '../system/argument-check.js' );
 const DataPortalAction = require( './data-portal-action.js' );
 const DataPortalEvent = require( './data-portal-event.js' );

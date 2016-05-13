@@ -1,6 +1,6 @@
 console.log( 'Testing shared/configuration-error.js...' );
 
-const ConfigurationError = require( '../../../source/shared/configuration-error.js' );
+const ConfigurationError = require( '../../../source/system/configuration-error.js' );
 
 describe( 'Configuration error', () => {
 

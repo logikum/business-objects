@@ -2,6 +2,8 @@
 
 const ArgumentError = require( './argument-error.js' );
 const ComposerError = require( './composer-error.js' );
+const ConfigurationError = require( './configuration-error.js' );
+//const Configuration = require( './configuration-reader.js' );
 const ConstructorError = require( './constructor-error.js' );
 const MethodError = require( './method-error.js' );
 const PropertyError = require( './property-error.js' );
@@ -22,6 +24,8 @@ const Utility = require( './utility.js' );
  *      constructor to create a new error related to an argument.
  * @property {function} ComposerError - {@link bo.system.ComposerError Composer error}
  *      constructor to create a new error related to model composer.
+ * @property {function} ConfigurationError - {@link bo.system.ConfigurationError Configuration error}
+ *      constructor to create a new error related to configuration.
  * @property {function} ConstructorError - {@link bo.system.ConstructorError Constructor error}
  *      constructor to create a new error related to a constructor argument.
  * @property {function} MethodError - {@link bo.system.MethodError Method error}
@@ -42,9 +46,11 @@ const Utility = require( './utility.js' );
  * @property {function} Utility - {@link bo.system.Utility Utility}
  *      function provides static methods for configuration and internationalization.
  */
-var index = {
+const index = {
   ArgumentError: ArgumentError,
   ComposerError: ComposerError,
+  ConfigurationError: ConfigurationError,
+  //Configuration: Configuration,
   ConstructorError: ConstructorError,
   MethodError: MethodError,
   PropertyError: PropertyError,
