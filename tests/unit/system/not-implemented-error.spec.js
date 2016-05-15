@@ -1,6 +1,9 @@
 console.log( 'Testing system/not-implemented-error.js...' );
 
-const NotImplementedError = require( '../../../source/system/not-implemented-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const NotImplementedError = read( 'system/not-implemented-error.js' );
 
 describe( 'Not implemented error', () => {
 

@@ -1,8 +1,11 @@
 console.log( 'Testing shared/transfer-context.js...' );
 
-const TransferContext = require( '../../../source/shared/transfer-context.js' );
-const PropertyInfo = require( '../../../source/shared/property-info.js' );
-const Text = require( '../../../source/data-types/text.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const TransferContext = read( 'shared/transfer-context.js' );
+const PropertyInfo = read( 'shared/property-info.js' );
+const Text = read( 'data-types/text.js' );
 
 describe( 'Transfer context', () => {
 

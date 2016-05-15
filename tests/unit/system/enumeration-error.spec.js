@@ -1,6 +1,9 @@
 console.log( 'Testing system/enumeration-error.js...' );
 
-const EnumerationError = require( '../../../source/system/enumeration-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const EnumerationError = read( 'system/enumeration-error.js' );
 
 describe( 'Enumeration error', () => {
 

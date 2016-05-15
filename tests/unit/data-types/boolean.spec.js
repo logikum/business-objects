@@ -1,7 +1,10 @@
 console.log( 'Testing data-types/boolean.js...' );
 
-const Boolean = require( '../../../source/data-types/boolean.js' );
-const DataType = require( '../../../source/data-types/data-type.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const Boolean = read( 'data-types/boolean.js' );
+const DataType = read( 'data-types/data-type.js' );
 
 describe( 'Boolean type', () => {
   const dt = new Boolean();

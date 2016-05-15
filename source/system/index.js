@@ -3,7 +3,7 @@
 const ArgumentError = require( './argument-error.js' );
 const ComposerError = require( './composer-error.js' );
 const ConfigurationError = require( './configuration-error.js' );
-//const Configuration = require( './configuration-reader.js' );
+const ConfigurationReader = require( './configuration-reader.js' );
 const ConstructorError = require( './constructor-error.js' );
 const MethodError = require( './method-error.js' );
 const PropertyError = require( './property-error.js' );
@@ -26,6 +26,8 @@ const Utility = require( './utility.js' );
  *      constructor to create a new error related to model composer.
  * @property {function} ConfigurationError - {@link bo.system.ConfigurationError Configuration error}
  *      constructor to create a new error related to configuration.
+ * @property {function} ConfigurationReader - {@link bo.system.ConfigurationReader Configuration reader}
+ *      object provides methods and properties to access the business objects' configuration.
  * @property {function} ConstructorError - {@link bo.system.ConstructorError Constructor error}
  *      constructor to create a new error related to a constructor argument.
  * @property {function} MethodError - {@link bo.system.MethodError Method error}
@@ -50,7 +52,7 @@ const index = {
   ArgumentError: ArgumentError,
   ComposerError: ComposerError,
   ConfigurationError: ConfigurationError,
-  //Configuration: Configuration,
+  ConfigurationReader: ConfigurationReader,
   ConstructorError: ConstructorError,
   MethodError: MethodError,
   PropertyError: PropertyError,

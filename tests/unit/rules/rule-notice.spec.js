@@ -1,7 +1,10 @@
 console.log('Testing rules/rule-notice.js...');
 
-var RuleNotice = require('../../../source/rules/rule-notice.js');
-var RuleSeverity = require('../../../source/rules/rule-severity.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var RuleNotice = read( 'rules/rule-notice.js');
+var RuleSeverity = read( 'rules/rule-severity.js');
 
 describe('Rule notice', function () {
 

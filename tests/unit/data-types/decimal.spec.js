@@ -1,7 +1,10 @@
 console.log( 'Testing data-types/decimal.js...' );
 
-const Decimal = require( '../../../source/data-types/decimal.js' );
-const DataType = require( '../../../source/data-types/data-type.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const Decimal = read( 'data-types/decimal.js' );
+const DataType = read( 'data-types/data-type.js' );
 
 describe( 'Decimal type', () => {
   const dt = new Decimal();

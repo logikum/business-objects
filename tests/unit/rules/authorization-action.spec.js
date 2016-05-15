@@ -1,6 +1,9 @@
 console.log( 'Testing rules/authorization-action.js...' );
 
-const AuthorizationAction = require( '../../../source/rules/authorization-action.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const AuthorizationAction = read( 'rules/authorization-action.js' );
 
 describe( 'Authorization action enumeration', () => {
 

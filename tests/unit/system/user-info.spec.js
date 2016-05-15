@@ -1,6 +1,9 @@
 console.log( 'Testing system/enumeration.js...' );
 
-const UserInfo = require( '../../../source/system/user-info.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const UserInfo = read( 'system/user-info.js' );
 
 describe( 'User info', () => {
 

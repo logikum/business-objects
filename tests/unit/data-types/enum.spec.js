@@ -1,8 +1,11 @@
 console.log( 'Testing data-types/enum.js...' );
 
-const Enum = require( '../../../source/data-types/enum.js' );
-const DataType = require( '../../../source/data-types/data-type.js' );
-const ModelState = require( '../../../source/shared/model-state.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const Enum = read( 'data-types/enum.js' );
+const DataType = read( 'data-types/data-type.js' );
+const ModelState = read( 'shared/model-state.js' );
 
 describe( 'Enum type', () => {
   const dt = new Enum( ModelState );

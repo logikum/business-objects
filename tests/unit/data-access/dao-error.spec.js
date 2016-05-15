@@ -1,6 +1,9 @@
 console.log( 'Testing data-access/data-type-error.js...' );
 
-const DaoError = require( '../../../source/data-access/dao-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const DaoError = read( 'data-access/dao-error.js' );
 
 describe( 'Data access object error', () => {
 

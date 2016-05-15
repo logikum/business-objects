@@ -1,7 +1,10 @@
 console.log( 'Testing shared/data-portal-error.js...' );
 
-const DataPortalError = require( '../../../source/shared/data-portal-error.js' );
-const DataPortalAction = require( '../../../source/shared/data-portal-action.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const DataPortalError = read( 'shared/data-portal-error.js' );
+const DataPortalAction = read( 'shared/data-portal-action.js' );
 
 describe( 'Data portal error', () => {
 

@@ -1,10 +1,13 @@
 console.log('Testing main.js...');
 
-var BrokenRuleList = require('../../../source/rules/broken-rule-list.js');
-var BrokenRule = require('../../../source/rules/broken-rule.js');
-var RuleSeverity = require('../../../source/rules/rule-severity.js');
-var PropertyInfo = require('../../../source/shared/property-info.js');
-var Text = require('../../../source/data-types/text.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var BrokenRuleList = read( 'rules/broken-rule-list.js');
+var BrokenRule = read( 'rules/broken-rule.js');
+var RuleSeverity = read( 'rules/rule-severity.js');
+var PropertyInfo = read( 'shared/property-info.js');
+var Text = read( 'data-types/text.js');
 
 describe('Broken rule list', function () {
 

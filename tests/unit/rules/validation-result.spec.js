@@ -1,9 +1,12 @@
 console.log('Testing rules/validation-result.js...');
 
-var ValidationResult = require('../../../source/rules/validation-result.js');
-var ResultBase = require('../../../source/rules/result-base.js');
-var RuleSeverity = require('../../../source/rules/rule-severity.js');
-var BrokenRule = require('../../../source/rules/broken-rule.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var ValidationResult = read( 'rules/validation-result.js');
+var ResultBase = read( 'rules/result-base.js');
+var RuleSeverity = read( 'rules/rule-severity.js');
+var BrokenRule = read( 'rules/broken-rule.js');
 
 describe('Validation result', function () {
 

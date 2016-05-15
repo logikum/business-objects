@@ -1,6 +1,9 @@
 console.log( 'Testing shared/model-error.js...' );
 
-const ModelError = require( '../../../source/shared/model-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const ModelError = read( 'shared/model-error.js' );
 
 describe( 'Model error', () => {
 

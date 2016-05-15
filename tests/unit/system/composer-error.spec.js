@@ -1,6 +1,9 @@
 console.log( 'Testing system/composer-error.js...' );
 
-const ComposerError = require( '../../../source/system/composer-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const ComposerError = read( 'system/composer-error.js' );
 
 describe( 'Composer error', () => {
 

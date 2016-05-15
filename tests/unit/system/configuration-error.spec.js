@@ -1,6 +1,9 @@
-console.log( 'Testing shared/configuration-error.js...' );
+console.log( 'Testing system/configuration-error.js...' );
 
-const ConfigurationError = require( '../../../source/system/configuration-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const ConfigurationError = read( 'system/configuration-error.js' );
 
 describe( 'Configuration error', () => {
 

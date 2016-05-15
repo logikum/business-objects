@@ -1,9 +1,13 @@
 console.log('Testing shared/data-portal-context.js...');
 
-var DataPortalContext = require('../../../source/shared/data-portal-context.js');
-var PropertyInfo = require('../../../source/shared/property-info.js');
-var Text = require('../../../source/data-types/text.js');
-var UserInfo = require('../../../source/system/user-info.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var DataPortalContext = read( 'shared/data-portal-context.js');
+var PropertyInfo = read( 'shared/property-info.js');
+var Text = read( 'data-types/text.js');
+var UserInfo = read( 'system/user-info.js');
+
 var UserReader = require('../../../data/get-user.js');
 
 describe('Data portal context', function() {

@@ -1,6 +1,9 @@
 console.log( 'Testing data-access/dao-base.js...' );
 
-const DaoBase = require( '../../../source/data-access/dao-base.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const DaoBase = read( 'data-access/dao-base.js' );
 
 describe('Base data access object', function () {
 

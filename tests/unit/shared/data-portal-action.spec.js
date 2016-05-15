@@ -1,6 +1,9 @@
 console.log( 'Testing shared/data-portal-action.js...' );
 
-const DataPortalAction = require( '../../../source/shared/data-portal-action.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const DataPortalAction = read( 'shared/data-portal-action.js' );
 
 describe( 'Data portal action enumeration', () => {
 

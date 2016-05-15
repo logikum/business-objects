@@ -1,7 +1,10 @@
 console.log( 'Testing data-types/date-time.js...' );
 
-const DateTime = require( '../../../source/data-types/date-time.js' );
-const DataType = require( '../../../source/data-types/data-type.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const DateTime = read( 'data-types/date-time.js' );
+const DataType = read( 'data-types/data-type.js' );
 
 describe( 'DateTime type', () => {
   const dt = new DateTime();

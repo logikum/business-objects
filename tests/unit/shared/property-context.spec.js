@@ -1,8 +1,11 @@
 console.log('Testing shared/property-context.js...');
 
-var PropertyContext = require('../../../source/shared/property-context.js');
-var PropertyInfo = require('../../../source/shared/property-info.js');
-var Text = require('../../../source/data-types/text.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var PropertyContext = read( 'shared/property-context.js');
+var PropertyInfo = read( 'shared/property-info.js');
+var Text = read( 'data-types/text.js');
 
 describe('Property context', function() {
   var properties = [ new PropertyInfo('scores', new Text()) ];

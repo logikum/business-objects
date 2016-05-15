@@ -1,12 +1,15 @@
 console.log('Testing shared/property-manager.js...');
 
-var PropertyManager = require('../../../source/shared/property-manager.js');
-var PropertyInfo = require('../../../source/shared/property-info.js');
-var F = require('../../../source/shared/property-flag.js');
-var Text = require('../../../source/data-types/text.js');
-var DateTime = require('../../../source/data-types/date-time.js');
-var CollectionBase = require('../../../source/collection-base.js');
-var ModelBase = require('../../../source/model-base.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var PropertyManager = read( 'shared/property-manager.js');
+var PropertyInfo = read( 'shared/property-info.js');
+var F = read( 'shared/property-flag.js');
+var Text = read( 'data-types/text.js');
+var DateTime = read( 'data-types/date-time.js');
+var CollectionBase = read( 'collection-base.js');
+var ModelBase = read( 'model-base.js');
 
 describe('Property manager', function () {
   function getPropertyValue (property) {

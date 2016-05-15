@@ -1,6 +1,9 @@
 console.log( 'Testing data-access/index.js...' );
 
-const da = require( '../../../source/data-access/index.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const da = read( 'data-access/index.js' );
 
 describe( 'Data access index', () => {
 

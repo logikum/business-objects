@@ -1,10 +1,14 @@
 console.log('Testing shared/extension-methods.js...');
 
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
 var path = require('path');
-var ExtensionManager = require('../../../source/shared/extension-manager.js');
-var DaoBase = require('../../../source/data-access/dao-base.js');
+var ExtensionManager = read( 'shared/extension-manager.js');
+var DaoBase = read( 'data-access/dao-base.js');
+var DataPortalContext = read( 'shared/data-portal-context.js');
+
 var DaoBuilder = require('../../../data/custom-core/dao-builder.js');
-var DataProtalContext = require('../../../source/shared/data-portal-context.js');
 
 describe('Extension manager', () => {
   var em = new ExtensionManager('data_source', '/model/path');
@@ -248,6 +252,6 @@ describe('Extension manager', () => {
 
     expect(em.$runMethod).toBeDefined();
     expect(em.$runMethod).toEqual(jasmine.any(Function));
-    expect(em.$runMethod('method', {}, new DataProtalContext(), null)).toEqual(undefined);
+    expect(em.$runMethod('method', {}, new DataPortalContext(), null)).toEqual(undefined);
   });
 });

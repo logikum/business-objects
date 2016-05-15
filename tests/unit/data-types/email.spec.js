@@ -1,7 +1,10 @@
 console.log( 'Testing data-types/email.js...' );
 
-const Email = require( '../../../source/data-types/email.js' );
-const DataType = require( '../../../source/data-types/data-type.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const Email = read( 'data-types/email.js' );
+const DataType = read( 'data-types/data-type.js' );
 
 describe( 'Email type', () => {
   const dt = new Email();

@@ -1,6 +1,9 @@
 console.log( 'Testing data-access/dao-context.js...' );
 
-const DaoContext = require( '../../../source/data-access/dao-context.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const DaoContext = read( 'data-access/dao-context.js' );
 
 describe( 'DAO context', () => {
 

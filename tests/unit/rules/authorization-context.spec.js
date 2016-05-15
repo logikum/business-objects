@@ -1,9 +1,12 @@
 console.log('Testing rules/authorization-context.js...');
 
-var AuthorizationContext = require('../../../source/rules/authorization-context.js');
-var AuthorizationAction = require('../../../source/rules/authorization-action.js');
-var BrokenRuleList = require('../../../source/rules/broken-rule-list.js');
-var UserInfo = require('../../../source/system/user-info.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var AuthorizationContext = read( 'rules/authorization-context.js');
+var AuthorizationAction = read( 'rules/authorization-action.js');
+var BrokenRuleList = read( 'rules/broken-rule-list.js');
+var UserInfo = read( 'system/user-info.js');
 
 describe('Authorization context', function () {
   var user = new UserInfo('user-code');

@@ -1,9 +1,12 @@
 console.log( 'Testing shared/event-handler-list.js...' );
 
-const EventHandlerList = require( '../../../source/shared/event-handler-list.js' );
-const ModelBase = require( '../../../source/model-base.js' );
-const DataPortalEventArgs = require( '../../../source/shared/data-portal-event-args.js' );
-const DataPortalEvent = require( '../../../source/shared/data-portal-event.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const EventHandlerList = read( 'shared/event-handler-list.js' );
+const ModelBase = read( 'model-base.js' );
+const DataPortalEventArgs = read( 'shared/data-portal-event-args.js' );
+const DataPortalEvent = read( 'shared/data-portal-event.js' );
 
 describe( 'Event handler list', () => {
 

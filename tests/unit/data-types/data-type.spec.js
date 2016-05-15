@@ -1,6 +1,9 @@
 console.log( 'Testing data-types/data-type.js...' );
 
-const DataType = require( '../../../source/data-types/data-type.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const DataType = read( 'data-types/data-type.js' );
 
 describe( 'Base data type', () => {
   let dt = null;

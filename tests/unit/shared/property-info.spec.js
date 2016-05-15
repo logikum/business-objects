@@ -1,10 +1,13 @@
 console.log( 'Testing shared/property-info.js...' );
 
-const PropertyInfo = require( '../../../source/shared/property-info.js' );
-const F = require( '../../../source/shared/property-flag.js' );
-const DataType = require( '../../../source/data-types/data-type.js' );
-const Text = require( '../../../source/data-types/text.js' );
-const CollectionBase = require( '../../../source/collection-base.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const PropertyInfo = read( 'shared/property-info.js' );
+const F = read( 'shared/property-flag.js' );
+const DataType = read( 'data-types/data-type.js' );
+const Text = read( 'data-types/text.js' );
+const CollectionBase = read( 'collection-base.js' );
 
 describe( 'Property description', () => {
 

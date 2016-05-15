@@ -1,7 +1,10 @@
 console.log( 'Testing data-types/text.js...' );
 
-const Text = require( '../../../source/data-types/text.js' );
-const DataType = require( '../../../source/data-types/data-type.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const Text = read( 'data-types/text.js' );
+const DataType = read( 'data-types/data-type.js' );
 
 describe( 'Text type', () => {
   const dt = new Text();

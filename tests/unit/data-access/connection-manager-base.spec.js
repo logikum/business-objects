@@ -1,6 +1,9 @@
 console.log( 'Testing main.js...' );
 
-const ConnectionManagerBase = require( '../../../source/data-access/connection-manager-base.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const ConnectionManagerBase = read( 'data-access/connection-manager-base.js' );
 
 describe( 'Base connection manager', () => {
   let cm = null;

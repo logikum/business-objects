@@ -1,16 +1,19 @@
 console.log('Testing rules/rule-manager.js...');
 
-var RuleManager = require('../../../source/rules/rule-manager.js');
-var ValidationRule = require('../../../source/rules/validation-rule.js');
-var ValidationContext = require('../../../source/rules/validation-context.js');
-var AuthorizationRule = require('../../../source/rules/authorization-rule.js');
-var AuthorizationContext = require('../../../source/rules/authorization-context.js');
-var AuthorizationAction = require('../../../source/rules/authorization-action.js');
-var NoAccessBehavior = require('../../../source/rules/no-access-behavior.js');
-var BrokenRuleList = require('../../../source/rules/broken-rule-list.js');
-var Text = require('../../../source/data-types/text.js');
-var DataStore = require('../../../source/shared/data-store.js');
-var PropertyInfo = require('../../../source/shared/property-info.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var RuleManager = read( 'rules/rule-manager.js');
+var ValidationRule = read( 'rules/validation-rule.js');
+var ValidationContext = read( 'rules/validation-context.js');
+var AuthorizationRule = read( 'rules/authorization-rule.js');
+var AuthorizationContext = read( 'rules/authorization-context.js');
+var AuthorizationAction = read( 'rules/authorization-action.js');
+var NoAccessBehavior = read( 'rules/no-access-behavior.js');
+var BrokenRuleList = read( 'rules/broken-rule-list.js');
+var Text = read( 'data-types/text.js');
+var DataStore = read( 'shared/data-store.js');
+var PropertyInfo = read( 'shared/property-info.js');
 
 describe('Rule manager', function () {
   var vr0 = new ValidationRule('ruleName');

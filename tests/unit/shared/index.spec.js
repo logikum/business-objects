@@ -1,27 +1,30 @@
 console.log('Testing shared/index.js...');
 
-var shared = require('../../../source/shared/index.js');
-var Text = require('../../../source/data-types/text.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var shared = read( 'shared/index.js');
+var Text = read( 'data-types/text.js');
 
-var ExtensionManager = require('../../../source/shared/extension-manager.js');
-var EventHandlerList = require('../../../source/shared/event-handler-list.js');
-var DataStore = require('../../../source/shared/data-store.js');
-//var ModelState = require('../../../source/shared/model-state.js');
-var ModelError = require('../../../source/shared/model-error.js');
+var ExtensionManager = read( 'shared/extension-manager.js');
+var EventHandlerList = read( 'shared/event-handler-list.js');
+var DataStore = read( 'shared/data-store.js');
+//var ModelState = read( 'shared/model-state.js');
+var ModelError = read( 'shared/model-error.js');
 
-var PropertyInfo = require('../../../source/shared/property-info.js');
-var PropertyFlag = require('../../../source/shared/property-flag.js');
-var PropertyManager = require('../../../source/shared/property-manager.js');
-var PropertyContext = require('../../../source/shared/property-context.js');
-var TransferContext = require('../../../source/shared/transfer-context.js');
+var PropertyInfo = read( 'shared/property-info.js');
+var PropertyFlag = read( 'shared/property-flag.js');
+var PropertyManager = read( 'shared/property-manager.js');
+var PropertyContext = read( 'shared/property-context.js');
+var TransferContext = read( 'shared/transfer-context.js');
 
-var DataPortalAction = require('../../../source/shared/data-portal-action.js');
-var DataPortalContext = require('../../../source/shared/data-portal-context.js');
-var DataPortalEvent = require('../../../source/shared/data-portal-event.js');
-var DataPortalEventArgs = require('../../../source/shared/data-portal-event-args.js');
-var DataPortalError = require('../../../source/shared/data-portal-error.js');
+var DataPortalAction = read( 'shared/data-portal-action.js');
+var DataPortalContext = read( 'shared/data-portal-context.js');
+var DataPortalEvent = read( 'shared/data-portal-event.js');
+var DataPortalEventArgs = read( 'shared/data-portal-event-args.js');
+var DataPortalError = read( 'shared/data-portal-error.js');
 
-var Enumeration = require('../../../source/system/enumeration.js');
+var Enumeration = read( 'system/enumeration.js');
 
 describe('Shared component index', function () {
   var text = new Text();

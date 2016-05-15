@@ -1,8 +1,11 @@
 console.log( 'Testing data-access/dao-builder.js...' );
 
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
 const path = require( 'path' );
-const DaoBuilder = require( '../../../source/data-access/dao-builder.js' );
-const DaoBase = require( '../../../source/data-access/dao-base.js' );
+const DaoBuilder = read( 'data-access/dao-builder.js' );
+const DaoBase = read( 'data-access/dao-base.js' );
 
 describe( 'Data access object builder', () => {
 

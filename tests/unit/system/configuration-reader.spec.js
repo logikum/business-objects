@@ -1,63 +1,64 @@
-console.log('Testing shared/configuration-reader.js...');
+console.log('Testing system/configuration-reader.js...');
 
-var configuration = require('../../../source/system/configuration-reader.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var configuration = read( 'system/configuration-reader.js');
+var NoAccessBehavior = read( 'rules/no-access-behavior.js');
+var daoBuilder = read( 'data-access/dao-builder.js');
+
 var ConnectionManager = require('../../../data/connection-manager.js');
-var NoAccessBehavior = require('../../../source/rules/no-access-behavior.js');
-var daoBuilder = require('../../../source/data-access/dao-builder.js');
 
 describe('Business objects configuration reader object', function() {
-
-  // Initialize the test environment.
-  configuration.initialize('/config/business-objects.js');
 
   it('has a connection manager object', done => {
 
     expect(configuration.connectionManager).toEqual(jasmine.any(ConnectionManager));
 
     configuration.connectionManager.openConnection('db')
-    .then( connection => {
-
-      expect(connection.dataSource).toBe('db');
-      expect(connection.connectionId).toBe(1);
-      expect(connection.transactionId).toBeNull();
-
-      return connection;
-    })
-    .then( connection => {
-
-      return configuration.connectionManager.closeConnection('db', connection)
-      .then( connection => {
-
-        expect(connection).toBeNull();
-
-        return null;
-      });
-    })
-    .then( none => {
-
-      return configuration.connectionManager.beginTransaction('db')
       .then( connection => {
 
         expect(connection.dataSource).toBe('db');
-        expect(connection.connectionId).toBe(2);
-        expect(connection.transactionId).toBe(1);
+        expect(connection.connectionId).toBe(1);
+        expect(connection.transactionId).toBeNull();
 
         return connection;
-      });
-    })
-    .then( connection => {
-
-      return configuration.connectionManager.commitTransaction('db', connection)
+      })
       .then( connection => {
 
-        expect(connection).toBeNull();
+        return configuration.connectionManager.closeConnection('db', connection)
+          .then( connection => {
 
-        done();
+            expect(connection).toBeNull();
+
+            return null;
+          });
+      })
+      .then( none => {
+
+        return configuration.connectionManager.beginTransaction('db')
+          .then( connection => {
+
+            expect(connection.dataSource).toBe('db');
+            expect(connection.connectionId).toBe(2);
+            expect(connection.transactionId).toBe(1);
+
+            return connection;
+          });
+      })
+      .then( connection => {
+
+        return configuration.connectionManager.commitTransaction('db', connection)
+          .then( connection => {
+
+            expect(connection).toBeNull();
+
+            done();
+          });
+      })
+      .catch( reason => {
+        console.log( reason );
       });
-    })
-    .catch( reason => {
-      console.log( reason );
-    });
   });
 
   it('has a data access object builder method', function() {

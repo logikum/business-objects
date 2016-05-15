@@ -1,6 +1,9 @@
 console.log( 'Testing system/enumeration.js...' );
 
-const Enumeration = require( '../../../source/system/enumeration.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const Enumeration = read( 'system/enumeration.js' );
 
 //region Test enumerations
 

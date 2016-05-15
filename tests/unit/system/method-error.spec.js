@@ -1,6 +1,9 @@
 console.log( 'Testing system/method-error.js...' );
 
-const MethodError = require( '../../../source/system/method-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const MethodError = read( 'system/method-error.js' );
 
 describe( 'Method error', () => {
 

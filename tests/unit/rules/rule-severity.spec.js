@@ -1,6 +1,9 @@
 console.log( 'Testing rules/rule-severity.js...' );
 
-const RuleSeverity = require( '../../../source/rules/rule-severity.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const RuleSeverity = read( 'rules/rule-severity.js' );
 
 describe( 'Rule severity enumeration', () => {
 

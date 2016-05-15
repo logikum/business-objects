@@ -1,10 +1,13 @@
 console.log('Testing shared/data-store.js...');
 
-var DataStore = require('../../../source/shared/data-store.js');
-var PropertyInfo = require('../../../source/shared/property-info.js');
-var F = require('../../../source/shared/property-flag.js');
-var Text = require('../../../source/data-types/text.js');
-var ModelBase = require('../../../source/model-base.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var DataStore = read( 'shared/data-store.js');
+var PropertyInfo = read( 'shared/property-info.js');
+var F = read( 'shared/property-flag.js');
+var Text = read( 'data-types/text.js');
+var ModelBase = read( 'model-base.js');
 
 describe('Data store', function () {
 

@@ -1,10 +1,13 @@
 console.log('Testing rules/rule-list.js...');
 
-var RuleList = require('../../../source/rules/rule-list.js');
-var InformationRule = require('../../../source/common-rules/information-rule.js');
-var RequiredRule = require('../../../source/common-rules/required-rule.js');
-var PropertyInfo = require('../../../source/shared/property-info.js');
-var Text = require('../../../source/data-types/text.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var RuleList = read( 'rules/rule-list.js');
+var InformationRule = read( 'common-rules/information-rule.js');
+var RequiredRule = read( 'common-rules/required-rule.js');
+var PropertyInfo = read( 'shared/property-info.js');
+var Text = read( 'data-types/text.js');
 
 describe('Rule list', function () {
 

@@ -1,6 +1,9 @@
 console.log( 'Testing system/argument-error.js...' );
 
-const ArgumentError = require( '../../../source/system/argument-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const ArgumentError = read( 'system/argument-error.js' );
 
 describe( 'Argument error', () => {
 

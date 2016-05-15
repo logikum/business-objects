@@ -1,6 +1,9 @@
 console.log( 'Testing shared/model-state.js...' );
 
-const ModelState = require( '../../../source/shared/model-state.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const ModelState = read( 'shared/model-state.js' );
 
 describe( 'Model state enumeration', () => {
 

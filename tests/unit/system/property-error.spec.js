@@ -1,6 +1,9 @@
 console.log( 'Testing system/property-error.js...' );
 
-const PropertyError = require( '../../../source/system/property-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const PropertyError = read( 'system/property-error.js' );
 
 describe( 'Property error', () => {
 

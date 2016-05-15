@@ -1,8 +1,11 @@
 console.log('Testing rules/validation-context.js...');
 
-var ValidationContext = require('../../../source/rules/validation-context.js');
-var BrokenRuleList = require('../../../source/rules/broken-rule-list.js');
-var DataStore = require('../../../source/shared/data-store.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var ValidationContext = read( 'rules/validation-context.js');
+var BrokenRuleList = read( 'rules/broken-rule-list.js');
+var DataStore = read( 'shared/data-store.js');
 
 describe('Validation context', function () {
   function getValue () { }

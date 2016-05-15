@@ -1,6 +1,9 @@
 console.log( 'Testing system/constructor-error.js...' );
 
-const ConstructorError = require( '../../../source/system/constructor-error.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const ConstructorError = read( 'system/constructor-error.js' );
 
 describe( 'Constructor error', () => {
 

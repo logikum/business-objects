@@ -1,7 +1,10 @@
 console.log( 'Testing data-types/integer.js...' );
 
-const Integer = require( '../../../source/data-types/integer.js' );
-const DataType = require( '../../../source/data-types/data-type.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const Integer = read( 'data-types/integer.js' );
+const DataType = read( 'data-types/data-type.js' );
 
 describe( 'Integer type', () => {
   const dt = new Integer();

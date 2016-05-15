@@ -1,12 +1,15 @@
 console.log( 'Testing system/argument-check.js...' );
 
-const Argument = require( '../../../source/system/argument-check.js' );
-const ArgumentError = require( '../../../source/system/argument-error.js' );
-const ConstructorError = require( '../../../source/system/constructor-error.js' );
-const MethodError = require( '../../../source/system/method-error.js' );
-const PropertyError = require( '../../../source/system/property-error.js' );
-const Enumeration = require( '../../../source/system/enumeration.js' );
-const ModelBase = require( '../../../source/model-base.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const Argument = read( 'system/argument-check.js' );
+const ArgumentError = read( 'system/argument-error.js' );
+const ConstructorError = read( 'system/constructor-error.js' );
+const MethodError = read( 'system/method-error.js' );
+const PropertyError = read( 'system/property-error.js' );
+const Enumeration = read( 'system/enumeration.js' );
+const ModelBase = read( 'model-base.js' );
 
 const ClearScheduleCommand = require( '../../../data/simple-core/clear-schedule-command.js' );
 

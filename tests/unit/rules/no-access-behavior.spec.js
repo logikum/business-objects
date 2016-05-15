@@ -1,6 +1,9 @@
 console.log( 'Testing rules/no-access-behavior.js...' );
 
-const NoAccessBehavior = require( '../../../source/rules/no-access-behavior.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const NoAccessBehavior = read( 'rules/no-access-behavior.js' );
 
 describe( 'No access behavior enumeration', () => {
 

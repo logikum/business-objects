@@ -1,14 +1,17 @@
 console.log( 'Testing data-types/index.js...' );
 
-const dt = require( '../../../source/data-types/index.js' );
-//const DataType = require('../../../source/data-types/data-type.js');
-const Boolean = require( '../../../source/data-types/boolean.js' );
-const Text = require( '../../../source/data-types/text.js' );
-const Email = require( '../../../source/data-types/email.js' );
-const Integer = require( '../../../source/data-types/integer.js' );
-const Decimal = require( '../../../source/data-types/decimal.js' );
-//const Enum = require('../../../source/data-types/enum.js');
-const DateTime = require( '../../../source/data-types/date-time.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const dt = read( 'data-types/index.js' );
+//const DataType = read( 'data-types/data-type.js' );
+const Boolean = read( 'data-types/boolean.js' );
+const Text = read( 'data-types/text.js' );
+const Email = read( 'data-types/email.js' );
+const Integer = read( 'data-types/integer.js' );
+const Decimal = read( 'data-types/decimal.js' );
+//const Enum = read( 'data-types/enum.js' );
+const DateTime = read( 'data-types/date-time.js' );
 
 describe( 'Data type index', () => {
 

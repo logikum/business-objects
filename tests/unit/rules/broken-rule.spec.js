@@ -1,7 +1,10 @@
 console.log('Testing rules/broken-rule.js...');
 
-var BrokenRule = require('../../../source/rules/broken-rule.js');
-var RuleSeverity = require('../../../source/rules/rule-severity.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var BrokenRule = read( 'rules/broken-rule.js');
+var RuleSeverity = read( 'rules/rule-severity.js');
 
 describe('Broken rule', function () {
 

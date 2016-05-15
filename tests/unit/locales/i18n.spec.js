@@ -1,6 +1,9 @@
 console.log('Testing locales/i18n.js...');
 
-var i18n = require('../../../source/locales/i18n.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+var i18n = read('locales/i18n.js');
 
 describe('Internationalization', function () {
   var currentLocale = '';
