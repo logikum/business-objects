@@ -1,28 +1,28 @@
 'use strict';
 
-var ValidationRule = require('./validation-rule.js');
-var ValidationContext = require('./validation-context.js');
-var ValidationResult = require('./validation-result.js');
-var DataTypeRule = require('./data-type-rule.js');
+const ValidationRule = require( './validation-rule.js' );
+const ValidationContext = require( './validation-context.js' );
+const ValidationResult = require( './validation-result.js' );
+const DataTypeRule = require( './data-type-rule.js' );
 
-var AuthorizationRule = require('./authorization-rule.js');
-var AuthorizationContext = require('./authorization-context.js');
-var AuthorizationResult = require('./authorization-result.js');
-var AuthorizationError = require('./authorization-error.js');
-var AuthorizationAction = require('./authorization-action.js');
-var NoAccessBehavior = require('./no-access-behavior.js');
+const AuthorizationRule = require( './authorization-rule.js' );
+const AuthorizationContext = require( './authorization-context.js' );
+const AuthorizationResult = require( './authorization-result.js' );
+const AuthorizationError = require( './authorization-error.js' );
+const AuthorizationAction = require( './authorization-action.js' );
+const NoAccessBehavior = require( './no-access-behavior.js' );
 
-var RuleManager = require('./rule-manager.js');
-var RuleList = require('./rule-list.js');
-var RuleSeverity = require('./rule-severity.js');
-var RuleBase = require('./rule-base.js');
-var ResultBase = require('./result-base.js');
+const RuleManager = require( './rule-manager.js' );
+const RuleList = require( './rule-list.js' );
+const RuleSeverity = require( './rule-severity.js' );
+const RuleBase = require( './rule-base.js' );
+const ResultBase = require( './result-base.js' );
 
-var BrokenRule = require('./broken-rule.js');
-var BrokenRuleList = require('./broken-rule-list.js');
-var RuleNotice = require('./rule-notice.js');
-var BrokenRulesOutput = require('./broken-rules-output.js');
-var BrokenRulesResponse = require('./broken-rules-response.js');
+const BrokenRule = require( './broken-rule.js' );
+const BrokenRuleList = require( './broken-rule-list.js' );
+const RuleNotice = require( './rule-notice.js' );
+const BrokenRulesOutput = require( './broken-rules-output.js' );
+const BrokenRulesResponse = require( './broken-rules-response.js' );
 
 /**
  * Contains components used by authorization and validation rules.
@@ -73,7 +73,7 @@ var BrokenRulesResponse = require('./broken-rules-response.js');
  * @property {function} BrokenRulesResponse - {@link bo.rules.BrokenRulesResponse Validation response}
  *      constructor creates a new broken rules response instance.
  */
-var index = {
+const index = {
   ValidationRule: ValidationRule,
   ValidationContext: ValidationContext,
   ValidationResult: ValidationResult,
@@ -100,6 +100,6 @@ var index = {
 };
 
 // Immutable object.
-Object.freeze(index);
+Object.freeze( index );
 
 module.exports = index;

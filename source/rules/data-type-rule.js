@@ -1,53 +1,51 @@
 'use strict';
 
-var util = require('util');
-var t = require('../locales/i18n-bo.js')('Rules');
-var ValidationRule = require('./validation-rule.js');
+const t = require( '../locales/i18n-bo.js' )( 'Rules' );
+const ValidationRule = require( './validation-rule.js' );
 
 /**
- * @classdesc
- *      The rule ensures that the data type of the property value is valid.
- *      This rule is used by the models internally to check the data types
- *      of the properties.
- * @description
- *      Creates a new data type rule object.
+ * The rule ensures that the data type of the property value is valid.
+ * This rule is used by the models internally to check the data types
+ * of the properties.
  *
  * @memberof bo.rules
- * @constructor
- * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
- *
  * @extends bo.rules.ValidationRule
- *
- * @throws {@link bo.system.ArgumentError Argument error}:
- *    The primary property must be a PropertyInfo object.
  */
-function DataTypeRule (primaryProperty) {
-  ValidationRule.call(this, 'DataType');
+class DataTypeRule extends ValidationRule {
 
-  // Initialize base properties.
-  this.initialize(
+  /**
+   * Creates a new data type rule object.
+   *
+   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *    The primary property must be a PropertyInfo object.
+   */
+  constructor( primaryProperty ) {
+    super( 'DataType' );
+
+    // Initialize base properties.
+    this.initialize(
       primaryProperty,
-      t('dataType', primaryProperty.name, primaryProperty.type.name),
+      t( 'dataType', primaryProperty.name, primaryProperty.type.name ),
       Number.MAX_VALUE,
       true
-  );
+    );
 
-  // Immutable object.
-  Object.freeze(this);
+    // Immutable object.
+    Object.freeze( this );
+  }
+
+  /**
+   * Checks the validity of the property value.
+   *
+   * @function bo.rules.DataTypeRule#execute
+   * @param {Array.<*>} inputs - An array of the values of the required properties.
+   * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
+   */
+  execute( inputs ) {
+    // Nothing to do.
+  }
 }
-util.inherits(DataTypeRule, ValidationRule);
-
-/**
- * Checks the validity of the property value.
- *
- * @function bo.rules.DataTypeRule#execute
- * @param {Array.<*>} inputs - An array of the values of the required properties.
- * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
- */
-DataTypeRule.prototype.execute = function (inputs) {
-
-  if (inputs[this.primaryProperty.name] === undefined)
-    return this.result(this.message);
-};
 
 module.exports = DataTypeRule;

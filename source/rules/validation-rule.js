@@ -1,39 +1,47 @@
 'use strict';
 
-var CLASS_NAME = 'ValidationRule';
+const Argument = require( '../system/argument-check.js' );
+const RuleBase = require( './rule-base.js' );
+const RuleSeverity = require( './rule-severity.js' );
+const ValidationResult = require( './validation-result.js' );
+const PropertyInfo = require( '../shared/property-info.js' );
 
-var util = require('util');
-var Argument = require('../system/argument-check.js');
-var RuleBase = require('./rule-base.js');
-var RuleSeverity = require('./rule-severity.js');
-var ValidationResult = require('./validation-result.js');
-var PropertyInfo = require('../shared/property-info.js');
+const _inputProperties = new WeakMap();
+const _affectedProperties = new WeakMap();
 
 /**
- * @classdesc
- *      Represents a validation rule.
- * @description
- *      Creates a new validation rule object.
- *      The rule instances should be frozen.
+ * Represents a validation rule.
  *
  * @memberof bo.rules
- * @constructor
- * @param {string} ruleName - The name of the rule.
- *    It is typically the name of the constructor, without the Rule suffix.
- *
  * @extends bo.rules.RuleBase
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
  */
-function ValidationRule (ruleName) {
-  RuleBase.call(this, ruleName);
+class ValidationRule extends RuleBase {
 
   /**
-   * The definition of the property the rule relates to.
-   * @type {bo.shared.PropertyInfo}
-   * @readonly
+   * Creates a new validation rule object.
+   * The rule instances should be frozen.
+   *
+   * @param {string} ruleName - The name of the rule.
+   *    It is typically the name of the constructor, without the Rule suffix.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
    */
-  this.primaryProperty = null;
+  constructor( ruleName ) {
+    super( ruleName );
+
+    /**
+     * The definition of the property the rule relates to.
+     * @member {bo.shared.PropertyInfo} bo.rules.ValidationRule#primaryProperty
+     * @readonly
+     */
+    this.primaryProperty = null;
+
+    _inputProperties.set( this, [] );
+    _affectedProperties.set( this, [] );
+
+    // Immutable object.
+    Object.freeze( ValidationRule );
+  }
 
   /**
    * Sets the properties of the rule.
@@ -46,17 +54,14 @@ function ValidationRule (ruleName) {
    * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
    * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
-  this.initialize = function (primaryProperty, message, priority, stopsProcessing) {
+  initialize( primaryProperty, message, priority, stopsProcessing ) {
 
-    this.primaryProperty = Argument.inMethod(CLASS_NAME, 'initialize')
-        .check(primaryProperty).forMandatory('primaryProperty').asType(PropertyInfo);
+    this.primaryProperty = Argument.inMethod( this.constructor.name, 'initialize' )
+      .check( primaryProperty ).forMandatory( 'primaryProperty' ).asType( PropertyInfo );
 
     // Initialize base properties.
-    RuleBase.prototype.initialize.call(this, message, priority, stopsProcessing);
-  };
-
-  var inputProperties = [];
-  var affectedProperties = [];
+    RuleBase.prototype.initialize.call( this, message, priority, stopsProcessing );
+  }
 
   /**
    * Adds an additional property to the rule that will use its value.
@@ -65,14 +70,15 @@ function ValidationRule (ruleName) {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The input property must be a PropertyInfo object.
    */
-  this.addInputProperty = function (property) {
+  addInputProperty( property ) {
 
-    property = Argument.inMethod(CLASS_NAME, 'addInputProperty')
-        .check(property).forMandatory('property').asType(PropertyInfo);
+    property = Argument.inMethod( this.constructor.name, 'addInputProperty' )
+      .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
-    if (inputProperties.indexOf(property) < 0)
-      inputProperties.push(property);
-  };
+    const inputProperties = _inputProperties.get( this );
+    if (inputProperties.indexOf( property ) < 0)
+      inputProperties.push( property );
+  }
 
   /**
    * Adds an additional property that is influenced by the rule.
@@ -81,14 +87,15 @@ function ValidationRule (ruleName) {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The affected property must be a PropertyInfo object.
    */
-  this.addAffectedProperty = function (property) {
+  addAffectedProperty( property ) {
 
-    property = Argument.inMethod(CLASS_NAME, 'addAffectedProperty')
-        .check(property).forMandatory('property').asType(PropertyInfo);
+    property = Argument.inMethod( this.constructor.name, 'addAffectedProperty' )
+      .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
-    if (affectedProperties.indexOf(property) < 0)
-      affectedProperties.push(property);
-  };
+    const affectedProperties = _affectedProperties.get( this );
+    if (affectedProperties.indexOf( property ) < 0)
+      affectedProperties.push( property );
+  }
 
   /**
    * Returns the values of the properties that are used by the rule.
@@ -101,19 +108,21 @@ function ValidationRule (ruleName) {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function..
    */
-  this.getInputValues = function (getValue) {
+  getInputValues( getValue ) {
 
-    getValue = Argument.inMethod(CLASS_NAME, 'getInputValues')
-        .check(getValue).forMandatory('getValue').asFunction();
+    getValue = Argument.inMethod( this.constructor.name, 'getInputValues' )
+      .check( getValue ).forMandatory( 'getValue' ).asFunction();
 
-    var inputValues = {};
-    var combined = new Array(this.primaryProperty).concat(inputProperties);
-    for (var i = 0; i < combined.length; i++) {
-      var property = combined[i];
-      inputValues[property.name] = getValue(property);
+    const inputValues = {};
+    const inputProperties = _inputProperties.get( this );
+    const combined = new Array( this.primaryProperty ).concat( inputProperties );
+
+    for (let i = 0; i < combined.length; i++) {
+      const property = combined[ i ];
+      inputValues[ property.name ] = getValue( property );
     }
     return inputValues;
-  };
+  }
 
   /**
    * Returns the result of the rule executed.
@@ -122,22 +131,22 @@ function ValidationRule (ruleName) {
    * @param {bo.rules.RuleSeverity} severity - The severity of the failed rule.
    * @returns {bo.rules.ValidationResult} The result of the validation rule.
    */
-  this.result = function (message, severity) {
+  result( message, severity ) {
 
-    var result = new ValidationResult(this.ruleName, this.primaryProperty.name, message || this.message);
-
-    result.severity = Argument.inMethod(CLASS_NAME, 'result')
-        .check(severity).for('severity').asEnumMember(RuleSeverity, RuleSeverity.error);
+    const affectedProperties = _affectedProperties.get( this );
+    const result = new ValidationResult(
+      this.ruleName,
+      this.primaryProperty.name,
+      message || this.message
+    );
+    result.severity = Argument.inMethod( this.constructor.name, 'result' )
+      .check( severity ).for( 'severity' ).asEnumMember( RuleSeverity, RuleSeverity.error );
     result.stopsProcessing = this.stopsProcessing;
     result.isPreserved = false;
     result.affectedProperties = affectedProperties;
 
     return result;
-  };
-
-  // Immutable object.
-  Object.freeze(ValidationRule);
+  }
 }
-util.inherits(ValidationRule, RuleBase);
 
 module.exports = ValidationRule;

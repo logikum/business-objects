@@ -1,69 +1,68 @@
 'use strict';
 
-var CLASS_NAME = 'MaxValueRule';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')('Rules');
-var Argument = require('../system/argument-check.js');
-var ValidationRule = require('../rules/validation-rule.js');
+const t = require( '../locales/i18n-bo.js' )( 'Rules' );
+const Argument = require( '../system/argument-check.js' );
+const ValidationRule = require( '../rules/validation-rule.js' );
 
 /**
- * @classdesc
- *      The rule ensures that the value of the property does not exceed a given value.
- * @description
- *      Creates a new max-value rule object.
+ * The rule ensures that the value of the property does not exceed a given value.
  *
  * @memberof bo.commonRules
- * @constructor
- * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
- * @param {number} maxValue - The maximum value of the property.
- * @param {string} message - Human-readable description of the rule failure.
- * @param {number} [priority=10] - The priority of the rule.
- * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
- *
  * @extends bo.rules.ValidationRule
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
- * @throws {@link bo.system.ArgumentError Argument error}: The maximum value is required.
- * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function MaxValueRule (primaryProperty, maxValue, message, priority, stopsProcessing) {
-  ValidationRule.call(this, 'MaxValue');
+class MaxValueRule extends ValidationRule {
 
   /**
-   * The maximum value of the property.
-   * @type {number}
-   * @readonly
+   * Creates a new max-value rule object.
+   *
+   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {number} maxValue - The maximum value of the property.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The maximum value is required.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
-  this.maxValue = Argument.inConstructor(CLASS_NAME).check(maxValue).for('maxValue').hasValue();
+  constructor( primaryProperty, maxValue, message, priority, stopsProcessing ) {
+    super( 'MaxValue' );
 
-  // Initialize base properties.
-  this.initialize(
+    /**
+     * The maximum value of the property.
+     * @member {number} bo.commonRules.MaxValueRule#maxValue
+     * @readonly
+     */
+    this.maxValue = Argument.inConstructor( this.constructor.name )
+      .check( maxValue ).for( 'maxValue' ).hasValue();
+
+    // Initialize base properties.
+    this.initialize(
       primaryProperty,
-      message || t('maxValue', primaryProperty.name, maxValue),
+      message || t( 'maxValue', primaryProperty.name, maxValue ),
       priority,
       stopsProcessing
-  );
+    );
 
-  // Immutable object.
-  Object.freeze(this);
+    // Immutable object.
+    Object.freeze( this );
+  }
+
+  /**
+   * Checks if the value of the property does not exceed the defined value.
+   *
+   * @abstract
+   * @function bo.commonRules.MaxValueRule#execute
+   * @param {Array.<*>} inputs - An array of the values of the required properties.
+   * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
+   */
+  execute( inputs ) {
+
+    const value = inputs[ this.primaryProperty.name ];
+
+    if (value && value > this.maxValue)
+      return this.result( this.message );
+  }
 }
-util.inherits(MaxValueRule, ValidationRule);
-
-/**
- * Checks if the value of the property does not exceed the defined value.
- *
- * @abstract
- * @function bo.commonRules.MaxValueRule#execute
- * @param {Array.<*>} inputs - An array of the values of the required properties.
- * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
- */
-MaxValueRule.prototype.execute = function (inputs) {
-
-  var value = inputs[this.primaryProperty.name];
-
-  if (value && value > this.maxValue)
-    return this.result(this.message);
-};
 
 module.exports = MaxValueRule;

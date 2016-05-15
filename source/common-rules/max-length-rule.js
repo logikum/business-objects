@@ -1,71 +1,69 @@
 'use strict';
 
-var CLASS_NAME = 'MaxLengthRule';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')('Rules');
-var Argument = require('../system/argument-check.js');
-var ValidationRule = require('../rules/validation-rule.js');
+const t = require( '../locales/i18n-bo.js' )( 'Rules' );
+const Argument = require( '../system/argument-check.js' );
+const ValidationRule = require( '../rules/validation-rule.js' );
 
 /**
- * @classdesc
- *      The rule ensures that the length of the property value does not exceed a given length.
- * @description
- *      Creates a new max-length rule object.
+ * The rule ensures that the length of the property value does not exceed a given length.
  *
  * @memberof bo.commonRules
- * @constructor
- * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
- * @param {number} maxLength - The maximum length of the property value.
- * @param {string} message - Human-readable description of the rule failure.
- * @param {number} [priority=10] - The priority of the rule.
- * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
- *
  * @extends bo.rules.ValidationRule
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
- * @throws {@link bo.system.ArgumentError Argument error}: The maximum length must be an integer value.
- * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function MaxLengthRule (primaryProperty, maxLength, message, priority, stopsProcessing) {
-  ValidationRule.call(this, 'MaxLength');
+class MaxLengthRule extends ValidationRule {
 
   /**
-   * The maximum length of the property value.
-   * @type {number}
-   * @readonly
+   * Creates a new max-length rule object.
+   *
+   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {number} maxLength - The maximum length of the property value.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The maximum length must be an integer value.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
-  this.maxLength = Argument.inConstructor(CLASS_NAME).check(maxLength).forMandatory('maxLength').asInteger();
+  constructor( primaryProperty, maxLength, message, priority, stopsProcessing ) {
+    super( 'MaxLength' );
 
-  // Initialize base properties.
-  this.initialize(
+    /**
+     * The maximum length of the property value.
+     * @member {number} bo.commonRules.MaxLengthRule#maxLength
+     * @readonly
+     */
+    this.maxLength = Argument.inConstructor( this.constructor.name )
+      .check( maxLength ).forMandatory( 'maxLength' ).asInteger();
+
+    // Initialize base properties.
+    this.initialize(
       primaryProperty,
       message || (maxLength > 1 ?
-        t('maxLength', primaryProperty.name, maxLength) :
-        t('maxLength1', primaryProperty.name)),
+        t( 'maxLength', primaryProperty.name, maxLength ) :
+        t( 'maxLength1', primaryProperty.name )),
       priority,
       stopsProcessing
-  );
+    );
 
-  // Immutable object.
-  Object.freeze(this);
+    // Immutable object.
+    Object.freeze( this );
+  }
+
+  /**
+   * Checks if the length of the property value does not exceed the defined length.
+   *
+   * @function bo.commonRules.MaxLengthRule#execute
+   * @param {Array.<*>} inputs - An array of the values of the required properties.
+   * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
+   */
+  execute( inputs ) {
+
+    const value = inputs[ this.primaryProperty.name ];
+
+    if (value && value.toString().length > this.maxLength)
+      return this.result( this.message );
+  }
 }
-util.inherits(MaxLengthRule, ValidationRule);
-
-/**
- * Checks if the length of the property value does not exceed the defined length.
- *
- * @abstract
- * @function bo.commonRules.MaxLengthRule#execute
- * @param {Array.<*>} inputs - An array of the values of the required properties.
- * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
- */
-MaxLengthRule.prototype.execute = function (inputs) {
-
-  var value = inputs[this.primaryProperty.name];
-
-  if (value && value.toString().length > this.maxLength)
-    return this.result(this.message);
-};
 
 module.exports = MaxLengthRule;

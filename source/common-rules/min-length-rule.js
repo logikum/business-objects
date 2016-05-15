@@ -1,71 +1,69 @@
 'use strict';
 
-var CLASS_NAME = 'MinLengthRule';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')('Rules');
-var Argument = require('../system/argument-check.js');
-var ValidationRule = require('../rules/validation-rule.js');
+const t = require( '../locales/i18n-bo.js' )( 'Rules' );
+const Argument = require( '../system/argument-check.js' );
+const ValidationRule = require( '../rules/validation-rule.js' );
 
 /**
- * @classdesc
- *      The rule ensures that the length of the property value reaches a given length.
- * @description
- *      Creates a new min-length rule object.
+ * The rule ensures that the length of the property value reaches a given length.
  *
  * @memberof bo.commonRules
- * @constructor
- * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
- * @param {number} minLength - The minimum length of the property value.
- * @param {string} message - Human-readable description of the rule failure.
- * @param {number} [priority=10] - The priority of the rule.
- * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
- *
  * @extends bo.rules.ValidationRule
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
- * @throws {@link bo.system.ArgumentError Argument error}: The minimum length must be an integer value.
- * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function MinLengthRule (primaryProperty, minLength, message, priority, stopsProcessing) {
-  ValidationRule.call(this, 'MinLength');
+class MinLengthRule extends ValidationRule {
 
   /**
-   * The minimum length of the property value.
-   * @type {number}
-   * @readonly
+   * Creates a new min-length rule object.
+   *
+   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {number} minLength - The minimum length of the property value.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The minimum length must be an integer value.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
-  this.minLength = Argument.inConstructor(CLASS_NAME).check(minLength).forMandatory('minLength').asInteger();
+  constructor( primaryProperty, minLength, message, priority, stopsProcessing ) {
+    super( 'MinLength' );
 
-  // Initialize base properties.
-  this.initialize(
+    /**
+     * The minimum length of the property value.
+     * @member {number} bo.commonRules.MinLengthRule#minLength
+     * @readonly
+     */
+    this.minLength = Argument.inConstructor( this.constructor.name )
+      .check( minLength ).forMandatory( 'minLength' ).asInteger();
+
+    // Initialize base properties.
+    this.initialize(
       primaryProperty,
       message || (minLength > 1 ?
-        t('minLength', primaryProperty.name, minLength) :
-        t('minLength1', primaryProperty.name)),
+        t( 'minLength', primaryProperty.name, minLength ) :
+        t( 'minLength1', primaryProperty.name )),
       priority,
       stopsProcessing
-  );
+    );
 
-  // Immutable object.
-  Object.freeze(this);
+    // Immutable object.
+    Object.freeze( this );
+  }
+
+  /**
+   * Checks if the length of the property value reaches the defined length.
+   *
+   * @function bo.commonRules.MinLengthRule#execute
+   * @param {Array.<*>} inputs - An array of the values of the required properties.
+   * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
+   */
+  execute( inputs ) {
+
+    const value = inputs[ this.primaryProperty.name ];
+
+    if (!value || value.toString().length < this.minLength)
+      return this.result( this.message );
+  }
 }
-util.inherits(MinLengthRule, ValidationRule);
-
-/**
- * Checks if the length of the property value reaches the defined length.
- *
- * @abstract
- * @function bo.commonRules.MinLengthRule#execute
- * @param {Array.<*>} inputs - An array of the values of the required properties.
- * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
- */
-MinLengthRule.prototype.execute = function (inputs) {
-
-  var value = inputs[this.primaryProperty.name];
-
-  if (!value || value.toString().length < this.minLength)
-    return this.result(this.message);
-};
 
 module.exports = MinLengthRule;

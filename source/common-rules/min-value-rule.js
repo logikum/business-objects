@@ -1,69 +1,67 @@
 'use strict';
 
-var CLASS_NAME = 'MinValueRule';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')('Rules');
-var Argument = require('../system/argument-check.js');
-var ValidationRule = require('../rules/validation-rule.js');
+const t = require( '../locales/i18n-bo.js' )( 'Rules' );
+const Argument = require( '../system/argument-check.js' );
+const ValidationRule = require( '../rules/validation-rule.js' );
 
 /**
- * @classdesc
- *      The rule ensures that the value of the property reaches a given value.
- * @description
- *      Creates a new min-value rule object.
+ * The rule ensures that the value of the property reaches a given value.
  *
  * @memberof bo.commonRules
- * @constructor
- * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
- * @param {number} minValue - The minimum value of the property.
- * @param {string} message - Human-readable description of the rule failure.
- * @param {number} [priority=10] - The priority of the rule.
- * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
- *
  * @extends bo.rules.ValidationRule
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
- * @throws {@link bo.system.ArgumentError Argument error}: The minimum value is required.
- * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function MinValueRule (primaryProperty, minValue, message, priority, stopsProcessing) {
-  ValidationRule.call(this, 'MinValue');
+class MinValueRule extends ValidationRule {
 
   /**
-   * The minimum value of the property.
-   * @type {number}
-   * @readonly
+   * Creates a new min-value rule object.
+   *
+   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {number} minValue - The minimum value of the property.
+   * @param {string} message - Human-readable description of the rule failure.
+   * @param {number} [priority=10] - The priority of the rule.
+   * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The primary property must be a PropertyInfo object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The minimum value is required.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
-  this.minValue = Argument.inConstructor(CLASS_NAME).check(minValue).forMandatory('minValue').hasValue();
+  constructor( primaryProperty, minValue, message, priority, stopsProcessing ) {
+    super( 'MinValue' );
 
-  // Initialize base properties.
-  this.initialize(
+    /**
+     * The minimum value of the property.
+     * @member {number} bo.commonRules.MinValueRule#minValue
+     * @readonly
+     */
+    this.minValue = Argument.inConstructor( this.constructor.name )
+      .check( minValue ).forMandatory( 'minValue' ).hasValue();
+
+    // Initialize base properties.
+    this.initialize(
       primaryProperty,
-      message || t('minValue', primaryProperty.name, minValue),
+      message || t( 'minValue', primaryProperty.name, minValue ),
       priority,
       stopsProcessing
-  );
+    );
 
-  // Immutable object.
-  Object.freeze(this);
+    // Immutable object.
+    Object.freeze( this );
+  }
+
+  /**
+   * Checks if the value of the property reaches the defined value.
+   *
+   * @function bo.commonRules.MinValueRule#execute
+   * @param {Array.<*>} inputs - An array of the values of the required properties.
+   * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
+   */
+  execute( inputs ) {
+
+    const value = inputs[ this.primaryProperty.name ];
+
+    if (!value || value < this.minValue)
+      return this.result( this.message );
+  }
 }
-util.inherits(MinValueRule, ValidationRule);
-
-/**
- * Checks if the value of the property reaches the defined value.
- *
- * @abstract
- * @function bo.commonRules.MinValueRule#execute
- * @param {Array.<*>} inputs - An array of the values of the required properties.
- * @returns {(bo.rules.ValidationResult|undefined)} Information about the failure.
- */
-MinValueRule.prototype.execute = function (inputs) {
-
-  var value = inputs[this.primaryProperty.name];
-
-  if (!value || value < this.minValue)
-    return this.result(this.message);
-};
 
 module.exports = MinValueRule;

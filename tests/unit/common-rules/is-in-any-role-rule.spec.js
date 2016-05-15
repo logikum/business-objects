@@ -1,63 +1,71 @@
-console.log('Testing common-rules/is-in-any-role-rule.js...');
+console.log( 'Testing common-rules/is-in-any-role-rule.js...' );
 
-var IsInAnyRoleRule = require('../../../source/common-rules/is-in-any-role-rule.js');
-var AuthorizationRule = require('../../../source/rules/authorization-rule.js');
-var AuthorizationAction = require('../../../source/rules/authorization-action.js');
-var User = require('../../../data/user.js');
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const IsInAnyRoleRule = read( 'common-rules/is-in-any-role-rule.js' );
+const AuthorizationRule = read( 'rules/authorization-rule.js' );
+const AuthorizationAction = read( 'rules/authorization-action.js' );
 
-describe('Is-in-any-role rule', function () {
+const User = require( '../../../data/user.js' );
 
-  it('constructor expects three-to-six arguments', function () {
-    var build01 = function () { return new IsInAnyRoleRule(); };
-    var build02 = function () { return new IsInAnyRoleRule(AuthorizationAction.updateObject); };
-    var build03 = function () { return new IsInAnyRoleRule(AuthorizationAction.updateObject, null); };
-    var build04 = function () { return new IsInAnyRoleRule(AuthorizationAction.updateObject, null, 'developers'); };
-    var build05 = function () { return new IsInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women']); };
-    var build06 = function () { return new IsInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women'], 'message'); };
-    var build07 = function () { return new IsInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women'], 'message', 100); };
-    var build08 = function () { return new IsInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women'], 'message', 100, true); };
-    var build09 = function () { return new IsInAnyRoleRule(4, null, ['men', 'women'], 'message', 100, true); };
+describe( 'Is-in-any-role rule', () => {
 
-    expect(build01).toThrow();
-    expect(build02).toThrow();
-    expect(build03).toThrow();
-    expect(build04).toThrow();
-    expect(build05).not.toThrow();
-    expect(build06).not.toThrow();
-    expect(build07).not.toThrow();
-    expect(build08).not.toThrow();
-    expect(build09).not.toThrow();
-  });
+  it( 'constructor expects three-to-six arguments', () => {
 
-  it('inherits authorization rule type', function() {
-    var rule = new IsInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women'], 'message', 100, true);
+    const build01 = function () { return new IsInAnyRoleRule(); };
+    const build02 = function () { return new IsInAnyRoleRule( AuthorizationAction.updateObject ); };
+    const build03 = function () { return new IsInAnyRoleRule( AuthorizationAction.updateObject, null ); };
+    const build04 = function () { return new IsInAnyRoleRule( AuthorizationAction.updateObject, null, 'developers' ); };
+    const build05 = function () { return new IsInAnyRoleRule( AuthorizationAction.updateObject, null, [ 'men', 'women' ] ); };
+    const build06 = function () { return new IsInAnyRoleRule( AuthorizationAction.updateObject, null, [ 'men', 'women' ], 'message' ); };
+    const build07 = function () { return new IsInAnyRoleRule( AuthorizationAction.updateObject, null, [ 'men', 'women' ], 'message', 100 ); };
+    const build08 = function () { return new IsInAnyRoleRule( AuthorizationAction.updateObject, null, [ 'men', 'women' ], 'message', 100, true ); };
+    const build09 = function () { return new IsInAnyRoleRule( 4, null, [ 'men', 'women' ], 'message', 100, true ); };
 
-    expect(rule).toEqual(jasmine.any(AuthorizationRule));
-  });
+    expect( build01 ).toThrow();
+    expect( build02 ).toThrow();
+    expect( build03 ).toThrow();
+    expect( build04 ).toThrow();
+    expect( build05 ).not.toThrow();
+    expect( build06 ).not.toThrow();
+    expect( build07 ).not.toThrow();
+    expect( build08 ).not.toThrow();
+    expect( build09 ).not.toThrow();
+  } );
 
-  it('has four properties', function () {
-    var rule = new IsInAnyRoleRule(AuthorizationAction.updateObject, null, ['men', 'women'], 'message', 100, true);
+  it( 'inherits authorization rule type', () => {
 
-    expect(rule.ruleName).toBe('IsInAnyRole');
-    expect(rule.message).toBe('message');
-    expect(rule.priority).toBe(100);
-    expect(rule.stopsProcessing).toBe(true);
-  });
+    const rule = new IsInAnyRoleRule( AuthorizationAction.updateObject, null, [ 'men', 'women' ], 'message', 100, true );
 
-  it('execute method works', function() {
-    var john = new User('john', 'John Smith', 'john@company.com', ['salesmen']);
-    var paul = new User('paul', 'Paul Smith', 'paul@company.com', ['testers', 'developers']);
-    var rule_1 = new IsInAnyRoleRule(AuthorizationAction.createObject, null, ['developers', 'designers'], 'message', 100, true);
-    var rule_2 = new IsInAnyRoleRule(AuthorizationAction.removeObject, null, ['salesmen', 'managers'], 'message', 100, true);
+    expect( rule ).toEqual( jasmine.any( AuthorizationRule ) );
+  } );
 
-    var call01 = function () { rule_1.execute(); };
-    var call02 = function () { rule_1.execute(john); };
-    var call03 = function () { rule_2.execute(paul); };
+  it( 'has four properties', () => {
 
-    expect(call01).toThrow();
-    expect(call02).toThrow();
-    expect(call03).toThrow();
-    expect(rule_1.execute(paul)).toBeUndefined();
-    expect(rule_2.execute(john)).toBeUndefined();
-  });
-});
+    const rule = new IsInAnyRoleRule( AuthorizationAction.updateObject, null, [ 'men', 'women' ], 'message', 100, true );
+
+    expect( rule.ruleName ).toBe( 'IsInAnyRole' );
+    expect( rule.message ).toBe( 'message' );
+    expect( rule.priority ).toBe( 100 );
+    expect( rule.stopsProcessing ).toBe( true );
+  } );
+
+  it( 'execute method works', () => {
+
+    const john = new User( 'john', 'John Smith', 'john@company.com', [ 'salesmen' ] );
+    const paul = new User( 'paul', 'Paul Smith', 'paul@company.com', [ 'testers', 'developers' ] );
+    const rule_1 = new IsInAnyRoleRule( AuthorizationAction.createObject, null, [ 'developers', 'designers' ], 'message', 100, true );
+    const rule_2 = new IsInAnyRoleRule( AuthorizationAction.removeObject, null, [ 'salesmen', 'managers' ], 'message', 100, true );
+
+    const call01 = function () { rule_1.execute(); };
+    const call02 = function () { rule_1.execute( john ); };
+    const call03 = function () { rule_2.execute( paul ); };
+
+    expect( call01 ).toThrow();
+    expect( call02 ).toThrow();
+    expect( call03 ).toThrow();
+    expect( rule_1.execute( paul ) ).toBeUndefined();
+    expect( rule_2.execute( john ) ).toBeUndefined();
+  } );
+} );

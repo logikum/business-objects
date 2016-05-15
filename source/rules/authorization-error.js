@@ -1,38 +1,38 @@
 'use strict';
 
-var CLASS_NAME = 'AuthorizationError';
-
-var util = require('util');
-var t = require('../locales/i18n-bo.js')(CLASS_NAME);
+const t = require( '../locales/i18n-bo.js' )( 'AuthorizationError' );
 
 /**
- * @classdesc Represents an authorization error.
- * @description Creates an authorization error object.
+ * Represents an authorization error.
  *
  * @memberof bo.rules
- * @constructor
- * @param {string} [message] - Human-readable description of the error.
- * @param {...*} [messageParams] - Optional interpolation parameters of the message.
- *
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
-function AuthorizationError () {
-  Error.call(this);
+class AuthorizationError extends Error {
 
   /**
-   * The name of the error type.
-   * @type {string}
-   * @default AuthorizationError
+   * Creates an authorization error object.
+   *
+   * @param {string} [message] - Human-readable description of the error.
+   * @param {...*} [params] - Optional interpolation parameters of the message.
    */
-  this.name = this.constructor.name;
+  constructor( message, ...params ) {
+    super();
 
-  /**
-   * Human-readable description of the error.
-   * @type {string}
-   */
-  this.message = t.apply(this, arguments);
+    /**
+     * The name of the error type.
+     * @member {string} bo.rules.AuthorizationError#name
+     * @default DaoError
+     */
+    this.name = this.constructor.name;
+
+    /**
+     * Human-readable description of the error.
+     * @member {string} bo.rules.AuthorizationError#message
+     */
+    this.message = t( ...arguments );
+  }
 }
-util.inherits(AuthorizationError, Error);
 
 module.exports = AuthorizationError;

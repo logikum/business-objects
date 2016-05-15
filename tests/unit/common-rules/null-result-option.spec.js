@@ -1,6 +1,9 @@
 console.log( 'Testing common-rules/null-result-option.js...' );
 
-const NullResultOption = require( '../../../source/common-rules/null-result-option.js' );
+function read ( filename ) {
+  return require( '../../../source/' + filename );
+}
+const NullResultOption = read( 'common-rules/null-result-option.js' );
 
 describe( 'No result option enumeration', () => {
 
@@ -37,11 +40,15 @@ describe( 'No result option enumeration', () => {
 
   it( 'check method inspects a value', () => {
 
-    function check1() {NullResultOption.check( -1 ); }
-    function check2() {NullResultOption.check( NullResultOption.returnTrue ); }
-    function check3() {NullResultOption.check( NullResultOption.returnFalse ); }
-    function check4() {NullResultOption.check( NullResultOption.convertToEmptyString ); }
-    function check5() {NullResultOption.check( 3 ); }
+    function check1() { NullResultOption.check( -1 ); }
+
+    function check2() { NullResultOption.check( NullResultOption.returnTrue ); }
+
+    function check3() { NullResultOption.check( NullResultOption.returnFalse ); }
+
+    function check4() { NullResultOption.check( NullResultOption.convertToEmptyString ); }
+
+    function check5() { NullResultOption.check( 3 ); }
 
     expect( check1 ).toThrow();
     expect( check2 ).not.toThrow();
