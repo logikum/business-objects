@@ -1,137 +1,139 @@
 'use strict';
 
-var CLASS_NAME = 'DataPortalContext';
+const configuration = require( './../system/configuration-reader.js' );
+const Argument = require( '../system/argument-check.js' );
+const ModelError = require( './model-error.js' );
+const PropertyInfo = require( './property-info.js' );
+const UserInfo = require( '../system/user-info.js' );
 
-var config = require('./../system/configuration-reader.js');
-var Argument = require('../system/argument-check.js');
-var ModelError = require('./model-error.js');
-var PropertyInfo = require('./property-info.js');
-var UserInfo = require('../system/user-info.js');
+const _getValue = new WeakMap();
+const _setValue = new WeakMap();
+const _isDirty = new WeakMap();
+const _connection = new WeakMap();
+const _fulfill = new WeakMap();
+const _reject = new WeakMap();
+
+function getByName( properties, name ) {
+  for (let i = 0; i < properties.length; i++) {
+    if (properties[ i ].name === name)
+      return properties[ i ];
+  }
+  throw new ModelError( 'noProperty', properties.name, name );
+}
 
 /**
- * @classdesc
- *    Provides the context for custom data portal actions.
- * @description
- *    Creates a new data context object.
- *      </br></br>
- *    <i><b>Warning:</b> Data portal context objects are created in models internally.
- *    They are intended only to make publicly available the context
- *    for custom data portal actions.</i>
+ * Provides the context for custom data portal actions.
  *
  * @memberof bo.shared
- * @constructor
- * @param {object} dao - The data access object of the current model.
- * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
- * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
- * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The dao argument must be an object.
- * @throws {@link bo.system.ArgumentError Argument error}: The properties must be an array
- *    of PropertyInfo objects, or a single PropertyInfo object or null.
- * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function.
- * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
  */
-function DataPortalContext( dao, properties, getValue, setValue ) {
+class DataPortalContext {
 
-  //region Variables
+  /**
+   * Creates a new data context object.
+   *   </br></br>
+   * <i><b>Warning:</b> Data portal context objects are created in models internally.
+   * They are intended only to make publicly available the context
+   * for custom data portal actions.</i>
+   *
+   * @param {object} dao - The data access object of the current model.
+   * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
+   * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
+   * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The dao argument must be an object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The properties must be an array
+   *    of PropertyInfo objects, or a single PropertyInfo object or null.
+   * @throws {@link bo.system.ArgumentError Argument error}: The getValue argument must be a function.
+   * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
+   */
+  constructor( dao, properties, getValue, setValue ) {
+    const check = Argument.inConstructor( this.constructor.name );
 
-  var self = this;
-  var isDirty = false;
-  var daConnection = null;
-  var fnFulfill = null;
-  var fnReject = null;
-  var check = Argument.inConstructor(CLASS_NAME);
+    /**
+     * The data access object of the current model.
+     * @member {object} bo.shared.DataPortalContext#dao
+     * @readonly
+     */
+    this.dao = check( dao || {} ).forMandatory( 'dao' ).asObject();
 
-  //endregion
+    /**
+     * Array of property definitions that may appear on the data transfer object.
+     * @member {Array.<bo.shared.PropertyInfo>} bo.shared.DataPortalContext#properties
+     * @readonly
+     */
+    this.properties = check( properties ).forOptional( 'properties' ).asArray( PropertyInfo );
+
+    _getValue.set( this, check( getValue ).forOptional( 'getValue' ).asFunction() );
+    _setValue.set( this, check( setValue ).forOptional( 'setValue' ).asFunction() );
+
+    _isDirty.set( this, false );
+    _connection.set( this, null );
+    _fulfill.set( this, null );
+    _reject.set( this, null );
+
+    // Immutable object.
+    Object.freeze( this );
+  }
 
   //region Properties
 
   /**
-   * The data access object of the current model.
-   * @type {object}
-   * @readonly
-   */
-  this.dao = check(dao || {}).forMandatory('dao').asObject();
-
-  /**
-   * Array of property definitions that may appear on the data transfer object.
-   * @type {Array.<bo.shared.PropertyInfo>}
-   * @readonly
-   */
-  this.properties = check(properties).forOptional('properties').asArray(PropertyInfo);
-
-  getValue = check(getValue).forOptional('getValue').asFunction();
-  setValue = check(setValue).forOptional('setValue').asFunction();
-
-  /**
    * The current user.
-   * @type {bo.system.UserInfo}
+   * @member {bo.system.UserInfo} bo.shared.DataPortalContext#user
    * @readonly
    */
-  this.user = config.getUser();
+  get user() {
+    return configuration.getUser();
+  }
 
   /**
    * The current locale.
-   * @type {string}
+   * @member {string} bo.shared.DataPortalContext#locale
    * @readonly
    */
-  this.locale = config.getLocale();
+  get locale() {
+    return configuration.getLocale();
+  }
 
   /**
    * The connection object for the data source.
-   * @name bo.shared.DataPortalContext#connection
-   * @type {object}
+   * @member {object} bo.shared.DataPortalContext#connection
    * @readonly
    */
-  Object.defineProperty(self, 'connection', {
-    get: function () {
-      return daConnection;
-    },
-    enumerable: true
-  });
+  get connection() {
+    return _connection.get( this );
+  }
 
   /**
    * Indicates whether the current model itself has been changed.
-   * @name bo.shared.DataPortalContext#isSelfDirty
-   * @type {boolean}
+   * @member {boolean} bo.shared.DataPortalContext#isSelfDirty
    * @readonly
    */
-  Object.defineProperty(self, 'isSelfDirty', {
-    get: function () {
-      return isDirty;
-    },
-    enumerable: true
-  });
+  get isSelfDirty() {
+    return _isDirty.get( this );
+  }
 
   /**
    * The fulfilling function of the promise when extension manager
    * calls a custom data portal method.
-   * @name bo.shared.DataPortalContext#fulfill
-   * @type {function}
+   * @member {function} bo.shared.DataPortalContext#fulfill
    * @readonly
    */
-  Object.defineProperty(self, 'fulfill', {
-    get: function () {
-      return fnFulfill;
-    },
-    enumerable: true
-  });
+  get fulfill() {
+    return _fulfill.get( this );
+  }
 
   /**
    * The rejecting function of the promise when extension manager
    * calls a custom data portal method.
-   * @name bo.shared.DataPortalContext#reject
-   * @type {function}
+   * @member {function} bo.shared.DataPortalContext#reject
    * @readonly
    */
-  Object.defineProperty(self, 'reject', {
-    get: function () {
-      return fnReject;
-    },
-    enumerable: true
-  });
+  get reject() {
+    return _reject.get( this );
+  }
 
-  //endregion
+//endregion
 
   //region Methods
 
@@ -142,11 +144,11 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @param {boolean} [isSelfDirty] - Indicates whether the current model itself has been changed.
    * @returns {bo.shared.DataPortalContext} The data context object itself.
    */
-  this.setState = function (connection, isSelfDirty) {
-    daConnection = connection || null;
-    isDirty = isSelfDirty === true;
+  setState( connection, isSelfDirty ) {
+    _connection.set( this, connection || null );
+    _isDirty.set( this, isSelfDirty === true );
     return this;
-  };
+  }
 
   /**
    * Sets the state setting functions of the promise when
@@ -155,17 +157,9 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @param {function} fulfill - The fulfill argument of the promise factory.
    * @param {function} reject - The reject argument of the promise factory.
    */
-  this.setPromise = function( fulfill, reject ) {
-    fnFulfill = typeof fulfill === 'function' ? fulfill : null;
-    fnReject = typeof reject === 'function' ? reject : null;
-  };
-
-  function getByName (name) {
-    for (var i = 0; i < self.properties.length; i++) {
-      if (self.properties[i].name === name)
-        return self.properties[i];
-    }
-    throw new ModelError('noProperty', properties.name, name);
+  setPromise( fulfill, reject ) {
+    _fulfill.set( this, typeof fulfill === 'function' ? fulfill : null );
+    _reject.set( this, typeof reject === 'function' ? reject : null );
   }
 
   /**
@@ -178,14 +172,15 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @throws {@link bo.system.ArgumentError Argument error}: The model has no property with the given name.
    * @throws {@link bo.shared.ModelError Model error}: Cannot read the properties of a collection.
    */
-  this.getValue = function (propertyName) {
-    propertyName = Argument.inMethod(CLASS_NAME, 'getValue')
-        .check(propertyName).forMandatory('propertyName').asString();
+  getValue( propertyName ) {
+    propertyName = Argument.inMethod( this.constructor.name, 'getValue' )
+      .check( propertyName ).forMandatory( 'propertyName' ).asString();
+    const getValue = _getValue.get( this );
     if (getValue)
-      return getValue(getByName(propertyName));
+      return getValue( getByName( this.properties, propertyName ) );
     else
-      throw new ModelError('readCollection', properties.name, propertyName);
-  };
+      throw new ModelError( 'readCollection', this.properties.name, propertyName );
+  }
 
   /**
    * Sets the current value of a model property.
@@ -197,16 +192,17 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @throws {@link bo.system.ArgumentError Argument error}: The model has no property with the given name.
    * @throws {@link bo.shared.ModelError Model error}: Cannot write the properties of a collection.
    */
-  this.setValue = function (propertyName, value) {
-    propertyName = Argument.inMethod(CLASS_NAME, 'setValue')
-        .check(propertyName).forMandatory('propertyName').asString();
+  setValue( propertyName, value ) {
+    propertyName = Argument.inMethod( this.constructor.name, 'setValue' )
+      .check( propertyName ).forMandatory( 'propertyName' ).asString();
+    const setValue = _setValue.get( this );
     if (setValue) {
       if (value !== undefined) {
-        setValue(getByName(propertyName), value);
+        setValue( getByName( this.properties, propertyName ), value );
       }
     } else
-      throw new ModelError('writeCollection', properties.name, propertyName);
-  };
+      throw new ModelError( 'writeCollection', this.properties.name, propertyName );
+  }
 
   //endregion
 
@@ -220,9 +216,9 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @param {*} methodArg - Additional argument of the method to call.
    * @returns {Promise.<*>} Returns a promise to the result of the method.
    */
-  this.call = function( methodName, methodArg ) {
-    return dao.$runMethod( methodName, this.connection, methodArg );
-  };
+  call( methodName, methodArg ) {
+    return this.dao.$runMethod( methodName, this.connection, methodArg );
+  }
 
   /**
    * Calls the create method on the data access object with current context.
@@ -230,9 +226,9 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    *
    * @returns {Promise.<*>} Returns a promise to the result of the create method.
    */
-  this.create = function() {
-    return dao.$runMethod( 'create', this.connection );
-  };
+  create() {
+    return this.dao.$runMethod( 'create', this.connection );
+  }
 
   /**
    * Calls the fetch method on the data access object with current context.
@@ -241,9 +237,9 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @param {*} filter - The search conditions of the retrieval.
    * @returns {Promise.<*>} Returns a promise to the result of the fetch method.
    */
-  this.fetch = function( filter ) {
-    return dao.$runMethod( 'fetch', this.connection, filter );
-  };
+  fetch( filter ) {
+    return this.dao.$runMethod( 'fetch', this.connection, filter );
+  }
 
   /**
    * Calls the insert method on the data access object with current context.
@@ -252,9 +248,9 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @param {*} data - The data transfer object.
    * @returns {Promise.<*>} Returns a promise to the result of the insert method.
    */
-  this.insert = function( data ) {
-    return dao.$runMethod( 'insert', this.connection, data );
-  };
+  insert( data ) {
+    return this.dao.$runMethod( 'insert', this.connection, data );
+  }
 
   /**
    * Calls the update method on the data access object with current context.
@@ -263,9 +259,9 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @param {*} data - The data transfer object.
    * @returns {Promise.<*>} Returns a promise to the result of the update method.
    */
-  this.update = function( data ) {
-    return dao.$runMethod( 'update', this.connection, data );
-  };
+  update( data ) {
+    return this.dao.$runMethod( 'update', this.connection, data );
+  }
 
   /**
    * Calls the remove method on the data access object with current context.
@@ -274,9 +270,9 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @param {*} filter - The search conditions of the removal.
    * @returns {Promise.<null>} Returns a promise to the result of the remove method, i.e. to a null.
    */
-  this.remove = function( filter ) {
-    return dao.$runMethod( 'remove', this.connection, filter );
-  };
+  remove( filter ) {
+    return this.dao.$runMethod( 'remove', this.connection, filter );
+  }
 
   /**
    * Calls the execute method on the data access object with current context.
@@ -285,14 +281,11 @@ function DataPortalContext( dao, properties, getValue, setValue ) {
    * @param {*} data - The data transfer object.
    * @returns {Promise.<*>} Returns a promise to the result of the execute method.
    */
-  this.execute = function( data ) {
-    return dao.$runMethod( 'execute', this.connection, data );
-  };
+  execute( data ) {
+    return this.dao.$runMethod( 'execute', this.connection, data );
+  }
 
   //endregion
-
-  // Immutable object.
-  Object.freeze(this);
 }
 
 module.exports = DataPortalContext;

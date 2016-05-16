@@ -6,6 +6,33 @@ const DataPortalAction = require( './data-portal-action.js' );
 const DataPortalEvent = require( './data-portal-event.js' );
 const DataPortalError = require( './data-portal-error.js' );
 
+function eventToAction( event ) {
+  switch (event) {
+    case DataPortalEvent.preFetch:
+    case DataPortalEvent.postFetch:
+      return DataPortalAction.fetch;
+    case DataPortalEvent.preCreate:
+    case DataPortalEvent.postCreate:
+      return DataPortalAction.create;
+    case DataPortalEvent.preInsert:
+    case DataPortalEvent.postInsert:
+      return DataPortalAction.insert;
+    case DataPortalEvent.preUpdate:
+    case DataPortalEvent.postUpdate:
+      return DataPortalAction.update;
+    case DataPortalEvent.preRemove:
+    case DataPortalEvent.postRemove:
+      return DataPortalAction.remove;
+    case DataPortalEvent.preExecute:
+    case DataPortalEvent.postExecute:
+      return DataPortalAction.execute;
+    case DataPortalEvent.preSave:
+    case DataPortalEvent.postSave:
+    default:
+      return null;
+  }
+}
+
 /**
  * Provides the context for data portal events.
  *
@@ -80,33 +107,6 @@ class DataPortalEventArgs {
      * @readonly
      */
     this.locale = config.getLocale();
-
-    function eventToAction( event ) {
-      switch (event) {
-        case DataPortalEvent.preFetch:
-        case DataPortalEvent.postFetch:
-          return DataPortalAction.fetch;
-        case DataPortalEvent.preCreate:
-        case DataPortalEvent.postCreate:
-          return DataPortalAction.create;
-        case DataPortalEvent.preInsert:
-        case DataPortalEvent.postInsert:
-          return DataPortalAction.insert;
-        case DataPortalEvent.preUpdate:
-        case DataPortalEvent.postUpdate:
-          return DataPortalAction.update;
-        case DataPortalEvent.preRemove:
-        case DataPortalEvent.postRemove:
-          return DataPortalAction.remove;
-        case DataPortalEvent.preExecute:
-        case DataPortalEvent.postExecute:
-          return DataPortalAction.execute;
-        case DataPortalEvent.preSave:
-        case DataPortalEvent.postSave:
-        default:
-          return null;
-      }
-    }
 
     // Immutable object.
     Object.freeze( this );

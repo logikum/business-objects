@@ -110,7 +110,7 @@ function initialize (cfgPath) {
  * @property {internal~initializeCfg} initialize -
  *    Reads the configuration of business objects.
  */
-var config = {
+var configuration = {
   connectionManager: null,
   daoBuilder: daoBuilder,
   getUser: getUser,
@@ -129,4 +129,4 @@ var config = {
   }
 };
 
-module.exports = config;
+module.exports = configuration;

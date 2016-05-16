@@ -7,12 +7,12 @@ const PropertyInfo = require( './property-info.js' );
 const _getValue = new WeakMap();
 const _setValue = new WeakMap();
 
-function getByName( name ) {
-  for (let i = 0; i < this.properties.length; i++) {
-    if (this.properties[ i ].name === name)
-      return this.properties[ i ];
+function getByName( properties, name ) {
+  for (let i = 0; i < properties.length; i++) {
+    if (properties[ i ].name === name)
+      return properties[ i ];
   }
-  throw new ModelError( 'noProperty', this.properties.name, name );
+  throw new ModelError( 'noProperty', properties.name, name );
 }
 
 /**
@@ -72,8 +72,7 @@ class TransferContext {
     if (getValue) {
       propertyName = Argument.inMethod( this.constructor.name, 'getValue' )
         .check( propertyName ).forMandatory( 'propertyName' ).asString();
-      const findProperty = getByName.bind( this );
-      return getValue( findProperty( propertyName ) );
+      return getValue( getByName( this.properties, propertyName ) );
     } else
       throw new ModelError( 'getValue' );
   }
@@ -93,8 +92,7 @@ class TransferContext {
       propertyName = Argument.inMethod( this.constructor.name, 'setValue' )
         .check( propertyName ).forMandatory( 'propertyName' ).asString();
       if (value !== undefined) {
-        const findProperty = getByName.bind( this );
-        setValue( findProperty( propertyName ), value );
+        setValue( getByName( this.properties, propertyName ), value );
       }
     } else
       throw new ModelError( 'setValue' );
