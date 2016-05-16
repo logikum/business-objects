@@ -1,23 +1,50 @@
 'use strict';
 
-var CLASS_NAME = 'DataStore';
+const Argument = require( '../system/argument-check.js' );
+const PropertyInfo = require( './property-info.js' );
+const CollectionBase = require( '../collection-base.js' );
+const ModelBase = require( '../model-base.js' );
 
-var Argument = require('../system/argument-check.js');
-var PropertyInfo = require('./property-info.js');
-var CollectionBase = require('../collection-base.js');
-var ModelBase = require('../model-base.js');
+const _data = new WeakMap();
+const _validity = new WeakMap();
+
+function getPropertyValue( target, propertyName ) {
+  const data = _data.get( target );
+  return data.get( propertyName );
+}
+function setPropertyValue( target, propertyName, value ) {
+  const data = _data.get( target );
+  data.set( propertyName, value );
+  _data.set( target, data );
+}
+function getValidity( target, propertyName ) {
+  const validity = _validity.get( target );
+  return validity.get( propertyName );
+}
+function setValidity( target, propertyName, value ) {
+  const validity = _validity.get( target );
+  validity.set( propertyName, true );
+  _validity.set( target, validity );
+}
 
 /**
- * @classdesc Provides methods to manage the values of business object model's properties.
- * @description Creates a new data store object.
+ * Provides methods to manage the values of business object model's properties.
  *
  * @memberof bo.shared
- * @constructor
  */
-function DataStore () {
+class DataStore {
 
-  var data = {};
-  var status = {};
+  /**
+   * Creates a new data store object.
+   */
+  constructor() {
+
+    _data.set( this, new Map() );
+    _validity.set( this, new Map() );
+
+    // Immutable object.
+    Object.freeze( this );
+  }
 
   /**
    * Initializes the value of a property in the store.
@@ -28,15 +55,15 @@ function DataStore () {
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
    * @throws {@link bo.system.ArgumentError Argument error}: The value must be null, a model or a collection.
    */
-  this.initValue = function (property, value) {
-    var check = Argument.inMethod(CLASS_NAME, 'initValue');
+  initValue( property, value ) {
+    const check = Argument.inMethod( this.constructor.name, 'initValue' );
 
-    property = check(property).forMandatory('property').asType(PropertyInfo);
-    value = check(value).forOptional('value').asType([ CollectionBase, ModelBase ]);
+    property = check( property ).forMandatory( 'property' ).asType( PropertyInfo );
+    value = check( value ).forOptional( 'value' ).asType( [ CollectionBase, ModelBase ] );
 
-    data[property.name] = value;
-    status[property.name] = true;
-  };
+    setPropertyValue( this, property.name, value );
+    setValidity( this, property.name, true );
+  }
 
   /**
    * Gets the value of a model property.
@@ -46,13 +73,13 @@ function DataStore () {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
    */
-  this.getValue = function (property) {
+  getValue( property ) {
 
-    property = Argument.inMethod(CLASS_NAME, 'getValue')
-        .check(property).forMandatory('property').asType(PropertyInfo);
+    property = Argument.inMethod( this.constructor.name, 'getValue' )
+      .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
-    return data[property.name];
-  };
+    return getPropertyValue( this, property.name );
+  }
 
   /**
    * Sets the value of a model property.
@@ -64,32 +91,32 @@ function DataStore () {
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
    * @throws {@link bo.system.ArgumentError Argument error}: The value must be defined.
    */
-  this.setValue = function (property, value) {
-    var check = Argument.inMethod(CLASS_NAME, 'setValue');
+  setValue( property, value ) {
+    const check = Argument.inMethod( this.constructor.name, 'setValue' );
 
-    property = check(property).forMandatory('property').asType(PropertyInfo);
-    value = check(value).for('value').asDefined();
+    property = check( property ).forMandatory( 'property' ).asType( PropertyInfo );
+    value = check( value ).for( 'value' ).asDefined();
 
     // Check value.
-    var parsed = property.type.parse(value);
+    const parsed = property.type.parse( value );
     if (parsed === undefined) {
       // Invalid value.
-      status[property.name] = false;
+      setValidity( this, property.name, false );
       return false;
     } else {
       // Valid value.
-      if (parsed !== data[property.name]) {
+      if (parsed !== getPropertyValue( this, property.name )) {
         // Value has changed.
-        data[property.name] = parsed;
-        status[property.name] = true;
+        setPropertyValue( this, property.name, parsed );
+        setValidity( this, property.name, true );
         return true;
       } else {
         // Value is unchanged.
-        status[property.name] = true;
+        setValidity( this, property.name, true );
         return false;
       }
     }
-  };
+  }
 
   /**
    * Indicates whether a property has a valid value.
@@ -97,16 +124,13 @@ function DataStore () {
    * @param {bo.shared.PropertyInfo} property - The definition of the model property.
    * @returns {boolean} True if the property has a valid value, otherwise false.
    */
-  this.hasValidValue = function (property) {
+  hasValidValue( property ) {
 
-    property = Argument.inMethod(CLASS_NAME, 'hasValidValue')
-        .check(property).forMandatory('property').asType(PropertyInfo);
+    property = Argument.inMethod( this.constructor.name, 'hasValidValue' )
+      .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
-    return status[property.name];
-  };
-
-  // Immutable object.
-  Object.freeze(this);
+    return getValidity( this, property.name );
+  }
 }
 
 module.exports = DataStore;

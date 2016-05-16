@@ -18,7 +18,7 @@ class EventHandlerList {
    * Creates a new event handler list object.
    */
   constructor() {
-    _items.set( this, [] );
+    _items.set( this, new Set() );
   }
 
   /**
@@ -35,7 +35,7 @@ class EventHandlerList {
   add( modelName, event, handler ) {
     var check = Argument.inMethod( this.constructor.name, 'add' );
     const items = _items.get( this );
-    items.push( {
+    items.add( {
       modelName: check( modelName ).forMandatory( 'modelName' ).asString(),
       event: check( event ).for( 'event' ).asEnumMember( DataPortalEvent, null ),
       handler: check( handler ).forMandatory( 'handler' ).asFunction()
@@ -58,11 +58,10 @@ class EventHandlerList {
       .check( target ).forMandatory( 'target' ).asType( [ ModalBase, CollectionBase ] );
 
     const items = _items.get( this );
-    items.filter( function ( item ) {
-      return item.modelName === target.$modelName;
-    } ).forEach( function ( item ) {
-      target.on( DataPortalEvent.getName( item.event ), item.handler )
-    } )
+    for (const item of items) {
+      if (item.modelName === target.$modelName)
+        target.on( DataPortalEvent.getName( item.event ), item.handler )
+    }
   }
 }
 

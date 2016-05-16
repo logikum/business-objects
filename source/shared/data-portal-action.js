@@ -1,6 +1,6 @@
 'use strict';
 
-const Enumeration = require('../system/enumeration.js');
+const Enumeration = require( '../system/enumeration.js' );
 
 /**
  * Specifies the operations of models to execute on data access objects. Members:

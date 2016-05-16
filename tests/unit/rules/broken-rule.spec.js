@@ -1,44 +1,44 @@
-console.log('Testing rules/broken-rule.js...');
+console.log( 'Testing rules/broken-rule.js...' );
 
-function read ( filename ) {
+function read( filename ) {
   return require( '../../../source/' + filename );
 }
-var BrokenRule = read( 'rules/broken-rule.js');
-var RuleSeverity = read( 'rules/rule-severity.js');
+const BrokenRule = read( 'rules/broken-rule.js' );
+const RuleSeverity = read( 'rules/rule-severity.js' );
 
-describe('Broken rule', function () {
+describe( 'Broken rule', () => {
 
-  it('constructor expects five arguments', function () {
-    var build01 = function () { return new BrokenRule(); };
-    var build02 = function () { return new BrokenRule('name'); };
-    var build03 = function () { return new BrokenRule('name', true); };
-    var build04 = function () { return new BrokenRule('name', false, 'property'); };
-    var build05 = function () { return new BrokenRule('name', true, 'property', 'message'); };
-    var build06 = function () { return new BrokenRule('name', false, 'property', 'message', RuleSeverity.error); };
-    var build07 = function () { return new BrokenRule('name', false, 'property', 'message', RuleSeverity.success); };
-    var build08 = function () { return new BrokenRule(1, 2, 3, 4, 5); };
-    var build09 = function () {
-      return new BrokenRule('name', null, null, 'message');
-    };
+  it( 'constructor expects five arguments', () => {
 
-    expect(build01).toThrow();
-    expect(build02).toThrow();
-    expect(build03).toThrow();
-    expect(build04).toThrow();
-    expect(build05).not.toThrow();
-    expect(build06).not.toThrow();
-    expect(build07).not.toThrow();
-    expect(build08).toThrow();
-    expect(build09).not.toThrow();
-  });
+    const build01 = function () { return new BrokenRule(); };
+    const build02 = function () { return new BrokenRule( 'name' ); };
+    const build03 = function () { return new BrokenRule( 'name', true ); };
+    const build04 = function () { return new BrokenRule( 'name', false, 'property' ); };
+    const build05 = function () { return new BrokenRule( 'name', true, 'property', 'message' ); };
+    const build06 = function () { return new BrokenRule( 'name', false, 'property', 'message', RuleSeverity.error ); };
+    const build07 = function () { return new BrokenRule( 'name', false, 'property', 'message', RuleSeverity.success ); };
+    const build08 = function () { return new BrokenRule( 1, 2, 3, 4, 5 ); };
+    const build09 = function () { return new BrokenRule( 'name', null, null, 'message' ); };
 
-  it('has five properties', function() {
-    var br = new BrokenRule('name', false, 'property', 'message', RuleSeverity.success);
+    expect( build01 ).toThrow();
+    expect( build02 ).toThrow();
+    expect( build03 ).toThrow();
+    expect( build04 ).toThrow();
+    expect( build05 ).not.toThrow();
+    expect( build06 ).not.toThrow();
+    expect( build07 ).not.toThrow();
+    expect( build08 ).toThrow();
+    expect( build09 ).not.toThrow();
+  } );
 
-    expect(br.ruleName).toBe('name');
-    expect(br.isPreserved).toBe(false);
-    expect(br.propertyName).toBe('property');
-    expect(br.message).toBe('message');
-    expect(br.severity).toBe(RuleSeverity.success);
-  });
-});
+  it( 'has five properties', () => {
+
+    const br = new BrokenRule( 'name', false, 'property', 'message', RuleSeverity.success );
+
+    expect( br.ruleName ).toBe( 'name' );
+    expect( br.isPreserved ).toBe( false );
+    expect( br.propertyName ).toBe( 'property' );
+    expect( br.message ).toBe( 'message' );
+    expect( br.severity ).toBe( RuleSeverity.success );
+  } );
+} );

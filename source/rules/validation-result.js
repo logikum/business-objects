@@ -1,41 +1,40 @@
 'use strict';
 
-var CLASS_NAME = 'ValidationResult';
-
-var util = require('util');
-var Argument = require('../system/argument-check.js');
-var ResultBase = require('./result-base.js');
+const Argument = require( '../system/argument-check.js' );
+const ResultBase = require( './result-base.js' );
 
 /**
- * @classdesc Represents the failed result of executing a validation rule.
- * @description Creates a new validation rule result object.
+ * Represents the failed result of executing a validation rule.
  *
  * @memberof bo.rules
- * @constructor
- * @param {string} ruleName - The name of the rule.
- * @param {string} propertyName - The name of the property the rule belongs to.
- * @param {string} message - Human-readable description of the reason of the failure.
- *
  * @extends bo.rules.ResultBase
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
- * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a non-empty string.
- * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-function ValidationResult (ruleName, propertyName, message) {
-
-  propertyName = Argument.inConstructor(CLASS_NAME)
-      .check(propertyName).forMandatory('propertyName').asString();
-
-  ResultBase.call(this, ruleName, propertyName, message);
+class ValidationResult extends ResultBase {
 
   /**
-   * An array of properties that are affected by the rule.
-   * @type {Array.<bo.shared.PropertyInfo>}
-   * @readonly
+   * Creates a new validation rule result object.
+   *
+   * @param {string} ruleName - The name of the rule.
+   * @param {string} propertyName - The name of the property the rule belongs to.
+   * @param {string} message - Human-readable description of the reason of the failure.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
-  this.affectedProperties = null;
+  constructor( ruleName, propertyName, message ) {
+    super( ruleName, propertyName, message );
+
+    propertyName = Argument.inConstructor( this.constructor.name )
+      .check( propertyName ).forMandatory( 'propertyName' ).asString();
+
+    /**
+     * An array of properties that are affected by the rule.
+     * @member {Array.<bo.shared.PropertyInfo>} bo.rules.ValidationResult#affectedProperties
+     * @readonly
+     */
+    this.affectedProperties = null;
+  }
 }
-util.inherits(ValidationResult, ResultBase);
 
 module.exports = ValidationResult;

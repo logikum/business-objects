@@ -117,6 +117,9 @@ describe( 'Validation rule', () => {
     const pm = new PropertyManager();
     const rule = new ValidationRule( 'ruleName' );
     const store = new DataStore();
+    const getPropertyValue = function( property ) {
+      return store.getValue( property );
+    };
 
     pm.add( primary );
     pm.add( secondary );
@@ -126,7 +129,7 @@ describe( 'Validation rule', () => {
     rule.initialize( primary, 'message', 19, true );
     rule.addInputProperty( secondary );
 
-    expect( rule.getInputValues( store.getValue ) ).toEqual( {
+    expect( rule.getInputValues( getPropertyValue ) ).toEqual( {
       primary: 'turtle',
       secondary: 'beach'
     } );

@@ -1,85 +1,88 @@
 'use strict';
 
-var CLASS_NAME = 'RuleResult';
-
-var Argument = require('../system/argument-check.js');
-var BrokenRule = require('./broken-rule.js');
-var RuleSeverity = require('./rule-severity.js');
+const Argument = require( '../system/argument-check.js' );
+const BrokenRule = require( './broken-rule.js' );
+const RuleSeverity = require( './rule-severity.js' );
 
 /**
- * @classdesc Serves as the base class for the failed result of executing a rule.
- * @description Creates a new rule result object.
+ * Serves as the base class for the failed result of executing a rule.
  *
  * @memberof bo.rules
- * @constructor
- * @param {string} ruleName - The name of the rule.
- * @param {string} propertyName - The name of the property the rule belongs to.
- * @param {string} message - Human-readable description of the reason of the failure.
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
- * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
  */
-var ResultBase = function (ruleName, propertyName, message) {
-  var check = Argument.inConstructor(CLASS_NAME);
+class ResultBase {
 
   /**
-   * The name of the rule.
-   * @type {string}
-   * @readonly
+   * Creates a new rule result object.
+   *
+   * @param {string} ruleName - The name of the rule.
+   * @param {string} propertyName - The name of the property the rule belongs to.
+   * @param {string} message - Human-readable description of the reason of the failure.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
    */
-  this.ruleName = check(ruleName).forMandatory('ruleName').asString();
+  constructor( ruleName, propertyName, message ) {
+    const check = Argument.inConstructor( this.constructor.name );
+
+    /**
+     * The name of the rule.
+     * @member {string} bo.rules.ResultBase#ruleName
+     * @readonly
+     */
+    this.ruleName = check( ruleName ).forMandatory( 'ruleName' ).asString();
+
+    /**
+     * The name of the property the rule belongs to.
+     * @member {string} bo.rules.ResultBase#propertyName
+     * @readonly
+     */
+    this.propertyName = propertyName || '';
+
+    /**
+     * Human-readable description of the reason of the failure.
+     * @member {string} bo.rules.ResultBase#message
+     * @readonly
+     */
+    this.message = check( message ).forMandatory( 'message' ).asString();
+
+    /**
+     * The severity of the rule failure.
+     * @member {bo.rules.RuleSeverity} bo.rules.ResultBase#severity
+     * @readonly
+     */
+    this.severity = RuleSeverity.error;
+
+    /**
+     * Indicates whether processing the rules of the property should stop.
+     * @member {boolean} bo.rules.ResultBase#stopsProcessing
+     * @readonly
+     */
+    this.stopsProcessing = false;
+
+    /**
+     * Indicates whether the broken rule of this failure is preserved when a new verification starts.
+     * Typically the broken rules of authorization rules are retained.
+     * @member {boolean} bo.rules.ResultBase#isPreserved
+     * @readonly
+     */
+    this.isPreserved = false;
+  }
 
   /**
-   * The name of the property the rule belongs to.
-   * @type {string}
-   * @readonly
+   * Maps the rule result to broken rule.
+   *
+   * @function bo.rules.ResultBase#toBrokenRule
+   * @returns {bo.rules.BrokenRule} The broken rule companion of the rule result.
    */
-  this.propertyName = propertyName || '';
-
-  /**
-   * Human-readable description of the reason of the failure.
-   * @type {string}
-   * @readonly
-   */
-  this.message = check(message).forMandatory('message').asString();
-
-  /**
-   * The severity of the rule failure.
-   * @type {bo.rules.RuleSeverity}
-   * @readonly
-   */
-  this.severity = RuleSeverity.error;
-
-  /**
-   * Indicates whether processing the rules of the property should stop.
-   * @type {boolean}
-   * @readonly
-   */
-  this.stopsProcessing = false;
-
-  /**
-   * Indicates whether the broken rule of this failure is preserved when a new verification starts.
-   * Typically the broken rules of authorization rules are retained.
-   * @type {boolean}
-   * @readonly
-   */
-  this.isPreserved = false;
-};
-
-/**
- * Maps the rule result to broken rule.
- *
- * @function bo.rules.ResultBase#toBrokenRule
- * @returns {bo.rules.BrokenRule} The broken rule companion of the rule result.
- */
-ResultBase.prototype.toBrokenRule = function() {
-  return new BrokenRule(
+  toBrokenRule() {
+    return new BrokenRule(
       this.ruleName,
       this.isPreserved,
       this.propertyName,
       this.message,
       this.severity
-  );
-};
+    );
+  }
+}
 
 module.exports = ResultBase;

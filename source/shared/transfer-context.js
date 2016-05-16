@@ -48,11 +48,8 @@ class TransferContext {
      */
     this.properties = check( properties ).forOptional( 'properties' ).asArray( PropertyInfo );
 
-    getValue = check( getValue ).forOptional( 'getValue' ).asFunction();
-    setValue = check( setValue ).forOptional( 'setValue' ).asFunction();
-
-    _getValue.set( this, getValue );
-    _setValue.set( this, setValue );
+    _getValue.set( this, check( getValue ).forOptional( 'getValue' ).asFunction() );
+    _setValue.set( this, check( setValue ).forOptional( 'setValue' ).asFunction() );
 
     // Immutable object.
     Object.freeze( this );

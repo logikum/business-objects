@@ -1,61 +1,64 @@
 'use strict';
 
-var CLASS_NAME = 'BrokenRule';
-
-var Argument = require('../system/argument-check.js');
-var RuleSeverity = require('./rule-severity.js');
+const Argument = require( '../system/argument-check.js' );
+const RuleSeverity = require( './rule-severity.js' );
 
 /**
- * @classdesc Represents the public turnout of a failed rule.
- * @description Creates a new broken rule instance.
+ * Represents the public turnout of a failed rule.
  *
  * @memberof bo.rules
- * @constructor
- * @param {string} ruleName - The name of the failed rule.
- * @param {boolean} isPreserved - Indicates whether the broken rule of this failure
- *      is preserved when a new verification starts.
- * @param {string} [propertyName] - The name of the property the rule belongs to.
- * @param {string} message - Human-readable description of the reason of the failure.
- * @param {bo.rules.RuleSeverity} severity - The severity of the rule failure.
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
- * @throws {@link bo.system.ArgumentError Argument error}: The preservation flag must be a Boolean value.
- * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a string.
- * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
- * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a RuleSeverity item.
  */
-function BrokenRule (ruleName, isPreserved, propertyName, message, severity) {
-  var check = Argument.inConstructor(CLASS_NAME);
+class BrokenRule {
 
   /**
-   * The name of the failed rule.
-   * @type {string}
+   * Creates a new broken rule instance.
+   *
+   * @param {string} ruleName - The name of the failed rule.
+   * @param {boolean} isPreserved - Indicates whether the broken rule of this failure
+   *      is preserved when a new verification starts.
+   * @param {string} [propertyName] - The name of the property the rule belongs to.
+   * @param {string} message - Human-readable description of the reason of the failure.
+   * @param {bo.rules.RuleSeverity} severity - The severity of the rule failure.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The rule name must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The preservation flag must be a Boolean value.
+   * @throws {@link bo.system.ArgumentError Argument error}: The property name must be a string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The message must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a RuleSeverity item.
    */
-  this.ruleName = check(ruleName).forMandatory('ruleName').asString();
+  constructor( ruleName, isPreserved, propertyName, message, severity ) {
+    const check = Argument.inConstructor( this.constructor.name );
 
-  /**
-   * Indicates whether the broken rule is preserved when a new verification starts.
-   * @type {boolean}
-   */
-  this.isPreserved = check(isPreserved || false).forMandatory('isPreserved').asBoolean();
+    /**
+     * The name of the failed rule.
+     * @member {string} bo.rules.BrokenRule#ruleName
+     */
+    this.ruleName = check( ruleName ).forMandatory( 'ruleName' ).asString();
 
-  /**
-   * The name of the property the failed rule belongs to.
-   * @type {string}
-   */
-  this.propertyName = check(propertyName || '').for('propertyName').asString();
+    /**
+     * Indicates whether the broken rule is preserved when a new verification starts.
+     * @member {boolean} bo.rules.BrokenRule#isPreserved
+     */
+    this.isPreserved = check( isPreserved || false ).forMandatory( 'isPreserved' ).asBoolean();
 
-  /**
-   * Human-readable description of the reason of the failure.
-   * @type {string}
-   */
-  this.message = check(message).forMandatory('message').asString();
+    /**
+     * The name of the property the failed rule belongs to.
+     * @member {string} bo.rules.BrokenRule#propertyName
+     */
+    this.propertyName = check( propertyName || '' ).for( 'propertyName' ).asString();
 
-  /**
-   * The severity of the rule failure.
-   * @type {bo.rules.RuleSeverity}
-   */
-  this.severity = check(severity).for('severity').asEnumMember(RuleSeverity, RuleSeverity.error);
+    /**
+     * Human-readable description of the reason of the failure.
+     * @member {string} bo.rules.BrokenRule#message
+     */
+    this.message = check( message ).forMandatory( 'message' ).asString();
+
+    /**
+     * The severity of the rule failure.
+     * @member {bo.rules.RuleSeverity} bo.rules.BrokenRule#severity
+     */
+    this.severity = check( severity ).for( 'severity' ).asEnumMember( RuleSeverity, RuleSeverity.error );
+  }
 }
 
 module.exports = BrokenRule;

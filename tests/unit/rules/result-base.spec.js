@@ -1,35 +1,37 @@
-console.log('Testing rules/result-base.js...');
+console.log( 'Testing rules/result-base.js...' );
 
-function read ( filename ) {
+function read( filename ) {
   return require( '../../../source/' + filename );
 }
-var ResultBase = read( 'rules/result-base.js');
-var RuleSeverity = read( 'rules/rule-severity.js');
-var BrokenRule = read( 'rules/broken-rule.js');
+const ResultBase = read( 'rules/result-base.js' );
+const RuleSeverity = read( 'rules/rule-severity.js' );
+const BrokenRule = read( 'rules/broken-rule.js' );
 
-describe('Rule base', function () {
-  var rb = new ResultBase('rule', 'property', 'message');
+describe( 'Rule base', () => {
 
-  it('has six properties', function() {
+  const rb = new ResultBase( 'rule', 'property', 'message' );
 
-    expect(rb.ruleName).toBe('rule');
-    expect(rb.propertyName).toBe('property');
-    expect(rb.message).toBe('message');
-    expect(rb.severity).toBe(RuleSeverity.error);
-    expect(rb.stopsProcessing).toBe(false);
-    expect(rb.isPreserved).toBe(false);
-  });
+  it( 'has six properties', () => {
 
-  it('toBrokenRule method works', function() {
+    expect( rb.ruleName ).toBe( 'rule' );
+    expect( rb.propertyName ).toBe( 'property' );
+    expect( rb.message ).toBe( 'message' );
+    expect( rb.severity ).toBe( RuleSeverity.error );
+    expect( rb.stopsProcessing ).toBe( false );
+    expect( rb.isPreserved ).toBe( false );
+  } );
+
+  it( 'toBrokenRule method works', () => {
+
     //rb.ruleName = 'rule name';
     //rb.message = 'message';
-    var broken = rb.toBrokenRule();
+    const broken = rb.toBrokenRule();
 
-    expect(broken).toEqual(jasmine.any(BrokenRule));
-    expect(broken.ruleName).toBe('rule');
-    expect(broken.isPreserved).toBe(false);
-    expect(broken.propertyName).toBe('property');
-    expect(broken.message).toBe('message');
-    expect(broken.severity).toBe(RuleSeverity.error);
-  });
-});
+    expect( broken ).toEqual( jasmine.any( BrokenRule ) );
+    expect( broken.ruleName ).toBe( 'rule' );
+    expect( broken.isPreserved ).toBe( false );
+    expect( broken.propertyName ).toBe( 'property' );
+    expect( broken.message ).toBe( 'message' );
+    expect( broken.severity ).toBe( RuleSeverity.error );
+  } );
+} );

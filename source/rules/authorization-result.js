@@ -1,7 +1,7 @@
 'use strict';
 
-var Argument = require( '../system/argument-check.js' );
-var ResultBase = require( './result-base.js' );
+const Argument = require( '../system/argument-check.js' );
+const ResultBase = require( './result-base.js' );
 
 /**
  * Represents the failed result of executing an authorization rule.

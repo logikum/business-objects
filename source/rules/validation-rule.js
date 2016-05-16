@@ -102,7 +102,6 @@ class ValidationRule extends RuleBase {
    * This method is called by the rule manager internally to provide
    * the values of the input properties for the execute() method.
    *
-   * @protected
    * @param {internal~getValue} getValue - A function that returns the value of a property.
    * @returns {object} An object that properties hold the values of the input properties of.
    *
@@ -133,7 +132,6 @@ class ValidationRule extends RuleBase {
    */
   result( message, severity ) {
 
-    const affectedProperties = _affectedProperties.get( this );
     const result = new ValidationResult(
       this.ruleName,
       this.primaryProperty.name,
@@ -143,7 +141,7 @@ class ValidationRule extends RuleBase {
       .check( severity ).for( 'severity' ).asEnumMember( RuleSeverity, RuleSeverity.error );
     result.stopsProcessing = this.stopsProcessing;
     result.isPreserved = false;
-    result.affectedProperties = affectedProperties;
+    result.affectedProperties = _affectedProperties.get( this );
 
     return result;
   }
