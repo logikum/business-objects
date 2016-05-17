@@ -1,7 +1,5 @@
 'use strict';
 
-const CLASS_NAME = 'ConnectionManager';
-
 const NotImplementedError = require('../system/not-implemented-error.js');
 
 /**

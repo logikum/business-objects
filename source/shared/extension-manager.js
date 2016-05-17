@@ -1,190 +1,237 @@
 'use strict';
 
-var CLASS_NAME = 'ExtensionManager';
+const config = require( './../system/configuration-reader.js' );
+const Argument = require( '../system/argument-check.js' );
+const ModelError = require( './model-error.js' );
+const DataPortalContext = require( '../shared/data-portal-context.js' );
 
-var config = require('./../system/configuration-reader.js');
-var Argument = require('../system/argument-check.js');
-var ModelError = require('./model-error.js');
-var DataPortalContext = require('../shared/data-portal-context.js');
+const _methods = new WeakMap();
+const _otherMethods = new WeakMap();
+
+function getMethod( target, name ) {
+  const methods = _methods.get( target );
+  return methods.get( name );
+}
+function setMethod( target, name, arity, value ) {
+  if (value && typeof value === 'function' && value.length == arity) {
+    const methods = _methods.get( target );
+    methods.set( name, value );
+    _methods.set( target, methods );
+  }
+  else {
+    const className = target.constructor.name;
+    switch (arity) {
+      case 0:
+        throw new ModelError( 'propertyArg0', className, name );
+      case 1:
+        throw new ModelError( 'propertyArg1', className, name );
+      default:
+        throw new ModelError( 'propertyArgN', className, name, arity );
+    }
+  }
+}
 
 /**
- * @classdesc
- *    Provides properties to customize models' behavior.
- * @description
- *    Creates a new extension manager object.
+ * Provides properties to customize models' behavior.
  *
  * @memberof bo.shared
- * @constructor
- * @param {string} dataSource - The name of the data source.
- * @param {string} modelPath - The full path of the model.
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The data source must be a non-empty string.
- * @throws {@link bo.system.ArgumentError Argument error}: The model path must be a non-empty string.
  */
-function ExtensionManager( dataSource, modelPath ) {
-  var check = Argument.inConstructor(CLASS_NAME);
+class ExtensionManager {
 
   /**
-   * The name of the data source.
-   * @type {string}
-   * @readonly
+   * Creates a new extension manager object.
+   *
+   * @param {string} dataSource - The name of the data source.
+   * @param {string} modelPath - The full path of the model.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The data source must be a non-empty string.
+   * @throws {@link bo.system.ArgumentError Argument error}: The model path must be a non-empty string.
    */
-  this.dataSource = check(dataSource).forMandatory('dataSource').asString();
+  constructor( dataSource, modelPath ) {
+    const check = Argument.inConstructor( this.constructor.name );
 
-  /**
-   * The path of the model definition.
-   * @type {string}
-   * @readonly
-   */
-  this.modelPath = check(modelPath).forMandatory('modelPath').asString();
+    /**
+     * The name of the data source.
+     * @member {string} bo.shared.ExtensionManager#dataSource
+     * @readonly
+     */
+    this.dataSource = check( dataSource ).forMandatory( 'dataSource' ).asString();
+
+    /**
+     * The path of the model definition.
+     * @member {string} bo.shared.ExtensionManager#modelPath
+     * @readonly
+     */
+    this.modelPath = check( modelPath ).forMandatory( 'modelPath' ).asString();
+
+    _methods.set( this, new Map() );
+    _otherMethods.set( this, new Set() );
+
+    // Immutable object.
+    Object.freeze( this );
+  }
 
   //region Properties for the custom methods
 
-  var self = this;
-  var methods = {};
-  var definitions = [
-    { name: 'daoBuilder',  length: 3 },
-    { name: 'toDto',       length: 1 },
-    { name: 'fromDto',     length: 2 },
-    { name: 'toCto',       length: 1 },
-    { name: 'fromCto',     length: 2 },
-    { name: 'dataCreate',  length: 1 },
-    { name: 'dataFetch',   length: 3 },
-    { name: 'dataInsert',  length: 1 },
-    { name: 'dataUpdate',  length: 1 },
-    { name: 'dataRemove',  length: 1 },
-    { name: 'dataExecute', length: 2 }
-  ];
-
   /**
    * Factory method to create the data access object for a model instance.
-   * @name bo.shared.ExtensionManager#daoBuilder
-   * @type {external.daoBuilder}
-   * @readonly
+   * @member {external.daoBuilder} bo.shared.ExtensionManager#daoBuilder
    */
+  get daoBuilder() {
+    return getMethod( this, 'daoBuilder' );
+  }
+  set daoBuilder( value ) {
+    setMethod( this, 'daoBuilder', 3, value );
+  }
+
   /**
    * Converts the model instance to data transfer object.
-   * @name bo.shared.ExtensionManager#toDto
-   * @type {external.toDto}
-   * @readonly
+   * @member {external.toDto} bo.shared.ExtensionManager#toDto
    */
+  get toDto() {
+    return getMethod( this, 'toDto' );
+  }
+  set toDto( value ) {
+    setMethod( this, 'toDto', 1, value );
+  }
+
   /**
    * Converts the data transfer object to model instance.
-   * @name bo.shared.ExtensionManager#fromDto
-   * @type {external.fromDto}
-   * @readonly
+   * @member {external.fromDto} bo.shared.ExtensionManager#fromDto
    */
+  get fromDto() {
+    return getMethod( this, 'fromDto' );
+  }
+  set fromDto( value ) {
+    setMethod( this, 'fromDto', 2, value );
+  }
+
   /**
    * Converts the model instance to client transfer object.
-   * @name bo.shared.ExtensionManager#toCto
-   * @type {external.toCto}
-   * @readonly
+   * @member {external.toCto} bo.shared.ExtensionManager#toCto
    */
+  get toCto() {
+    return getMethod( this, 'toCto' );
+  }
+  set toCto( value ) {
+    setMethod( this, 'toCto', 1, value );
+  }
+
   /**
    * Converts the client transfer object to model instance.
-   * @name bo.shared.ExtensionManager#fromCto
-   * @type {external.fromCto}
-   * @readonly
+   * @member {external.fromCto} bo.shared.ExtensionManager#fromCto
    */
+  get fromCto() {
+    return getMethod( this, 'fromCto' );
+  }
+  set fromCto( value ) {
+    setMethod( this, 'fromCto', 2, value );
+  }
+
   /**
    * Returns the property values of a new instance from the data source.
-   * @name bo.shared.ExtensionManager#dataCreate
-   * @type {external.dataCreate}
-   * @readonly
+   * @member {external.dataCreate} bo.shared.ExtensionManager#dataCreate
    */
+  get dataCreate() {
+    return getMethod( this, 'dataCreate' );
+  }
+  set dataCreate( value ) {
+    setMethod( this, 'dataCreate', 1, value );
+  }
+
   /**
    * Returns the property values of an existing instance from the data source.
-   * @name bo.shared.ExtensionManager#dataFetch
-   * @type {external.dataFetch}
-   * @readonly
+   * @member {external.dataFetch} bo.shared.ExtensionManager#dataFetch
    */
+  get dataFetch() {
+    return getMethod( this, 'dataFetch' );
+  }
+  set dataFetch( value ) {
+    setMethod( this, 'dataFetch', 3, value );
+  }
+
   /**
    * Saves a new instance into the data source.
-   * @name bo.shared.ExtensionManager#dataInsert
-   * @type {external.dataInsert}
-   * @readonly
+   * @member {external.dataInsert} bo.shared.ExtensionManager#dataInsert
    */
+  get dataInsert() {
+    return getMethod( this, 'dataInsert' );
+  }
+  set dataInsert( value ) {
+    setMethod( this, 'dataInsert', 1, value );
+  }
+
   /**
    * Saves an existing instance into the data source.
-   * @name bo.shared.ExtensionManager#dataUpdate
-   * @type {external.dataUpdate}
-   * @readonly
+   * @member {external.dataUpdate} bo.shared.ExtensionManager#dataUpdate
    */
+  get dataUpdate() {
+    return getMethod( this, 'dataUpdate' );
+  }
+  set dataUpdate( value ) {
+    setMethod( this, 'dataUpdate', 1, value );
+  }
+
   /**
    * Deletes an existing instance from the data source.
-   * @name bo.shared.ExtensionManager#dataRemove
-   * @type {external.dataRemove}
-   * @readonly
+   * @member {external.dataRemove} bo.shared.ExtensionManager#dataRemove
    */
+  get dataRemove() {
+    return getMethod( this, 'dataRemove' );
+  }
+  set dataRemove( value ) {
+    setMethod( this, 'dataRemove', 1, value );
+  }
+
   /**
    * Executes a command on the data source.
-   * @name bo.shared.ExtensionManager#dataExecute
-   * @type {external.dataExecute}
-   * @readonly
+   * @member {external.dataExecute} bo.shared.ExtensionManager#dataExecute
    */
-  definitions.map( function(definition) {
-    methods[definition.name] = null;
-
-    Object.defineProperty(self, definition.name, {
-      get: function () {
-        return methods[definition.name];
-      },
-      set: function (value) {
-        if (value && typeof value === 'function' && value.length == definition.length)
-          methods[definition.name] = value;
-        else
-          switch (definition.length) {
-            case 0:
-              throw new ModelError('propertyArg0', CLASS_NAME, definition.name);
-            case 1:
-              throw new ModelError('propertyArg1', CLASS_NAME, definition.name);
-            default:
-              throw new ModelError('propertyArgN', CLASS_NAME, definition.name, definition.length);
-          }
-      },
-      enumerable: true
-    });
-  });
+  get dataExecute() {
+    return getMethod( this, 'dataExecute' );
+  }
+  set dataExecute( value ) {
+    setMethod( this, 'dataExecute', 2, value );
+  }
 
   //endregion
 
   //region Command object extensions
 
-  var otherMethods = [];
-
   /**
    * Adds a new instance method to the model.
    * (The method will call a custom execute method on a command object instance.)
    *
-   * @function bo.shared.ExtensionManager#addOtherMethod
    * @param {string} methodName - The name of the method on the data access object to be called.
    * @param {boolean} [isTransaction] - Indicates whether transaction is required.
    */
-  this.addOtherMethod = function (methodName, isTransaction) {
-    methodName = Argument.inMethod(CLASS_NAME, 'addOtherMethod')
-        .check(methodName).forMandatory('methodName').asString();
+  addOtherMethod( methodName, isTransaction ) {
+    methodName = Argument.inMethod( this.constructor.name, 'addOtherMethod' )
+      .check( methodName ).forMandatory( 'methodName' ).asString();
     isTransaction = isTransaction || false;
 
-    otherMethods.push({ name: methodName, trx: isTransaction });
-  };
+    const otherMethods = _otherMethods.get( this );
+    otherMethods.add( { name: methodName, trx: isTransaction } );
+    _otherMethods.set( this, otherMethods );
+  }
 
   /**
    * Instantiate the defined custom methods on the model instance.
    * (The method is currently used by command objects only.)
    *
-   * @function bo.shared.ExtensionManager#buildOtherMethods
    * @protected
    * @param {ModelBase} instance - An instance of the model.
    */
-  this.buildOtherMethods = function (instance) {
-    if (otherMethods) {
-      otherMethods.map(function (definition) {
-        instance[definition.name] = function () {
-          return instance.execute(definition.name, definition.trx);
+  buildOtherMethods( instance ) {
+    const otherMethods = _otherMethods.get( this );
+    if (otherMethods.size) {
+      otherMethods.forEach( function ( definition ) {
+        instance[ definition.name ] = function () {
+          return instance.execute( definition.name, definition.trx );
         };
-      });
+      } );
     }
-  };
+  }
 
   //endregion
 
@@ -196,11 +243,11 @@ function ExtensionManager( dataSource, modelPath ) {
    * @param {string} modelName - The name of the model.
    * @returns {bo.dataAccess.DaoBase} The data access object instance of the model.
    */
-  this.getDataAccessObject = function (modelName) {
-    return self.daoBuilder ?
-        self.daoBuilder(dataSource, modelPath, modelName) :
-        config.daoBuilder(dataSource, modelPath, modelName);
-  };
+  getDataAccessObject( modelName ) {
+    return this.daoBuilder ?
+      this.daoBuilder( this.dataSource, this.modelPath, modelName ) :
+      config.daoBuilder( this.dataSource, this.modelPath, modelName );
+  }
 
   /**
    * Executes a custom data portal method.
@@ -213,29 +260,27 @@ function ExtensionManager( dataSource, modelPath ) {
    * @param {...*} [dpParams] - More optional parameters of the data portal method.
    * @returns {Promise.<object>} Returns a promise to the result of the custom data portal method.
    */
-  this.$runMethod = function( methodName, thisArg, dpContext, dpParams) {
-    var check = Argument.inMethod( CLASS_NAME, '$runMethod' );
+  $runMethod( methodName, thisArg, dpContext, dpParams ) {
+    const check = Argument.inMethod( this.constructor.name, '$runMethod' );
 
     methodName = check( methodName ).forMandatory( 'methodName' ).asString();
     thisArg = check( thisArg ).forMandatory( 'thisArg' ).asObject();
     dpContext = check( dpContext ).forMandatory( 'dpContext' ).asType( DataPortalContext );
 
-    methodName = 'data' + methodName[0].toUpperCase() + methodName.substr(1);
-    if ( methods[ methodName ]) {
+    methodName = 'data' + methodName[ 0 ].toUpperCase() + methodName.substr( 1 );
+    const method = getMethod( this, methodName );
+    if (method) {
 
       // Remove method name and execution context from arguments.
-      var args = Array.prototype.slice.call( arguments ).slice( 2 );
+      const args = [ ...arguments ].slice( 2 );
 
       // Execute the custom data portal method.
-      return new Promise( (fulfill, reject) => {
+      return new Promise( ( fulfill, reject ) => {
         dpContext.setPromise( fulfill, reject );
-        methods[ methodName ].apply( thisArg, args );
-      });
+        method.apply( thisArg, args );
+      } );
     }
-  };
-
-  // Immutable object.
-  Object.freeze(this);
+  }
 }
 
 module.exports = ExtensionManager;

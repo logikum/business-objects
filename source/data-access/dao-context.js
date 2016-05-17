@@ -1,7 +1,5 @@
 'use strict';
 
-const CLASS_NAME = 'DaoContext';
-
 const Argument = require( '../system/argument-check.js' );
 
 /**
@@ -23,7 +21,7 @@ class DaoContext {
    * @param {object} connection - The connection to the data source.
    */
   constructor( fulfill, reject, connection ) {
-    const check = Argument.inConstructor( CLASS_NAME );
+    const check = Argument.inConstructor( this.constructor.name );
 
     /**
      * The success handler of the promise executor.
