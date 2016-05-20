@@ -1,97 +1,113 @@
-console.log('Testing system/configuration-reader.js...');
+console.log( 'Testing system/configuration-reader.js...' );
 
-function read ( filename ) {
+function read( filename ) {
   return require( '../../../source/' + filename );
 }
-var configuration = read( 'system/configuration-reader.js');
-var NoAccessBehavior = read( 'rules/no-access-behavior.js');
-var daoBuilder = read( 'data-access/dao-builder.js');
 
-var ConnectionManager = require('../../../data/connection-manager.js');
+const configuration = read( 'system/configuration-reader.js' );
+const NoAccessBehavior = read( 'rules/no-access-behavior.js' );
+const daoBuilder = read( 'data-access/dao-builder.js' );
 
-describe('Business objects configuration reader object', function() {
+const ConnectionManager = require( '../../../data/connection-manager.js' );
 
-  it('has a connection manager object', done => {
+describe( 'Business objects configuration reader object', () => {
 
-    expect(configuration.connectionManager).toEqual(jasmine.any(ConnectionManager));
+  it( 'has a connection manager object', done => {
 
-    configuration.connectionManager.openConnection('db')
+    expect( configuration.connectionManager ).toEqual( jasmine.any( ConnectionManager ) );
+
+    configuration.connectionManager.openConnection( 'db' )
       .then( connection => {
 
-        expect(connection.dataSource).toBe('db');
-        expect(connection.connectionId).toBe(1);
-        expect(connection.transactionId).toBeNull();
+        expect( connection.dataSource ).toBe( 'db' );
+        expect( connection.connectionId ).toBe( 1 );
+        expect( connection.transactionId ).toBeNull();
 
         return connection;
-      })
+      } )
       .then( connection => {
 
-        return configuration.connectionManager.closeConnection('db', connection)
+        return configuration.connectionManager.closeConnection( 'db', connection )
           .then( connection => {
 
-            expect(connection).toBeNull();
+            expect( connection ).toBeNull();
 
             return null;
-          });
-      })
+          } );
+      } )
       .then( none => {
 
-        return configuration.connectionManager.beginTransaction('db')
+        return configuration.connectionManager.beginTransaction( 'db' )
           .then( connection => {
 
-            expect(connection.dataSource).toBe('db');
-            expect(connection.connectionId).toBe(2);
-            expect(connection.transactionId).toBe(1);
+            expect( connection.dataSource ).toBe( 'db' );
+            expect( connection.connectionId ).toBe( 2 );
+            expect( connection.transactionId ).toBe( 1 );
 
             return connection;
-          });
-      })
+          } );
+      } )
       .then( connection => {
 
-        return configuration.connectionManager.commitTransaction('db', connection)
+        return configuration.connectionManager.commitTransaction( 'db', connection )
           .then( connection => {
 
-            expect(connection).toBeNull();
+            expect( connection ).toBeNull();
 
             done();
-          });
-      })
+          } );
+      } )
       .catch( reason => {
         console.log( reason );
-      });
-  });
+      } );
+  } );
 
-  it('has a data access object builder method', function() {
+  it( 'has a data access object builder method', () => {
 
-    expect(configuration.daoBuilder).toBe(daoBuilder);
-  });
+    expect( configuration.daoBuilder ).toBe( daoBuilder );
+  } );
 
-  it('has a user reader method', function() {
-    var user = configuration.getUser();
+  it( 'has a user reader method', () => {
 
-    expect(user).toEqual(jasmine.any(Object));
-    expect(user.userCode).toBe('ada-lovelace');
-    expect(user.userName).toBe('Ada Lovelace');
-    expect(user.email).toBe('ada.lovelace@computer.net');
-    expect(user.roles).toContain('administrators');
-  });
+    const user = configuration.getUser();
 
-  it('can have a no access behavior property', function() {
+    expect( user ).toEqual( jasmine.any( Object ) );
+    expect( user.userCode ).toBe( 'ada-lovelace' );
+    expect( user.userName ).toBe( 'Ada Lovelace' );
+    expect( user.email ).toBe( 'ada.lovelace@computer.net' );
+    expect( user.roles ).toContain( 'administrators' );
+  } );
 
-    expect(configuration.noAccessBehavior).toBe(NoAccessBehavior.throwError);
-  });
+  it( 'can have a no access behavior property', () => {
 
-  it('has a property for the path of locales', function() {
+    expect( configuration.noAccessBehavior ).toBe( NoAccessBehavior.throwError );
+  } );
 
-    expect(configuration.pathOfLocales.substr(-8)).toBe('/locales');
-  });
+  it( 'has a property for the path of locales', () => {
 
-  it('has a locale reader method', function() {
+    expect( configuration.pathOfLocales.substr( -8 ) ).toBe( '/locales' );
+  } );
 
-    expect(configuration.getLocale).toEqual(jasmine.any(Function));
+  it( 'has a locale reader method', () => {
 
-    var locale = configuration.getLocale();
+    expect( configuration.getLocale ).toEqual( jasmine.any( Function ) );
 
-    expect(locale).toBe('hu-HU');
-  });
-});
+    const locale = configuration.getLocale();
+
+    expect( locale ).toBe( 'hu-HU' );
+  } );
+
+  it( 'is immutable', () => {
+
+    const init = function () {
+      configuration.initialize( '/config/business-objects.js' );
+    };
+    const extent = function () {
+      configuration.extent = '/config/business-objects.js';
+      return configuration.extent;
+    };
+
+    expect( init ).toThrow();
+    expect( extent() ).toBeUndefined();
+  } );
+} );

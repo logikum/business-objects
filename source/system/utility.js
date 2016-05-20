@@ -1,7 +1,7 @@
 'use strict';
 
-var fs = require( 'fs' );
-var path = require( 'path' );
+const fs = require( 'fs' );
+const path = require( 'path' );
 
 /**
  * Provides static methods for configuration and internationalization.
@@ -33,11 +33,11 @@ class Utility {
       relativePath.trim().length === 0)
       throw new errorType( 'string', name );
 
-    var fullPath = path.join( process.cwd(), relativePath );
+    const fullPath = path.join( process.cwd(), relativePath );
     if (!fs.existsSync( fullPath ) || !fs.statSync( fullPath ).isFile())
       throw new errorType( 'file', name, fullPath );
 
-    var requiredFunction = require( fullPath );
+    const requiredFunction = require( fullPath );
     if (typeof requiredFunction !== 'function')
       throw new errorType( 'function', name, fullPath );
 
@@ -65,7 +65,7 @@ class Utility {
       relativePath.trim().length === 0)
       throw new errorType( 'string', name );
 
-    var fullPath = path.join( process.cwd(), relativePath );
+    const fullPath = path.join( process.cwd(), relativePath );
     if (!fs.existsSync( fullPath ) || !fs.statSync( fullPath ).isDirectory())
       throw new errorType( 'directory', name, fullPath );
 

@@ -8,7 +8,7 @@ const system = read( 'system/index.js' );
 const ArgumentError = read( 'system/argument-error.js' );
 const ComposerError = read( 'system/composer-error.js' );
 const ConfigurationError = read( 'system/configuration-error.js');
-//const ConfigurationReader = read( 'system/configuration-reader.js');
+// const ConfigurationReader = read( 'system/configuration-reader.js');
 const ConstructorError = read( 'system/constructor-error.js' );
 const MethodError = read( 'system/method-error.js' );
 const PropertyError = read( 'system/property-error.js' );
@@ -27,7 +27,7 @@ describe( 'System component index', () => {
     expect( new system.ArgumentError( 'message' ) ).toEqual( jasmine.any( ArgumentError ) );
     expect( new system.ComposerError( 'message' ) ).toEqual( jasmine.any( ComposerError ) );
     expect( new system.ConfigurationError( 'message' ) ).toEqual( jasmine.any( ConfigurationError ) );
-    expect( system.ConfigurationReader ).toEqual( jasmine.any( Object ) );
+    expect( system.ConfigurationReader ).toEqual( jasmine.any( Function ) );
     expect( new system.ConstructorError( 'message' ) ).toEqual( jasmine.any( ConstructorError ) );
     expect( new system.MethodError( 'message' ) ).toEqual( jasmine.any( MethodError ) );
     expect( new system.PropertyError( 'message' ) ).toEqual( jasmine.any( PropertyError ) );

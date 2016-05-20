@@ -30,7 +30,7 @@ describe( 'Business object index', () => {
     expect( bo.shared ).toEqual( jasmine.any( Object ) );
     expect( bo.system ).toEqual( jasmine.any( Object ) );
 
-    expect( bo.configuration ).toEqual( jasmine.any( Object ) );
+    expect( bo.configuration ).toEqual( jasmine.any( Function ) );
     expect( bo.i18n ).toEqual( jasmine.any( Function ) );
   } );
 } );

@@ -6,10 +6,12 @@ function read ( filename ) {
 const DataType = read( 'data-types/data-type.js' );
 
 describe( 'Base data type', () => {
+
   let dt = null;
 
   it( 'constructor expects no argument', () => {
-    var build01 = () => { dt = new DataType(); };
+
+    const build01 = () => { dt = new DataType(); };
 
     expect( build01 ).not.toThrow();
   } );
@@ -20,6 +22,7 @@ describe( 'Base data type', () => {
   } );
 
   it( 'has two not implemented methods', () => {
+
     function call1() { dt.parse( 1 ); }
     function call2() { dt.hasValue( 2 ); }
 
