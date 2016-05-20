@@ -1,53 +1,74 @@
 'use strict';
 
-var CLASS_NAME = 'PropertyManager';
+const Argument = require( '../system/argument-check.js' );
+const MethodError = require( '../system/method-error.js' );
+const PropertyInfo = require( './property-info.js' );
+const DataType = require( '../data-types/data-type.js' );
+const ModelError = require( './model-error.js' );
 
-var Argument = require('../system/argument-check.js');
-var MethodError = require('../system/method-error.js');
-var PropertyInfo = require('./property-info.js');
-var DataType = require('../data-types/data-type.js');
-var ModelError = require('./model-error.js');
+const _items = new WeakMap();
+const _changed = new WeakMap(); // for children
+const _children = new WeakMap();
+const _isFrozen = new WeakMap();
+const _modelName = new WeakMap();
+
+function checkChildren( target ) {
+  if (_changed.get( target )) {
+    const items = _items.get( target );
+    const children = items.filter( function ( item ) {
+      return !(item.type instanceof DataType);
+    } );
+    _children.set( target, children );
+    _changed.set( target, false );
+  }
+}
 
 /**
- * @classdesc Provides methods to manage the properties of a business object model.
- * @description Creates a new property manager object.
+ * Provides methods to manage the properties of a business object model.
  *
  * @memberof bo.shared
- * @constructor
- * @param {...bo.shared.PropertyInfo} [property] - Description of a model property.
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
  */
-function PropertyManager (/*, property1, property2 [, ...] */) {
-
-  var items = [];
-  var changed = false;  // for children
-  var children = [];
-  var isFrozen = false;
-  var modelName = CLASS_NAME;
-  var check = Argument.inConstructor(CLASS_NAME);
-
-  Array.prototype.slice.call(arguments)
-      .forEach(function (arg) {
-        items.push(check(arg).forMandatory().asType(PropertyInfo, 'properties'));
-        changed = true;
-      });
+class PropertyManager {
 
   /**
-   * The name of the business object model.
-   * @type {string}
-   * @default 'PropertyManager'
+   * Creates a new property manager object.
+   *
+   * @param {Array.<bo.shared.PropertyInfo>} [properties] - Description of a model property.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
    */
-  Object.defineProperty(this, 'modelName', {
-    get: function () {
-      return modelName;
-    },
-    set: function (value) {
-      modelName = Argument.inProperty(CLASS_NAME, 'modelName')
-          .check(value).forMandatory().asString();
-    },
-    enumeration: true
-  });
+  constructor( ...properties ) {
+
+    const check = Argument.inConstructor( this.constructor.name );
+    const items = [];
+    let changed = false;
+
+    if (properties) {
+      properties.forEach( property => {
+        items.push( check( property ).forMandatory().asType( PropertyInfo, 'properties' ) );
+        changed = true;
+      } );
+    }
+
+    _items.set( this, items );
+    _changed.set( this, changed );
+    _children.set( this, [] );
+    _isFrozen.set( this, false );
+    _modelName.set( this, this.constructor.name );
+
+    // Immutable object.
+    Object.freeze( this );
+  }
+
+  get modelName() {
+    return _modelName.get( this );
+  }
+
+  set modelName( value ) {
+    const modelName = Argument.inProperty( this.constructor.name, 'modelName' )
+      .check( value ).forMandatory().asString();
+    _modelName.set( this, modelName );
+  }
 
   //region Item management
 
@@ -59,14 +80,19 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
    * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.
    */
-  this.add = function (property) {
-    if (isFrozen)
-      throw new ModelError('frozen', this.modelName);
+  add( property ) {
+    if (_isFrozen.get( this ))
+      throw new ModelError( 'frozen', this.modelName );
 
-    items.push(Argument.inMethod(CLASS_NAME, 'add')
-        .check(property).forMandatory('property').asType(PropertyInfo));
-    changed = true;
-  };
+    property = Argument.inMethod( this.constructor.name, 'add' )
+      .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
+
+    const items = _items.get( this );
+    items.push( property );
+    _items.set( this, items );
+
+    _changed.set( this, true );
+  }
 
   /**
    * Creates a new property for the business object model.
@@ -90,15 +116,20 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    * @throws {@link bo.system.ArgumentError Argument error}: The flags must be PropertyFlag items.
    * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.
    */
-  this.create = function (name, type, flags) {
-    if (isFrozen)
-      throw new ModelError('frozen', this.modelName);
+  create( name, type, flags ) {
+    if (_isFrozen.get( this ))
+      throw new ModelError( 'frozen', this.modelName );
 
-    var property = new PropertyInfo(name, type, flags);
-    items.push(property);
-    changed = true;
+    const property = new PropertyInfo( name, type, flags );
+
+    const items = _items.get( this );
+    items.push( property );
+    _items.set( this, items );
+
+    _changed.set( this, true );
+
     return property;
-  };
+  }
 
   /**
    * Determines whether a property belongs to the business object model.
@@ -108,49 +139,51 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
    */
-  this.contains = function (property) {
-    property = Argument.inMethod(CLASS_NAME, 'contains')
-        .check(property).forMandatory('property').asType(PropertyInfo);
+  contains( property ) {
+    property = Argument.inMethod( this.constructor.name, 'contains' )
+      .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
-    return items.some(function (item) {
-      return item.name === property.name;
-    });
-  };
+    return _items.get( this )
+      .some( function ( item ) {
+        return item.name === property.name;
+      } );
+  }
 
   /**
    * Gets the property with the given name.
    *
    * @param {string} name - The name of the property.
    * @param {string} [message] - The error message in case of not finding the property.
-   * @param {...*} [messageParams] - Optional interpolation parameters of the message.
    * @returns {bo.shared.PropertyInfo} The requested property definition.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The business object has no property
    *    with the given name.
    */
-  this.getByName = function (name, message) {
-    name = Argument.inMethod(CLASS_NAME, 'getByName')
-        .check(name).forMandatory('name').asString();
+  getByName( name, message ) {
+    name = Argument.inMethod( this.constructor.name, 'getByName' )
+      .check( name ).forMandatory( 'name' ).asString();
 
-    for (var i = 0; i < items.length; i++) {
-      if (items[i].name === name)
-        return items[i];
+    const items = _items.get( this );
+    for (let i = 0; i < items.length; i++) {
+      if (items[ i ].name === name)
+        return items[ i ];
     }
-    throw new MethodError(message || 'noProperty', CLASS_NAME, 'getByName', 'name', this.modelName, name);
-  };
+    throw new MethodError( message || 'noProperty',
+      this.constructor.name, 'getByName', 'name', this.modelName, name );
+  }
 
   /**
    * Gets the property definitions of the business object model as an array.
    *
    * @returns {Array.<bo.shared.PropertyInfo>} The array of model properties.
    */
-  this.toArray = function () {
-    var array = items.filter(function (item) {
-      return item.type instanceof DataType;
-    });
-    return array;
-  };
+  toArray() {
+    return _items.get( this )
+      .filter( function ( item ) {
+        return item.type instanceof DataType;
+      } );
+  }
 
   //endregion
 
@@ -162,9 +195,9 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    * @param {external.cbCollectionItem} callback - Function that produces an element
    *    of the model properties, taking three arguments: property, index, array.
    */
-  this.forEach = function (callback) {
-    items.forEach(callback);
-  };
+  forEach( callback ) {
+    _items.get( this ).forEach( callback );
+  }
 
   /**
    * Creates a new array with all properties that pass the test implemented by the provided function.
@@ -174,9 +207,9 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    *    Return true to keep the property definition, false otherwise.
    * @returns {Array.<bo.shared.PropertyInfo>} A new array with all properties that passed the test.
    */
-  this.filter = function (callback) {
-    return items.filter(callback);
-  };
+  filter( callback ) {
+    return _items.get( this ).filter( callback );
+  }
 
   /**
    * Creates a new array with the results of calling a provided function
@@ -186,42 +219,33 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    *    taking three arguments: property, index, array.
    * @returns {Array} A new array with items produced by the function.
    */
-  this.map = function (callback) {
-    return items.map(callback);
-  };
+  map( callback ) {
+    return _items.get( this ).map( callback );
+  }
 
   //endregion
 
   //region Children
-
-  function checkChildren () {
-    if (changed) {
-      children = items.filter(function (item) {
-        return !(item.type instanceof DataType);
-      });
-      changed = false;
-    }
-  }
 
   /**
    * Gets the child objects and collections of the current model.
    *
    * @returns {Array.<bo.shared.PropertyInfo>} - The array of the child properties.
    */
-  this.children = function () {
-    checkChildren();
-    return children;
-  };
+  children() {
+    checkChildren( this );
+    return _children.get( this );
+  }
 
   /**
    * Gets the count of the child objects and collections of the current model.
    *
    * @returns {Number} The count of the child properties.
    */
-  this.childCount = function () {
-    checkChildren();
-    return children.length;
-  };
+  childCount() {
+    checkChildren( this );
+    return _children.get( this ).length;
+  }
 
   /**
    * Verifies the model types of child objects and freezes properties of the model.
@@ -233,27 +257,23 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    * @throws {@link bo.shared.ModelError Model error}: The type of a model property
    *      should be an allowed type.
    */
-  this.verifyChildTypes = function (allowedTypes) {
-    allowedTypes = Argument.inMethod(CLASS_NAME, 'verifyChildTypes')
-        .check(allowedTypes).forMandatory('allowedTypes').asArray(String);
+  verifyChildTypes( allowedTypes ) {
+    allowedTypes = Argument.inMethod( this.constructor.name, 'verifyChildTypes' )
+      .check( allowedTypes ).forMandatory( 'allowedTypes' ).asArray( String );
 
-    checkChildren();
-    var child;
+    checkChildren( this );
 
-    for (var i = 0; i < children.length; i++) {
-      var matches = false;
-      child = children[i];
-      for (var j = 0; j < allowedTypes.length; j++) {
-        if (child.type.modelType == allowedTypes[j]) {
-          matches = true;
-          break;
-        }
-      }
-      if (!matches)
-        throw new ModelError('invalidChild',
-            this.modelName, child.name, child.type.modelType, allowedTypes.join(' | '));
-    }
-    isFrozen = true;
+    let children = _children.get( this );
+
+    children.forEach( child => {
+      if (!(allowedTypes.some( allowedType => {
+          return child.type.modelType == allowedType;
+        } )))
+        throw new ModelError( 'invalidChild',
+          this.modelName, child.name, child.type.modelType, allowedTypes.join( ' | ' ) );
+    } );
+
+    _isFrozen.set( this, true );
   };
 
   //endregion
@@ -275,43 +295,44 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The getPropertyValue argument must be a function.
    */
-  this.getKey = function (getPropertyValue) {
+  getKey( getPropertyValue ) {
 
-    getPropertyValue = Argument.inMethod(CLASS_NAME, 'getKey')
-        .check(getPropertyValue).forMandatory('getPropertyValue').asFunction();
+    getPropertyValue = Argument.inMethod( this.constructor.name, 'getKey' )
+      .check( getPropertyValue ).forMandatory( 'getPropertyValue' ).asFunction();
 
     // No properties - no keys.
+    const items = _items.get( this );
     if (!items.length)
       return undefined;
 
-    var key;
+    let key;
     // Get key properties.
-    var keys = items.filter(function (item) {
+    const keys = items.filter( item => {
       return item.isKey;
-    });
+    } );
     // Evaluate result.
     switch (keys.length) {
       case 0:
         // No keys: dto will be used.
         key = {};
-        items.forEach(function (item) {
+        items.forEach( item => {
           if (item.isOnDto)
-            key[item.name] = getPropertyValue(item);
-        });
+            key[ item.name ] = getPropertyValue( item );
+        } );
         break;
       case 1:
         // One key: key value will be used.
-        key = getPropertyValue(keys[0]);
+        key = getPropertyValue( keys[ 0 ] );
         break;
       default:
         // More keys: key object will be used.
         key = {};
-        keys.forEach(function (item) {
-          key[item.name] = getPropertyValue(item);
-        });
+        keys.forEach( item => {
+          key[ item.name ] = getPropertyValue( item );
+        } );
     }
     return key;
-  };
+  }
 
   /**
    * Determines that the passed data contains current values of the model key.
@@ -325,42 +346,40 @@ function PropertyManager (/*, property1, property2 [, ...] */) {
    * @throws {@link bo.system.ArgumentError Argument error}: The data argument must be an object.
    * @throws {@link bo.system.ArgumentError Argument error}: The getPropertyValue argument must be a function.
    */
-  this.keyEquals = function (data, getPropertyValue) {
-    var check = Argument.inMethod(CLASS_NAME, 'keyEquals');
+  keyEquals( data, getPropertyValue ) {
+    const check = Argument.inMethod( this.constructor.name, 'keyEquals' );
 
-    data = check(data).forMandatory('data').asObject();
-    getPropertyValue = check(getPropertyValue).forMandatory('getPropertyValue').asFunction();
+    data = check( data ).forMandatory( 'data' ).asObject();
+    getPropertyValue = check( getPropertyValue ).forMandatory( 'getPropertyValue' ).asFunction();
 
     // Get key properties.
-    var keys = items.filter(function (item) {
+    const items = _items.get( this );
+    const keys = items.filter( item => {
       return item.isKey;
-    });
+    } );
+
     // Get key values.
-    var values = {};
+    const values = new Map();
     if (keys.length) {
-      keys.forEach(function (item) {
-        values[item.name] = getPropertyValue(item);
-      });
+      keys.forEach( item => {
+        values.set( item.name, getPropertyValue( item ) );
+      } );
     } else {
-      items.forEach(function (item) {
+      items.forEach( item => {
         if (item.isOnCto)
-          values[item.name] = getPropertyValue(item);
-      });
+          values.set( item.name, getPropertyValue( item ) );
+      } );
     }
-    // Compare key values to data.
-    for (var propertyName in values) {
-      if (values.hasOwnProperty(propertyName)) {
-        if (data[propertyName] === undefined || data[propertyName] !== values[propertyName])
-          return false;
-      }
+
+    // Compare values.
+    for (const [propertyName, propertyValue] of values.entries()) {
+      if (data[ propertyName ] === undefined || data[ propertyName ] !== propertyValue)
+        return false;
     }
     return true;
-  };
+  }
 
   //endregion
-
-  // Immutable object.
-  Object.freeze(this);
 }
 
 module.exports = PropertyManager;

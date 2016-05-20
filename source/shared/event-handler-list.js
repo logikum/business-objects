@@ -33,7 +33,7 @@ class EventHandlerList {
    * @throws {@link bo.system.ArgumentError Argument error}: The handler must be a function.
    */
   add( modelName, event, handler ) {
-    var check = Argument.inMethod( this.constructor.name, 'add' );
+    const check = Argument.inMethod( this.constructor.name, 'add' );
     const items = _items.get( this );
     items.add( {
       modelName: check( modelName ).forMandatory( 'modelName' ).asString(),
