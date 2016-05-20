@@ -1,19 +1,26 @@
 'use strict';
 
-var CLASS_NAME = 'RuleList';
+const Argument = require( '../system/argument-check.js' );
+const AuthorizationRule = require( './authorization-rule.js' );
+const ValidationRule = require( './validation-rule.js' );
 
-var Argument = require('../system/argument-check.js');
-var AuthorizationRule = require('./authorization-rule.js');
-var ValidationRule = require('./validation-rule.js');
+// Rules are sorted descending by priority.
+function sortByPriority( a, b ) {
+  if (a.priority > b.priority) {
+    return -1;
+  }
+  if (a.priority < b.priority) {
+    return 1;
+  }
+  return 0;
+}
 
 /**
- * @classdesc Represents the lists of rules of a model instance.
- * @description Creates a new rule list instance.
+ * Represents the lists of rules of a model instance.
  *
  * @memberof bo.rules
- * @constructor
  */
-function RuleList () {
+class RuleList {
 
   /**
    * Adds a new rule to the list of rules of its owner property.
@@ -25,27 +32,16 @@ function RuleList () {
    * @throws {@link bo.system.ArgumentError Argument error}: The identifier must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a ValidationRule or AuthorizationRule object.
    */
-  this.add = function (id, rule) {
-    var check = Argument.inMethod(CLASS_NAME, 'add');
+  add( id, rule ) {
+    const check = Argument.inMethod( this.constructor.name, 'add' );
 
-    id = check(id).forMandatory('id').asString();
-    rule = check(rule).forMandatory('rule').asType([ ValidationRule, AuthorizationRule ]);
+    id = check( id ).forMandatory( 'id' ).asString();
+    rule = check( rule ).forMandatory( 'rule' ).asType( [ ValidationRule, AuthorizationRule ] );
 
-    if (this[id])
-      this[id].push(rule);
+    if (this[ id ])
+      this[ id ].push( rule );
     else
-      this[id] = new Array(rule);
-  };
-
-  // Rules are sorted descending by priority.
-  function sortByPriority (a, b) {
-    if (a.priority > b.priority) {
-      return -1;
-    }
-    if (a.priority < b.priority) {
-      return 1;
-    }
-    return 0;
+      this[ id ] = new Array( rule );
   }
 
   /**
@@ -53,13 +49,13 @@ function RuleList () {
    *
    * @function bo.rules.RuleList#sort
    */
-  this.sort = function () {
-    for (var id in this) {
-      if (this.hasOwnProperty(id) && this[id] instanceof Array) {
-        this[id].sort(sortByPriority);
+  sort() {
+    for (const id in this) {
+      if (this.hasOwnProperty( id ) && this[ id ] instanceof Array) {
+        this[ id ].sort( sortByPriority );
       }
     }
-  };
+  }
 }
 
 module.exports = RuleList;

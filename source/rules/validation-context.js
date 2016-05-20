@@ -1,52 +1,53 @@
 'use strict';
 
-var CLASS_NAME = 'ValidationContext';
-
-var Argument = require('../system/argument-check.js');
-var DataStore = require('../shared/data-store.js');
-var BrokenRuleList = require('./broken-rule-list.js');
+const Argument = require( '../system/argument-check.js' );
+const DataStore = require( '../shared/data-store.js' );
+const BrokenRuleList = require( './broken-rule-list.js' );
 
 /**
- * @classdesc
- *    Provides the context for custom validation rules.
- * @description
- *    Creates a new validation context object.
- *      </br></br>
- *    <i><b>Warning:</b> Validation context objects are created in models internally.
- *    They are intended only to make publicly available the context
- *    for custom validation rules.</i>
+ * Provides the context for custom validation rules.
  *
  * @memberof bo.rules
- * @constructor
- * @param {bo.shared.DataStore} dataStore - The storage of the property values.
- * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The data store must be a DataStore object.
- * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
-function ValidationContext (dataStore, brokenRules) {
-  var check = Argument.inConstructor(CLASS_NAME);
-
-  dataStore = check(dataStore).forMandatory('dataStore').asType(DataStore);
+class ValidationContext {
 
   /**
-   * Returns the value of a model property.
-   * @type {internal~getValue}
-   * @readonly
+   * Creates a new validation context object.
+   *   </br></br>
+   * <i><b>Warning:</b> Validation context objects are created in models internally.
+   * They are intended only to make publicly available the context
+   * for custom validation rules.</i>
+   *
+   * @param {bo.shared.DataStore} dataStore - The storage of the property values.
+   * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The data store must be a DataStore object.
+   * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
    */
-  this.getValue = function (property) {
-    return dataStore.hasValidValue(property) ? dataStore.getValue(property) : undefined;
-  };
+  constructor( dataStore, brokenRules ) {
+    const check = Argument.inConstructor( this.constructor.name );
 
-  /**
-   * The list of the broken rules.
-   * @type {bo.rules.BrokenRuleList}
-   * @readonly
-   */
-  this.brokenRules = check(brokenRules).forMandatory('brokenRules').asType(BrokenRuleList);
+    dataStore = check( dataStore ).forMandatory( 'dataStore' ).asType( DataStore );
 
-  // Immutable object.
-  Object.freeze(this);
+    /**
+     * Returns the value of a model property.
+     * @member {internal~getValue} bo.rules.ValidationContext#getValue
+     * @readonly
+     */
+    this.getValue = function ( property ) {
+      return dataStore.hasValidValue( property ) ? dataStore.getValue( property ) : undefined;
+    };
+
+    /**
+     * The list of the broken rules.
+     * @member {bo.rules.BrokenRuleList} bo.rules.ValidationContext#brokenRules
+     * @readonly
+     */
+    this.brokenRules = check( brokenRules ).forMandatory( 'brokenRules' ).asType( BrokenRuleList );
+
+    // Immutable object.
+    Object.freeze( this );
+  }
 }
 
 module.exports = ValidationContext;
