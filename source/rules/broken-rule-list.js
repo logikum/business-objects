@@ -1,11 +1,11 @@
 'use strict';
 
-const Argument = require('../system/argument-check.js');
-const PropertyInfo = require('../shared/property-info.js');
-const BrokenRule = require('./broken-rule.js');
-const BrokenRulesOutput = require('./broken-rules-output.js');
-const RuleNotice = require('./rule-notice.js');
-const RuleSeverity = require('./rule-severity.js');
+const Argument = require( '../system/argument-check.js' );
+const PropertyInfo = require( '../shared/property-info.js' );
+const BrokenRule = require( './broken-rule.js' );
+const BrokenRulesOutput = require( './broken-rules-output.js' );
+const RuleNotice = require( './rule-notice.js' );
+const RuleSeverity = require( './rule-severity.js' );
 
 const _modelName = new WeakMap();
 const _items = new WeakMap();
@@ -25,13 +25,14 @@ class BrokenRuleList {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
    */
-  constructor(modelName) {
-    modelName = Argument.inConstructor(this.constructor.name)
-      .check(modelName).forMandatory('modelName').asString();
+  constructor( modelName ) {
 
-    _modelName.set(this, modelName);
-    _items.set(this, {});
-    _length.set(this, 0);
+    modelName = Argument.inConstructor( this.constructor.name )
+      .check( modelName ).forMandatory( 'modelName' ).asString();
+
+    _modelName.set( this, modelName );
+    _items.set( this, new Map() );
+    _length.set( this, 0 );
   }
 
   /**
@@ -41,22 +42,27 @@ class BrokenRuleList {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a BrokenRule object.
    */
-  add(brokenRule) {
-    brokenRule = Argument.inMethod(this.constructor.name, 'add')
-      .check(brokenRule).forMandatory('brokenRule').asType(BrokenRule);
+  add( brokenRule ) {
 
-    const items = _items.get(this);
-    let length = _length.get(this);
+    brokenRule = Argument.inMethod( this.constructor.name, 'add' )
+      .check( brokenRule ).forMandatory( 'brokenRule' ).asType( BrokenRule );
 
-    if (items[brokenRule.propertyName])
-      items[brokenRule.propertyName].push(brokenRule);
+    const items = _items.get( this );
+    let length = _length.get( this );
+    const key = brokenRule.propertyName;
+
+    if (items.has( key )) {
+      const list = items.get( key );
+      list.push( brokenRule );
+      items.set( key, list );
+    }
     else {
-      items[brokenRule.propertyName] = new Array(brokenRule);
+      items.set( key, new Array( brokenRule ) );
       length++;
     }
 
-    _items.set(this, items);
-    _length.set(this, length);
+    _items.set( this, items );
+    _length.set( this, length );
   }
 
   /**
@@ -66,9 +72,9 @@ class BrokenRuleList {
    *
    * @param {bo.rules.PropertyInfo} [property] - A property definition.
    */
-  clear(property) {
-    const items = _items.get(this);
-    let length = _length.get(this);
+  clear( property ) {
+    const items = _items.get( this );
+    let length = _length.get( this );
 
     //region Clear for property
 
@@ -77,15 +83,18 @@ class BrokenRuleList {
      *
      * @param {string} propertyName - The name of the property that broken rules are deleted of.
      */
-    function clearFor (propertyName) {
-      if (items[propertyName]) {
-        const preserved = items[propertyName].filter(function (item) {
+    function clearFor( propertyName ) {
+
+      if (items.has( propertyName )) {
+
+        const preserved = items.get( propertyName ).filter( function ( item ) {
           return item.isPreserved;
-        });
+        } );
+
         if (preserved.length)
-          items[propertyName] = preserved;
+          items.set( propertyName, preserved );
         else {
-          delete items[propertyName];
+          items.delete( propertyName );
           length--;
         }
       }
@@ -94,15 +103,14 @@ class BrokenRuleList {
     //endregion
 
     if (property instanceof PropertyInfo)
-      clearFor(property.name);
+      clearFor( property.name );
     else
-      for (const propertyName in items) {
-        if (items.hasOwnProperty(propertyName))
-          clearFor(propertyName);
+      for (const propertyName of items.keys()) {
+        clearFor( propertyName );
       }
 
-    _items.set(this, items);
-    _length.set(this, length);
+    _items.set( this, items );
+    _length.set( this, length );
   }
 
   /**
@@ -111,20 +119,20 @@ class BrokenRuleList {
    *
    * @param property
    */
-  clearAll(property) {
-    let items = _items.get(this);
-    let length = _length.get(this);
+  clearAll( property ) {
+    let items = _items.get( this );
+    let length = _length.get( this );
 
     if (property instanceof PropertyInfo) {
-      delete items[property.name];
+      items.delete( property.name );
       length--;
     } else {
-      items = {};
+      items.clear();
       length = 0;
     }
 
-    _items.set(this, items);
-    _length.set(this, length);
+    _items.set( this, items );
+    _length.set( this, length );
   }
 
   /**
@@ -134,15 +142,13 @@ class BrokenRuleList {
    * @returns {boolean} - True if the model is valid, otherwise false.
    */
   isValid() {
-    const items = _items.get(this);
-    for (const propertyName in items) {
-      if (items.hasOwnProperty(propertyName)) {
+    const items = _items.get( this );
 
-        if (items[propertyName].some(function (item) {
-            return item.severity === RuleSeverity.error;
-          }))
-          return false;
-      }
+    for (const list of items.values()) {
+      if (list.some( function ( item ) {
+          return item.severity === RuleSeverity.error;
+        } ))
+        return false;
     }
     return true;
   }
@@ -155,31 +161,28 @@ class BrokenRuleList {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The namespace must be a string.
    */
-  output(namespace) {
+  output( namespace ) {
 
-    namespace = Argument.inMethod(this.constructor.name, 'output')
-      .check(namespace).forOptional('namespace').asString();
-
-    const items = _items.get(this);
-    const length = _length.get(this);
-    const modelName = _modelName.get(this);
+    namespace = Argument.inMethod( this.constructor.name, 'output' )
+      .check( namespace ).forOptional( 'namespace' ).asString();
 
     const data = new BrokenRulesOutput();
+    const length = _length.get( this );
+
     if (length) {
-
+      const items = _items.get( this );
+      const modelName = _modelName.get( this );
       const ns = namespace ? namespace + ':' : '';
-      for (const property in items) {
-        if (items.hasOwnProperty(property)) {
 
-          items[property].forEach(function(brokenRule) {
+      for (const property of items.keys()) {
+        items.get( property ).forEach( function ( brokenRule ) {
 
-            const propertyName = modelName + '.' + brokenRule.propertyName;
-            const message = brokenRule.message || ns + propertyName + '.' + brokenRule.ruleName;
-            const notice = new RuleNotice(message, brokenRule.severity);
+          const propertyName = modelName + '.' + brokenRule.propertyName;
+          const message = brokenRule.message || ns + propertyName + '.' + brokenRule.ruleName;
+          const notice = new RuleNotice( message, brokenRule.severity );
 
-            data.add(propertyName, notice);
-          });
-        }
+          data.add( propertyName, notice );
+        } );
       }
     }
     return data;

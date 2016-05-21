@@ -1,129 +1,137 @@
-console.log('Testing rules/broken-rules-output.js...');
+console.log( 'Testing rules/broken-rules-output.js...' );
 
-function read ( filename ) {
+function read( filename ) {
   return require( '../../../source/' + filename );
 }
-var BrokenRulesOutput = read( 'rules/broken-rules-output.js');
-var RuleNotice = read( 'rules/rule-notice.js');
-var RuleSeverity = read( 'rules/rule-severity.js');
 
-describe('Broken rules output', function () {
+const BrokenRulesOutput = read( 'rules/broken-rules-output.js' );
+const RuleNotice = read( 'rules/rule-notice.js' );
+const RuleSeverity = read( 'rules/rule-severity.js' );
 
-  it('constructor expects no argument', function () {
-    var build01 = function () { return new BrokenRulesOutput(); };
+describe( 'Broken rules output', () => {
 
-    expect(build01).not.toThrow();
-  });
+  it( 'constructor expects no argument', () => {
 
-  it('has read-only $length property', function() {
-    var bro = new BrokenRulesOutput();
-    var notice = new RuleNotice('message', RuleSeverity.error);
+    const build01 = function () { return new BrokenRulesOutput(); };
 
-    expect(bro.$length).toBe(0);
+    expect( build01 ).not.toThrow();
+  } );
 
-    bro.add('property', notice);
+  it( 'has read-only $length property', () => {
 
-    expect(bro.$length).toBe(1);
+    const bro = new BrokenRulesOutput();
+    const notice = new RuleNotice( 'message', RuleSeverity.error );
+
+    expect( bro.$length ).toBe( 0 );
+
+    bro.add( 'property', notice );
+
+    expect( bro.$length ).toBe( 1 );
 
     bro.$length = 99;
 
-    expect(bro.$length).toBe(1);
-  });
+    expect( bro.$length ).toBe( 1 );
+  } );
 
-  it('has read-only $count property', function() {
-    var bro = new BrokenRulesOutput();
-    var notice = new RuleNotice('message', RuleSeverity.error);
+  it( 'has read-only $count property', () => {
 
-    expect(bro.$count).toBe(0);
+    const bro = new BrokenRulesOutput();
+    const notice = new RuleNotice( 'message', RuleSeverity.error );
 
-    bro.add('property', notice);
+    expect( bro.$count ).toBe( 0 );
 
-    expect(bro.$count).toBe(1);
+    bro.add( 'property', notice );
+
+    expect( bro.$count ).toBe( 1 );
 
     bro.$count = 99;
 
-    expect(bro.$count).toBe(1);
-  });
+    expect( bro.$count ).toBe( 1 );
+  } );
 
-  it('add method expects two non-empty string and a severity argument', function() {
-    var bro = new BrokenRulesOutput();
-    var notice = new RuleNotice('message', RuleSeverity.error);
+  it( 'add method expects two non-empty string and a severity argument', () => {
 
-    var add01 = function () { bro.add(); };
-    var add02 = function () { bro.add('property'); };
-    var add03 = function () { bro.add(notice); };
-    var add04 = function () { bro.add(notice, 'property'); };
-    var add05 = function () { bro.add('', notice); };
-    var add06 = function () { bro.add('message', RuleSeverity.error); };
-    var add07 = function () { bro.add('property', notice); };
-    var add08 = function () { bro.add(null, null); };
+    const bro = new BrokenRulesOutput();
+    const notice = new RuleNotice( 'message', RuleSeverity.error );
 
-    expect(add01).toThrow();
-    expect(add02).toThrow();
-    expect(add03).toThrow();
-    expect(add04).toThrow();
-    expect(add05).toThrow();
-    expect(add06).toThrow();
-    expect(add07).not.toThrow();
-    expect(add08).toThrow();
-  });
+    const add01 = function () { bro.add(); };
+    const add02 = function () { bro.add( 'property' ); };
+    const add03 = function () { bro.add( notice ); };
+    const add04 = function () { bro.add( notice, 'property' ); };
+    const add05 = function () { bro.add( '', notice ); };
+    const add06 = function () { bro.add( 'message', RuleSeverity.error ); };
+    const add07 = function () { bro.add( 'property', notice ); };
+    const add08 = function () { bro.add( null, null ); };
 
-  it('add method creates an array property', function() {
-    var bro = new BrokenRulesOutput();
-    bro.add('property', new RuleNotice('message #1', RuleSeverity.information));
-    bro.add('property', new RuleNotice('message #2', RuleSeverity.error));
+    expect( add01 ).toThrow();
+    expect( add02 ).toThrow();
+    expect( add03 ).toThrow();
+    expect( add04 ).toThrow();
+    expect( add05 ).toThrow();
+    expect( add06 ).toThrow();
+    expect( add07 ).not.toThrow();
+    expect( add08 ).toThrow();
+  } );
 
-    expect(bro.property).toEqual(jasmine.any(Array));
-    expect(bro.property[0].message).toBe('message #1');
-    expect(bro.property[0].severity).toBe(RuleSeverity.information);
-    expect(bro.property[1].message).toBe('message #2');
-    expect(bro.property[1].severity).toBe(RuleSeverity.error);
-  });
+  it( 'add method creates an array property', () => {
 
-  it('addChild method expects two arguments', function() {
-    var bro = new BrokenRulesOutput();
-    var broChild = new BrokenRulesOutput();
+    const bro = new BrokenRulesOutput();
+    bro.add( 'property', new RuleNotice( 'message #1', RuleSeverity.information ) );
+    bro.add( 'property', new RuleNotice( 'message #2', RuleSeverity.error ) );
 
-    var add01 = function () { bro.addChild(); };
-    var add02 = function () { bro.addChild('property'); };
-    var add03 = function () { bro.addChild('property', 'message'); };
-    var add04 = function () { bro.addChild('property', broChild); };
-    var add05 = function () { bro.addChild(broChild); };
-    var add06 = function () { bro.addChild(broChild, 'property'); };
-    var add07 = function () { bro.addChild('', broChild); };
-    var add08 = function () { bro.addChild(1, broChild); };
+    expect( bro.property ).toEqual( jasmine.any( Array ) );
+    expect( bro.property[ 0 ].message ).toBe( 'message #1' );
+    expect( bro.property[ 0 ].severity ).toBe( RuleSeverity.information );
+    expect( bro.property[ 1 ].message ).toBe( 'message #2' );
+    expect( bro.property[ 1 ].severity ).toBe( RuleSeverity.error );
+  } );
 
-    expect(add01).toThrow();
-    expect(add02).toThrow();
-    expect(add03).toThrow();
-    expect(add04).not.toThrow();
-    expect(add05).toThrow();
-    expect(add06).toThrow();
-    expect(add07).toThrow();
-    expect(add08).toThrow();
-  });
+  it( 'addChild method expects two arguments', () => {
 
-  it('addChildren method expects two arguments', function() {
-    var bro = new BrokenRulesOutput();
-    var broChild = new BrokenRulesOutput();
-    var broChildren = [ broChild ];
+    const bro = new BrokenRulesOutput();
+    const broChild = new BrokenRulesOutput();
 
-    var add01 = function () { bro.addChildren(); };
-    var add02 = function () { bro.addChildren('property'); };
-    var add03 = function () { bro.addChildren('property', 'message'); };
-    var add04 = function () { bro.addChildren('property', broChild); };
-    var add05 = function () { bro.addChildren('property', broChildren); };
-    var add06 = function () { bro.addChildren(broChildren, 'property'); };
-    var add07 = function () { bro.addChildren(broChildren); };
-    var add08 = function () { bro.addChildren(true, broChildren); };
+    const add01 = function () { bro.addChild(); };
+    const add02 = function () { bro.addChild( 'property' ); };
+    const add03 = function () { bro.addChild( 'property', 'message' ); };
+    const add04 = function () { bro.addChild( 'property', broChild ); };
+    const add05 = function () { bro.addChild( broChild ); };
+    const add06 = function () { bro.addChild( broChild, 'property' ); };
+    const add07 = function () { bro.addChild( '', broChild ); };
+    const add08 = function () { bro.addChild( 1, broChild ); };
 
-    expect(add01).toThrow();
-    expect(add02).toThrow();
-    expect(add03).toThrow();
-    expect(add04).not.toThrow();
-    expect(add05).not.toThrow();
-    expect(add06).toThrow();
-    expect(add07).toThrow();
-    expect(add08).toThrow();
-  });
-});
+    expect( add01 ).toThrow();
+    expect( add02 ).toThrow();
+    expect( add03 ).toThrow();
+    expect( add04 ).not.toThrow();
+    expect( add05 ).toThrow();
+    expect( add06 ).toThrow();
+    expect( add07 ).toThrow();
+    expect( add08 ).toThrow();
+  } );
+
+  it( 'addChildren method expects two arguments', () => {
+
+    const bro = new BrokenRulesOutput();
+    const broChild = new BrokenRulesOutput();
+    const broChildren = [ broChild ];
+
+    const add01 = function () { bro.addChildren(); };
+    const add02 = function () { bro.addChildren( 'property' ); };
+    const add03 = function () { bro.addChildren( 'property', 'message' ); };
+    const add04 = function () { bro.addChildren( 'property', broChild ); };
+    const add05 = function () { bro.addChildren( 'property', broChildren ); };
+    const add06 = function () { bro.addChildren( broChildren, 'property' ); };
+    const add07 = function () { bro.addChildren( broChildren ); };
+    const add08 = function () { bro.addChildren( true, broChildren ); };
+
+    expect( add01 ).toThrow();
+    expect( add02 ).toThrow();
+    expect( add03 ).toThrow();
+    expect( add04 ).not.toThrow();
+    expect( add05 ).not.toThrow();
+    expect( add06 ).toThrow();
+    expect( add07 ).toThrow();
+    expect( add08 ).toThrow();
+  } );
+} );
