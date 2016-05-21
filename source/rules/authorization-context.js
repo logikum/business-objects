@@ -1,72 +1,73 @@
 'use strict';
 
-var CLASS_NAME = 'AuthorizationContext';
-
-var config = require('../system/configuration-reader.js');
-var Argument = require('../system/argument-check.js');
-var UserInfo = require('../system/user-info.js');
-var BrokenRuleList = require('./broken-rule-list.js');
-var AuthorizationAction = require('./authorization-action.js');
+const config = require( '../system/configuration-reader.js' );
+const Argument = require( '../system/argument-check.js' );
+const UserInfo = require( '../system/user-info.js' );
+const BrokenRuleList = require( './broken-rule-list.js' );
+const AuthorizationAction = require( './authorization-action.js' );
 
 /**
- * @classdesc
- *    Provides the context for custom authorization rules.
- * @description
- *    Creates a new authorization context object.
- *      </br></br>
- *    <i><b>Warning:</b> Authorization context objects are created in models internally.
- *    They are intended only to make publicly available the context
- *    for custom authorization rules.</i>
+ * Provides the context for custom authorization rules.
  *
  * @memberof bo.rules
- * @constructor
- * @param {bo.rules.AuthorizationAction} action - The operation to authorize.
- * @param {string} [targetName] - Eventual parameter of the authorization action.
- * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The action must be an AuthorizationAction item.
- * @throws {@link bo.system.ArgumentError Argument error}: The target name must be a string value.
- * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
  */
-function AuthorizationContext (action, targetName, brokenRules) {
-  var check = Argument.inConstructor(CLASS_NAME);
-
-  action = check(action).for('action').asEnumMember(AuthorizationAction, null);
-  targetName = check(targetName).for('targetName').asString();
+class AuthorizationContext {
 
   /**
-   * The list of the broken rules.
-   * @type {bo.rules.BrokenRuleList}
-   * @readonly
+   * Creates a new authorization context object.
+   *   </br></br>
+   * <i><b>Warning:</b> Authorization context objects are created in models internally.
+   * They are intended only to make publicly available the context
+   * for custom authorization rules.</i>
+   *
+   * @param {bo.rules.AuthorizationAction} action - The operation to authorize.
+   * @param {string} [targetName] - Eventual parameter of the authorization action.
+   * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The action must be an AuthorizationAction item.
+   * @throws {@link bo.system.ArgumentError Argument error}: The target name must be a string value.
+   * @throws {@link bo.system.ArgumentError Argument error}: The broken rules must be a BrokenRuleList object.
    */
-  this.brokenRules = check(brokenRules).forMandatory('brokenRules').asType(BrokenRuleList);
+  constructor( action, targetName, brokenRules ) {
+    const check = Argument.inConstructor( this.constructor.name );
 
-  /**
-   * The identifier of the authorization action. Generally it is the action value,
-   * or when target is not empty, the action value and the target name separated by
-   * a dot, respectively.
-   * @type {string}
-   * @readonly
-   */
-  this.ruleId = AuthorizationAction.getName(action);
-  if (targetName)
-    this.ruleId += '.' + targetName;
+    action = check( action ).for( 'action' ).asEnumMember( AuthorizationAction, null );
+    targetName = check( targetName ).for( 'targetName' ).asString();
 
-  /**
-   * The current user.
-   * @type {bo.system.UserInfo}
-   * @readonly
-   */
-  this.user = config.getUser();
-  /**
-   * The current locale.
-   * @type {string}
-   * @readonly
-   */
-  this.locale = config.getLocale();
+    /**
+     * The list of the broken rules.
+     * @member {bo.rules.BrokenRuleList} bo.rules.AuthorizationContext#brokenRules
+     * @readonly
+     */
+    this.brokenRules = check( brokenRules ).forMandatory( 'brokenRules' ).asType( BrokenRuleList );
 
-  // Immutable object.
-  Object.freeze(this);
+    /**
+     * The identifier of the authorization action. Generally it is the action value,
+     * or when target is not empty, the action value and the target name separated by
+     * a dot, respectively.
+     * @member {string} bo.rules.AuthorizationContext#ruleId
+     * @readonly
+     */
+    this.ruleId = AuthorizationAction.getName( action );
+    if (targetName)
+      this.ruleId += '.' + targetName;
+
+    /**
+     * The current user.
+     * @member {bo.system.UserInfo} bo.rules.AuthorizationContext#user
+     * @readonly
+     */
+    this.user = config.getUser();
+    /**
+     * The current locale.
+     * @member {string} bo.rules.AuthorizationContext#locale
+     * @readonly
+     */
+    this.locale = config.getLocale();
+
+    // Immutable object.
+    Object.freeze( this );
+  }
 }
 
 module.exports = AuthorizationContext;

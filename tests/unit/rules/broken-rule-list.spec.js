@@ -1,123 +1,129 @@
-console.log('Testing main.js...');
+console.log( 'Testing main.js...' );
 
-function read ( filename ) {
+function read( filename ) {
   return require( '../../../source/' + filename );
 }
-var BrokenRuleList = read( 'rules/broken-rule-list.js');
-var BrokenRule = read( 'rules/broken-rule.js');
-var RuleSeverity = read( 'rules/rule-severity.js');
-var PropertyInfo = read( 'shared/property-info.js');
-var Text = read( 'data-types/text.js');
+const BrokenRuleList = read( 'rules/broken-rule-list.js' );
+const BrokenRule = read( 'rules/broken-rule.js' );
+const RuleSeverity = read( 'rules/rule-severity.js' );
+const PropertyInfo = read( 'shared/property-info.js' );
+const Text = read( 'data-types/text.js' );
 
-describe('Broken rule list', function () {
+describe( 'Broken rule list', () => {
 
-  it('constructor expects a non-empty string argument', function () {
-    var build01 = function () { return new BrokenRuleList(); };
-    var build02 = function () { return new BrokenRuleList(1.234); };
-    var build03 = function () { return new BrokenRuleList(true); };
-    var build04 = function () { return new BrokenRuleList(''); };
-    var build05 = function () { return new BrokenRuleList(null); };
-    var build06 = function () { return new BrokenRuleList({}); };
-    var build07 = function () { return new BrokenRuleList([]); };
-    var build08 = function () { return new BrokenRuleList('model'); };
+  it( 'constructor expects a non-empty string argument', () => {
 
-    expect(build01).toThrow();
-    expect(build02).toThrow();
-    expect(build03).toThrow();
-    expect(build04).toThrow();
-    expect(build05).toThrow();
-    expect(build06).toThrow();
-    expect(build07).toThrow();
-    expect(build08).not.toThrow();
-  });
+    const build01 = function () { return new BrokenRuleList(); };
+    const build02 = function () { return new BrokenRuleList( 1.234 ); };
+    const build03 = function () { return new BrokenRuleList( true ); };
+    const build04 = function () { return new BrokenRuleList( '' ); };
+    const build05 = function () { return new BrokenRuleList( null ); };
+    const build06 = function () { return new BrokenRuleList( {} ); };
+    const build07 = function () { return new BrokenRuleList( [] ); };
+    const build08 = function () { return new BrokenRuleList( 'model' ); };
 
-  it('add method expects a broken rule argument', function() {
-    var brl = new BrokenRuleList('model');
-    var br = new BrokenRule('name', false, 'property', 'message', RuleSeverity.error);
+    expect( build01 ).toThrow();
+    expect( build02 ).toThrow();
+    expect( build03 ).toThrow();
+    expect( build04 ).toThrow();
+    expect( build05 ).toThrow();
+    expect( build06 ).toThrow();
+    expect( build07 ).toThrow();
+    expect( build08 ).not.toThrow();
+  } );
 
-    var add01 = function () { brl.add(); };
-    var add02 = function () { brl.add('property'); };
-    var add03 = function () { brl.add('property', 'message'); };
-    var add04 = function () { brl.add('property', br); };
-    var add05 = function () { brl.add(br); };
+  it( 'add method expects a broken rule argument', () => {
 
-    expect(add01).toThrow();
-    expect(add02).toThrow();
-    expect(add03).toThrow();
-    expect(add04).toThrow();
-    expect(add05).not.toThrow();
-  });
+    const brl = new BrokenRuleList( 'model' );
+    const br = new BrokenRule( 'name', false, 'property', 'message', RuleSeverity.error );
 
-  it('isValid method works', function() {
-    var brl1 = new BrokenRuleList('model');
-    var br1 = new BrokenRule('name #1', false, 'property', 'message #1', RuleSeverity.success);
-    brl1.add(br1);
-    var brl2 = new BrokenRuleList('model');
-    var br2 = new BrokenRule('name #2', true, 'property', 'message #2', RuleSeverity.error);
-    brl2.add(br2);
+    const add01 = function () { brl.add(); };
+    const add02 = function () { brl.add( 'property' ); };
+    const add03 = function () { brl.add( 'property', 'message' ); };
+    const add04 = function () { brl.add( 'property', br ); };
+    const add05 = function () { brl.add( br ); };
 
-    expect(brl1.isValid()).toBe(true);
-    expect(brl2.isValid()).toBe(false);
-  });
+    expect( add01 ).toThrow();
+    expect( add02 ).toThrow();
+    expect( add03 ).toThrow();
+    expect( add04 ).toThrow();
+    expect( add05 ).not.toThrow();
+  } );
 
-  it('output method converts broken rules', function() {
-    var brl = new BrokenRuleList('model');
-    var br1 = new BrokenRule('name #1', false, 'property1', 'message #1', RuleSeverity.warning);
-    var br2 = new BrokenRule('name #2', true, 'property2', 'message #2', RuleSeverity.error);
-    brl.add(br1);
-    brl.add(br2);
-    var brs = brl.output();
+  it( 'isValid method works', () => {
 
-    expect(brs['model.property1']).toEqual(jasmine.any(Array));
-    expect(brs['model.property1'][0].message).toBe('message #1');
-    expect(brs['model.property1'][0].severity).toBe(RuleSeverity.warning);
-    expect(brs['model.property2']).toEqual(jasmine.any(Array));
-    expect(brs['model.property2'][0].message).toBe('message #2');
-    expect(brs['model.property2'][0].severity).toBe(RuleSeverity.error);
+    const brl1 = new BrokenRuleList( 'model' );
+    const br1 = new BrokenRule( 'name #1', false, 'property', 'message #1', RuleSeverity.success );
+    brl1.add( br1 );
+    const brl2 = new BrokenRuleList( 'model' );
+    const br2 = new BrokenRule( 'name #2', true, 'property', 'message #2', RuleSeverity.error );
+    brl2.add( br2 );
+
+    expect( brl1.isValid() ).toBe( true );
+    expect( brl2.isValid() ).toBe( false );
+  } );
+
+  it( 'output method converts broken rules', () => {
+
+    const brl = new BrokenRuleList( 'model' );
+    const br1 = new BrokenRule( 'name #1', false, 'property1', 'message #1', RuleSeverity.warning );
+    const br2 = new BrokenRule( 'name #2', true, 'property2', 'message #2', RuleSeverity.error );
+    brl.add( br1 );
+    brl.add( br2 );
+    let brs = brl.output();
+
+    expect( brs[ 'model.property1' ] ).toEqual( jasmine.any( Array ) );
+    expect( brs[ 'model.property1' ][ 0 ].message ).toBe( 'message #1' );
+    expect( brs[ 'model.property1' ][ 0 ].severity ).toBe( RuleSeverity.warning );
+    expect( brs[ 'model.property2' ] ).toEqual( jasmine.any( Array ) );
+    expect( brs[ 'model.property2' ][ 0 ].message ).toBe( 'message #2' );
+    expect( brs[ 'model.property2' ][ 0 ].severity ).toBe( RuleSeverity.error );
 
     brl.clearAll();
     brs = brl.output();
 
-    expect(brs.$length).toBe(0);
-  });
+    expect( brs.$length ).toBe( 0 );
+  } );
 
-  it('clear and clearAll methods work for a property', function() {
-    var brl = new BrokenRuleList('model');
-    var br1 = new BrokenRule('name #1', false, 'property', 'message #1', RuleSeverity.error);
-    var br2 = new BrokenRule('name #2', true, 'property', 'message #2', RuleSeverity.error);
-    brl.add(br1);
-    brl.add(br2);
-    var pi = new PropertyInfo('property', new Text());
+  it( 'clear and clearAll methods work for a property', () => {
 
-    brl.clear(pi);
-    var brs = brl.output();
+    const brl = new BrokenRuleList( 'model' );
+    const br1 = new BrokenRule( 'name #1', false, 'property', 'message #1', RuleSeverity.error );
+    const br2 = new BrokenRule( 'name #2', true, 'property', 'message #2', RuleSeverity.error );
+    brl.add( br1 );
+    brl.add( br2 );
+    const pi = new PropertyInfo( 'property', new Text() );
 
-    expect(brs['model.property']).toEqual(jasmine.any(Array));
-    expect(brs['model.property'][0].message).toBe('message #2');
+    brl.clear( pi );
+    let brs = brl.output();
 
-    brl.clearAll(pi);
+    expect( brs[ 'model.property' ] ).toEqual( jasmine.any( Array ) );
+    expect( brs[ 'model.property' ][ 0 ].message ).toBe( 'message #2' );
+
+    brl.clearAll( pi );
     brs = brl.output();
 
-    expect(brs.$length).toBe(0);
-  });
+    expect( brs.$length ).toBe( 0 );
+  } );
 
-  it('clear and clearAll methods work for all properties', function() {
-    var brl = new BrokenRuleList('model');
-    var br1 = new BrokenRule('name #1', false, 'property1', 'message #1', RuleSeverity.error);
-    var br2 = new BrokenRule('name #2', true, 'property2', 'message #2', RuleSeverity.error);
-    brl.add(br1);
-    brl.add(br2);
+  it( 'clear and clearAll methods work for all properties', () => {
+
+    const brl = new BrokenRuleList( 'model' );
+    const br1 = new BrokenRule( 'name #1', false, 'property1', 'message #1', RuleSeverity.error );
+    const br2 = new BrokenRule( 'name #2', true, 'property2', 'message #2', RuleSeverity.error );
+    brl.add( br1 );
+    brl.add( br2 );
 
     brl.clear();
-    var brs = brl.output();
+    let brs = brl.output();
 
-    expect(brs['model.property1']).not.toBeDefined();
-    expect(brs['model.property2']).toEqual(jasmine.any(Array));
-    expect(brs['model.property2'][0].message).toBe('message #2');
+    expect( brs[ 'model.property1' ] ).not.toBeDefined();
+    expect( brs[ 'model.property2' ] ).toEqual( jasmine.any( Array ) );
+    expect( brs[ 'model.property2' ][ 0 ].message ).toBe( 'message #2' );
 
     brl.clearAll();
     brs = brl.output();
 
-    expect(brs.$length).toBe(0);
-  });
-});
+    expect( brs.$length ).toBe( 0 );
+  } );
+} );

@@ -1,30 +1,38 @@
 'use strict';
 
-var CLASS_NAME = 'BrokenRuleList';
+const Argument = require('../system/argument-check.js');
+const PropertyInfo = require('../shared/property-info.js');
+const BrokenRule = require('./broken-rule.js');
+const BrokenRulesOutput = require('./broken-rules-output.js');
+const RuleNotice = require('./rule-notice.js');
+const RuleSeverity = require('./rule-severity.js');
 
-var Argument = require('../system/argument-check.js');
-var PropertyInfo = require('../shared/property-info.js');
-var BrokenRule = require('./broken-rule.js');
-var BrokenRulesOutput = require('./broken-rules-output.js');
-var RuleNotice = require('./rule-notice.js');
-var RuleSeverity = require('./rule-severity.js');
+const _modelName = new WeakMap();
+const _items = new WeakMap();
+const _length = new WeakMap();
 
 /**
- * @classdesc Represents the lists of broken rules.
- * @description Creates a new broken rule list instance.
+ * Represents the lists of broken rules.
  *
  * @memberof bo.rules
- * @constructor
- * @param {string} modelName - The name of the model.
- *
- * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
  */
-var BrokenRuleList = function (modelName) {
+class BrokenRuleList {
 
-  modelName = Argument.inConstructor(CLASS_NAME).check(modelName).forMandatory('modelName').asString();
+  /**
+   * Creates a new broken rule list instance.
+   *
+   * @param {string} modelName - The name of the model.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
+   */
+  constructor(modelName) {
+    modelName = Argument.inConstructor(this.constructor.name)
+      .check(modelName).forMandatory('modelName').asString();
 
-  var items = {};
-  var length = 0;
+    _modelName.set(this, modelName);
+    _items.set(this, {});
+    _length.set(this, 0);
+  }
 
   /**
    * Adds a broken rule to the list.
@@ -33,9 +41,12 @@ var BrokenRuleList = function (modelName) {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a BrokenRule object.
    */
-  this.add = function (brokenRule) {
-    brokenRule = Argument.inMethod(CLASS_NAME, 'add')
-        .check(brokenRule).forMandatory('brokenRule').asType(BrokenRule);
+  add(brokenRule) {
+    brokenRule = Argument.inMethod(this.constructor.name, 'add')
+      .check(brokenRule).forMandatory('brokenRule').asType(BrokenRule);
+
+    const items = _items.get(this);
+    let length = _length.get(this);
 
     if (items[brokenRule.propertyName])
       items[brokenRule.propertyName].push(brokenRule);
@@ -43,25 +54,9 @@ var BrokenRuleList = function (modelName) {
       items[brokenRule.propertyName] = new Array(brokenRule);
       length++;
     }
-  };
 
-  /**
-   * Removes the broken rules of a property except of the retained ones.
-   *
-   * @param {string} propertyName - The name of the property that broken rules are deleted of.
-   */
-  function clearFor (propertyName) {
-    if (items[propertyName]) {
-      var preserved = items[propertyName].filter(function (item) {
-        return item.isPreserved;
-      });
-      if (preserved.length)
-        items[propertyName] = preserved;
-      else {
-        delete items[propertyName];
-        length--;
-      }
-    }
+    _items.set(this, items);
+    _length.set(this, length);
   }
 
   /**
@@ -71,15 +66,44 @@ var BrokenRuleList = function (modelName) {
    *
    * @param {bo.rules.PropertyInfo} [property] - A property definition.
    */
-  this.clear = function (property) {
+  clear(property) {
+    const items = _items.get(this);
+    let length = _length.get(this);
+
+    //region Clear for property
+
+    /**
+     * Removes the broken rules of a property except of the retained ones.
+     *
+     * @param {string} propertyName - The name of the property that broken rules are deleted of.
+     */
+    function clearFor (propertyName) {
+      if (items[propertyName]) {
+        const preserved = items[propertyName].filter(function (item) {
+          return item.isPreserved;
+        });
+        if (preserved.length)
+          items[propertyName] = preserved;
+        else {
+          delete items[propertyName];
+          length--;
+        }
+      }
+    }
+
+    //endregion
+
     if (property instanceof PropertyInfo)
       clearFor(property.name);
     else
-      for (var propertyName in items) {
+      for (const propertyName in items) {
         if (items.hasOwnProperty(propertyName))
           clearFor(propertyName);
       }
-  };
+
+    _items.set(this, items);
+    _length.set(this, length);
+  }
 
   /**
    * Removes the broken rules of a property, including retained ones.
@@ -87,7 +111,10 @@ var BrokenRuleList = function (modelName) {
    *
    * @param property
    */
-  this.clearAll = function (property) {
+  clearAll(property) {
+    let items = _items.get(this);
+    let length = _length.get(this);
+
     if (property instanceof PropertyInfo) {
       delete items[property.name];
       length--;
@@ -95,7 +122,10 @@ var BrokenRuleList = function (modelName) {
       items = {};
       length = 0;
     }
-  };
+
+    _items.set(this, items);
+    _length.set(this, length);
+  }
 
   /**
    * Determines if the model is valid. The model is valid when it has no
@@ -103,18 +133,19 @@ var BrokenRuleList = function (modelName) {
    *
    * @returns {boolean} - True if the model is valid, otherwise false.
    */
-  this.isValid = function () {
-    for (var propertyName in items) {
+  isValid() {
+    const items = _items.get(this);
+    for (const propertyName in items) {
       if (items.hasOwnProperty(propertyName)) {
 
         if (items[propertyName].some(function (item) {
-              return item.severity === RuleSeverity.error;
-            }))
+            return item.severity === RuleSeverity.error;
+          }))
           return false;
       }
     }
     return true;
-  };
+  }
 
   /**
    * Transforms the broken rules into a format that can be sent to the client.
@@ -124,23 +155,27 @@ var BrokenRuleList = function (modelName) {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The namespace must be a string.
    */
-  this.output = function (namespace) {
+  output(namespace) {
 
-    namespace = Argument.inMethod(CLASS_NAME, 'output')
-        .check(namespace).forOptional('namespace').asString();
+    namespace = Argument.inMethod(this.constructor.name, 'output')
+      .check(namespace).forOptional('namespace').asString();
 
-    var data = new BrokenRulesOutput();
+    const items = _items.get(this);
+    const length = _length.get(this);
+    const modelName = _modelName.get(this);
+
+    const data = new BrokenRulesOutput();
     if (length) {
 
-      var ns = namespace ? namespace + ':' : '';
-      for (var property in items) {
+      const ns = namespace ? namespace + ':' : '';
+      for (const property in items) {
         if (items.hasOwnProperty(property)) {
 
           items[property].forEach(function(brokenRule) {
 
-            var propertyName = modelName + '.' + brokenRule.propertyName;
-            var message = brokenRule.message || ns + propertyName + '.' + brokenRule.ruleName;
-            var notice = new RuleNotice(message, brokenRule.severity);
+            const propertyName = modelName + '.' + brokenRule.propertyName;
+            const message = brokenRule.message || ns + propertyName + '.' + brokenRule.ruleName;
+            const notice = new RuleNotice(message, brokenRule.severity);
 
             data.add(propertyName, notice);
           });
@@ -148,7 +183,7 @@ var BrokenRuleList = function (modelName) {
       }
     }
     return data;
-  };
-};
+  }
+}
 
 module.exports = BrokenRuleList;
