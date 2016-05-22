@@ -1,6 +1,7 @@
 'use strict';
 
-//const ExtensionManagerBase = require( './extension-manager-base.js' );
+//region Imports
+
 const ExtensionManager = require( './extension-manager.js' );
 const EventHandlerList = require( './event-handler-list.js' );
 const DataStore = require( './data-store.js' );
@@ -18,6 +19,8 @@ const DataPortalContext = require( './data-portal-context.js' );
 const DataPortalEvent = require( './data-portal-event.js' );
 const DataPortalEventArgs = require( './data-portal-event-args.js' );
 const DataPortalError = require( './data-portal-error.js' );
+
+//endregion
 
 /**
  * Contains components used by models, collections and other components.
@@ -60,7 +63,6 @@ const DataPortalError = require( './data-portal-error.js' );
  *
  */
 const index = {
-  //ExtensionManagerBase: ExtensionManagerBase,
   ExtensionManager: ExtensionManager,
   EventHandlerList: EventHandlerList,
   DataStore: DataStore,

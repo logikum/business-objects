@@ -2,27 +2,27 @@
 
 //region Imports
 
-var ModelComposer = require('./model-composer.js');
+const ModelComposer = require( './model-composer.js' );
 
-var EditableRootObject = require('./editable-root-object.js');
-var EditableChildObject = require('./editable-child-object.js');
-var EditableRootCollection = require('./editable-root-collection.js');
-var EditableChildCollection = require('./editable-child-collection.js');
-var ReadOnlyRootObject = require('./read-only-root-object.js');
-var ReadOnlyChildObject = require('./read-only-child-object.js');
-var ReadOnlyRootCollection = require('./read-only-root-collection.js');
-var ReadOnlyChildCollection = require('./read-only-child-collection.js');
-var CommandObject = require('./command-object.js');
+const EditableRootObject = require( './editable-root-object.js' );
+const EditableChildObject = require( './editable-child-object.js' );
+const EditableRootCollection = require( './editable-root-collection.js' );
+const EditableChildCollection = require( './editable-child-collection.js' );
+const ReadOnlyRootObject = require( './read-only-root-object.js' );
+const ReadOnlyChildObject = require( './read-only-child-object.js' );
+const ReadOnlyRootCollection = require( './read-only-root-collection.js' );
+const ReadOnlyChildCollection = require( './read-only-child-collection.js' );
+const CommandObject = require( './command-object.js' );
 
-var commonRules = require('./common-rules/index.js');
-var dataAccess = require('./data-access/index.js');
-var dataTypes = require('./data-types/index.js');
-var rules = require('./rules/index.js');
-var shared = require('./shared/index.js');
-var system = require('./system/index.js');
+const commonRules = require( './common-rules/index.js' );
+const dataAccess = require( './data-access/index.js' );
+const dataTypes = require( './data-types/index.js' );
+const rules = require( './rules/index.js' );
+const shared = require( './shared/index.js' );
+const system = require( './system/index.js' );
 
-var configuration = require('./system/configuration-reader.js');
-var i18n = require('./locales/i18n.js');
+const configuration = require( './system/configuration-reader.js' );
+const i18n = require( './locales/i18n.js' );
 
 //endregion
 
@@ -49,7 +49,7 @@ var i18n = require('./locales/i18n.js');
  * @property {function} i18n - {@link bo.i18n Internationalization}
  *      constructor to create new a message localizer object.
  */
-var index = {
+const index = {
   ModelComposer: ModelComposer,
 
   //ModelBase: ModelBase,
@@ -83,13 +83,13 @@ var index = {
    *    The relative path of the {@link external.configurationFile configuration file} (.js or .json).
    *    E.g. /config/business-objects.json
    */
-  initialize: function (cfgPath) {
-    this.configuration.initialize(cfgPath);
-    this.i18n.initialize(this.configuration.pathOfLocales, this.configuration.getLocale);
+  initialize: function ( cfgPath ) {
+    this.configuration.initialize( cfgPath );
+    this.i18n.initialize( this.configuration.pathOfLocales, this.configuration.getLocale );
   }
 };
 
 // Immutable object.
-Object.freeze(index);
+Object.freeze( index );
 
 module.exports = index;

@@ -1,5 +1,7 @@
 'use strict';
 
+//region Imports
+
 const ValidationRule = require( './validation-rule.js' );
 const ValidationContext = require( './validation-context.js' );
 const ValidationResult = require( './validation-result.js' );
@@ -23,6 +25,8 @@ const BrokenRuleList = require( './broken-rule-list.js' );
 const RuleNotice = require( './rule-notice.js' );
 const BrokenRulesOutput = require( './broken-rules-output.js' );
 const BrokenRulesResponse = require( './broken-rules-response.js' );
+
+//endregion
 
 /**
  * Contains components used by authorization and validation rules.

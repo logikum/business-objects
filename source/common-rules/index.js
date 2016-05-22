@@ -1,5 +1,7 @@
 'use strict';
 
+//region Imports
+
 const IsInRoleRule = require( './is-in-role-rule.js' );
 const IsInAnyRoleRule = require( './is-in-any-role-rule.js' );
 const IsInAllRolesRule = require( './is-in-all-roles-rule.js' );
@@ -17,6 +19,8 @@ const DependencyRule = require( './dependency-rule.js' );
 const InformationRule = require( './information-rule.js' );
 
 const NullResultOption = require( './null-result-option.js' );
+
+//endregion
 
 /**
  * Contains implementations of frequently used rules.
