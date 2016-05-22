@@ -1,110 +1,116 @@
-console.log('Testing rules/rule-manager.js...');
+console.log( 'Testing rules/rule-manager.js...' );
 
-function read ( filename ) {
+function read( filename ) {
   return require( '../../../source/' + filename );
 }
-var RuleManager = read( 'rules/rule-manager.js');
-var ValidationRule = read( 'rules/validation-rule.js');
-var ValidationContext = read( 'rules/validation-context.js');
-var AuthorizationRule = read( 'rules/authorization-rule.js');
-var AuthorizationContext = read( 'rules/authorization-context.js');
-var AuthorizationAction = read( 'rules/authorization-action.js');
-var NoAccessBehavior = read( 'rules/no-access-behavior.js');
-var BrokenRuleList = read( 'rules/broken-rule-list.js');
-var Text = read( 'data-types/text.js');
-var DataStore = read( 'shared/data-store.js');
-var PropertyInfo = read( 'shared/property-info.js');
+const RuleManager = read( 'rules/rule-manager.js' );
+const ValidationRule = read( 'rules/validation-rule.js' );
+const ValidationContext = read( 'rules/validation-context.js' );
+const AuthorizationRule = read( 'rules/authorization-rule.js' );
+const AuthorizationContext = read( 'rules/authorization-context.js' );
+const AuthorizationAction = read( 'rules/authorization-action.js' );
+const NoAccessBehavior = read( 'rules/no-access-behavior.js' );
+const BrokenRuleList = read( 'rules/broken-rule-list.js' );
+const Text = read( 'data-types/text.js' );
+const DataStore = read( 'shared/data-store.js' );
+const PropertyInfo = read( 'shared/property-info.js' );
 
-describe('Rule manager', function () {
-  var vr0 = new ValidationRule('ruleName');
-  var ar0 = new AuthorizationRule('ruleName');
+describe( 'Rule manager', () => {
 
-  var vr = new ValidationRule('ruleName');
-  var property = new PropertyInfo('property', new Text());
-  vr.initialize(property, 'message', 19, true);
+  const vr0 = new ValidationRule( 'ruleName' );
+  const ar0 = new AuthorizationRule( 'ruleName' );
 
-  var ar = new AuthorizationRule('ruleName');
-  ar.initialize(AuthorizationAction.updateObject, null, 'message', 13, true);
+  const vr = new ValidationRule( 'ruleName' );
+  const property = new PropertyInfo( 'property', new Text() );
+  vr.initialize( property, 'message', 19, true );
 
-  it('constructor expects any rule argument', function () {
-    var build01 = function () { return new RuleManager(); };
-    var build02 = function () { return new RuleManager(1); };
-    var build03 = function () { return new RuleManager(true); };
-    var build04 = function () { return new RuleManager('rules'); };
-    var build05 = function () { return new RuleManager(11.11); };
-    var build06 = function () { return new RuleManager({}); };
-    var build07 = function () { return new RuleManager([]); };
-    var build08 = function () { return new RuleManager(vr0); };
-    var build09 = function () { return new RuleManager(ar0); };
-    var build10 = function () { return new RuleManager(vr); };
-    var build11 = function () { return new RuleManager(ar); };
-    var build12 = function () { return new RuleManager(vr, ar); };
+  const ar = new AuthorizationRule( 'ruleName' );
+  ar.initialize( AuthorizationAction.updateObject, null, 'message', 13, true );
 
-    expect(build01).not.toThrow();
-    expect(build02).toThrow();
-    expect(build03).toThrow();
-    expect(build04).toThrow();
-    expect(build05).toThrow();
-    expect(build06).toThrow();
-    expect(build07).toThrow();
-    expect(build08).toThrow();
-    expect(build09).toThrow();
-    expect(build10).not.toThrow();
-    expect(build11).not.toThrow();
-    expect(build12).not.toThrow();
-  });
+  it( 'constructor expects any rule argument', () => {
 
-  it('initialize method works', function() {
-    var rm = new RuleManager(vr, ar);
-    rm.initialize(NoAccessBehavior.throwError);
+    const build01 = function () { return new RuleManager(); };
+    const build02 = function () { return new RuleManager( 1 ); };
+    const build03 = function () { return new RuleManager( true ); };
+    const build04 = function () { return new RuleManager( 'rules' ); };
+    const build05 = function () { return new RuleManager( 11.11 ); };
+    const build06 = function () { return new RuleManager( {} ); };
+    const build07 = function () { return new RuleManager( [] ); };
+    const build08 = function () { return new RuleManager( vr0 ); };
+    const build09 = function () { return new RuleManager( ar0 ); };
+    const build10 = function () { return new RuleManager( vr ); };
+    const build11 = function () { return new RuleManager( ar ); };
+    const build12 = function () { return new RuleManager( vr, ar ); };
 
-    expect(rm.noAccessBehavior).toBe(NoAccessBehavior.throwError);
-  });
+    expect( build01 ).not.toThrow();
+    expect( build02 ).toThrow();
+    expect( build03 ).toThrow();
+    expect( build04 ).toThrow();
+    expect( build05 ).toThrow();
+    expect( build06 ).toThrow();
+    expect( build07 ).toThrow();
+    expect( build08 ).toThrow();
+    expect( build09 ).toThrow();
+    expect( build10 ).not.toThrow();
+    expect( build11 ).not.toThrow();
+    expect( build12 ).not.toThrow();
+  } );
 
-  it('add method works', function() {
-    var rm = new RuleManager();
-    rm.initialize(NoAccessBehavior.throwError);
+  it( 'initialize method works', () => {
 
-    var add01 = function () { rm.add(); };
-    var add02 = function () { rm.add({}); };
-    var add03 = function () { rm.add(vr0); };
-    var add04 = function () { rm.add(ar0); };
-    var add05 = function () { rm.add(vr); };
-    var add06 = function () { rm.add(ar); };
-    var add07 = function () { rm.add([vr, ar]); };
+    const rm = new RuleManager( vr, ar );
+    rm.initialize( NoAccessBehavior.throwError );
 
-    expect(add01).toThrow();
-    expect(add02).toThrow();
-    expect(add03).toThrow();
-    expect(add04).toThrow();
-    expect(add05).not.toThrow();
-    expect(add06).not.toThrow();
-    expect(add07).toThrow();
-  });
+    expect( rm.noAccessBehavior ).toBe( NoAccessBehavior.throwError );
+  } );
 
-  it('validate method works', function() {
-    var rm = new RuleManager(vr);
-    rm.initialize(NoAccessBehavior.throwError);
+  it( 'add method works', () => {
 
-    var brokenRules = new BrokenRuleList('modelName');
-    var context = new ValidationContext(new DataStore(), brokenRules);
+    const rm = new RuleManager();
+    rm.initialize( NoAccessBehavior.throwError );
 
-    var validate01 = function () { rm.validate(property, context); };
+    const add01 = function () { rm.add(); };
+    const add02 = function () { rm.add( {} ); };
+    const add03 = function () { rm.add( vr0 ); };
+    const add04 = function () { rm.add( ar0 ); };
+    const add05 = function () { rm.add( vr ); };
+    const add06 = function () { rm.add( ar ); };
+    const add07 = function () { rm.add( [ vr, ar ] ); };
 
-    expect(validate01).toThrow('The ValidationRule.execute method is not implemented.');
-  });
+    expect( add01 ).toThrow();
+    expect( add02 ).toThrow();
+    expect( add03 ).toThrow();
+    expect( add04 ).toThrow();
+    expect( add05 ).not.toThrow();
+    expect( add06 ).not.toThrow();
+    expect( add07 ).toThrow();
+  } );
 
-  it('hasPermission method works', function() {
-    var rm = new RuleManager(ar);
-    rm.initialize(NoAccessBehavior.throwError);
+  it( 'validate method works', () => {
 
-    var brokenRules = new BrokenRuleList('modelName');
-    var context = new AuthorizationContext(AuthorizationAction.updateObject, '', brokenRules);
+    const rm = new RuleManager( vr );
+    rm.initialize( NoAccessBehavior.throwError );
 
-    var hasPermission01 = function () {
-      rm.hasPermission(context);
+    const brokenRules = new BrokenRuleList( 'modelName' );
+    const context = new ValidationContext( new DataStore(), brokenRules );
+
+    const validate01 = function () { rm.validate( property, context ); };
+
+    expect( validate01 ).toThrow( 'The ValidationRule.execute method is not implemented.' );
+  } );
+
+  it( 'hasPermission method works', () => {
+
+    const rm = new RuleManager( ar );
+    rm.initialize( NoAccessBehavior.throwError );
+
+    const brokenRules = new BrokenRuleList( 'modelName' );
+    const context = new AuthorizationContext( AuthorizationAction.updateObject, '', brokenRules );
+
+    const hasPermission01 = function () {
+      rm.hasPermission( context );
     };
 
-    expect(hasPermission01).toThrow('The AuthorizationRule.execute method is not implemented.');
-  });
-});
+    expect( hasPermission01 ).toThrow( 'The AuthorizationRule.execute method is not implemented.' );
+  } );
+} );

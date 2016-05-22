@@ -1,70 +1,62 @@
 'use strict';
 
-var CLASS_NAME = 'RuleManager';
+const Argument = require( '../system/argument-check.js' );
+const MethodError = require( '../system/method-error.js' );
+const RuleList = require( './rule-list.js' );
+const ValidationRule = require( './validation-rule.js' );
+const ValidationContext = require( './validation-context.js' );
+const AuthorizationRule = require( './authorization-rule.js' );
+const AuthorizationContext = require( './authorization-context.js' );
+const RuleSeverity = require( './rule-severity.js' );
+const NoAccessBehavior = require( './no-access-behavior.js' );
+const PropertyInfo = require( '../shared/property-info.js' );
 
-var Argument = require('../system/argument-check.js');
-var MethodError = require('../system/method-error.js');
-var RuleList = require('./rule-list.js');
-var ValidationRule = require('./validation-rule.js');
-var ValidationContext = require('./validation-context.js');
-var AuthorizationRule = require('./authorization-rule.js');
-var AuthorizationContext = require('./authorization-context.js');
-var RuleSeverity = require('./rule-severity.js');
-var NoAccessBehavior = require('./no-access-behavior.js');
-var PropertyInfo = require('../shared/property-info.js');
+const _validationRules = new WeakMap();
+const _authorizationRules = new WeakMap();
+const _noAccessBehavior = new WeakMap();
 
 /**
- * @classdesc Provides methods to manage the rules of a business object model.
- * @description Creates a new rule manager object.
+ * Provides methods to manage the rules of a business object model.
  *
  * @memberof bo.rules
- * @constructor
  */
-var RuleManager = function () {
+class RuleManager {
 
-  var self = this;
-  var validationRules = new RuleList();
-  var authorizationRules = new RuleList();
-  var noAccessBehavior = null;
+  /**
+   * Creates a new rule manager object.
+   *
+   * @param {Array.<(bo.rules.ValidationRule|bo.rules.AuthorizationRule)>} [rules] -
+   *      an optional array of validation and authorization rules to set up the rule manager.
+   */
+  constructor( ...rules ) {
+
+    _validationRules.set( this, new RuleList() );
+    _authorizationRules.set( this, new RuleList() );
+    _noAccessBehavior.set( this, null );
+
+    rules.forEach( rule => {
+      this.add( rule );
+    } );
+
+    // Immutable object.
+    Object.freeze( this );
+  }
 
   /**
    * Defines the default behavior for unauthorized operations.
-   * @name bo.rules.RuleManager#noAccessBehavior
-   * @type {bo.rules.NoAccessBehavior}
+   * @member {bo.rules.NoAccessBehavior} bo.rules.RuleManager#noAccessBehavior
    * @default {bo.rules.NoAccessBehavior#throwError}
    */
-  Object.defineProperty(this, 'noAccessBehavior', {
-    get: function () {
-      return noAccessBehavior;
-    },
-    set: function (value) {
-      noAccessBehavior = Argument.inProperty(CLASS_NAME, 'noAccessBehavior')
-          .check(value).for().asEnumMember(NoAccessBehavior, NoAccessBehavior.throwError);
-    },
-    enumeration: true
-  });
+  get noAccessBehavior() {
+    return _noAccessBehavior.get( this );
+  }
 
-  /**
-   * Initializes the rule manager: sorts the rules by priority and
-   * sets the default behavior for unauthorized operations.
-   *
-   * @param {bo.rules.NoAccessBehavior} defaultBehavior - The default behavior for unauthorized operations.
-   *
-   * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a NoAccessBehavior item.
-   */
-  this.initialize = function (defaultBehavior) {
-    this.noAccessBehavior = defaultBehavior;
-    validationRules.sort();
-    authorizationRules.sort();
-
-    for (var id in authorizationRules) {
-      if (authorizationRules.hasOwnProperty(id) && authorizationRules[id] instanceof Array) {
-        authorizationRules[id].forEach(function (rule) {
-          rule.noAccessBehavior = noAccessBehavior;
-        });
-      }
-    }
-  };
+  set noAccessBehavior( value ) {
+    _noAccessBehavior.set( this,
+      Argument.inProperty( this.constructor.name, 'noAccessBehavior' )
+        .check( value ).for().asEnumMember( NoAccessBehavior, NoAccessBehavior.throwError )
+    );
+  }
 
   /**
    * Adds a new rule to the business object model.
@@ -74,20 +66,52 @@ var RuleManager = function () {
    * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a Rule object.
    * @throws {@link bo.system.ArgumentError Argument error}: The rule is not initialized.
    */
-  this.add = function (rule) {
+  add( rule ) {
 
     if (rule instanceof ValidationRule) {
       if (!rule.primaryProperty)
-        throw new ArgumentError('notInitRule', CLASS_NAME, 'add', 'rule');
-      validationRules.add(rule.primaryProperty.name, rule);
-
-    } else if (rule instanceof AuthorizationRule) {
+        throw new ArgumentError( 'notInitRule', this.constructor.name, 'add', 'rule' );
+      const validationRules = _validationRules.get( this );
+      validationRules.add( rule.primaryProperty.name, rule );
+      _validationRules.set( this, validationRules );
+    }
+    else if (rule instanceof AuthorizationRule) {
       if (!rule.ruleId)
-        throw new ArgumentError('notInitRule', CLASS_NAME, 'add', 'rule');
-      authorizationRules.add(rule.ruleId, rule);
+        throw new ArgumentError( 'notInitRule', this.constructor.name, 'add', 'rule' );
+      const authorizationRules = _authorizationRules.get( this );
+      authorizationRules.add( rule.ruleId, rule );
+      _authorizationRules.set( this, authorizationRules );
+    }
+    else
+      throw new MethodError( 'manType', this.constructor.name, 'add', 'rule', 'Rule' );
+  }
 
-    } else
-      throw new MethodError('manType', CLASS_NAME, 'add', 'rule', 'Rule');
+  /**
+   * Initializes the rule manager: sorts the rules by priority and
+   * sets the default behavior for unauthorized operations.
+   *
+   * @param {bo.rules.NoAccessBehavior} defaultBehavior - The default behavior for unauthorized operations.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The severity must be a NoAccessBehavior item.
+   */
+  initialize( defaultBehavior ) {
+    this.noAccessBehavior = defaultBehavior;
+
+    const validationRules = _validationRules.get( this );
+    validationRules.sort();
+    _validationRules.set( this, validationRules );
+
+    const authorizationRules = _authorizationRules.get( this );
+    authorizationRules.sort();
+
+    for (const id in authorizationRules) {
+      if (authorizationRules.hasOwnProperty( id ) && authorizationRules[ id ] instanceof Array) {
+        authorizationRules[ id ].forEach( function ( rule ) {
+          rule.noAccessBehavior = defaultBehavior;
+        } );
+      }
+    }
+    _authorizationRules.set( this, authorizationRules );
   };
 
   /**
@@ -99,59 +123,62 @@ var RuleManager = function () {
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
    * @throws {@link bo.system.ArgumentError Argument error}: The context must be a ValidationContext object.
    */
-  this.validate = function (property, context) {
-    var check = Argument.inMethod(CLASS_NAME, 'validate');
+  validate( property, context ) {
+    const check = Argument.inMethod( this.constructor.name, 'validate' );
 
-    property = check(property).forMandatory('property').asType(PropertyInfo);
-    context = check(context).forMandatory('context').asType(ValidationContext);
+    property = check( property ).forMandatory( 'property' ).asType( PropertyInfo );
+    context = check( context ).forMandatory( 'context' ).asType( ValidationContext );
 
-    context.brokenRules.clear(property);
+    context.brokenRules.clear( property );
 
-    var rules = validationRules[property.name];
+    const validationRules = _validationRules.get( this );
+    const rules = validationRules[ property.name ];
     if (rules) {
-      for (var i = 0; i < rules.length; i++) {
-        var rule = rules[i];
+      for (let i = 0; i < rules.length; i++) {
+        const rule = rules[ i ];
 
-        var result = rule.execute(rule.getInputValues(context.getValue));
+        const result = rule.execute( rule.getInputValues( context.getValue ) );
 
         if (result) {
           if (result.severity !== RuleSeverity.success) {
-            context.brokenRules.add(result.toBrokenRule());
+            context.brokenRules.add( result.toBrokenRule() );
           }
           if (result.affectedProperties) {
-            result.affectedProperties.forEach(function (affectedProperty) {
-              self.validate(affectedProperty, context);
-            });
+            result.affectedProperties.forEach( function ( affectedProperty ) {
+              self.validate( affectedProperty, context );
+            } );
           }
           if (result.stopsProcessing)
             break;
         }
       }
     }
-  };
+  }
 
   /**
    * Validates a property - executes all validation rules of the property.
    *
    * @param {bo.rules.AuthorizationContext} context - The context of the action authorization.
+   * @returns {boolean} True when the user is allowed to execute the action, otherwise false.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The context must be a AuthorizationContext object.
    * @throws {@link bo.rules.AuthorizationError Authorization error}: The user has no permission to execute the action.
    */
-  this.hasPermission = function (context) {
+  hasPermission( context ) {
 
-    context = Argument.inMethod(CLASS_NAME, 'hasPermission')
-        .check(context).forMandatory('context').asType(AuthorizationContext);
-    var isAllowed = true;
+    context = Argument.inMethod( this.constructor.name, 'hasPermission' )
+      .check( context ).forMandatory( 'context' ).asType( AuthorizationContext );
+    let isAllowed = true;
 
-    var rules = authorizationRules[context.ruleId];
+    const authorizationRules = _authorizationRules.get( this );
+    const rules = authorizationRules[ context.ruleId ];
     if (rules) {
-      for (var i = 0; i < rules.length; i++) {
+      for (let i = 0; i < rules.length; i++) {
 
-        var result = rules[i].execute(context.user);
+        const result = rules[ i ].execute( context.user );
 
         if (result) {
-          context.brokenRules.push(result.toBrokenRule());
+          context.brokenRules.push( result.toBrokenRule() );
           isAllowed = false;
           if (result.stopsProcessing)
             break;
@@ -159,15 +186,7 @@ var RuleManager = function () {
       }
     }
     return isAllowed;
-  };
-
-  var args = Array.prototype.slice.call(arguments);
-  args.forEach(function (arg) {
-    self.add(arg);
-  });
-
-  // Immutable object.
-  Object.freeze(this);
-};
+  }
+}
 
 module.exports = RuleManager;
