@@ -19,11 +19,20 @@ function sortByPriority( a, b ) {
  * Represents the lists of rules of a model instance.
  *
  * @memberof bo.rules
+ * @extends Map
  */
-class RuleList {
+class RuleList extends Map {
 
   /**
-   * Adds a new rule to the list of rules of its owner property.
+   * Creates a new rule list.
+   */
+  constructor() {
+    super();
+    Object.freeze( this );
+  }
+
+  /**
+   * Adds a new rule to the list of rules of the property identified.
    *
    * @function bo.rules.RuleList#add
    * @param {string} id - The identifier of the rule list, typically the property name.
@@ -32,16 +41,19 @@ class RuleList {
    * @throws {@link bo.system.ArgumentError Argument error}: The identifier must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The rule must be a ValidationRule or AuthorizationRule object.
    */
-  add( id, rule ) {
+  set( id, rule ) {
     const check = Argument.inMethod( this.constructor.name, 'add' );
 
     id = check( id ).forMandatory( 'id' ).asString();
     rule = check( rule ).forMandatory( 'rule' ).asType( [ ValidationRule, AuthorizationRule ] );
 
-    if (this[ id ])
-      this[ id ].push( rule );
+    if (this.has( id )) {
+      const array = this.get( id );
+      array.push( rule );
+      super.set( id, array );
+    }
     else
-      this[ id ] = new Array( rule );
+      super.set( id, new Array( rule ) );
   }
 
   /**
@@ -50,10 +62,8 @@ class RuleList {
    * @function bo.rules.RuleList#sort
    */
   sort() {
-    for (const id in this) {
-      if (this.hasOwnProperty( id ) && this[ id ] instanceof Array) {
-        this[ id ].sort( sortByPriority );
-      }
+    for (const array of this.values()) {
+      array.sort( sortByPriority );
     }
   }
 }

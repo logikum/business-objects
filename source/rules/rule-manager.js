@@ -72,14 +72,14 @@ class RuleManager {
       if (!rule.primaryProperty)
         throw new ArgumentError( 'notInitRule', this.constructor.name, 'add', 'rule' );
       const validationRules = _validationRules.get( this );
-      validationRules.add( rule.primaryProperty.name, rule );
+      validationRules.set( rule.primaryProperty.name, rule );
       _validationRules.set( this, validationRules );
     }
     else if (rule instanceof AuthorizationRule) {
       if (!rule.ruleId)
         throw new ArgumentError( 'notInitRule', this.constructor.name, 'add', 'rule' );
       const authorizationRules = _authorizationRules.get( this );
-      authorizationRules.add( rule.ruleId, rule );
+      authorizationRules.set( rule.ruleId, rule );
       _authorizationRules.set( this, authorizationRules );
     }
     else
@@ -104,12 +104,10 @@ class RuleManager {
     const authorizationRules = _authorizationRules.get( this );
     authorizationRules.sort();
 
-    for (const id in authorizationRules) {
-      if (authorizationRules.hasOwnProperty( id ) && authorizationRules[ id ] instanceof Array) {
-        authorizationRules[ id ].forEach( function ( rule ) {
-          rule.noAccessBehavior = defaultBehavior;
-        } );
-      }
+    for (const array in authorizationRules.values()) {
+      array.forEach( rule => {
+        rule.noAccessBehavior = defaultBehavior;
+      } );
     }
     _authorizationRules.set( this, authorizationRules );
   };
@@ -132,11 +130,11 @@ class RuleManager {
     context.brokenRules.clear( property );
 
     const validationRules = _validationRules.get( this );
-    const rules = validationRules[ property.name ];
-    if (rules) {
+    if (validationRules.has( property.name )) {
+      const rules = validationRules.get( property.name );
+
       for (let i = 0; i < rules.length; i++) {
         const rule = rules[ i ];
-
         const result = rule.execute( rule.getInputValues( context.getValue ) );
 
         if (result) {
@@ -171,10 +169,10 @@ class RuleManager {
     let isAllowed = true;
 
     const authorizationRules = _authorizationRules.get( this );
-    const rules = authorizationRules[ context.ruleId ];
-    if (rules) {
-      for (let i = 0; i < rules.length; i++) {
+    if (authorizationRules.has( context.ruleId )) {
+      const rules = authorizationRules.get( context.ruleId );
 
+      for (let i = 0; i < rules.length; i++) {
         const result = rules[ i ].execute( context.user );
 
         if (result) {

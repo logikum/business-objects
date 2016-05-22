@@ -24,12 +24,12 @@ describe( 'Rule list', () => {
     const pi = new PropertyInfo( 'property', new Text() );
     const rule = new RequiredRule( pi, 'message', 13, true );
 
-    const add01 = function () { rl.add(); };
-    const add02 = function () { rl.add( 'property' ); };
-    const add03 = function () { rl.add( 'property', 'message' ); };
-    const add04 = function () { rl.add( 'property', rule ); };
-    const add05 = function () { rl.add( '', rule ); };
-    const add06 = function () { rl.add( null, rule ); };
+    const add01 = function () { rl.set(); };
+    const add02 = function () { rl.set( 'property' ); };
+    const add03 = function () { rl.set( 'property', 'message' ); };
+    const add04 = function () { rl.set( 'property', rule ); };
+    const add05 = function () { rl.set( '', rule ); };
+    const add06 = function () { rl.set( null, rule ); };
 
     expect( add01 ).toThrow();
     expect( add02 ).toThrow();
@@ -45,16 +45,16 @@ describe( 'Rule list', () => {
     const pi = new PropertyInfo( 'property', new Text() );
     const rule1 = new InformationRule( pi, 'message #1', 7, false );
     const rule2 = new RequiredRule( pi, 'message #2', 13, true );
-    rl.add( 'property', rule1 );
-    rl.add( 'property', rule2 );
+    rl.set( 'property', rule1 );
+    rl.set( 'property', rule2 );
 
-    expect( rl.property ).toEqual( jasmine.any( Array ) );
-    expect( rl.property[ 0 ].message ).toBe( 'message #1' );
-    expect( rl.property[ 0 ].priority ).toBe( 7 );
-    expect( rl.property[ 0 ].stopsProcessing ).toBe( false );
-    expect( rl.property[ 1 ].message ).toBe( 'message #2' );
-    expect( rl.property[ 1 ].priority ).toBe( 13 );
-    expect( rl.property[ 1 ].stopsProcessing ).toBe( true );
+    expect( rl.get('property') ).toEqual( jasmine.any( Array ) );
+    expect( rl.get('property')[ 0 ].message ).toBe( 'message #1' );
+    expect( rl.get('property')[ 0 ].priority ).toBe( 7 );
+    expect( rl.get('property')[ 0 ].stopsProcessing ).toBe( false );
+    expect( rl.get('property')[ 1 ].message ).toBe( 'message #2' );
+    expect( rl.get('property')[ 1 ].priority ).toBe( 13 );
+    expect( rl.get('property')[ 1 ].stopsProcessing ).toBe( true );
   } );
 
   it( 'sort method arranges items by priority', () => {
@@ -63,11 +63,11 @@ describe( 'Rule list', () => {
     const pi = new PropertyInfo( 'property', new Text() );
     const rule1 = new InformationRule( pi, 'message #1', 7, false );
     const rule2 = new RequiredRule( pi, 'message #2', 13, true );
-    rl.add( 'property', rule1 );
-    rl.add( 'property', rule2 );
+    rl.set( 'property', rule1 );
+    rl.set( 'property', rule2 );
     rl.sort();
 
-    expect( rl.property[ 0 ].message ).toBe( 'message #2' );
-    expect( rl.property[ 1 ].message ).toBe( 'message #1' );
+    expect( rl.get('property')[ 0 ].message ).toBe( 'message #2' );
+    expect( rl.get('property')[ 1 ].message ).toBe( 'message #1' );
   } );
 } );
