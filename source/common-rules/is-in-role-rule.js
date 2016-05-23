@@ -38,7 +38,7 @@ class IsInRoleRule extends AuthorizationRule {
      * @member {string} bo.commonRules.IsInRoleRule#role
      * @readonly
      */
-    this.role = Argument.inConstructor( this.constructor.name )
+    this.role = Argument.inConstructor( IsInRoleRule.name )
       .check( role ).forMandatory( 'role' ).asString();
 
     // Initialize base properties.
@@ -63,7 +63,7 @@ class IsInRoleRule extends AuthorizationRule {
    */
   execute( userInfo ) {
 
-    userInfo = Argument.inMethod( this.constructor.name, 'execute' )
+    userInfo = Argument.inMethod( IsInRoleRule.name, 'execute' )
       .check( userInfo ).forOptional( 'userInfo' ).asType( UserInfo );
 
     const hasPermission = userInfo.isInRole( this.role );

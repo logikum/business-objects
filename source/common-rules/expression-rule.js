@@ -30,7 +30,7 @@ class ExpressionRule extends ValidationRule {
    */
   constructor( primaryProperty, regex, option, message, priority, stopsProcessing ) {
     super( 'Expression' );
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( ExpressionRule.name );
 
     /**
      * The regular expression that the property value has to conform.
@@ -49,7 +49,7 @@ class ExpressionRule extends ValidationRule {
     // Initialize base properties.
     this.initialize(
       primaryProperty,
-      message || t( 'expression', primaryProperty.name ),
+      message || t( 'expression', primaryProperty ? primaryProperty.name : '' ),
       priority,
       stopsProcessing
     );

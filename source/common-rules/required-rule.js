@@ -28,7 +28,7 @@ class RequiredRule extends ValidationRule {
     // Initialize base properties.
     this.initialize(
       primaryProperty,
-      message || t( 'required', primaryProperty.name ),
+      message || t( 'required', primaryProperty ? primaryProperty.name : '' ),
       priority || 50,
       stopsProcessing
     );

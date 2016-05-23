@@ -27,7 +27,7 @@ describe( 'Min-Length rule', () => {
 
     expect( build01 ).toThrow();
     expect( build02 ).toThrow();
-    expect( build03 ).toThrow();
+    expect( build03 ).toThrow( 'The minLength argument of MinLengthRule constructor must be an integer value.' );
     expect( build04 ).toThrow();
     expect( build05 ).not.toThrow();
     expect( build06 ).not.toThrow();

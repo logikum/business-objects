@@ -33,15 +33,16 @@ class MinLengthRule extends ValidationRule {
      * @member {number} bo.commonRules.MinLengthRule#minLength
      * @readonly
      */
-    this.minLength = Argument.inConstructor( this.constructor.name )
+    this.minLength = Argument.inConstructor( MinLengthRule.name )
       .check( minLength ).forMandatory( 'minLength' ).asInteger();
 
     // Initialize base properties.
+    const propertyName = primaryProperty ? primaryProperty.name : '';
     this.initialize(
       primaryProperty,
       message || (minLength > 1 ?
-        t( 'minLength', primaryProperty.name, minLength ) :
-        t( 'minLength1', primaryProperty.name )),
+        t( 'minLength', propertyName, minLength ) :
+        t( 'minLength1', propertyName )),
       priority,
       stopsProcessing
     );

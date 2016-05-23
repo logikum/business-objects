@@ -29,7 +29,7 @@ describe( 'Dependency rule', () => {
     const build08 = function () { return new DependencyRule( pi, di, 'message', 7, true ); };
     const build09 = function () { return new DependencyRule( pi, [ di, di2 ], 'message', 7, true ); };
 
-    expect( build01 ).toThrow();
+    expect( build01 ).toThrow( 'The dependencies argument of DependencyRule constructor must be an array of PropertyInfo objects or a single PropertyInfo object.' );
     expect( build02 ).toThrow();
     expect( build03 ).toThrow();
     expect( build04 ).toThrow();

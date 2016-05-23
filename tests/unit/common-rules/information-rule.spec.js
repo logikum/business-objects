@@ -25,7 +25,7 @@ describe( 'Information rule', () => {
     const build07 = function () { return new InformationRule( pi, 'message', 3 ); };
     const build08 = function () { return new InformationRule( pi, 'message', 3, false ); };
 
-    expect( build01 ).toThrow();
+    expect( build01 ).toThrow( 'The message argument of InformationRule constructor must be a non-empty string.' );
     expect( build02 ).toThrow();
     expect( build03 ).toThrow();
     expect( build04 ).toThrow();

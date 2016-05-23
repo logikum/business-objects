@@ -27,7 +27,7 @@ describe( 'Min-value rule', () => {
 
     expect( build01 ).toThrow();
     expect( build02 ).toThrow();
-    expect( build03 ).toThrow();
+    expect( build03 ).toThrow( 'The minValue argument of MinValueRule constructor is required.' );
     expect( build04 ).toThrow();
     expect( build05 ).not.toThrow();
     expect( build06 ).not.toThrow();

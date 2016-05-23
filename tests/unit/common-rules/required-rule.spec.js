@@ -25,7 +25,7 @@ describe( 'Required rule', () => {
     const build07 = function () { return new RequiredRule( pi, 'message', 100 ); };
     const build08 = function () { return new RequiredRule( pi, 'message', 100, true ); };
 
-    expect( build01 ).toThrow();
+    expect( build01 ).toThrow( 'The primaryProperty argument of RequiredRule.initialize method must be a PropertyInfo object.' );
     expect( build02 ).toThrow();
     expect( build03 ).toThrow();
     expect( build04 ).toThrow();

@@ -33,13 +33,13 @@ class MaxValueRule extends ValidationRule {
      * @member {number} bo.commonRules.MaxValueRule#maxValue
      * @readonly
      */
-    this.maxValue = Argument.inConstructor( this.constructor.name )
+    this.maxValue = Argument.inConstructor( MaxValueRule.name )
       .check( maxValue ).for( 'maxValue' ).hasValue();
 
     // Initialize base properties.
     this.initialize(
       primaryProperty,
-      message || t( 'maxValue', primaryProperty.name, maxValue ),
+      message || t( 'maxValue', primaryProperty ? primaryProperty.name : '', maxValue ),
       priority,
       stopsProcessing
     );

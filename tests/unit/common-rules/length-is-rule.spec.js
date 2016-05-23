@@ -27,7 +27,7 @@ describe( 'Length-is rule', () => {
 
     expect( build01 ).toThrow();
     expect( build02 ).toThrow();
-    expect( build03 ).toThrow();
+    expect( build03 ).toThrow( 'The length argument of LengthIsRule constructor must be an integer value.' );
     expect( build04 ).toThrow();
     expect( build05 ).not.toThrow();
     expect( build06 ).not.toThrow();

@@ -33,13 +33,13 @@ class MinValueRule extends ValidationRule {
      * @member {number} bo.commonRules.MinValueRule#minValue
      * @readonly
      */
-    this.minValue = Argument.inConstructor( this.constructor.name )
+    this.minValue = Argument.inConstructor( MinValueRule.name )
       .check( minValue ).forMandatory( 'minValue' ).hasValue();
 
     // Initialize base properties.
     this.initialize(
       primaryProperty,
-      message || t( 'minValue', primaryProperty.name, minValue ),
+      message || t( 'minValue', primaryProperty ? primaryProperty.name : '', minValue ),
       priority,
       stopsProcessing
     );

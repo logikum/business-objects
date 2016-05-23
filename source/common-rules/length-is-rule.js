@@ -33,15 +33,16 @@ class LengthIsRule extends ValidationRule {
      * @member {number} bo.commonRules.LengthIsRule#length
      * @readonly
      */
-    this.length = Argument.inConstructor( this.constructor.name )
+    this.length = Argument.inConstructor( LengthIsRule.name )
       .check( length ).forMandatory( 'length' ).asInteger();
 
     // Initialize base properties.
+    const propertyName = primaryProperty ? primaryProperty.name : '';
     this.initialize(
       primaryProperty,
       message || (length > 1 ?
-        t( 'lengthIs', primaryProperty.name, length ) :
-        t( 'lengthIs1', primaryProperty.name )),
+        t( 'lengthIs', propertyName, length ) :
+        t( 'lengthIs1', propertyName )),
       priority,
       stopsProcessing
     );

@@ -27,7 +27,7 @@ describe( 'Max-value rule', () => {
 
     expect( build01 ).toThrow();
     expect( build02 ).toThrow();
-    expect( build03 ).toThrow();
+    expect( build03 ).toThrow( 'The maxValue argument of MaxValueRule constructor is required.' );
     expect( build04 ).toThrow();
     expect( build05 ).not.toThrow();
     expect( build06 ).not.toThrow();

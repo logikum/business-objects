@@ -25,7 +25,7 @@ describe( 'Is-in-any-role rule', () => {
 
     expect( build01 ).toThrow();
     expect( build02 ).toThrow();
-    expect( build03 ).toThrow();
+    expect( build03 ).toThrow( 'The roles argument of IsInAnyRoleRule constructor must be an array of String values or a single String values.' );
     expect( build04 ).toThrow();
     expect( build05 ).not.toThrow();
     expect( build06 ).not.toThrow();
@@ -61,10 +61,12 @@ describe( 'Is-in-any-role rule', () => {
     const call01 = function () { rule_1.execute(); };
     const call02 = function () { rule_1.execute( john ); };
     const call03 = function () { rule_2.execute( paul ); };
+    const call04 = function () { rule_2.execute( { userName: 'Mark' } ); };
 
     expect( call01 ).toThrow();
     expect( call02 ).toThrow();
     expect( call03 ).toThrow();
+    expect( call04 ).toThrow( 'The userInfo argument of IsInAnyRoleRule.execute method must be a UserInfo object or null.' );
     expect( rule_1.execute( paul ) ).toBeUndefined();
     expect( rule_2.execute( john ) ).toBeUndefined();
   } );

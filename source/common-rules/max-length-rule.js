@@ -33,15 +33,16 @@ class MaxLengthRule extends ValidationRule {
      * @member {number} bo.commonRules.MaxLengthRule#maxLength
      * @readonly
      */
-    this.maxLength = Argument.inConstructor( this.constructor.name )
+    this.maxLength = Argument.inConstructor( MaxLengthRule.name )
       .check( maxLength ).forMandatory( 'maxLength' ).asInteger();
 
     // Initialize base properties.
+    const propertyName = primaryProperty ? primaryProperty.name : '';
     this.initialize(
       primaryProperty,
       message || (maxLength > 1 ?
-        t( 'maxLength', primaryProperty.name, maxLength ) :
-        t( 'maxLength1', primaryProperty.name )),
+        t( 'maxLength', propertyName, maxLength ) :
+        t( 'maxLength1', propertyName )),
       priority,
       stopsProcessing
     );

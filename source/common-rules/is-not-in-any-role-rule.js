@@ -38,7 +38,7 @@ class IsNotInAnyRoleRule extends AuthorizationRule {
      * @member {Array.<string>} bo.commonRules.IsNotInAnyRoleRule#roles
      * @readonly
      */
-    this.roles = Argument.inConstructor( this.constructor.name )
+    this.roles = Argument.inConstructor( IsNotInAnyRoleRule.name )
       .check( roles ).forMandatory( 'roles' ).asArray( String );
 
     // Initialize base properties.
@@ -63,7 +63,7 @@ class IsNotInAnyRoleRule extends AuthorizationRule {
    */
   execute( userInfo ) {
 
-    userInfo = Argument.inMethod( this.constructor.name, 'execute' )
+    userInfo = Argument.inMethod( IsNotInAnyRoleRule.name, 'execute' )
       .check( userInfo ).forOptional( 'userInfo' ).asType( UserInfo );
 
     let hasPermission = true;

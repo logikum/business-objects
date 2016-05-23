@@ -33,7 +33,7 @@ class DependencyRule extends ValidationRule {
   constructor( primaryProperty, dependencies, message, priority, stopsProcessing ) {
     super( 'Dependency' );
 
-    dependencies = Argument.inConstructor( this.constructor.name )
+    dependencies = Argument.inConstructor( DependencyRule.name )
       .check( dependencies ).forMandatory( 'dependencies' ).asArray( PropertyInfo );
 
     // Initialize base properties.
