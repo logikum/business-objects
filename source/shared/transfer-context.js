@@ -39,7 +39,7 @@ class TransferContext {
    * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
    */
   constructor( properties, getValue, setValue ) {
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( TransferContext.name );
 
     /**
      * Array of property definitions that may appear on the transfer object.
@@ -67,7 +67,7 @@ class TransferContext {
   getValue( propertyName ) {
     const getValue = _getValue.get( this );
     if (getValue) {
-      propertyName = Argument.inMethod( this.constructor.name, 'getValue' )
+      propertyName = Argument.inMethod( TransferContext.name, 'getValue' )
         .check( propertyName ).forMandatory( 'propertyName' ).asString();
       return getValue( getByName( this.properties, propertyName ) );
     } else
@@ -86,7 +86,7 @@ class TransferContext {
   setValue( propertyName, value ) {
     const setValue = _setValue.get( this );
     if (setValue) {
-      propertyName = Argument.inMethod( this.constructor.name, 'setValue' )
+      propertyName = Argument.inMethod( TransferContext.name, 'setValue' )
         .check( propertyName ).forMandatory( 'propertyName' ).asString();
       if (value !== undefined) {
         setValue( getByName( this.properties, propertyName ), value );

@@ -35,7 +35,7 @@ describe( 'Property manager', () => {
     function create9() { return new PropertyManager( property1, property2, property3 ); }
 
     expect( create1 ).not.toThrow();
-    expect( create2 ).toThrow();
+    expect( create2 ).toThrow( 'All arguments of PropertyManager constructor must be a PropertyInfo object.' );
     expect( create3 ).toThrow();
     expect( create4 ).toThrow();
     expect( create5 ).toThrow();
@@ -52,6 +52,9 @@ describe( 'Property manager', () => {
 
     pm.modelName = 'model';
     expect( pm.modelName ).toBe( 'model' );
+
+    function set01() { pm.modelName = 3.14; }
+    expect( set01 ).toThrow( 'The value of PropertyManager.modelName property must be a non-empty string.' );
   } );
 
   //region Item management
@@ -73,7 +76,7 @@ describe( 'Property manager', () => {
       pm.add( email );
     }
 
-    expect( add1 ).toThrow();
+    expect( add1 ).toThrow( 'The property argument of PropertyManager.add method must be a PropertyInfo object.' );
     expect( add2 ).not.toThrow();
   } );
 
@@ -100,7 +103,7 @@ describe( 'Property manager', () => {
       const exists = pm.contains( email );
     }
 
-    expect( contains1 ).toThrow();
+    expect( contains1 ).toThrow( 'The property argument of PropertyManager.contains method must be a PropertyInfo object.' );
     expect( pm.contains( propertyEmail ) ).toBe( false );
     expect( pm.contains( propertyName ) ).toBe( true );
   } );
@@ -119,7 +122,7 @@ describe( 'Property manager', () => {
 
     const result = pm.getByName( 'name' );
 
-    expect( getByName1 ).toThrow();
+    expect( getByName1 ).toThrow( 'The name argument of PropertyManager.getByName method must be a non-empty string.' );
     expect( getByName2 ).toThrow();
     expect( getByName3 ).toThrow();
     expect( getByName4 ).toThrow();
@@ -242,9 +245,11 @@ describe( 'Property manager', () => {
     const address = new PropertyInfo( 'address', Address );
     pm.add( address );
 
-    const verify = function () { pm.verifyChildTypes( 'Array' ); }
+    const verify1 = function () { pm.verifyChildTypes( Array ); };
+    const verify2 = function () { pm.verifyChildTypes( 'Array' ); };
 
-    expect( verify ).toThrow();
+    expect( verify1 ).toThrow( 'The allowedTypes argument of PropertyManager.verifyChildTypes method must be an array of String values or a single String value.' );
+    expect( verify2 ).toThrow( 'The model type of orders property of PropertyManager is object, but it should be Array.' );
   } );
 
   //endregion
@@ -267,8 +272,10 @@ describe( 'Property manager', () => {
     };
 
     const key = pm.getKey( getPropertyValue );
+    function get01() { const k = pm.getKey( 1024 ); };
 
     expect( key ).toEqual( object );
+    expect( get01 ).toThrow( 'The getPropertyValue argument of PropertyManager.getKey method must be a function.' );
   } );
 
   it( 'getKey method works - one key', () => {
@@ -310,6 +317,18 @@ describe( 'Property manager', () => {
     const key = pm.getKey( getPropertyValue );
 
     expect( key ).toBeUndefined();
+  } );
+
+  it( 'keyEquals method works', () => {
+
+    const code = new PropertyInfo( 'code', new Text(), F.key );
+    const name = new PropertyInfo( 'name', new Text() );
+    const pm = new PropertyManager( code, name );
+
+    function equals01() { const eq = pm.keyEquals( 'code' ); }
+
+    expect( pm.keyEquals( { code: 'code' }, getPropertyValue ) ).toBe( true );
+    expect( equals01 ).toThrow( 'The data argument of PropertyManager.keyEquals method must be an object.' );
   } );
 
   //endregion

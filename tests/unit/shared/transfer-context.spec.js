@@ -34,7 +34,7 @@ describe( 'Transfer context', () => {
     function create10() { return new TransferContext( null, getValue, setValue ); }
 
     expect( create01 ).not.toThrow();
-    expect( create02 ).toThrow();
+    expect( create02 ).toThrow( 'The properties argument of TransferContext constructor must be an array of PropertyInfo objects, or a single PropertyInfo object or null.' );
     expect( create03 ).toThrow();
     expect( create04 ).not.toThrow();
     expect( create05 ).not.toThrow();
@@ -62,19 +62,25 @@ describe( 'Transfer context', () => {
   it( 'getValue method works', () => {
 
     const ctxReadOnly = new TransferContext( [ pi ], null, setValue );
-    function get01() { const v = ctxReadOnly.getValue( 'property' ); }
+
+    function get01() { return ctx.getValue(); }
+    function get02() { return ctxReadOnly.getValue( 'property' ); }
 
     expect( ctx.getValue( 'property' ) ).toBe( 125 );
-    expect( get01 ).toThrow( "Read-only model's properties cannot be copied to data transfer object." );
+    expect( get01 ).toThrow( 'The propertyName argument of TransferContext.getValue method must be a non-empty string.' );
+    expect( get02 ).toThrow( "Read-only model's properties cannot be copied to data transfer object." );
   } );
 
   it( 'setValue method works', () => {
 
     const ctxReadOnly = new TransferContext( [ pi ], getValue, null );
     ctx.setValue( 'property', 1001 );
-    function set01() { ctxReadOnly.setValue( 'property', 1001 ); }
+
+    function set01() { ctx.setValue( 1001 ); }
+    function set02() { ctxReadOnly.setValue( 'property', 1001 ); }
 
     expect( ctx.getValue( 'property' ) ).toBe( 1001 );
-    expect( set01 ).toThrow( "Read-only model's properties cannot be copied from client transfer object." );
+    expect( set01 ).toThrow( 'The propertyName argument of TransferContext.setValue method must be a non-empty string.' );
+    expect( set02 ).toThrow( "Read-only model's properties cannot be copied from client transfer object." );
   } );
 } );

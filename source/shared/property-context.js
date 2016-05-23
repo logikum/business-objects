@@ -42,7 +42,7 @@ class PropertyContext {
    * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
    */
   constructor( modelName, properties, getValue, setValue ) {
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( PropertyContext.name );
 
     /**
      * The name of the business object model.
@@ -82,7 +82,7 @@ class PropertyContext {
    * @returns {bo.shared.PropertyContext} The property context object itself.
    */
   with( property ) {
-    _primaryProperty.set( this, Argument.inMethod( this.constructor.name, 'with' )
+    _primaryProperty.set( this, Argument.inMethod( PropertyContext.name, 'with' )
       .check( property ).forMandatory( 'property' ).asType( PropertyInfo ) );
     return this;
   }
@@ -98,7 +98,7 @@ class PropertyContext {
    * @throws {@link bo.shared.ModelError Model error}: The property cannot be read.
    */
   getValue( propertyName ) {
-    propertyName = Argument.inMethod( this.constructor.name, 'getValue' )
+    propertyName = Argument.inMethod( PropertyContext.name, 'getValue' )
       .check( propertyName ).forMandatory( 'propertyName' ).asString();
     const getValue = _getValue.get( this );
     if (getValue) {
@@ -119,7 +119,7 @@ class PropertyContext {
    * @throws {@link bo.shared.ModelError Model error}: The property cannot be written.
    */
   setValue( propertyName, value ) {
-    propertyName = Argument.inMethod( this.constructor.name, 'setValue' )
+    propertyName = Argument.inMethod( PropertyContext.name, 'setValue' )
       .check( propertyName ).forMandatory( 'propertyName' ).asString();
     const setValue = _setValue.get( this );
     if (setValue) {

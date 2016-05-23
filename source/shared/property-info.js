@@ -37,7 +37,7 @@ class PropertyInfo {
    */
   constructor( name, type, flags, getter, setter ) {
 
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( PropertyInfo.name );
 
     /**
      * The name of the property.

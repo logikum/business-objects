@@ -26,7 +26,7 @@ describe( 'Property description', () => {
     const pi3 = new PropertyInfo( 'property', items, F.readOnly );
     const pi4 = new PropertyInfo( 'property', new Text(), F.key | F.onDtoOnly );
 
-    expect( create1 ).toThrow();
+    expect( create1 ).toThrow( 'The name argument of PropertyInfo constructor must be a non-empty string.' );
     expect( create2 ).toThrow();
     expect( create3 ).toThrow();
     expect( create4 ).toThrow();

@@ -39,7 +39,7 @@ class PropertyManager {
    */
   constructor( ...properties ) {
 
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( PropertyManager.name );
     const items = [];
     let changed = false;
 
@@ -54,7 +54,7 @@ class PropertyManager {
     _changed.set( this, changed );
     _children.set( this, [] );
     _isFrozen.set( this, false );
-    _modelName.set( this, this.constructor.name );
+    _modelName.set( this, PropertyManager.name );
 
     // Immutable object.
     Object.freeze( this );
@@ -65,7 +65,7 @@ class PropertyManager {
   }
 
   set modelName( value ) {
-    const modelName = Argument.inProperty( this.constructor.name, 'modelName' )
+    const modelName = Argument.inProperty( PropertyManager.name, 'modelName' )
       .check( value ).forMandatory().asString();
     _modelName.set( this, modelName );
   }
@@ -84,7 +84,7 @@ class PropertyManager {
     if (_isFrozen.get( this ))
       throw new ModelError( 'frozen', this.modelName );
 
-    property = Argument.inMethod( this.constructor.name, 'add' )
+    property = Argument.inMethod( PropertyManager.name, 'add' )
       .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
     const items = _items.get( this );
@@ -140,7 +140,7 @@ class PropertyManager {
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
    */
   contains( property ) {
-    property = Argument.inMethod( this.constructor.name, 'contains' )
+    property = Argument.inMethod( PropertyManager.name, 'contains' )
       .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
     return _items.get( this )
@@ -161,7 +161,7 @@ class PropertyManager {
    *    with the given name.
    */
   getByName( name, message ) {
-    name = Argument.inMethod( this.constructor.name, 'getByName' )
+    name = Argument.inMethod( PropertyManager.name, 'getByName' )
       .check( name ).forMandatory( 'name' ).asString();
 
     const items = _items.get( this );
@@ -170,7 +170,7 @@ class PropertyManager {
         return items[ i ];
     }
     throw new MethodError( message || 'noProperty',
-      this.constructor.name, 'getByName', 'name', this.modelName, name );
+      PropertyManager.name, 'getByName', 'name', this.modelName, name );
   }
 
   /**
@@ -258,7 +258,7 @@ class PropertyManager {
    *      should be an allowed type.
    */
   verifyChildTypes( allowedTypes ) {
-    allowedTypes = Argument.inMethod( this.constructor.name, 'verifyChildTypes' )
+    allowedTypes = Argument.inMethod( PropertyManager.name, 'verifyChildTypes' )
       .check( allowedTypes ).forMandatory( 'allowedTypes' ).asArray( String );
 
     checkChildren( this );
@@ -268,9 +268,11 @@ class PropertyManager {
     children.forEach( child => {
       if (!(allowedTypes.some( allowedType => {
           return child.type.modelType == allowedType;
-        } )))
+        } ))) {
+        const childType = (child.type && child.type.modelType) ? child.type.modelType : typeof child;
         throw new ModelError( 'invalidChild',
-          this.modelName, child.name, child.type.modelType, allowedTypes.join( ' | ' ) );
+          this.modelName, child.name, childType, allowedTypes.join( ' | ' ) );
+      }
     } );
 
     _isFrozen.set( this, true );
@@ -297,7 +299,7 @@ class PropertyManager {
    */
   getKey( getPropertyValue ) {
 
-    getPropertyValue = Argument.inMethod( this.constructor.name, 'getKey' )
+    getPropertyValue = Argument.inMethod( PropertyManager.name, 'getKey' )
       .check( getPropertyValue ).forMandatory( 'getPropertyValue' ).asFunction();
 
     // No properties - no keys.
@@ -347,7 +349,7 @@ class PropertyManager {
    * @throws {@link bo.system.ArgumentError Argument error}: The getPropertyValue argument must be a function.
    */
   keyEquals( data, getPropertyValue ) {
-    const check = Argument.inMethod( this.constructor.name, 'keyEquals' );
+    const check = Argument.inMethod( PropertyManager.name, 'keyEquals' );
 
     data = check( data ).forMandatory( 'data' ).asObject();
     getPropertyValue = check( getPropertyValue ).forMandatory( 'getPropertyValue' ).asFunction();

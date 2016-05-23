@@ -25,7 +25,7 @@ class ModelError extends Error {
      * @member {string} bo.shared.ModelError#name
      * @default ModelError
      */
-    this.name = this.constructor.name;
+    this.name = ModelError.name;
 
     /**
      * Human-readable description of the error.
