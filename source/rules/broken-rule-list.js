@@ -7,16 +7,12 @@ const BrokenRulesOutput = require( './broken-rules-output.js' );
 const RuleNotice = require( './rule-notice.js' );
 const RuleSeverity = require( './rule-severity.js' );
 
-const _modelName = new WeakMap();
-const _items = new WeakMap();
-const _length = new WeakMap();
-
 /**
  * Represents the lists of broken rules.
  *
  * @memberof bo.rules
  */
-class BrokenRuleList {
+class BrokenRuleList extends Map {
 
   /**
    * Creates a new broken rule list instance.
@@ -26,13 +22,19 @@ class BrokenRuleList {
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
    */
   constructor( modelName ) {
+    super();
 
-    modelName = Argument.inConstructor( this.constructor.name )
+    /**
+     * The name of the model that broken rules the list contains of.
+     *
+     * @member {string} bo.rules.BrokenRuleList#modelName
+     * @readonly
+     */
+    this.modelName = Argument.inConstructor( this.constructor.name )
       .check( modelName ).forMandatory( 'modelName' ).asString();
 
-    _modelName.set( this, modelName );
-    _items.set( this, new Map() );
-    _length.set( this, 0 );
+    // Immutable object.
+    Object.freeze( this );
   }
 
   /**
@@ -47,22 +49,15 @@ class BrokenRuleList {
     brokenRule = Argument.inMethod( this.constructor.name, 'add' )
       .check( brokenRule ).forMandatory( 'brokenRule' ).asType( BrokenRule );
 
-    const items = _items.get( this );
-    let length = _length.get( this );
     const key = brokenRule.propertyName;
 
-    if (items.has( key )) {
-      const list = items.get( key );
+    if (super.has( key )) {
+      const list = super.get( key );
       list.push( brokenRule );
-      items.set( key, list );
+      super.set( key, list );
     }
-    else {
-      items.set( key, new Array( brokenRule ) );
-      length++;
-    }
-
-    _items.set( this, items );
-    _length.set( this, length );
+    else
+      super.set( key, new Array( brokenRule ) );
   }
 
   /**
@@ -73,8 +68,6 @@ class BrokenRuleList {
    * @param {bo.rules.PropertyInfo} [property] - A property definition.
    */
   clear( property ) {
-    const items = _items.get( this );
-    let length = _length.get( this );
 
     //region Clear for property
 
@@ -83,34 +76,30 @@ class BrokenRuleList {
      *
      * @param {string} propertyName - The name of the property that broken rules are deleted of.
      */
-    function clearFor( propertyName ) {
+    function clearForProperty( propertyName ) {
 
-      if (items.has( propertyName )) {
+      if (this.has( propertyName )) {
 
-        const preserved = items.get( propertyName ).filter( function ( item ) {
+        const preserved = this.get( propertyName ).filter( function ( item ) {
           return item.isPreserved;
         } );
 
         if (preserved.length)
-          items.set( propertyName, preserved );
-        else {
-          items.delete( propertyName );
-          length--;
-        }
+          this.set( propertyName, preserved );
+        else
+          this.delete( propertyName );
       }
     }
 
     //endregion
 
+    const clearFor = clearForProperty.bind( this );
     if (property instanceof PropertyInfo)
       clearFor( property.name );
     else
-      for (const propertyName of items.keys()) {
+      for (const propertyName of super.keys()) {
         clearFor( propertyName );
       }
-
-    _items.set( this, items );
-    _length.set( this, length );
   }
 
   /**
@@ -120,19 +109,11 @@ class BrokenRuleList {
    * @param property
    */
   clearAll( property ) {
-    let items = _items.get( this );
-    let length = _length.get( this );
 
-    if (property instanceof PropertyInfo) {
-      items.delete( property.name );
-      length--;
-    } else {
-      items.clear();
-      length = 0;
-    }
-
-    _items.set( this, items );
-    _length.set( this, length );
+    if (property instanceof PropertyInfo)
+      super.delete( property.name );
+    else
+      super.clear();
   }
 
   /**
@@ -142,9 +123,8 @@ class BrokenRuleList {
    * @returns {boolean} - True if the model is valid, otherwise false.
    */
   isValid() {
-    const items = _items.get( this );
 
-    for (const list of items.values()) {
+    for (const list of super.values()) {
       if (list.some( function ( item ) {
           return item.severity === RuleSeverity.error;
         } ))
@@ -167,17 +147,15 @@ class BrokenRuleList {
       .check( namespace ).forOptional( 'namespace' ).asString();
 
     const data = new BrokenRulesOutput();
-    const length = _length.get( this );
 
-    if (length) {
-      const items = _items.get( this );
-      const modelName = _modelName.get( this );
+    if (this.size) {
+      const self = this;
       const ns = namespace ? namespace + ':' : '';
 
-      for (const property of items.keys()) {
-        items.get( property ).forEach( function ( brokenRule ) {
+      for (const property of super.keys()) {
+        super.get( property ).forEach( function ( brokenRule ) {
 
-          const propertyName = modelName + '.' + brokenRule.propertyName;
+          const propertyName = self.modelName + '.' + brokenRule.propertyName;
           const message = brokenRule.message || ns + propertyName + '.' + brokenRule.ruleName;
           const notice = new RuleNotice( message, brokenRule.severity );
 

@@ -32,6 +32,15 @@ describe( 'Broken rule list', () => {
     expect( build08 ).not.toThrow();
   } );
 
+  it( 'has one read-only property', () => {
+
+    const brl = new BrokenRuleList( 'Employee' );
+    expect( brl.modelName ).toBe( 'Employee' );
+
+    brl.modelName = 'Customer';
+    expect( brl.modelName ).toBe( 'Employee' );
+  } );
+
   it( 'add method expects a broken rule argument', () => {
 
     const brl = new BrokenRuleList( 'model' );

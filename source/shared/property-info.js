@@ -20,7 +20,7 @@ class PropertyInfo {
    * or a custom data type based on {@link bo.dataTypes.DataType DataType} object,
    * or can be any business object model or collection defined by the
    * model types available in the {@link bo} namespace (i.e. models based on
-   * {@link bo.ModelBase ModelBase} or {@link bo.CollectionBase CollectionBase}
+   * {@link ModelBase ModelBase} or {@link CollectionBase CollectionBase}
    * objects).
    *   </br></br>
    * The flags parameter is ignored when data type is a model or collection.
@@ -53,7 +53,7 @@ class PropertyInfo {
      * or a custom data type based on {@link bo.dataTypes.DataType DataType} object,
      * or can be any business object model or collection defined by the
      * model types available in the {@link bo} namespace (i.e. models based on
-     * {@link bo.ModelBase ModelBase} or {@link bo.CollectionBase CollectionBase}
+     * {@link ModelBase ModelBase} or {@link CollectionBase CollectionBase}
      * objects).
      *
      * @type {*}
