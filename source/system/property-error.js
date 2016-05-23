@@ -25,7 +25,7 @@ class PropertyError extends Error {
      * @member {string} bo.system.PropertyError#name
      * @default ArgumentError
      */
-    this.name = this.constructor.name;
+    this.name = PropertyError.name;
 
     /**
      * Human-readable description of the error.

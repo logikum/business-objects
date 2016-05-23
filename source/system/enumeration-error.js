@@ -25,7 +25,7 @@ class EnumerationError extends Error {
      * @member {string} bo.system.EnumerationError#name
      * @default ArgumentError
      */
-    this.name = this.constructor.name;
+    this.name = EnumerationError.name;
 
     /**
      * Human-readable description of the error.

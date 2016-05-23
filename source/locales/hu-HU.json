@@ -35,8 +35,8 @@
   },
   "DaoError": {
     "default": "Hiba van az adatelérési objektumban.",
-    "c_manString": "Az adatelérési objektum konstruktorának {0} paramétere nem lehet üres szöveg.",
-    "m_manString": "Az adatelérési objektum {0} eljárásának {1} paramétere nem lehet üres szöveg.",
+    "c_manString": "A {0} konstruktor {0} paramétere nem lehet üres szöveg.",
+    "m_manString": "A {0}.{1} eljárás {2} paramétere nem lehet üres szöveg.",
     "f_manString": "A daoBuilder függvény {0} paramétere nem lehet üres szöveg.",
     "filePath": "A daoBuilder függvény {0} paramétere érvénytelen elérési út: {1}",
     "noDaoFile": "A szükséges adatelérési fájl nem létezik: {0}",

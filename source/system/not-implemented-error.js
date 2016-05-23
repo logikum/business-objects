@@ -25,7 +25,7 @@ class NotImplementedError extends Error {
      * @member {string} bo.system.NotImplementedError#name
      * @default ArgumentError
      */
-    this.name = this.constructor.name;
+    this.name = NotImplementedError.name;
 
     /**
      * Human-readable description of the error.

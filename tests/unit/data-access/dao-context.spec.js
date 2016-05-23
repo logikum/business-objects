@@ -34,7 +34,7 @@ describe( 'DAO context', () => {
     expect( create06 ).not.toThrow();
     expect( create07 ).toThrow();
     expect( create08 ).not.toThrow();
-    expect( create09 ).toThrow();
+    expect( create09 ).toThrow( 'The fulfill argument of DaoContext constructor must be a function.' );
   });
 
   it( 'has three read-only properties', () => {

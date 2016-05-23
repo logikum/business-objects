@@ -25,7 +25,7 @@ class ConstructorError extends Error {
      * @member {string} bo.system.ConstructorError#name
      * @default ArgumentError
      */
-    this.name = this.constructor.name;
+    this.name = ConstructorError.name;
 
     /**
      * Human-readable description of the error.

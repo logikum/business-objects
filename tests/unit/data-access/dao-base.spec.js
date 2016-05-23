@@ -23,7 +23,7 @@ describe('Base data access object', function () {
     expect( build04 ).toThrow();
     expect( build05 ).toThrow();
     expect( build06 ).toThrow();
-    expect( build07 ).toThrow();
+    expect( build07 ).toThrow( 'The name argument of DaoBase constructor must be a non-empty string.' );
     expect( build08 ).not.toThrow();
   });
 
@@ -47,10 +47,10 @@ describe('Base data access object', function () {
 
     expect( check01 ).toThrow();
     expect( check02 ).toThrow();
-    expect( check03 ).toThrow();
+    expect( check03 ).toThrow( 'The methodName argument of Sample.$runMethod method must be a non-empty string.' );
     expect( check04 ).toThrow();
     expect( check05 ).not.toThrow();
-    expect( check06 ).toThrow();
+    expect( check06 ).toThrow( 'Sample object has no method named count.' );
   });
 
   it( '$hasCreate method works', () => {

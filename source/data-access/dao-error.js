@@ -25,7 +25,7 @@ class DaoError extends Error {
      * @member {string} bo.dataAccess.DaoError#name
      * @default DaoError
      */
-    this.name = this.constructor.name;
+    this.name = DaoError.name;
 
     /**
      * Human-readable description of the error.

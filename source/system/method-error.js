@@ -25,7 +25,7 @@ class MethodError extends Error {
      * @member {string} bo.system.MethodError#name
      * @default ArgumentError
      */
-    this.name = this.constructor.name;
+    this.name = MethodError.name;
 
     /**
      * Human-readable description of the error.

@@ -21,7 +21,7 @@ class DaoBase {
   constructor( name ) {
 
     if (typeof name !== 'string' && !(name instanceof String) || name.trim().length === 0)
-      throw new DaoError( 'c_manString', 'name' );
+      throw new DaoError( 'c_manString', this.constructor.name, 'name' );
 
     /**
      * The name of the data access object.
@@ -53,7 +53,7 @@ class DaoBase {
   $runMethod( methodName, connection, methodArg ) {
 
     if (typeof methodName !== 'string' || methodName.trim().length === 0)
-      throw new DaoError( 'm_manString', 'checkMethod', 'methodName' );
+      throw new DaoError( 'm_manString', this.name, '$runMethod', 'methodName' );
     if (!this[ methodName ] || typeof this[ methodName ] !== 'function')
       throw new DaoError( 'noMethod', this.name, methodName );
 

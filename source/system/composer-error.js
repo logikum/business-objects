@@ -25,7 +25,7 @@ class ComposerError extends Error {
      * @member {string} bo.system.ComposerError#name
      * @default ComposerError
      */
-    this.name = this.constructor.name;
+    this.name = ComposerError.name;
 
     /**
      * Human-readable description of the error.

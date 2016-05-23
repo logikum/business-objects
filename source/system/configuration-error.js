@@ -25,7 +25,7 @@ class ConfigurationError extends Error {
      * @member {string} bo.system.ConfigurationError#name
      * @default ConfigurationError
      */
-    this.name = this.constructor.name;
+    this.name = ConfigurationError.name;
 
     /**
      * Human-readable description of the error.

@@ -21,7 +21,7 @@ class DaoContext {
    * @param {object} connection - The connection to the data source.
    */
   constructor( fulfill, reject, connection ) {
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( DaoContext.name );
 
     /**
      * The success handler of the promise executor.

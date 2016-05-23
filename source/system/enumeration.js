@@ -1,7 +1,5 @@
 'use strict';
 
-const CLASS_NAME = 'Enumeration';
-
 const Argument = require( './argument-check.js' );
 const EnumerationError = require( './enumeration-error.js' );
 
@@ -52,7 +50,8 @@ class Enumeration {
    * @throws {@link bo.system.EnumerationError Enumeration error}: The passed value is not an enumeration item.
    */
   getName( value ) {
-    value = Argument.inMethod( CLASS_NAME, 'getName' ).check( value ).forMandatory( 'value' ).asNumber();
+    value = Argument.inMethod( this.constructor.name, 'getName' )
+      .check( value ).forMandatory( 'value' ).asNumber();
 
     for (const propertyName in this) {
       if (this.hasOwnProperty( propertyName ) && typeof this[ propertyName ] === 'number') {
@@ -74,7 +73,8 @@ class Enumeration {
    * @throws {@link bo.system.EnumerationError Enumeration error}: The passed name is not an enumeration item.
    */
   getValue( name ) {
-    name = Argument.inMethod( CLASS_NAME, 'getValue' ).check( name ).forMandatory( 'name' ).asString();
+    name = Argument.inMethod( this.constructor.name, 'getValue' )
+      .check( name ).forMandatory( 'name' ).asString();
 
     for (const propertyName in this) {
       if (this.hasOwnProperty( propertyName ) && typeof this[ propertyName ] === 'number') {

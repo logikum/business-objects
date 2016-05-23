@@ -25,7 +25,7 @@ class ArgumentError extends Error {
      * @member {string} bo.system.ArgumentError#name
      * @default ArgumentError
      */
-    this.name = this.constructor.name;
+    this.name = ArgumentError.name;
 
     /**
      * Human-readable description of the error.
