@@ -48,7 +48,7 @@ class ExtensionManager {
    * @throws {@link bo.system.ArgumentError Argument error}: The model path must be a non-empty string.
    */
   constructor( dataSource, modelPath ) {
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( ExtensionManager.name );
 
     /**
      * The name of the data source.
@@ -206,7 +206,7 @@ class ExtensionManager {
    * @param {boolean} [isTransaction] - Indicates whether transaction is required.
    */
   addOtherMethod( methodName, isTransaction ) {
-    methodName = Argument.inMethod( this.constructor.name, 'addOtherMethod' )
+    methodName = Argument.inMethod( ExtensionManager.name, 'addOtherMethod' )
       .check( methodName ).forMandatory( 'methodName' ).asString();
     isTransaction = isTransaction || false;
 
@@ -261,7 +261,7 @@ class ExtensionManager {
    * @returns {Promise.<object>} Returns a promise to the result of the custom data portal method.
    */
   $runMethod( methodName, thisArg, dpContext, dpParams ) {
-    const check = Argument.inMethod( this.constructor.name, '$runMethod' );
+    const check = Argument.inMethod( ExtensionManager.name, '$runMethod' );
 
     methodName = check( methodName ).forMandatory( 'methodName' ).asString();
     thisArg = check( thisArg ).forMandatory( 'thisArg' ).asObject();

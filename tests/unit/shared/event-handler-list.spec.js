@@ -44,4 +44,13 @@ describe( 'Event handler list', () => {
     expect( result ).toBe( 'Event model.postCreate: Model has been created.' );
   } );
 
+  it( 'add and setup methods work (2)', () => {
+
+    const ehl = new EventHandlerList();
+    function test01() { ehl.add( 1, DataPortalEvent.postCreate ); }
+    function test02() { ehl.setup( 'target' ); }
+
+    expect( test01 ).toThrow( 'The modelName argument of EventHandlerList.add method must be a non-empty string.' );
+    expect( test02 ).toThrow( 'The target argument of EventHandlerList.setup method must be a ModelBase | CollectionBase object.' );
+  } );
 } );

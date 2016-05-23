@@ -47,7 +47,7 @@ class DataPortalContext {
    * @throws {@link bo.system.ArgumentError Argument error}: The setValue argument must be a function.
    */
   constructor( dao, properties, getValue, setValue ) {
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( DataPortalContext.name );
 
     /**
      * The data access object of the current model.
@@ -133,7 +133,7 @@ class DataPortalContext {
     return _reject.get( this );
   }
 
-//endregion
+  //endregion
 
   //region Methods
 
@@ -173,7 +173,7 @@ class DataPortalContext {
    * @throws {@link bo.shared.ModelError Model error}: Cannot read the properties of a collection.
    */
   getValue( propertyName ) {
-    propertyName = Argument.inMethod( this.constructor.name, 'getValue' )
+    propertyName = Argument.inMethod( DataPortalContext.name, 'getValue' )
       .check( propertyName ).forMandatory( 'propertyName' ).asString();
     const getValue = _getValue.get( this );
     if (getValue)
@@ -193,7 +193,7 @@ class DataPortalContext {
    * @throws {@link bo.shared.ModelError Model error}: Cannot write the properties of a collection.
    */
   setValue( propertyName, value ) {
-    propertyName = Argument.inMethod( this.constructor.name, 'setValue' )
+    propertyName = Argument.inMethod( DataPortalContext.name, 'setValue' )
       .check( propertyName ).forMandatory( 'propertyName' ).asString();
     const setValue = _setValue.get( this );
     if (setValue) {

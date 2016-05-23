@@ -27,14 +27,14 @@ class DataPortalError extends Error {
    */
   constructor( modeltype, modelName, action, interceptedError ) {
     super();
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( DataPortalError.name );
 
     /**
      * The name of the error type.
      * @member {string} bo.shared.DataPortalError#name
      * @default DataPortalError
      */
-    this.name = this.constructor.name;
+    this.name = DataPortalError.name;
 
     /**
      * The type of the model the intercepted error occurred in.

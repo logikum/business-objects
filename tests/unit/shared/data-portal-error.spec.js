@@ -19,7 +19,7 @@ describe( 'Data portal error', () => {
     function build07() { const err = new DataPortalError( 'type', 'model', DataPortalAction.create, {} ); }
     function build08() { const err = new DataPortalError( 'type', 'model', DataPortalAction.remove, { error: 'description' } ); }
 
-    expect( build01 ).toThrow();
+    expect( build01 ).toThrow( 'The modeltype argument of DataPortalError constructor must be a non-empty string.' );
     expect( build02 ).toThrow();
     expect( build03 ).toThrow();
     expect( build04 ).toThrow();

@@ -42,7 +42,7 @@ describe( 'Data portal context', () => {
     function create08() { return new DataPortalContext( dao, properties, getValue, setValue ); }
 
     expect( create01 ).not.toThrow();
-    expect( create02 ).toThrow();
+    expect( create02 ).toThrow( 'The dao argument of DataPortalContext constructor must be an object.' );
     expect( create03 ).toThrow();
     expect( create04 ).not.toThrow();
     expect( create05 ).not.toThrow();
@@ -118,9 +118,15 @@ describe( 'Data portal context', () => {
 
   it( 'getValue and setValue methods work', () => {
 
+    function test01() { return ctx.getValue(); }
+    function test02() { return ctx.setValue( true ); }
+
     const scores1 = ctx.getValue( 'scores' );
     ctx.setValue( 'scores', -1 );
     const scores2 = ctx.getValue( 'scores' );
+
+    expect( test01 ).toThrow( 'The propertyName argument of DataPortalContext.getValue method must be a non-empty string.' );
+    expect( test02 ).toThrow( 'The propertyName argument of DataPortalContext.setValue method must be a non-empty string.' );
 
     expect( scores1 ).toBe( 123 );
     expect( scores2 ).toBe( -1 );

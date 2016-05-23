@@ -60,7 +60,7 @@ class DataPortalEventArgs {
    */
   constructor( event, modelName, action, methodName, error ) {
 
-    const check = Argument.inConstructor( this.constructor.name );
+    const check = Argument.inConstructor( DataPortalEventArgs.name );
 
     event = check( event ).for( 'event' ).asEnumMember( DataPortalEvent, null );
 

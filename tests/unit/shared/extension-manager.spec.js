@@ -34,7 +34,7 @@ describe( 'Extension manager', () => {
     function create09() { return new ExtensionManager( '', '/model/path' ); }
     function create10() { return new ExtensionManager( 'data_source', '/model/path' ); }
 
-    expect( create01 ).toThrow();
+    expect( create01 ).toThrow( 'The dataSource argument of ExtensionManager constructor must be a non-empty string.' );
     expect( create02 ).toThrow();
     expect( create03 ).toThrow();
     expect( create04 ).toThrow();
@@ -268,5 +268,9 @@ describe( 'Extension manager', () => {
     expect( em.$runMethod ).toBeDefined();
     expect( em.$runMethod ).toEqual( jasmine.any( Function ) );
     expect( em.$runMethod( 'method', {}, new DataPortalContext(), null ) ).toEqual( undefined );
+
+    function test01() { em.$runMethod( true ); }
+
+    expect( test01 ).toThrow( 'The methodName argument of ExtensionManager.$runMethod method must be a non-empty string.' );
   } );
 } );

@@ -25,7 +25,7 @@ class EventHandlerList extends Set {
    * @throws {@link bo.system.ArgumentError Argument error}: The handler must be a function.
    */
   add( modelName, event, handler ) {
-    const check = Argument.inMethod( this.constructor.name, 'add' );
+    const check = Argument.inMethod( EventHandlerList.name, 'add' );
     super.add( {
       modelName: check( modelName ).forMandatory( 'modelName' ).asString(),
       event: check( event ).for( 'event' ).asEnumMember( DataPortalEvent, null ),
@@ -44,7 +44,7 @@ class EventHandlerList extends Set {
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
    */
   setup( target ) {
-    target = Argument.inMethod( this.constructor.name, 'setup' )
+    target = Argument.inMethod( EventHandlerList.name, 'setup' )
       .check( target ).forMandatory( 'target' ).asType( [ ModalBase, CollectionBase ] );
 
     for (const item of this) {

@@ -19,11 +19,11 @@ function setPropertyValue( target, propertyName, value ) {
 }
 function getValidity( target, propertyName ) {
   const validity = _validity.get( target );
-  return validity.get( propertyName );
+  return validity.get( propertyName ) || false;
 }
 function setValidity( target, propertyName, value ) {
   const validity = _validity.get( target );
-  validity.set( propertyName, true );
+  validity.set( propertyName, value );
   _validity.set( target, validity );
 }
 
@@ -56,7 +56,7 @@ class DataStore {
    * @throws {@link bo.system.ArgumentError Argument error}: The value must be null, a model or a collection.
    */
   initValue( property, value ) {
-    const check = Argument.inMethod( this.constructor.name, 'initValue' );
+    const check = Argument.inMethod( DataStore.name, 'initValue' );
 
     property = check( property ).forMandatory( 'property' ).asType( PropertyInfo );
     value = check( value ).forOptional( 'value' ).asType( [ CollectionBase, ModelBase ] );
@@ -75,7 +75,7 @@ class DataStore {
    */
   getValue( property ) {
 
-    property = Argument.inMethod( this.constructor.name, 'getValue' )
+    property = Argument.inMethod( DataStore.name, 'getValue' )
       .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
     return getPropertyValue( this, property.name );
@@ -92,7 +92,7 @@ class DataStore {
    * @throws {@link bo.system.ArgumentError Argument error}: The value must be defined.
    */
   setValue( property, value ) {
-    const check = Argument.inMethod( this.constructor.name, 'setValue' );
+    const check = Argument.inMethod( DataStore.name, 'setValue' );
 
     property = check( property ).forMandatory( 'property' ).asType( PropertyInfo );
     value = check( value ).for( 'value' ).asDefined();
@@ -126,7 +126,7 @@ class DataStore {
    */
   hasValidValue( property ) {
 
-    property = Argument.inMethod( this.constructor.name, 'hasValidValue' )
+    property = Argument.inMethod( DataStore.name, 'hasValidValue' )
       .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
     return getValidity( this, property.name );

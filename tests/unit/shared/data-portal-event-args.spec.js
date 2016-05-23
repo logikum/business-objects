@@ -46,7 +46,7 @@ describe( 'Data portal event arguments', () => {
       return new DataPortalEventArgs( DataPortalEvent.postSave, 'model', DataPortalAction.update, null, error );
     };
 
-    expect( build01 ).toThrow();
+    expect( build01 ).toThrow( 'The event argument of DataPortalEventArgs constructor must be a DataPortalEvent item.' );
     expect( build02 ).toThrow();
     expect( build03 ).not.toThrow();
     expect( build04 ).toThrow();
