@@ -72,6 +72,8 @@ describe( 'Extension manager', () => {
     expect( em.modelPath ).toBe( '/model/path' );
   } );
 
+  //region Properties for the custom methods
+
   it( 'daoBuilder property works', () => {
 
     function set1() { em.daoBuilder = 1987; }
@@ -240,6 +242,51 @@ describe( 'Extension manager', () => {
     expect( set5 ).toThrow();
     expect( set6 ).toThrow();
   } );
+
+  //endregion
+
+  //region Command object extensions
+
+  it( 'addOtherMethod method works', () => {
+
+    function add01() { em.addOtherMethod(); }
+    function add02() { em.addOtherMethod( 1 ); }
+    function add03() { em.addOtherMethod( true ); }
+    function add04() { em.addOtherMethod( [ 'send' ] ); }
+    function add05() { em.addOtherMethod( 'send' ); }
+    function add06() { em.addOtherMethod( 'post', 99.9 ); }
+    function add07() { em.addOtherMethod( 'post', 'mail' ); }
+    function add08() { em.addOtherMethod( 'post', true ); }
+
+    expect( add01 ).toThrow( 'The methodName argument of ExtensionManager.addOtherMethod method must be a non-empty string.' );
+    expect( add02 ).toThrow();
+    expect( add03 ).toThrow();
+    expect( add04 ).toThrow();
+    expect( add05 ).not.toThrow();
+    expect( add06 ).toThrow();
+    expect( add07 ).toThrow();
+    expect( add08 ).not.toThrow();
+  } );
+
+  it( 'buildOtherMethods method works', () => {
+
+    const instance = {
+      execute: function ( name, trx ) {
+        return 'Method ' + name + ' is ' + (trx ? '' : 'not ') + 'transactional.'
+      }
+    };
+    em.buildOtherMethods( instance );
+
+    expect( instance.send ).toBeDefined();
+    expect( instance.send ).toEqual( jasmine.any( Function ) );
+    expect( instance.send() ).toEqual( 'Method send is not transactional.' );
+
+    expect( instance.post ).toBeDefined();
+    expect( instance.post ).toEqual( jasmine.any( Function ) );
+    expect( instance.post() ).toEqual( 'Method post is transactional.' );
+  } );
+
+  //endregion
 
   it( 'getDataAccessObject method works', () => {
 

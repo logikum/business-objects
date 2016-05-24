@@ -206,9 +206,10 @@ class ExtensionManager {
    * @param {boolean} [isTransaction] - Indicates whether transaction is required.
    */
   addOtherMethod( methodName, isTransaction ) {
-    methodName = Argument.inMethod( ExtensionManager.name, 'addOtherMethod' )
-      .check( methodName ).forMandatory( 'methodName' ).asString();
-    isTransaction = isTransaction || false;
+    const check = Argument.inMethod( ExtensionManager.name, 'addOtherMethod' );
+
+    methodName = check( methodName ).forMandatory( 'methodName' ).asString();
+    isTransaction = check( isTransaction || false ).forMandatory( 'isTransaction' ).asBoolean();
 
     const otherMethods = _otherMethods.get( this );
     otherMethods.add( { name: methodName, trx: isTransaction } );
