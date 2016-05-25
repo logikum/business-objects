@@ -1,6 +1,6 @@
 'use strict';
 
-var i18n = require('./i18n.js');
+const i18n = require( './i18n.js' );
 
 /**
  * Get a message localizer function initialized for the messages of
@@ -11,11 +11,11 @@ var i18n = require('./i18n.js');
  * @param {string} [keyRoot] - The key root of the messages.
  * @returns {bo.i18n#get} The message localizer function.
  */
-var getLocalizer = function (keyRoot) {
-  var boLocales = new i18n('$bo', keyRoot);
+const getLocalizer = function ( keyRoot ) {
+  const boLocales = new i18n( '$bo', keyRoot );
 
   return function () {
-    return boLocales.get.apply(boLocales, arguments.length ? arguments : ['default']);
+    return boLocales.get.apply( boLocales, arguments.length ? arguments : [ 'default' ] );
   }
 };
 

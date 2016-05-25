@@ -4,7 +4,7 @@
  *
  * @namespace external
  */
-var external = {
+const external = {
 
   //region Configuration
 

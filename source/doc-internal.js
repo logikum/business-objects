@@ -4,7 +4,7 @@
  *
  * @namespace internal
  */
-var internal = {
+const internal = {
   /**
    * Gets the value of a model property.
    *
