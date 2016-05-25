@@ -5,7 +5,7 @@ const Model = bo.ModelComposer;
 
 const BlanketOrderItem = require( './blanket-order-item.js' );
 
-const BlanketOrderItems = Model( 'BlanketOrderItems' )
+const BlanketOrderItems = new Model( 'BlanketOrderItems' )
   .editableChildCollection()
   // --- Collection elements
   .itemType( BlanketOrderItem )

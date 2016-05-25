@@ -16,7 +16,7 @@ function dataFetch( ctx, dto, method ) {
 
 //endregion
 
-const RescheduleShippingResult = Model( 'RescheduleShippingResult' )
+const RescheduleShippingResult = new Model( 'RescheduleShippingResult' )
   .readOnlyChildObject( 'dal', __filename )
   // --- Properties
   .integer( 'quantity' )

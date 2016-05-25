@@ -8,7 +8,7 @@ const cr = bo.commonRules;
 const Address = require( './address.js' );
 const BlanketOrderItems = require( './blanket-order-items.js' );
 
-const BlanketOrder = Model( 'BlanketOrder' )
+const BlanketOrder = new Model( 'BlanketOrder' )
   .editableRootObject( 'dao', __filename )
   // --- Properties
   .integer( 'orderKey', F.key | F.readOnly )

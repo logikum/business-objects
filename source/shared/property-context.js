@@ -101,10 +101,9 @@ class PropertyContext {
     propertyName = Argument.inMethod( PropertyContext.name, 'getValue' )
       .check( propertyName ).forMandatory( 'propertyName' ).asString();
     const getValue = _getValue.get( this );
-    if (getValue) {
-      const findProperty = getByName.bind( this );
-      return getValue( findProperty( propertyName ) );
-    } else
+    if (getValue)
+      return getValue( getByName.call( this, propertyName ) );
+    else
       throw new ModelError( 'readProperty', this.modelName, propertyName );
   }
 
@@ -123,10 +122,8 @@ class PropertyContext {
       .check( propertyName ).forMandatory( 'propertyName' ).asString();
     const setValue = _setValue.get( this );
     if (setValue) {
-      if (value !== undefined) {
-        const findProperty = getByName.bind( this );
-        setValue( findProperty( propertyName ), value );
-      }
+      if (value !== undefined)
+        setValue( getByName.call( this, propertyName ), value );
     } else
       throw new ModelError( 'writeProperty', this.modelName, propertyName );
   }

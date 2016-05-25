@@ -65,7 +65,7 @@ function dataFetch( ctx, filter, method ) {
 
 //endregion
 
-const BlanketOrderView = Model( 'BlanketOrderView' )
+const BlanketOrderView = new Model( 'BlanketOrderView' )
   .readOnlyRootObject( 'dal', __filename )
   // --- Properties
   .integer( 'orderKey', F.key )

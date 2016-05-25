@@ -8,7 +8,7 @@ const cr = bo.commonRules;
 const AddressView = require( './address-view.js' );
 const BlanketOrderItemsView = require( './blanket-order-items-view.js' );
 
-const BlanketOrderView = Model( 'BlanketOrderView' )
+const BlanketOrderView = new Model( 'BlanketOrderView' )
   .readOnlyRootObject( 'dao', __filename )
   // --- Properties
   .integer( 'orderKey', F.key )

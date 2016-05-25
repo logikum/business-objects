@@ -41,7 +41,7 @@ function dataFetch( ctx, filter, method ) {
 
 //endregion
 
-const BlanketOrderList = Model( 'BlanketOrderList' )
+const BlanketOrderList = new Model( 'BlanketOrderList' )
   .readOnlyRootCollection( 'dal', __filename )
   // --- Collection elements
   .itemType( BlanketOrderListItem )

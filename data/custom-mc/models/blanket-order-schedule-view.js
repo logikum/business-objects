@@ -45,7 +45,7 @@ function dataFetch( ctx, dto, method ) {
 
 //endregion
 
-const BlanketOrderScheduleView = Model( 'BlanketOrderScheduleView' )
+const BlanketOrderScheduleView = new Model( 'BlanketOrderScheduleView' )
   .readOnlyChildObject( 'dal', __filename )
   // --- Properties
   .integer( 'orderScheduleKey', F.key )

@@ -6,7 +6,7 @@ const F = bo.shared.PropertyFlag;
 
 const BlanketOrderSchedulesView = require( './blanket-order-schedules-view.js' );
 
-const BlanketOrderItemView = Model( 'BlanketOrderItemView' )
+const BlanketOrderItemView = new Model( 'BlanketOrderItemView' )
   .readOnlyChildObject( 'dao', __filename )
   // --- Properties
   .integer( 'orderItemKey', F.key )

@@ -30,7 +30,7 @@ function dataExecute( ctx, method ) {
 
 //endregion
 
-const RescheduleShippingCommand = Model( 'RescheduleShippingCommand' )
+const RescheduleShippingCommand = new Model( 'RescheduleShippingCommand' )
   .commandObject( 'dal', __filename )
   // --- Properties
   .integer( 'orderKey' )

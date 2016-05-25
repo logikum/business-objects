@@ -5,7 +5,7 @@ const Model = bo.ModelComposer;
 
 const BlanketOrderListItem = require( './blanket-order-list-item.js' );
 
-const BlanketOrderList = Model( 'BlanketOrderList' )
+const BlanketOrderList = new Model( 'BlanketOrderList' )
   .readOnlyRootCollection( 'dao', __filename )
   // --- Collection elements
   .itemType( BlanketOrderListItem )

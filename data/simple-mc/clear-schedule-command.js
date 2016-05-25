@@ -4,7 +4,7 @@ const bo = require( '../../source/index.js' );
 const Model = bo.ModelComposer;
 const cr = bo.commonRules;
 
-const ClearScheduleCommand = Model( 'ClearScheduleCommand' )
+const ClearScheduleCommand = new Model( 'ClearScheduleCommand' )
   .commandObject( 'dao', __filename )
   // --- Properties
   .integer( 'orderKey' )

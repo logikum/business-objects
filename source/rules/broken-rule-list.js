@@ -76,7 +76,7 @@ class BrokenRuleList extends Map {
      *
      * @param {string} propertyName - The name of the property that broken rules are deleted of.
      */
-    function clearForProperty( propertyName ) {
+    function clearFor( propertyName ) {
 
       if (this.has( propertyName )) {
 
@@ -93,12 +93,11 @@ class BrokenRuleList extends Map {
 
     //endregion
 
-    const clearFor = clearForProperty.bind( this );
     if (property instanceof PropertyInfo)
-      clearFor( property.name );
+      clearFor.call( this, property.name );
     else
       for (const propertyName of super.keys()) {
-        clearFor( propertyName );
+        clearFor.call( this, propertyName );
       }
   }
 

@@ -4,7 +4,7 @@ const bo = require( '../../source/index.js' );
 const Model = bo.ModelComposer;
 const F = bo.shared.PropertyFlag;
 
-const BlanketOrderSchedule = Model( 'BlanketOrderSchedule' )
+const BlanketOrderSchedule = new Model( 'BlanketOrderSchedule' )
   .editableChildObject( 'dao', __filename )
   // --- Properties
   .integer( 'orderScheduleKey', F.key | F.readOnly )

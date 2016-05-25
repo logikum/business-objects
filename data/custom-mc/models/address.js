@@ -125,7 +125,7 @@ function dataRemove( ctx ) {
 
 //endregion
 
-const Address = Model( 'Address' )
+const Address = new Model( 'Address' )
   .editableChildObject( 'dal', __filename )
   // --- Properties
   .integer( 'addressKey', F.key | F.readOnly )

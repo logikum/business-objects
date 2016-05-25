@@ -4,7 +4,7 @@ const bo = require( '../../source/index.js' );
 const Model = bo.ModelComposer;
 const F = bo.shared.PropertyFlag;
 
-const Address = Model( 'Address' )
+const Address = new Model( 'Address' )
   .editableChildObject( 'dao', __filename )
   // --- Properties
   .integer( 'addressKey', F.key | F.readOnly )

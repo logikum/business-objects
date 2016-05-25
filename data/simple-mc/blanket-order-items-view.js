@@ -5,7 +5,7 @@ const Model = bo.ModelComposer;
 
 const BlanketOrderItemView = require( './blanket-order-item-view.js' );
 
-const BlanketOrderItemsView = Model( 'BlanketOrderItemsView' )
+const BlanketOrderItemsView = new Model( 'BlanketOrderItemsView' )
   .readOnlyChildCollection()
   // --- Collection elements
   .itemType( BlanketOrderItemView )

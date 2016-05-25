@@ -6,7 +6,7 @@ const F = bo.shared.PropertyFlag;
 
 const BlanketOrderSchedules = require( './blanket-order-schedules.js' );
 
-const BlanketOrderItem = Model( 'BlanketOrderItem' )
+const BlanketOrderItem = new Model( 'BlanketOrderItem' )
   .editableChildObject( 'dao', __filename )
   // --- Properties
   .integer( 'orderItemKey', F.key | F.readOnly )

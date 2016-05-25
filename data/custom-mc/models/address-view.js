@@ -48,7 +48,7 @@ function dataFetch( ctx, dto, method ) {
 
 //endregion
 
-const AddressView = Model( 'AddressView' )
+const AddressView = new Model( 'AddressView' )
   .readOnlyChildObject( 'dal', __filename )
   // --- Properties
   .integer( 'addressKey', F.key )

@@ -119,7 +119,7 @@ function dataRemove( ctx ) {
 
 //endregion
 
-const BlanketOrderItem = Model( 'BlanketOrderItem' )
+const BlanketOrderItem = new Model( 'BlanketOrderItem' )
   .editableChildObject( 'dal', __filename )
   // --- Properties
   .integer( 'orderItemKey', F.key | F.readOnly )

@@ -2,77 +2,175 @@
 
 //region Imports
 
-var EditableRootObject = require('./editable-root-object.js');
-var EditableChildObject = require('./editable-child-object.js');
-var EditableRootCollection = require('./editable-root-collection.js');
-var EditableChildCollection = require('./editable-child-collection.js');
-var ReadOnlyRootObject = require('./read-only-root-object.js');
-var ReadOnlyChildObject = require('./read-only-child-object.js');
-var ReadOnlyRootCollection = require('./read-only-root-collection.js');
-var ReadOnlyChildCollection = require('./read-only-child-collection.js');
-var CommandObject = require('./command-object.js');
+const EditableRootObject = require( './editable-root-object.js' );
+const EditableChildObject = require( './editable-child-object.js' );
+const EditableRootCollection = require( './editable-root-collection.js' );
+const EditableChildCollection = require( './editable-child-collection.js' );
+const ReadOnlyRootObject = require( './read-only-root-object.js' );
+const ReadOnlyChildObject = require( './read-only-child-object.js' );
+const ReadOnlyRootCollection = require( './read-only-root-collection.js' );
+const ReadOnlyChildCollection = require( './read-only-child-collection.js' );
+const CommandObject = require( './command-object.js' );
 
-var PropertyManager = require('./shared/property-manager.js');
-var RuleManager = require('./rules/rule-manager.js');
-var ExtensionManager = require('./shared/extension-manager.js');
+const PropertyManager = require( './shared/property-manager.js' );
+const RuleManager = require( './rules/rule-manager.js' );
+const ExtensionManager = require( './shared/extension-manager.js' );
 
-var Action = require('./rules/authorization-action.js');
-var cr = require('./common-rules/index.js');
+const Action = require( './rules/authorization-action.js' );
+const cr = require( './common-rules/index.js' );
 
-var PropertyInfo = require('./shared/property-info.js');
-var dt = require('./data-types/index.js');
+const PropertyInfo = require( './shared/property-info.js' );
+const dt = require( './data-types/index.js' );
 
-var ComposerError = require('./system/composer-error.js');
+const ComposerError = require( './system/composer-error.js' );
 
 //endregion
 
-/**
- * Factory method to create a model composer for asynchronous business objects.
- *
- * @function bo.ModelComposer
- * @param {string} modelName - The name of the model.
- * @returns {ModelComposer} The model composer.
- */
-function ModelComposerFactory (modelName) {
-  return new ModelComposer (modelName);
-}
+//region Variables
 
-var ArgsType = {
+const ArgsType = {
   businessObject: 0,
   rootCollection: 1,
   childCollection: 2
 };
 
+const _modelName = new WeakMap();
+
+const _modelFactory = new WeakMap();
+const _modelTypeName = new WeakMap();
+const _memberType = new WeakMap();
+const _argsType = new WeakMap();
+const _isCollection = new WeakMap();
+const _isRoot = new WeakMap();
+const _isEditable = new WeakMap();
+
+const _properties = new WeakMap();
+const _rules = new WeakMap();
+const _extensions = new WeakMap();
+const _currentProperty = new WeakMap();
+
+//endregion
+
+//region Helper
+
+function initialize( dataSource, modelPath ) {
+  const argsType = _argsType.get( this );
+  if (argsType === ArgsType.businessObject)
+    _properties.set( this, new PropertyManager() );
+  if (argsType !== ArgsType.childCollection) {
+    _rules.set( this, new RuleManager() );
+    _extensions.set( this, new ExtensionManager( dataSource, modelPath ) );
+  }
+  return this;
+}
+
+function addProperty( propertyName, propertyType, flags, getter, setter ) {
+  const property = new PropertyInfo( propertyName, propertyType, flags, getter, setter );
+
+  const properties = _properties.get( this );
+  properties.add( property );
+  _properties.set( this, properties );
+
+  _currentProperty.set( this, property );
+  return this;
+}
+
+function addValRule( ruleFactory, parameters ) {
+  let args = Array.prototype.slice.call( parameters );
+  args.unshift( _currentProperty.get( this ) );
+
+  const rules = _rules.get( this );
+  rules.add( ruleFactory.apply( null, args ) );
+  _rules.set( this, rules );
+
+  return this;
+}
+
+function addAuthRule( action, parameters ) {
+  const args = Array.prototype.slice.call( parameters );
+  const ruleFactory = args.shift();
+  args.unshift( action, _currentProperty.get( this ) );
+
+  const rules = _rules.get( this );
+  rules.add( ruleFactory.apply( null, args ) );
+  _rules.set( this, rules );
+
+  return this;
+}
+
+function addObjRule( action, parameters ) {
+  const args = Array.prototype.slice.call( parameters );
+  const ruleFactory = args.shift();
+  args.unshift( action, null );
+
+  const rules = _rules.get( this );
+  rules.add( ruleFactory.apply( null, args ) );
+  _rules.set( this, rules );
+
+  return nonProperty.call( this );
+}
+
+function nonProperty() {
+  _currentProperty.delete( this );
+  return this;
+}
+
+function inGroup1() {
+  const self = this;
+  return [ EditableRootObject, EditableChildObject, EditableRootCollection ]
+    .some( function ( element ) {
+      return element === _modelFactory.get( self );
+    } );
+}
+
+function inGroup2() {
+  return _isCollection.get( this ) && !_isRoot.get( this ) ||
+    _modelFactory.get( this ) === CommandObject;
+}
+
+function inGroup3() {
+  const mf = _modelFactory.get( this );
+  return mf === EditableRootObject || mf === EditableChildObject;
+}
+
+function checkCurrentProperty( methodName ) {
+  if (!_currentProperty.get( this )) {
+    const modelName = _modelName.get( this );
+    const error = new ComposerError( 'property', modelName, methodName );
+    error.modelName = modelName;
+    error.modelType = _modelTypeName.get( this );
+    error.methodName = methodName;
+    throw error;
+  }
+}
+
+function invalid( methodName ) {
+  const modelName = _modelName.get( this );
+  const modelTypeName = _modelTypeName.get( this );
+  const error = new ComposerError( 'invalid', modelName, methodName, modelTypeName );
+  error.modelName = modelName;
+  error.modelType = modelTypeName;
+  error.methodName = methodName;
+  throw error;
+}
+
+//endregion
+
 /**
- * @classdesc
- *    Represents a model composer to build asynchronous business objects.
- * @description
- *    Creates a new asynchronous model composer instance.
+ * Represents a model composer to build asynchronous business objects.
  *
  * @name ModelComposer
- * @constructor
- * @param {string} modelName - The name of the model to build.
  */
-function ModelComposer (modelName) {
+class ModelComposer {
 
-  //region Variables
-
-  var self = this;
-
-  var modelFactory = null;
-  var modelTypeName = null;
-  var memberType = null;
-  var argsType = null;
-  var isCollection = null;
-  var isRoot = null;
-  var isEditable = null;
-
-  var properties = null;
-  var rules = null;
-  var extensions = null;
-  var currentProperty = null;
-
-  //endregion
+  /**
+   * Creates a new asynchronous model composer instance.
+   *
+   * @param {string} modelName - The name of the model to build.
+   */
+  constructor( modelName ) {
+    _modelName.set( this, modelName );
+  }
 
   //region Model types
 
@@ -84,15 +182,15 @@ function ModelComposer (modelName) {
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
    */
-  this.editableRootObject = function (dataSource, modelPath) {
-    modelFactory = EditableRootObject;
-    modelTypeName = 'EditableRootObject';
-    argsType = ArgsType.businessObject;
-    isCollection = false;
-    isRoot = true;
-    isEditable = true;
-    return initialize(dataSource, modelPath);
-  };
+  editableRootObject( dataSource, modelPath ) {
+    _modelFactory.set( this, EditableRootObject );
+    _modelTypeName.set( this, 'EditableRootObject' );
+    _argsType.set( this, ArgsType.businessObject );
+    _isCollection.set( this, false );
+    _isRoot.set( this, true );
+    _isEditable.set( this, true );
+    return initialize.call( this, dataSource, modelPath );
+  }
 
   /**
    * Sets the type of the business object as editable child object.
@@ -102,15 +200,15 @@ function ModelComposer (modelName) {
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
    */
-  this.editableChildObject = function (dataSource, modelPath) {
-    modelFactory = EditableChildObject;
-    modelTypeName = 'EditableChildObject';
-    argsType = ArgsType.businessObject;
-    isCollection = false;
-    isRoot = false;
-    isEditable = true;
-    return initialize(dataSource, modelPath);
-  };
+  editableChildObject( dataSource, modelPath ) {
+    _modelFactory.set( this, EditableChildObject );
+    _modelTypeName.set( this, 'EditableChildObject' );
+    _argsType.set( this, ArgsType.businessObject );
+    _isCollection.set( this, false );
+    _isRoot.set( this, false );
+    _isEditable.set( this, true );
+    return initialize.call( this, dataSource, modelPath );
+  }
 
   /**
    * Sets the type of the business object as read-only root object.
@@ -120,15 +218,15 @@ function ModelComposer (modelName) {
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
    */
-  this.readOnlyRootObject = function (dataSource, modelPath) {
-    modelFactory = ReadOnlyRootObject;
-    modelTypeName = 'ReadOnlyRootObject';
-    argsType = ArgsType.businessObject;
-    isCollection = false;
-    isRoot = true;
-    isEditable = false;
-    return initialize(dataSource, modelPath);
-  };
+  readOnlyRootObject( dataSource, modelPath ) {
+    _modelFactory.set( this, ReadOnlyRootObject );
+    _modelTypeName.set( this, 'ReadOnlyRootObject' );
+    _argsType.set( this, ArgsType.businessObject );
+    _isCollection.set( this, false );
+    _isRoot.set( this, true );
+    _isEditable.set( this, false );
+    return initialize.call( this, dataSource, modelPath );
+  }
 
   /**
    * Sets the type of the business object as read-only child object.
@@ -138,15 +236,15 @@ function ModelComposer (modelName) {
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
    */
-  this.readOnlyChildObject = function (dataSource, modelPath) {
-    modelFactory = ReadOnlyChildObject;
-    modelTypeName = 'ReadOnlyChildObject';
-    argsType = ArgsType.businessObject;
-    isCollection = false;
-    isRoot = false;
-    isEditable = false;
-    return initialize(dataSource, modelPath);
-  };
+  readOnlyChildObject( dataSource, modelPath ) {
+    _modelFactory.set( this, ReadOnlyChildObject );
+    _modelTypeName.set( this, 'ReadOnlyChildObject' );
+    _argsType.set( this, ArgsType.businessObject );
+    _isCollection.set( this, false );
+    _isRoot.set( this, false );
+    _isEditable.set( this, false );
+    return initialize.call( this, dataSource, modelPath );
+  }
 
   /**
    * Sets the type of the business object as editable root collection.
@@ -156,15 +254,15 @@ function ModelComposer (modelName) {
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
    */
-  this.editableRootCollection = function (dataSource, modelPath) {
-    modelFactory = EditableRootCollection;
-    modelTypeName = 'EditableRootCollection';
-    argsType = ArgsType.rootCollection;
-    isCollection = true;
-    isRoot = true;
-    isEditable = true;
-    return initialize(dataSource, modelPath);
-  };
+  editableRootCollection( dataSource, modelPath ) {
+    _modelFactory.set( this, EditableRootCollection );
+    _modelTypeName.set( this, 'EditableRootCollection' );
+    _argsType.set( this, ArgsType.rootCollection );
+    _isCollection.set( this, true );
+    _isRoot.set( this, true );
+    _isEditable.set( this, true );
+    return initialize.call( this, dataSource, modelPath );
+  }
 
   /**
    * Sets the type of the business object as editable child collection.
@@ -172,15 +270,15 @@ function ModelComposer (modelName) {
    * @function ModelComposer#editableChildCollection
    * @returns {ModelComposer} The model composer.
    */
-  this.editableChildCollection = function () {
-    modelFactory = EditableChildCollection;
-    modelTypeName = 'EditableChildCollection';
-    argsType = ArgsType.childCollection;
-    isCollection = true;
-    isRoot = false;
-    isEditable = true;
-    return initialize();
-  };
+  editableChildCollection() {
+    _modelFactory.set( this, EditableChildCollection );
+    _modelTypeName.set( this, 'EditableChildCollection' );
+    _argsType.set( this, ArgsType.childCollection );
+    _isCollection.set( this, true );
+    _isRoot.set( this, false );
+    _isEditable.set( this, true );
+    return initialize.call( this );
+  }
 
   /**
    * Sets the type of the business object as read-only root collection.
@@ -190,15 +288,15 @@ function ModelComposer (modelName) {
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
    */
-  this.readOnlyRootCollection = function (dataSource, modelPath) {
-    modelFactory = ReadOnlyRootCollection;
-    modelTypeName = 'ReadOnlyRootCollection';
-    argsType = ArgsType.rootCollection;
-    isCollection = true;
-    isRoot = true;
-    isEditable = false;
-    return initialize(dataSource, modelPath);
-  };
+  readOnlyRootCollection( dataSource, modelPath ) {
+    _modelFactory.set( this, ReadOnlyRootCollection );
+    _modelTypeName.set( this, 'ReadOnlyRootCollection' );
+    _argsType.set( this, ArgsType.rootCollection );
+    _isCollection.set( this, true );
+    _isRoot.set( this, true );
+    _isEditable.set( this, false );
+    return initialize.call( this, dataSource, modelPath );
+  }
 
   /**
    * Sets the type of the business object as read-only child collection.
@@ -206,15 +304,15 @@ function ModelComposer (modelName) {
    * @function ModelComposer#readOnlyChildCollection
    * @returns {ModelComposer} The model composer.
    */
-  this.readOnlyChildCollection = function () {
-    modelFactory = ReadOnlyChildCollection;
-    modelTypeName = 'ReadOnlyChildCollection';
-    argsType = ArgsType.childCollection;
-    isCollection = true;
-    isRoot = false;
-    isEditable = false;
-    return initialize();
-  };
+  readOnlyChildCollection() {
+    _modelFactory.set( this, ReadOnlyChildCollection );
+    _modelTypeName.set( this, 'ReadOnlyChildCollection' );
+    _argsType.set( this, ArgsType.childCollection );
+    _isCollection.set( this, true );
+    _isRoot.set( this, false );
+    _isEditable.set( this, false );
+    return initialize.call( this );
+  }
 
   /**
    * Sets the type of the business object as command object.
@@ -224,24 +322,14 @@ function ModelComposer (modelName) {
    * @param {string} modelPath - The path of the model definition.
    * @returns {ModelComposer} The model composer.
    */
-  this.commandObject = function (dataSource, modelPath) {
-    modelFactory = CommandObject;
-    modelTypeName = 'CommandObject';
-    argsType = ArgsType.businessObject;
-    isCollection = false;
-    isRoot = true;
-    isEditable = true;
-    return initialize(dataSource, modelPath);
-  };
-
-  function initialize (dataSource, modelPath) {
-    if (argsType === ArgsType.businessObject)
-      properties = new PropertyManager();
-    if (argsType !== ArgsType.childCollection) {
-      rules = new RuleManager();
-      extensions = new ExtensionManager(dataSource, modelPath);
-    }
-    return self;
+  commandObject( dataSource, modelPath ) {
+    _modelFactory.set( this, CommandObject );
+    _modelTypeName.set( this, 'CommandObject' );
+    _argsType.set( this, ArgsType.businessObject );
+    _isCollection.set( this, false );
+    _isRoot.set( this, true );
+    _isEditable.set( this, true );
+    return initialize.call( this, dataSource, modelPath );
   }
 
   //endregion
@@ -264,12 +352,12 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.itemType = function (itemType) {
-    if (!isCollection)
-      invalid('itemType');
-    memberType = itemType;
+  itemType( itemType ) {
+    if (!_isCollection.get( this ))
+      invalid.call( this, 'itemType' );
+    _memberType.set( this, itemType );
     return this;
-  };
+  }
 
   //endregion
 
@@ -296,11 +384,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.boolean = function (propertyName, flags, getter, setter) {
-    if (isCollection)
-      invalid('boolean');
-    return addProperty(propertyName, dt.Boolean, flags, getter, setter);
-  };
+  boolean( propertyName, flags, getter, setter ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'boolean' );
+    return addProperty.call( this, propertyName, dt.Boolean, flags, getter, setter );
+  }
 
   /**
    * Defines a text property for the business object.
@@ -323,11 +411,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.text = function (propertyName, flags, getter, setter) {
-    if (isCollection)
-      invalid('text');
-    return addProperty(propertyName, dt.Text, flags, getter, setter);
-  };
+  text( propertyName, flags, getter, setter ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'text' );
+    return addProperty.call( this, propertyName, dt.Text, flags, getter, setter );
+  }
 
   /**
    * Defines an e-mail address property for the business object.
@@ -350,11 +438,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.email = function (propertyName, flags, getter, setter) {
-    if (isCollection)
-      invalid('email');
-    return addProperty(propertyName, dt.Email, flags, getter, setter);
-  };
+  email( propertyName, flags, getter, setter ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'email' );
+    return addProperty.call( this, propertyName, dt.Email, flags, getter, setter );
+  }
 
   /**
    * Defines an integer property for the business object.
@@ -377,11 +465,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.integer = function (propertyName, flags, getter, setter) {
-    if (isCollection)
-      invalid('integer');
-    return addProperty(propertyName, dt.Integer, flags, getter, setter);
-  };
+  integer( propertyName, flags, getter, setter ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'integer' );
+    return addProperty.call( this, propertyName, dt.Integer, flags, getter, setter );
+  }
 
   /**
    * Defines a decimal property for the business object.
@@ -404,11 +492,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.decimal = function (propertyName, flags, getter, setter) {
-    if (isCollection)
-      invalid('decimal');
-    return addProperty(propertyName, dt.Decimal, flags, getter, setter);
-  };
+  decimal( propertyName, flags, getter, setter ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'decimal' );
+    return addProperty.call( this, propertyName, dt.Decimal, flags, getter, setter );
+  }
 
   /**
    * Defines an enumeration property for the business object.
@@ -431,11 +519,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.enum = function (propertyName, flags, getter, setter) {
-    if (isCollection)
-      invalid('enum');
-    return addProperty(propertyName, dt.Enum, flags, getter, setter);
-  };
+  enum( propertyName, flags, getter, setter ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'enum' );
+    return addProperty.call( this, propertyName, dt.Enum, flags, getter, setter );
+  }
 
   /**
    * Defines a date-time property for the business object.
@@ -458,11 +546,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.dateTime = function (propertyName, flags, getter, setter) {
-    if (isCollection)
-      invalid('dateTime');
-    return addProperty(propertyName, dt.DateTime, flags, getter, setter);
-  };
+  dateTime( propertyName, flags, getter, setter ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'dateTime' );
+    return addProperty.call( this, propertyName, dt.DateTime, flags, getter, setter );
+  }
 
   /**
    * Defines a general property for the business object.
@@ -485,17 +573,10 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.property = function (propertyName, typeCtor, flags, getter, setter) {
-    if (isCollection)
-      invalid('property');
-    return addProperty(propertyName, typeCtor, flags, getter, setter);
-  };
-
-  function addProperty (propertyName, propertyType, flags, getter, setter) {
-    var property = new PropertyInfo(propertyName, propertyType, flags, getter, setter);
-    properties.add(property);
-    currentProperty = property;
-    return self;
+  property( propertyName, typeCtor, flags, getter, setter ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'property' );
+    return addProperty.call( this, propertyName, typeCtor, flags, getter, setter );
   }
 
   //endregion
@@ -522,12 +603,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.required = function (/* message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('required');
-    checkCurrentProperty('required');
-    return addValRule(cr.required, arguments);
-  };
+  required( message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'required' );
+    checkCurrentProperty.call( this, 'required' );
+    return addValRule.call( this, cr.required, arguments );
+  }
 
   /**
    * Adds a maximum length rule to the current property.
@@ -550,12 +631,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.maxLength = function (/* maxLength, message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('maxLength');
-    checkCurrentProperty('maxLength');
-    return addValRule(cr.maxLength, arguments);
-  };
+  maxLength( maxLength, message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'maxLength' );
+    checkCurrentProperty.call( this, 'maxLength' );
+    return addValRule.call( this, cr.maxLength, arguments );
+  }
 
   /**
    * Adds a minimum length rule to the current property.
@@ -578,12 +659,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.minLength = function (/* minLength, message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('minLength');
-    checkCurrentProperty('minLength');
-    return addValRule(cr.minLength, arguments);
-  };
+  minLength( minLength, message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'minLength' );
+    checkCurrentProperty.call( this, 'minLength' );
+    return addValRule.call( this, cr.minLength, arguments );
+  }
 
   /**
    * Adds a required length rule to the current property.
@@ -606,12 +687,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.lengthIs = function (/* length, message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('lengthIs');
-    checkCurrentProperty('lengthIs');
-    return addValRule(cr.lengthIs, arguments);
-  };
+  lengthIs( length, message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'lengthIs' );
+    checkCurrentProperty.call( this, 'lengthIs' );
+    return addValRule.call( this, cr.lengthIs, arguments );
+  }
 
   /**
    * Adds a maximum value rule to the current property.
@@ -634,12 +715,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.maxValue = function (/* maxValue, message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('maxValue');
-    checkCurrentProperty('maxValue');
-    return addValRule(cr.maxValue, arguments);
-  };
+  maxValue( maxValue, message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'maxValue' );
+    checkCurrentProperty.call( this, 'maxValue' );
+    return addValRule.call( this, cr.maxValue, arguments );
+  }
 
   /**
    * Adds a minimum value rule to the current property.
@@ -662,12 +743,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.minValue = function (/* minValue, message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('minValue');
-    checkCurrentProperty('minValue');
-    return addValRule(cr.minValue, arguments);
-  };
+  minValuefunction( minValue, message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'minValue' );
+    checkCurrentProperty.call( this, 'minValue' );
+    return addValRule.call( this, cr.minValue, arguments );
+  }
 
   /**
    * Adds an expression rule to the current property.
@@ -691,12 +772,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.expression = function (/* regex, option, message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('expression');
-    checkCurrentProperty('expression');
-    return addValRule(cr.expression, arguments);
-  };
+  expression( regex, option, message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'expression' );
+    checkCurrentProperty.call( this, 'expression' );
+    return addValRule.call( this, cr.expression, arguments );
+  }
 
   /**
    * Adds a dependency rule to the current property.
@@ -720,12 +801,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.dependency = function (/* dependencies, message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('dependency');
-    checkCurrentProperty('dependency');
-    return addValRule(cr.dependency, arguments);
-  };
+  dependency( dependencies, message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'dependency' );
+    checkCurrentProperty.call( this, 'dependency' );
+    return addValRule.call( this, cr.dependency, arguments );
+  }
 
   /**
    * Adds an information rule to the current property.
@@ -747,18 +828,11 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.information = function (/* message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('information');
-    checkCurrentProperty('information');
-    return addValRule(cr.information, arguments);
-  };
-
-  function addValRule (ruleFactory, parameters) {
-    var args = Array.prototype.slice.call(parameters);
-    args.unshift(currentProperty);
-    rules.add(ruleFactory.apply(null, args));
-    return self;
+  information( message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'information' );
+    checkCurrentProperty.call( this, 'information' );
+    return addValRule.call( this, cr.information, arguments );
   }
 
   /**
@@ -784,16 +858,17 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.validate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('validate');
-    checkCurrentProperty('validate');
-    var args = Array.prototype.slice.call(parameters);
-    var ruleFactory = args.shift();
-    args.unshift(currentProperty);
-    rules.add(ruleFactory.apply(null, args));
+  validate( ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'validate' );
+    checkCurrentProperty.call( this, 'validate' );
+    const args = Array.prototype.slice.call( parameters, 1 );
+    args.unshift( _currentProperty.get( this ) );
+    const rules = _rules.get( this );
+    rules.add( ruleFactory.apply( null, args ) );
+    _rules.set( this, rules );
     return this;
-  };
+  }
 
   //endregion
 
@@ -824,12 +899,12 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.canRead = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (isCollection)
-      invalid('canRead');
-    checkCurrentProperty('canRead');
-    return addAuthRule(Action.readProperty, arguments);
-  };
+  canRead( ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'canRead' );
+    checkCurrentProperty.call( this, 'canRead' );
+    return addAuthRule.call( this, Action.readProperty, arguments );
+  }
 
   /**
    * Adds an authorization rule to the current property that determines
@@ -854,19 +929,11 @@ function ModelComposer (modelName) {
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    * @throws {@link bo.system.ComposerError Composer error}: The current property is undefinable.
    */
-  this.canWrite = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (isCollection || !isEditable)
-      invalid('canWrite');
-    checkCurrentProperty('canWrite');
-    return addAuthRule(Action.writeProperty, arguments);
-  };
-
-  function addAuthRule (action, parameters) {
-    var args = Array.prototype.slice.call(parameters);
-    var ruleFactory = args.shift();
-    args.unshift(action, currentProperty);
-    rules.add(ruleFactory.apply(null, args));
-    return self;
+  canWrite( ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ) || !_isEditable.get( this ))
+      invalid.call( this, 'canWrite' );
+    checkCurrentProperty.call( this, 'canWrite' );
+    return addAuthRule.call( this, Action.writeProperty, arguments );
   }
 
   //endregion
@@ -895,11 +962,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.canCreate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (!inGroup1())
-      invalid('canCreate');
-    return addObjRule(Action.createObject, arguments);
-  };
+  canCreate( ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (!inGroup1.call( this ))
+      invalid.call( this, 'canCreate' );
+    return addObjRule.call( this, Action.createObject, arguments );
+  }
 
   /**
    * Adds an authorization rule to the business object that determines
@@ -926,11 +993,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.canFetch = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (inGroup2())
-      invalid('canFetch');
-    return addObjRule(Action.fetchObject, arguments);
-  };
+  canFetch( ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (inGroup2.call( this ))
+      invalid.call( this, 'canFetch' );
+    return addObjRule.call( this, Action.fetchObject, arguments );
+  }
 
   /**
    * Adds an authorization rule to the business object that determines
@@ -954,11 +1021,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.canUpdate = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (!inGroup1())
-      invalid('canUpdate');
-    return addObjRule(Action.updateObject, arguments);
-  };
+  canUpdate( ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (!inGroup1.call( this ))
+      invalid.call( this, 'canUpdate' );
+    return addObjRule.call( this, Action.updateObject, arguments );
+  }
 
   /**
    * Adds an authorization rule to the business object that determines
@@ -982,11 +1049,11 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.canRemove = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (!inGroup1())
-      invalid('canRemove');
-    return addObjRule(Action.removeObject, arguments);
-  };
+  canRemove( ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (!inGroup1.call( this ))
+      invalid.call( this, 'canRemove' );
+    return addObjRule.call( this, Action.removeObject, arguments );
+  }
 
   /**
    * Adds an authorization rule to the business object that determines
@@ -1008,18 +1075,10 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.canExecute = function (/* ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (modelFactory !== CommandObject)
-      invalid('canExecute');
-    return addObjRule(Action.executeCommand, arguments);
-  };
-
-  function addObjRule (action, parameters) {
-    var args = Array.prototype.slice.call(parameters);
-    var ruleFactory = args.shift();
-    args.unshift(action, null);
-    rules.add(ruleFactory.apply(null, args));
-    return nonProperty();
+  canExecute( ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (_modelFactory.get( this ) !== CommandObject)
+      invalid.call( this, 'canExecute' );
+    return addObjRule.call( this, Action.executeCommand, arguments );
   }
 
   /**
@@ -1049,16 +1108,19 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.canCall = function (/* methodName, ruleFactory, [params], message, priority, stopsProcessing */) {
-    if (isCollection && !isRoot)
-      invalid('canCall');
-    var args = Array.prototype.slice.call(arguments);
-    var methodName = args.shift();
-    var ruleFactory = args.shift();
-    args.unshift(Action.executeMethod, methodName);
-    rules.add(ruleFactory.apply(null, args));
-    return nonProperty();
-  };
+  canCall( methodName, ruleFactory, [params], message, priority, stopsProcessing ) {
+    if (_isCollection.get( this ) && !_isRoot.get( this ))
+      invalid.call( this, 'canCall' );
+
+    const args = Array.prototype.slice.call( arguments, 2 );
+    args.unshift( Action.executeMethod, methodName );
+
+    const rules = _rules.get( this );
+    rules.add( ruleFactory.apply( null, args ) );
+    _rules.set( this, rules );
+
+    return nonProperty.call( this );
+  }
 
   //endregion
 
@@ -1087,12 +1149,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.daoBuilder = function (daoBuilder) {
-    if (!isRoot && modelFactory !== EditableChildObject)
-      invalid('daoBuilder');
+  daoBuilder( daoBuilder ) {
+    if (!_isRoot.get( this ) && _modelFactory.get( this ) !== EditableChildObject)
+      invalid.call( this, 'daoBuilder' );
+    const extensions = _extensions.get( this );
     extensions.daoBuilder = daoBuilder;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that converts
@@ -1114,12 +1178,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.toDto = function (toDto) {
-    if (!isEditable || isCollection)
-      invalid('toDto');
+  toDto( toDto ) {
+    if (!_isEditable.get( this ) || _isCollection.get( this ))
+      invalid.call( this, 'toDto' );
+    const extensions = _extensions.get( this );
     extensions.toDto = toDto;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that converts
@@ -1140,12 +1206,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.fromDto = function (fromDto) {
-    if (isCollection)
-      invalid('fromDto');
+  fromDto( fromDto ) {
+    if (_isCollection.get( this ))
+      invalid.call( this, 'fromDto' );
+    const extensions = _extensions.get( this );
     extensions.fromDto = fromDto;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that converts
@@ -1167,12 +1235,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.toCto = function (toCto) {
-    if (inGroup2())
-      invalid('toCto');
+  toCto( toCto ) {
+    if (inGroup2.call( this ))
+      invalid.call( this, 'toCto' );
+    const extensions = _extensions.get( this );
     extensions.toCto = toCto;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that converts
@@ -1191,12 +1261,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.fromCto = function (fromCto) {
-    if (!inGroup1())
-      invalid('fromCto');
+  fromCto( fromCto ) {
+    if (!inGroup1.call( this ))
+      invalid.call( this, 'fromCto' );
+    const extensions = _extensions.get( this );
     extensions.fromCto = fromCto;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that returns
@@ -1214,12 +1286,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.dataCreate = function (dataCreate) {
-    if (!inGroup3())
-      invalid('dataCreate');
+  dataCreate( dataCreate ) {
+    if (!inGroup3.call( this ))
+      invalid.call( this, 'dataCreate' );
+    const extensions = _extensions.get( this );
     extensions.dataCreate = dataCreate;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that returns
@@ -1241,12 +1315,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.dataFetch = function (dataFetch) {
-    if (inGroup2())
-      invalid('dataFetch');
+  dataFetch( dataFetch ) {
+    if (inGroup2.call( this ))
+      invalid.call( this, 'dataFetch' );
+    const extensions = _extensions.get( this );
     extensions.dataFetch = dataFetch;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that saves
@@ -1264,12 +1340,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.dataInsert = function (dataInsert) {
-    if (!inGroup3())
-      invalid('dataInsert');
+  dataInsert( dataInsert ) {
+    if (!inGroup3.call( this ))
+      invalid.call( this, 'dataInsert' );
+    const extensions = _extensions.get( this );
     extensions.dataInsert = dataInsert;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that saves
@@ -1287,12 +1365,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.dataUpdate = function (dataUpdate) {
-    if (!inGroup3())
-      invalid('dataUpdate');
+  dataUpdate( dataUpdate ) {
+    if (!inGroup3.call( this ))
+      invalid.call( this, 'dataUpdate' );
+    const extensions = _extensions.get( this );
     extensions.dataUpdate = dataUpdate;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that deletes
@@ -1310,12 +1390,14 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.dataRemove = function (dataRemove) {
-    if (!inGroup3())
-      invalid('dataRemove');
+  dataRemove( dataRemove ) {
+    if (!inGroup3.call( this ))
+      invalid.call( this, 'dataRemove' );
+    const extensions = _extensions.get( this );
     extensions.dataRemove = dataRemove;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a custom function to the business object that executes
@@ -1332,17 +1414,19 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.dataExecute = function (dataExecute) {
-    if (modelFactory !== CommandObject)
-      invalid('dataExecute');
+  dataExecute( dataExecute ) {
+    if (_modelFactory.get( this ) !== CommandObject)
+      invalid.call( this, 'dataExecute' );
+    const extensions = _extensions.get( this );
     extensions.dataExecute = dataExecute;
-    return nonProperty();
-  };
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
+  }
 
   /**
    * Adds a new instance method to the business object that
    * will call a custom execute method on a command object instance.
-   * See {@link bo.shared.ExtensionManagerBase#addOtherMethod addOtherMethod}
+   * See {@link bo.shared.ExtensionManager#addOtherMethod addOtherMethod}
    * method of ExtensionManagerBase class.
    *
    *    The function is valid for the following model type:
@@ -1355,66 +1439,34 @@ function ModelComposer (modelName) {
    *
    * @throws {@link bo.system.ComposerError Composer error}: The function is not applicable to the model type.
    */
-  this.addMethod = function (methodName) {
-    if (modelFactory !== CommandObject)
-      invalid('addMethod');
-    extensions.addOtherMethod(methodName);
-    return nonProperty();
-  };
-
-  //endregion
-
-  //region Helper
-
-  function nonProperty () {
-    currentProperty = null;
-    return self;
-  }
-
-  function inGroup1() {
-    return [EditableRootObject, EditableChildObject, EditableRootCollection].some(function (element) {
-      return element === modelFactory;
-    });
-  }
-
-  function inGroup2() {
-    return isCollection && !isRoot || modelFactory === CommandObject;
-  }
-
-  function inGroup3() {
-    return modelFactory === EditableRootObject || modelFactory === EditableChildObject;
-  }
-
-  function checkCurrentProperty(methodName) {
-    if (!currentProperty) {
-      var error = new ComposerError('property', modelName, methodName);
-      error.modelName = modelName;
-      error.modelType = modelTypeName;
-      error.methodName = methodName;
-      throw error;
-    }
-  }
-
-  function invalid(methodName) {
-    var error = new ComposerError('invalid', modelName, methodName, modelTypeName);
-    error.modelName = modelName;
-    error.modelType = modelTypeName;
-    error.methodName = methodName;
-    throw error;
+  addMethod( methodName ) {
+    if (_modelFactory.get( this ) !== CommandObject)
+      invalid.call( this, 'addMethod' );
+    const extensions = _extensions.get( this );
+    extensions.addOtherMethod( methodName );
+    _extensions.set( this, extensions );
+    return nonProperty.call( this );
   }
 
   //endregion
 
-  this.compose = function () {
-    switch (argsType) {
+  compose() {
+    const modelFactory = _modelFactory.get( this );
+    const modelName = _modelName.get( this );
+    const properties = _properties.get( this );
+    const rules = _rules.get( this );
+    const extensions = _extensions.get( this );
+    const memberType = _memberType.get( this );
+
+    switch (_argsType.get( this )) {
       case ArgsType.businessObject:
-        return new modelFactory(modelName, properties, rules, extensions);
+        return new modelFactory( modelName, properties, rules, extensions );
       case ArgsType.rootCollection:
-        return new modelFactory(modelName, memberType, rules, extensions);
+        return new modelFactory( modelName, memberType, rules, extensions );
       case ArgsType.childCollection:
-        return new modelFactory(modelName, memberType);
+        return new modelFactory( modelName, memberType );
     }
-  };
+  }
 }
 
-module.exports = ModelComposerFactory;
+module.exports = ModelComposer;

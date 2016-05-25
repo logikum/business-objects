@@ -4,7 +4,7 @@ const bo = require( '../../source/index.js' );
 const Model = bo.ModelComposer;
 const F = bo.shared.PropertyFlag;
 
-const BlanketOrderListItem = Model( 'BlanketOrderListItem' )
+const BlanketOrderListItem = new Model( 'BlanketOrderListItem' )
   .readOnlyChildObject( 'dao', __filename )
   // --- Properties
   .integer( 'orderKey', F.key )

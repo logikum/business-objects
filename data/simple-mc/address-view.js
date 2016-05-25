@@ -4,7 +4,7 @@ const bo = require( '../../source/index.js' );
 const Model = bo.ModelComposer;
 const F = bo.shared.PropertyFlag;
 
-const AddressView = Model( 'AddressView' )
+const AddressView = new Model( 'AddressView' )
   .readOnlyChildObject( 'dao', __filename )
   // --- Properties
   .integer( 'addressKey', F.key )
