@@ -112,7 +112,6 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
     var brokenRules = new BrokenRuleList(name);
     var isValidated = false;
     var dataContext = null;
-    var connection = null;
 
     /**
      * The name of the model.

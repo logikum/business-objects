@@ -3,7 +3,9 @@
 const Argument = require( '../system/argument-check.js' );
 const PropertyInfo = require( './property-info.js' );
 const CollectionBase = require( '../collection-base.js' );
+const CollectionBase2 = require( '../collection-base-2.js' );
 const ModelBase = require( '../model-base.js' );
+const ModelBase2 = require( '../model-base-2.js' );
 
 const _data = new WeakMap();
 const _validity = new WeakMap();
@@ -59,7 +61,9 @@ class DataStore {
     const check = Argument.inMethod( DataStore.name, 'initValue' );
 
     property = check( property ).forMandatory( 'property' ).asType( PropertyInfo );
-    value = check( value ).forOptional( 'value' ).asType( [ CollectionBase, ModelBase ] );
+    // TODO
+    value = check( value ).forOptional( 'value' ).asType( [
+      CollectionBase, CollectionBase2, ModelBase, ModelBase2 ] );
 
     setPropertyValue( this, property.name, value );
     setValidity( this, property.name, true );

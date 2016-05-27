@@ -13,7 +13,7 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const BlanketOrderList = bo.ReadOnlyRootCollection(
+const BlanketOrderList = new bo.ReadOnlyRootCollection(
   'BlanketOrderList',
   BlanketOrderListItem,
   rules,

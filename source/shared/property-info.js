@@ -4,7 +4,9 @@ const Argument = require( '../system/argument-check.js' );
 const DataType = require( '../data-types/data-type.js' );
 const PropertyFlag = require( '../shared/property-flag.js' );
 const ModelBase = require( '../model-base.js' );
+const ModelBase2 = require( '../model-base-2.js' );
 const CollectionBase = require( '../collection-base.js' );
+const CollectionBase2 = require( '../collection-base-2.js' );
 
 /**
  * Defines a property of a business object model.
@@ -59,7 +61,8 @@ class PropertyInfo {
      * @type {*}
      * @readonly
      */
-    this.type = check( type ).forMandatory( 'type' ).asType( [ DataType, ModelBase, CollectionBase ] );
+    this.type = check( type ).forMandatory( 'type' ).asType( [
+      DataType, ModelBase, ModelBase2, CollectionBase, CollectionBase2 ] ); // TODO
 
     /**
      * The custom getter function of the property.

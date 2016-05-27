@@ -16,22 +16,4 @@ function CollectionBase () {
 }
 util.inherits(CollectionBase, events.EventEmitter);
 
-// const events = require( 'events' );
-// const util = require( 'util' );
-//
-// /**
-//  * Serves as the base class for collections.
-//  *
-//  * @extends EventEmitter
-//  */
-// class CollectionBase extends events.EventEmitter {
-//
-//   /**
-//    * Creates a base collection instance.
-//    */
-//   constructor() {
-//     super();
-//   }
-// }
-
 module.exports = CollectionBase;

@@ -4,7 +4,7 @@ const bo = require( '../../source/index.js' );
 
 const BlanketOrderItemView = require( './blanket-order-item-view.js' );
 
-const BlanketOrderItemsView = bo.ReadOnlyChildCollection(
+const BlanketOrderItemsView = new bo.ReadOnlyChildCollection(
   'BlanketOrderItemsView',
   BlanketOrderItemView
 );

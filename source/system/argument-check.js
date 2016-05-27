@@ -392,14 +392,18 @@ function asType( type, message, ...messageParams ) {
   const self = this;
   const types = type instanceof Array ? type : [ type ];
   if (this.isMandatory) {
-    if (!(types.some( function ( option ) {
-        return self.value && (self.value instanceof option || self.value.super_ === option);
+    if (!(types.some( option => {
+        return self.value && (
+          self.value instanceof option ||
+          self.value.super_ === option ||
+          self.value.__proto__ === option);
       } )))
       this.exception( 'manType', typeNames( types ), message, ...messageParams );
   } else {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && !(types.some( function ( option ) {
+        // TODO
         return self.value && (self.value instanceof option || self.value.super_ === option);
       } )))
       this.exception( 'optType', typeNames( types ), message, ...messageParams );

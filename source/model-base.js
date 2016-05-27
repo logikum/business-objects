@@ -16,22 +16,4 @@ function ModelBase () {
 }
 util.inherits(ModelBase, events.EventEmitter);
 
-// const events = require('events');
-// const util = require('util');
-//
-// /**
-//  * Serves as the base class for models.
-//  *
-//  * @extends EventEmitter
-//  */
-// class ModelBase extends events.EventEmitter {
-//
-//   /**
-//    * Creates a base model instance.
-//    */
-//   constructor() {
-//     super();
-//   }
-// }
-
 module.exports = ModelBase;

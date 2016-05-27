@@ -10,8 +10,8 @@ const EditableRootCollection = require( './editable-root-collection.js' );
 const EditableChildCollection = require( './editable-child-collection.js' );
 const ReadOnlyRootObject = require( './read-only-root-object.js' );
 const ReadOnlyChildObject = require( './read-only-child-object.js' );
-const ReadOnlyRootCollection = require( './read-only-root-collection.js' );
-const ReadOnlyChildCollection = require( './read-only-child-collection.js' );
+const ReadOnlyRootCollection = require( './read-only-root-collection-2.js' );
+const ReadOnlyChildCollection = require( './read-only-child-collection-2.js' );
 const CommandObject = require( './command-object.js' );
 
 const commonRules = require( './common-rules/index.js' );

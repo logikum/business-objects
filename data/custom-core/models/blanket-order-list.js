@@ -52,7 +52,7 @@ extensions.daoBuilder = daoBuilder;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-const BlanketOrderList = bo.ReadOnlyRootCollection(
+const BlanketOrderList = new bo.ReadOnlyRootCollection(
   'BlanketOrderList',
   BlanketOrderListItem,
   rules,
