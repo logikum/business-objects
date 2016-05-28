@@ -33,6 +33,8 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const BlanketOrderScheduleView = bo.ReadOnlyChildObject( 'BlanketOrderScheduleView', properties, rules, extensions );
+const BlanketOrderScheduleView = new bo.ReadOnlyChildObject(
+  'BlanketOrderScheduleView', properties, rules, extensions
+);
 
 module.exports = BlanketOrderScheduleView;

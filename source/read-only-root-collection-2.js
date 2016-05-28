@@ -2,35 +2,35 @@
 
 //region Imports
 
-const config = require('./system/configuration-reader.js');
-const Argument = require('./system/argument-check.js');
+const config = require( './system/configuration-reader.js' );
+const Argument = require( './system/argument-check.js' );
 
-const CollectionBase = require('./collection-base-2.js');
+const CollectionBase = require( './collection-base-2.js' );
 const ModelType = require( './model-type.js' );
-const ModelError = require('./shared/model-error.js');
-const ExtensionManager = require('./shared/extension-manager.js');
-const EventHandlerList = require('./shared/event-handler-list.js');
+const ModelError = require( './shared/model-error.js' );
+const ExtensionManager = require( './shared/extension-manager.js' );
+const EventHandlerList = require( './shared/event-handler-list.js' );
 
-const TransferContext = require('./shared/transfer-context.js');
+const TransferContext = require( './shared/transfer-context.js' );
 
-const RuleManager = require('./rules/rule-manager.js');
-const BrokenRuleList = require('./rules/broken-rule-list.js');
-const AuthorizationAction = require('./rules/authorization-action.js');
-const AuthorizationContext = require('./rules/authorization-context.js');
-const BrokenRulesResponse = require('./rules/broken-rules-response.js');
+const RuleManager = require( './rules/rule-manager.js' );
+const BrokenRuleList = require( './rules/broken-rule-list.js' );
+const AuthorizationAction = require( './rules/authorization-action.js' );
+const AuthorizationContext = require( './rules/authorization-context.js' );
+const BrokenRulesResponse = require( './rules/broken-rules-response.js' );
 
-const DataPortalAction = require('./shared/data-portal-action.js');
-const DataPortalContext = require('./shared/data-portal-context.js');
-const DataPortalEvent = require('./shared/data-portal-event.js');
-const DataPortalEventArgs = require('./shared/data-portal-event-args.js');
-const DataPortalError = require('./shared/data-portal-error.js');
+const DataPortalAction = require( './shared/data-portal-action.js' );
+const DataPortalContext = require( './shared/data-portal-context.js' );
+const DataPortalEvent = require( './shared/data-portal-event.js' );
+const DataPortalEventArgs = require( './shared/data-portal-event-args.js' );
+const DataPortalError = require( './shared/data-portal-error.js' );
 
 //endregion
 
 //region Private variables
 
 const MODEL_DESC = 'Read-only root collection';
-const M_FETCH = DataPortalAction.getName(DataPortalAction.fetch);
+const M_FETCH = DataPortalAction.getName( DataPortalAction.fetch );
 
 const _itemType = new WeakMap();
 const _rules = new WeakMap();
@@ -49,18 +49,18 @@ const _totalItems = new WeakMap();
 
 //region Transfer object methods
 
-function getTransferContext () {
-  return new TransferContext(null, null, null);
+function getTransferContext() {
+  return new TransferContext( null, null, null );
 }
 
 function baseToCto() {
   let cto = [];
-  const items = _items.get(this);
-  const totalItems = _totalItems.get(this);
+  const items = _items.get( this );
+  const totalItems = _totalItems.get( this );
 
-  items.forEach(function (item) {
-    cto.push(item.toCto());
-  });
+  items.forEach( function ( item ) {
+    cto.push( item.toCto() );
+  } );
   if (totalItems)
     cto.totalItems = totalItems;
   return cto;
@@ -70,22 +70,22 @@ function baseToCto() {
 
 //region Permissions
 
-function getAuthorizationContext(action, targetName) {
-  const brokenRules = _brokenRules.get(this);
-  return new AuthorizationContext(action, targetName || '', brokenRules);
+function getAuthorizationContext( action, targetName ) {
+  const brokenRules = _brokenRules.get( this );
+  return new AuthorizationContext( action, targetName || '', brokenRules );
 }
 
-function canDo (action) {
-  const rules = _rules.get(this);
+function canDo( action ) {
+  const rules = _rules.get( this );
   return rules.hasPermission(
-    getAuthorizationContext.call( this, action)
+    getAuthorizationContext.call( this, action )
   );
 }
 
-function canExecute (methodName) {
-  const rules = _rules.get(this);
+function canExecute( methodName ) {
+  const rules = _rules.get( this );
   return rules.hasPermission(
-    getAuthorizationContext.call(this, AuthorizationAction.executeMethod, methodName)
+    getAuthorizationContext.call( this, AuthorizationAction.executeMethod, methodName )
   );
 }
 
@@ -94,13 +94,13 @@ function canExecute (methodName) {
 //region Child methods
 
 function fetchChildren( data ) {
-  const itemType = _itemType.get(this);
-  const eventHandlers = _eventHandlers.get(this);
+  const itemType = _itemType.get( this );
+  const eventHandlers = _eventHandlers.get( this );
 
   return data instanceof Array ?
     Promise.all( data.map( dto => {
       return itemType.load( this, dto, eventHandlers );
-    })) :
+    } ) ) :
     Promise.resolve( [] );
 }
 
@@ -113,10 +113,10 @@ function fetchChildren( data ) {
 //region Helper
 
 function getDataContext( connection ) {
-  let dataContext = _dataContext.get(this);
+  let dataContext = _dataContext.get( this );
   if (!dataContext) {
-    dataContext = new DataPortalContext( _dao.get(this) );
-    _dataContext.set(this, dataContext);
+    dataContext = new DataPortalContext( _dao.get( this ) );
+    _dataContext.set( this, dataContext );
   }
   return dataContext.setState( connection, false );
 }
@@ -138,16 +138,16 @@ function wrapError( error ) {
 
 function data_fetch( filter, method ) {
   const self = this;
-  return new Promise( (fulfill, reject) => {
+  return new Promise( ( fulfill, reject ) => {
     // Check permissions.
     if (method === M_FETCH ?
         canDo.call( self, AuthorizationAction.fetchObject ) :
         canExecute.call( self, method )) {
 
       let connection = null;
-      const extensions = _extensions.get(self);
+      const extensions = _extensions.get( self );
       // Open connection.
-      config.connectionManager.openConnection(extensions.dataSource)
+      config.connectionManager.openConnection( extensions.dataSource )
         .then( dsc => {
           connection = dsc;
           // Launch start event.
@@ -159,35 +159,35 @@ function data_fetch( filter, method ) {
            */
           raiseEvent.call( self, DataPortalEvent.preFetch, method );
           // Execute fetch.
-          const dao = _dao.get(self);
+          const dao = _dao.get( self );
           // Root element fetches all data from repository.
           return extensions.dataFetch ?
             // *** Custom fetch.
             extensions.$runMethod( 'fetch', self, getDataContext.call( self, connection ), filter, method ) :
             // *** Standard fetch.
             dao.$runMethod( method, connection, filter );
-        })
+        } )
         .then( dto => {
           // Get the count of all available items.
-          let totalItems = _totalItems.get(self);
+          let totalItems = _totalItems.get( self );
           if (dto.totalItems &&
             (typeof dto.totalItems === 'number' || dto.totalItems instanceof Number) &&
             dto.totalItems % 1 === 0)
             totalItems = dto.totalItems;
           else
             totalItems = null;
-          _totalItems.set(self, totalItems);
+          _totalItems.set( self, totalItems );
           // Load children.
           return fetchChildren.call( self, dto )
             .then( children => {
-              let items = _items.get(self);
+              let items = _items.get( self );
               children.forEach( child => {
                 items.push( child );
-              });
-              _items.set(self, items);
+              } );
+              _items.set( self, items );
               return null;
-            });
-        })
+            } );
+        } )
         .then( none => {
           // Launch finish event.
           /**
@@ -198,12 +198,12 @@ function data_fetch( filter, method ) {
            */
           raiseEvent.call( self, DataPortalEvent.postFetch, method );
           // Close connection.
-          config.connectionManager.closeConnection(extensions.dataSource, connection)
+          config.connectionManager.closeConnection( extensions.dataSource, connection )
             .then( none => {
               // Return the fetched read-only root collection.
               fulfill( self );
-            });
-        })
+            } );
+        } )
         .catch( reason => {
           // Wrap the intercepted error.
           const dpe = wrapError.call( self, reason );
@@ -214,10 +214,10 @@ function data_fetch( filter, method ) {
             .then( none => {
               // Pass the error.
               reject( dpe );
-            });
-        });
+            } );
+        } );
     }
-  });
+  } );
 }
 
 //endregion
@@ -251,8 +251,8 @@ class ReadOnlyRootCollection extends CollectionBase {
   constructor( name, itemType, rules, extensions, eventHandlers ) {
     super();
 
-    eventHandlers = Argument.inConstructor(name)
-      .check(eventHandlers).forOptional('eventHandlers').asType(EventHandlerList);
+    eventHandlers = Argument.inConstructor( name )
+      .check( eventHandlers ).forOptional( 'eventHandlers' ).asType( EventHandlerList );
 
     _itemType.set( this, itemType );
     _rules.set( this, rules );
@@ -265,7 +265,7 @@ class ReadOnlyRootCollection extends CollectionBase {
     _totalItems.set( this, null );
 
     // Get data access object.
-    _dao.set(this, extensions.getDataAccessObject(name));
+    _dao.set( this, extensions.getDataAccessObject( name ) );
 
     /**
      * The name of the model.
@@ -277,7 +277,7 @@ class ReadOnlyRootCollection extends CollectionBase {
 
     // Set up event handlers.
     if (eventHandlers)
-      eventHandlers.setup(this);
+      eventHandlers.setup( this );
 
     // Immutable definition object.
     Object.freeze( this );
@@ -294,7 +294,8 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @readonly
    */
   get count() {
-    return _items.get( this ).length;
+    const items = _items.get( this );
+    return items ? items.length : 0;
   }
 
   /**
@@ -311,6 +312,7 @@ class ReadOnlyRootCollection extends CollectionBase {
    * The name of the model type.
    *
    * @member {string} ReadOnlyRootCollection.modelType
+   * @default ReadOnlyRootCollection
    * @readonly
    */
   static get modelType() {
@@ -328,11 +330,11 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @returns {Array.<object>} The client transfer object.
    */
   toCto() {
-    const extensions = _extensions.get(this); 
+    const extensions = _extensions.get( this );
     if (extensions.toCto)
-      return extensions.toCto.call(this, getTransferContext());
+      return extensions.toCto.call( this, getTransferContext() );
     else
-      return baseToCto.call(this);
+      return baseToCto.call( this );
   }
 
   //endregion
@@ -378,10 +380,10 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @returns {boolean} True when the business object is valid, otherwise false.
    */
   isValid() {
-    const items = _items.get(this);
+    const items = _items.get( this );
     return items.every( item => {
       return item.isValid();
-    });
+    } );
   }
 
   /**
@@ -393,16 +395,16 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @function ReadOnlyRootCollection#checkRules
    */
   checkRules() {
-    const brokenRules = _brokenRules.get(this);
+    const brokenRules = _brokenRules.get( this );
     brokenRules.clear();
-    _brokenRules.set(this, brokenRules);
 
-    const items = _items.get(this);
+    const items = _items.get( this );
     items.forEach( item => {
       item.checkRules();
-    });
+    } );
 
-    _isValidated.set(this, true);
+    _brokenRules.set( this, brokenRules );
+    _isValidated.set( this, true );
   }
 
   /**
@@ -414,19 +416,19 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
    * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object collection.
    */
-  getBrokenRules(namespace) {
-    const brokenRules = _brokenRules.get(this);
-    var bro = brokenRules.output(namespace);
+  getBrokenRules( namespace ) {
+    const brokenRules = _brokenRules.get( this );
+    var bro = brokenRules.output( namespace );
 
     var self = this;
-    const items = _items.get(this);
-    items.forEach(item => {
-      const childBrokenRules = item.getBrokenRules(namespace);
+    const items = _items.get( this );
+    items.forEach( item => {
+      const childBrokenRules = item.getBrokenRules( namespace );
       if (childBrokenRules)
-        // TODO - adding broken rules to objects and collections?
-        /* bro.addChild(property.name, childBrokenRules); */
-        bro.addChild(self.$modelName, childBrokenRules);
-    });
+      // TODO - adding broken rules to objects and collections?
+      /* bro.addChild(property.name, childBrokenRules); */
+        bro.addChild( self.$modelName, childBrokenRules );
+    } );
 
     return bro.$length ? bro : null;
   }
@@ -441,9 +443,9 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
    * @returns {bo.rules.BrokenRulesResponse} The broken rules response to send to the client.
    */
-  getResponse(message, namespace) {
-    var output = this.getBrokenRules(namespace);
-    return output ? new BrokenRulesResponse(output, message) : null;
+  getResponse( message, namespace ) {
+    var output = this.getBrokenRules( namespace );
+    return output ? new BrokenRulesResponse( output, message ) : null;
   };
 
   //endregion
@@ -457,9 +459,9 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @param {number} index - The index of the required item in the collection.
    * @returns {ReadOnlyChildObject} The required collection item.
    */
-  at(index) {
-    const items = _items.get(this);
-    return items[index];
+  at( index ) {
+    const items = _items.get( this );
+    return items[ index ];
   }
 
   /**
@@ -468,9 +470,9 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @function ReadOnlyRootCollection#forEach
    * @param {external.cbCollectionItem} callback - Function that produces an item of the new collection.
    */
-  forEach(callback) {
-    const items = _items.get(this);
-    items.forEach(callback);
+  forEach( callback ) {
+    const items = _items.get( this );
+    items.forEach( callback );
   }
 
   /**
@@ -480,9 +482,9 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @param {external.cbCollectionItem} callback - Function to test for each collection item.
    * @returns {boolean} True when callback returns truthy value for each item, otherwise false.
    */
-  every(callback) {
-    const items = _items.get(this);
-    return items.every(callback);
+  every( callback ) {
+    const items = _items.get( this );
+    return items.every( callback );
   }
 
   /**
@@ -492,9 +494,9 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @param {external.cbCollectionItem} callback - Function to test for each collection item.
    * @returns {boolean} True when callback returns truthy value for some item, otherwise false.
    */
-  some(callback) {
-    const items = _items.get(this);
-    return items.some(callback);
+  some( callback ) {
+    const items = _items.get( this );
+    return items.some( callback );
   }
 
   /**
@@ -505,9 +507,9 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @param {external.cbCollectionItem} callback - Function to test for each collection item.
    * @returns {Array.<ReadOnlyChildObject>} The new array of collection items.
    */
-  filter(callback) {
-    const items = _items.get(this);
-    return items.filter(callback);
+  filter( callback ) {
+    const items = _items.get( this );
+    return items.filter( callback );
   }
 
   /**
@@ -518,9 +520,9 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @param {external.cbCollectionItem} callback - Function to test for each collection item.
    * @returns {Array.<*>} The new array of callback results.
    */
-  map(callback) {
-    const items = _items.get(this);
-    return items.map(callback);
+  map( callback ) {
+    const items = _items.get( this );
+    return items.map( callback );
   }
 
   /**
@@ -532,7 +534,7 @@ class ReadOnlyRootCollection extends CollectionBase {
    *      code point value, according to the string conversion of each item.
    * @returns {ReadOnlyRootCollection} The sorted collection.
    */
-  sort(fnCompare) {
+  sort( fnCompare ) {
     const items = _items.get( this );
     const sorted = items.sort( fnCompare );
     _items.set( this, sorted );
@@ -570,30 +572,55 @@ class ReadOnlyRootCollectionFactory {
   constructor( name, itemType, rules, extensions ) {
     const check = Argument.inConstructor( ModelType.ReadOnlyRootCollection );
 
-    name = check(name).forMandatory('name').asString();
-    rules = check(rules).forMandatory('rules').asType(RuleManager);
-    extensions = check(extensions).forMandatory('extensions').asType(ExtensionManager);
+    name = check( name ).forMandatory( 'name' ).asString();
+    rules = check( rules ).forMandatory( 'rules' ).asType( RuleManager );
+    extensions = check( extensions ).forMandatory( 'extensions' ).asType( ExtensionManager );
 
     // Verify the model type of the item type.
     if (itemType.modelType !== ModelType.ReadOnlyChildObject)
-      throw new ModelError('invalidItem',
+      throw new ModelError( 'invalidItem',
         itemType.prototype.name, itemType.modelType,
-        ModelType.ReadOnlyRootCollection, ModelType.ReadOnlyChildObject);
+        ModelType.ReadOnlyRootCollection, ModelType.ReadOnlyChildObject );
 
     const Model = ReadOnlyRootCollection.bind( undefined, name, itemType, rules, extensions );
+
+    //region Factory methods
 
     // /**
     //  * The name of the model type.
     //  *
     //  * @member {string} ReadOnlyRootCollection.modelType
+    //  * @default ReadOnlyRootCollection
     //  * @readonly
     //  */
-    // model.modelType = ModelType.ReadOnlyRootCollection;
+    // Model.modelType = ModelType.ReadOnlyRootCollection;
 
-    Model.fetch = function( filter, method, eventHandlers ) {
+    /**
+     * Retrieves a read-only business object collection from the repository.
+     *
+     * @function ReadOnlyRootCollection.fetch
+     * @param {*} [filter] - The filter criteria.
+     * @param {string} [method] - An alternative fetch method of the data access object.
+     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @returns {Promise.<ReadOnlyRootCollection>} Returns a promise to the retrieved read-only root collection.
+     *
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The method must be a string or null.
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The event handlers must be an EventHandlerList object or null.
+     * @throws {@link bo.system.ArgumentError Argument error}:
+     *      The callback must be a function.
+     * @throws {@link bo.rules.AuthorizationError Authorization error}:
+     *      The user has no permission to execute the action.
+     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     *      Fetching the business object collection has failed.
+     */
+    Model.fetch = function ( filter, method, eventHandlers ) {
       var instance = new Model( eventHandlers );
       return instance.fetch( filter, method );
     };
+
+    //endregion
 
     // Immutable definition class.
     Object.freeze( Model );

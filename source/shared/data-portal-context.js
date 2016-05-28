@@ -1,10 +1,15 @@
 'use strict';
 
+//region Imports
+
 const configuration = require( './../system/configuration-reader.js' );
 const Argument = require( '../system/argument-check.js' );
 const ModelError = require( './model-error.js' );
 const PropertyInfo = require( './property-info.js' );
-const UserInfo = require( '../system/user-info.js' );
+
+//endregion
+
+//region Private variables
 
 const _getValue = new WeakMap();
 const _setValue = new WeakMap();
@@ -12,6 +17,10 @@ const _isDirty = new WeakMap();
 const _connection = new WeakMap();
 const _fulfill = new WeakMap();
 const _reject = new WeakMap();
+
+//endregion
+
+//region Helper methods
 
 function getByName( properties, name ) {
   for (let i = 0; i < properties.length; i++) {
@@ -21,6 +30,8 @@ function getByName( properties, name ) {
   throw new ModelError( 'noProperty', properties.name, name );
 }
 
+//endregion
+
 /**
  * Provides the context for custom data portal actions.
  *
@@ -28,6 +39,8 @@ function getByName( properties, name ) {
  */
 class DataPortalContext {
 
+  //region Constructor
+  
   /**
    * Creates a new data context object.
    *   </br></br>
@@ -74,6 +87,8 @@ class DataPortalContext {
     // Immutable object.
     Object.freeze( this );
   }
+
+  //endregion
 
   //region Properties
 

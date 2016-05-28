@@ -1,5 +1,7 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const PropertyInfo = require( './property-info.js' );
 const CollectionBase = require( '../collection-base.js' );
@@ -7,27 +9,40 @@ const CollectionBase2 = require( '../collection-base-2.js' );
 const ModelBase = require( '../model-base.js' );
 const ModelBase2 = require( '../model-base-2.js' );
 
+//endregion
+
+//region Private variables
+
 const _data = new WeakMap();
 const _validity = new WeakMap();
 
-function getPropertyValue( target, propertyName ) {
-  const data = _data.get( target );
+//endregion
+
+//region Helper methods
+
+function getPropertyValue( propertyName ) {
+  const data = _data.get( this );
   return data.get( propertyName );
 }
-function setPropertyValue( target, propertyName, value ) {
-  const data = _data.get( target );
+
+function setPropertyValue( propertyName, value ) {
+  const data = _data.get( this );
   data.set( propertyName, value );
-  _data.set( target, data );
+  _data.set( this, data );
 }
-function getValidity( target, propertyName ) {
-  const validity = _validity.get( target );
+
+function getValidity( propertyName ) {
+  const validity = _validity.get( this );
   return validity.get( propertyName ) || false;
 }
-function setValidity( target, propertyName, value ) {
-  const validity = _validity.get( target );
+
+function setValidity( propertyName, value ) {
+  const validity = _validity.get( this );
   validity.set( propertyName, value );
-  _validity.set( target, validity );
+  _validity.set( this, validity );
 }
+
+//endregion
 
 /**
  * Provides methods to manage the values of business object model's properties.
@@ -36,6 +51,8 @@ function setValidity( target, propertyName, value ) {
  */
 class DataStore {
 
+  //region Constructor
+  
   /**
    * Creates a new data store object.
    */
@@ -48,6 +65,10 @@ class DataStore {
     Object.freeze( this );
   }
 
+  //endregion
+
+  //region Instance methods
+  
   /**
    * Initializes the value of a property in the store.
    *
@@ -65,8 +86,8 @@ class DataStore {
     value = check( value ).forOptional( 'value' ).asType( [
       CollectionBase, CollectionBase2, ModelBase, ModelBase2 ] );
 
-    setPropertyValue( this, property.name, value );
-    setValidity( this, property.name, true );
+    setPropertyValue.call( this, property.name, value );
+    setValidity.call( this, property.name, true );
   }
 
   /**
@@ -82,7 +103,7 @@ class DataStore {
     property = Argument.inMethod( DataStore.name, 'getValue' )
       .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
-    return getPropertyValue( this, property.name );
+    return getPropertyValue.call( this, property.name );
   }
 
   /**
@@ -105,18 +126,18 @@ class DataStore {
     const parsed = property.type.parse( value );
     if (parsed === undefined) {
       // Invalid value.
-      setValidity( this, property.name, false );
+      setValidity.call( this, property.name, false );
       return false;
     } else {
       // Valid value.
-      if (parsed !== getPropertyValue( this, property.name )) {
+      if (parsed !== getPropertyValue.call( this, property.name )) {
         // Value has changed.
-        setPropertyValue( this, property.name, parsed );
-        setValidity( this, property.name, true );
+        setPropertyValue.call( this, property.name, parsed );
+        setValidity.call( this, property.name, true );
         return true;
       } else {
         // Value is unchanged.
-        setValidity( this, property.name, true );
+        setValidity.call( this, property.name, true );
         return false;
       }
     }
@@ -133,8 +154,10 @@ class DataStore {
     property = Argument.inMethod( DataStore.name, 'hasValidValue' )
       .check( property ).forMandatory( 'property' ).asType( PropertyInfo );
 
-    return getValidity( this, property.name );
+    return getValidity.call( this, property.name );
   }
+
+  //endregion
 }
 
 module.exports = DataStore;

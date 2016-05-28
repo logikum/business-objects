@@ -48,6 +48,8 @@ function dataFetch( ctx, dto, method ) {
 const extensions = new Extensions( 'dal', __filename );
 extensions.dataFetch = dataFetch;
 
-const RescheduleShippingResult = bo.ReadOnlyChildObject( 'RescheduleShippingResult', properties, rules, extensions );
+const RescheduleShippingResult = new bo.ReadOnlyChildObject(
+  'RescheduleShippingResult', properties, rules, extensions
+);
 
 module.exports = RescheduleShippingResult;

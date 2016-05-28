@@ -35,6 +35,8 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const AddressView = bo.ReadOnlyChildObject( 'AddressView', properties, rules, extensions );
+const AddressView = new bo.ReadOnlyChildObject(
+  'AddressView', properties, rules, extensions
+);
 
 module.exports = AddressView;

@@ -35,6 +35,8 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const BlanketOrderListItem = bo.ReadOnlyChildObject( 'BlanketOrderListItem', properties, rules, extensions );
+const BlanketOrderListItem = new bo.ReadOnlyChildObject(
+  'BlanketOrderListItem', properties, rules, extensions
+);
 
 module.exports = BlanketOrderListItem;

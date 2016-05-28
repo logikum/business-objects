@@ -82,6 +82,8 @@ extensions.fromDto = fromDto;
 extensions.toCto = toCto;
 extensions.dataFetch = dataFetch;
 
-const AddressView = bo.ReadOnlyChildObject( 'AddressView', properties, rules, extensions );
+const AddressView = new bo.ReadOnlyChildObject(
+  'AddressView', properties, rules, extensions
+);
 
 module.exports = AddressView;

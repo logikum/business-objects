@@ -95,7 +95,8 @@ class ReadOnlyChildCollection extends CollectionBase {
    * @readonly
    */
   get count() {
-    return _items.get( this ).length;
+    const items = _items.get( this );
+    return items ? items.length : 0;
   }
 
   // /**

@@ -222,7 +222,7 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
 
     //region Child methods
 
-    function fetchChildren(dto, callback) {
+    function fetchChildren(dto) {
       return properties.childCount() ?
         Promise.all( properties.children().map( property => {
           var child = getPropertyValue( property );
@@ -509,10 +509,10 @@ var ReadOnlyChildObjectFactory = function (name, properties, rules, extensions) 
    * @default ReadOnlyChildObject
    * @readonly
    */
-
   Object.defineProperty(ReadOnlyChildObject, 'modelType', {
     get: function () { return CLASS_NAME; }
   });
+
   /**
    * The name of the model. However, it can be hidden by a model property with the same name.
    *
