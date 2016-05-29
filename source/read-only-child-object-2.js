@@ -16,7 +16,8 @@ const DataType = require( './data-types/data-type.js' );
 const PropertyManager = require( './shared/property-manager.js' );
 const PropertyContext = require( './shared/property-context.js' );
 const ValidationContext = require( './rules/validation-context.js' );
-const TransferContext = require( './shared/transfer-context.js' );
+const ClientTransferContext = require('./shared/client-transfer-context.js');
+const DataTransferContext = require('./shared/data-transfer-context.js');
 
 const RuleManager = require( './rules/rule-manager.js' );
 const DataTypeRule = require( './rules/data-type-rule.js' );
@@ -57,8 +58,8 @@ const _dataContext = new WeakMap();
 function getTransferContext( authorize ) {
   const properties = _properties.get( this );
   return authorize ?
-    new TransferContext( properties.toArray(), readPropertyValue.bind( this ), null ) :
-    new TransferContext( properties.toArray(), null, setPropertyValue.bind( this ) );
+    new ClientTransferContext( properties.toArray(), readPropertyValue.bind( this ), null ) :
+    new DataTransferContext( properties.toArray(), null, setPropertyValue.bind( this ) );
 }
 
 function baseFromDto( dto ) {

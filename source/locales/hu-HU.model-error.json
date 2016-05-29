@@ -7,7 +7,7 @@
     "writeProperty": "{0}.{1} tulajdonságot nem lehet írni.",
     "noProperty": "{0} modellnek nincs {1} nevű tulajdonsága.",
     "getValue": "Csak-olvasható modell tulajdonságait nem lehet átmásolni az adatátviteli objektumra.",
-    "setValue": "Csak-olvasható modell tulajdonságait nem lehet átmásolni az ügyféloldali objektumról.",
+    "writeValue": "Csak-olvasható modell tulajdonságait nem lehet átmásolni az ügyféloldali objektumról.",
     "readOnly": "{0}.{1} tulajdonság csak olvasható.",
     "transition": "Érvénytelen állapot-változás: {0} => {1}",
     "propertyArg0": "{0} {1} tulajdonsága csak egy függvény lehet paraméterek nélkül.",

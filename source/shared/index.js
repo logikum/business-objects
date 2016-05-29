@@ -12,7 +12,8 @@ const PropertyInfo = require( './property-info.js' );
 const PropertyFlag = require( './property-flag.js' );
 const PropertyManager = require( './property-manager.js' );
 const PropertyContext = require( './property-context.js' );
-const TransferContext = require( './transfer-context.js' );
+const ClientTransferContext = require( './client-transfer-context.js' );
+const DataTransferContext = require( './data-transfer-context.js' );
 
 const DataPortalAction = require( './data-portal-action.js' );
 const DataPortalContext = require( './data-portal-context.js' );
@@ -46,8 +47,10 @@ const DataPortalError = require( './data-portal-error.js' );
  *      constructor to create a new property manager.
  * @property {function} PropertyContext - {@link bo.shared.PropertyContext Property context}
  *      constructor to create new context object for custom property functions.
- * @property {function} TransferContext - {@link bo.shared.TransferContext Transfer context}
- *      constructor to create new context object for custom client and data transfer functions.
+ * @property {function} ClientTransferContext - {@link bo.shared.ClientTransferContext Client transfer context}
+ *      constructor to create new context object for custom client transfer functions.
+ * @property {function} DataTransferContext - {@link bo.shared.DataTransferContext Data transfer context}
+ *      constructor to create new context object for custom data transfer functions.
  *
  * @property {function} DataPortalAction - {@link bo.shared.DataPortalAction Data portal action}
  *      enumeration specifies the model operations to execute on data access objects.
@@ -73,7 +76,8 @@ const index = {
   PropertyFlag: PropertyFlag,
   PropertyManager: PropertyManager,
   PropertyContext: PropertyContext,
-  TransferContext: TransferContext,
+  ClientTransferContext: ClientTransferContext,
+  DataTransferContext: DataTransferContext,
 
   DataPortalAction: DataPortalAction,
   DataPortalContext: DataPortalContext,

@@ -11,7 +11,7 @@ const ModelError = require( './shared/model-error.js' );
 const ExtensionManager = require( './shared/extension-manager.js' );
 const EventHandlerList = require( './shared/event-handler-list.js' );
 
-const TransferContext = require( './shared/transfer-context.js' );
+const ClientTransferContext = require( './shared/client-transfer-context.js' );
 
 const RuleManager = require( './rules/rule-manager.js' );
 const BrokenRuleList = require( './rules/broken-rule-list.js' );
@@ -50,7 +50,7 @@ const _totalItems = new WeakMap();
 //region Transfer object methods
 
 function getTransferContext() {
-  return new TransferContext( null, null, null );
+  return new ClientTransferContext( null, null, null );
 }
 
 function baseToCto() {

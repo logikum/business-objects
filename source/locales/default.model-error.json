@@ -7,7 +7,7 @@
     "writeProperty": "{0}.{1} property cannot be written.",
     "noProperty": "{0} model has no property named {1}.",
     "getValue": "Read-only model's properties cannot be copied to data transfer object.",
-    "setValue": "Read-only model's properties cannot be copied from client transfer object.",
+    "writeValue": "Read-only model's properties cannot be copied from client transfer object.",
     "readOnly": "{0}.{1} property is read-only.",
     "transition": "Illegal state transition: {0} => {1}",
     "propertyArg0": "The {1} property of {0} expects a function without arguments.",

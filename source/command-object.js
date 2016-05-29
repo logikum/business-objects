@@ -18,7 +18,7 @@ var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
 var PropertyContext = require('./shared/property-context.js');
 var ValidationContext = require('./rules/validation-context.js');
-var TransferContext = require('./shared/transfer-context.js');
+var DataTransferContext = require('./shared/data-transfer-context.js');
 
 var RuleManager = require('./rules/rule-manager.js');
 var DataTypeRule = require('./rules/data-type-rule.js');
@@ -122,7 +122,7 @@ var CommandObjectFactory = function (name, properties, rules, extensions) {
     //region Transfer object methods
 
     function getTransferContext () {
-      return new TransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
+      return new DataTransferContext(properties.toArray(), getPropertyValue, setPropertyValue);
     }
 
     function baseToDto() {

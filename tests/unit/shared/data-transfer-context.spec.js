@@ -1,9 +1,9 @@
-console.log( 'Testing shared/transfer-context.js...' );
+console.log( 'Testing shared/data-transfer-context.js...' );
 
 function read ( filename ) {
   return require( '../../../source/' + filename );
 }
-const TransferContext = read( 'shared/transfer-context.js' );
+const DataTransferContext = read( 'shared/data-transfer-context.js' );
 const PropertyInfo = read( 'shared/property-info.js' );
 const Text = read( 'data-types/text.js' );
 
@@ -18,23 +18,23 @@ describe( 'Transfer context', () => {
   function setValue( property, value ) {
     propertyValue = property.name === 'property' ? value : null;
   }
-  const ctx = new TransferContext( [ pi ], getValue, setValue );
+  const ctx = new DataTransferContext( [ pi ], getValue, setValue );
 
   it( 'constructor expects three arguments', () => {
 
-    function create01() { return new TransferContext(); }
-    function create02() { return new TransferContext( 1, 2, 3 ); }
-    function create03() { return new TransferContext( '1', '2', '3' ); }
-    function create04() { return new TransferContext( [ pi ] ); }
-    function create05() { return new TransferContext( [ pi ], getValue ); }
-    function create06() { return new TransferContext( [ pi ], getValue, setValue ); }
-    function create07() { return new TransferContext( [ pi ], null, setValue ); }
-    function create08() { return new TransferContext( [ pi ], getValue, {} ); }
-    function create09() { return new TransferContext( [ pi ], {}, setValue ); }
-    function create10() { return new TransferContext( null, getValue, setValue ); }
+    function create01() { return new DataTransferContext(); }
+    function create02() { return new DataTransferContext( 1, 2, 3 ); }
+    function create03() { return new DataTransferContext( '1', '2', '3' ); }
+    function create04() { return new DataTransferContext( [ pi ] ); }
+    function create05() { return new DataTransferContext( [ pi ], getValue ); }
+    function create06() { return new DataTransferContext( [ pi ], getValue, setValue ); }
+    function create07() { return new DataTransferContext( [ pi ], null, setValue ); }
+    function create08() { return new DataTransferContext( [ pi ], getValue, {} ); }
+    function create09() { return new DataTransferContext( [ pi ], {}, setValue ); }
+    function create10() { return new DataTransferContext( null, getValue, setValue ); }
 
     expect( create01 ).not.toThrow();
-    expect( create02 ).toThrow( 'The properties argument of TransferContext constructor must be an array of PropertyInfo objects, or a single PropertyInfo object or null.' );
+    expect( create02 ).toThrow( 'The properties argument of DataTransferContext constructor must be an array of PropertyInfo objects, or a single PropertyInfo object or null.' );
     expect( create03 ).toThrow();
     expect( create04 ).not.toThrow();
     expect( create05 ).not.toThrow();
@@ -61,26 +61,26 @@ describe( 'Transfer context', () => {
 
   it( 'getValue method works', () => {
 
-    const ctxReadOnly = new TransferContext( [ pi ], null, setValue );
+    const ctxReadOnly = new DataTransferContext( [ pi ], null, setValue );
 
     function get01() { return ctx.getValue(); }
     function get02() { return ctxReadOnly.getValue( 'property' ); }
 
     expect( ctx.getValue( 'property' ) ).toBe( 125 );
-    expect( get01 ).toThrow( 'The propertyName argument of TransferContext.getValue method must be a non-empty string.' );
+    expect( get01 ).toThrow( 'The propertyName argument of DataTransferContext.getValue method must be a non-empty string.' );
     expect( get02 ).toThrow( "Read-only model's properties cannot be copied to data transfer object." );
   } );
 
   it( 'setValue method works', () => {
 
-    const ctxReadOnly = new TransferContext( [ pi ], getValue, null );
+    const ctxReadOnly = new DataTransferContext( [ pi ], getValue, null );
     ctx.setValue( 'property', 1001 );
 
     function set01() { ctx.setValue( 1001 ); }
     function set02() { ctxReadOnly.setValue( 'property', 1001 ); }
 
     expect( ctx.getValue( 'property' ) ).toBe( 1001 );
-    expect( set01 ).toThrow( 'The propertyName argument of TransferContext.setValue method must be a non-empty string.' );
-    expect( set02 ).toThrow( "Read-only model's properties cannot be copied from client transfer object." );
+    expect( set01 ).toThrow( 'The propertyName argument of DataTransferContext.setValue method must be a non-empty string.' );
+    expect( set02 ).toThrow( 'An error occurred in the model.' );
   } );
 } );

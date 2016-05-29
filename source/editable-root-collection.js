@@ -12,7 +12,7 @@ var ExtensionManager = require('./shared/extension-manager.js');
 var EventHandlerList = require('./shared/event-handler-list.js');
 var DataStore = require('./shared/data-store.js');
 
-var TransferContext = require('./shared/transfer-context.js');
+var DataTransferContext = require('./shared/data-transfer-context.js');
 
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
@@ -328,7 +328,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
     //region Transfer object methods
 
     function getTransferContext (authorize) {
-      return new TransferContext(null, null, null);
+      return new DataTransferContext(null, null, null);
     }
 
     function baseToCto() {

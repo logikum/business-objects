@@ -11,7 +11,7 @@ var ModelError = require('./shared/model-error.js');
 var ExtensionManager = require('./shared/extension-manager.js');
 var EventHandlerList = require('./shared/event-handler-list.js');
 
-var TransferContext = require('./shared/transfer-context.js');
+var ClientTransferContext = require('./shared/client-transfer-context.js');
 
 var RuleManager = require('./rules/rule-manager.js');
 var BrokenRuleList = require('./rules/broken-rule-list.js');
@@ -144,7 +144,7 @@ var ReadOnlyRootCollectionFactory = function (name, itemType, rules, extensions)
     //region Transfer object methods
 
     function getTransferContext () {
-      return new TransferContext(null, null, null);
+      return new ClientTransferContext(null, null, null);
     }
 
     function baseToCto() {

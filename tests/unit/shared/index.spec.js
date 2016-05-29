@@ -16,7 +16,8 @@ const PropertyInfo = read( 'shared/property-info.js' );
 const PropertyFlag = read( 'shared/property-flag.js' );
 const PropertyManager = read( 'shared/property-manager.js' );
 const PropertyContext = read( 'shared/property-context.js' );
-const TransferContext = read( 'shared/transfer-context.js' );
+const ClientTransferContext = read( 'shared/client-transfer-context.js' );
+const DataTransferContext = read( 'shared/data-transfer-context.js' );
 
 const DataPortalAction = read( 'shared/data-portal-action.js' );
 const DataPortalContext = read( 'shared/data-portal-context.js' );
@@ -52,7 +53,8 @@ describe( 'Shared component index', () => {
     expect( shared.PropertyFlag ).toBe( PropertyFlag );
     expect( new shared.PropertyManager() ).toEqual( jasmine.any( PropertyManager ) );
     expect( new shared.PropertyContext( 'model', [], getValue, setValue ) ).toEqual( jasmine.any( PropertyContext ) );
-    expect( new shared.TransferContext( [], getValue, setValue ) ).toEqual( jasmine.any( TransferContext ) );
+    expect( new shared.ClientTransferContext( [], getValue, setValue ) ).toEqual( jasmine.any( ClientTransferContext ) );
+    expect( new shared.DataTransferContext( [], getValue, setValue ) ).toEqual( jasmine.any( DataTransferContext ) );
 
     expect( shared.DataPortalAction ).toBe( DataPortalAction );
     expect( new shared.DataPortalContext( dao, [], getValue, setValue ) ).toEqual( jasmine.any( DataPortalContext ) );

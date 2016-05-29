@@ -18,7 +18,8 @@ var PropertyInfo = require('./shared/property-info.js');
 var PropertyManager = require('./shared/property-manager.js');
 var PropertyContext = require('./shared/property-context.js');
 var ValidationContext = require('./rules/validation-context.js');
-var TransferContext = require('./shared/transfer-context.js');
+var ClientTransferContext = require('./shared/client-transfer-context.js');
+var DataTransferContext = require('./shared/data-transfer-context.js');
 
 var RuleManager = require('./rules/rule-manager.js');
 var DataTypeRule = require('./rules/data-type-rule.js');
@@ -319,8 +320,8 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
 
     function getTransferContext( authorize ) {
       return authorize ?
-          new TransferContext( properties.toArray(), readPropertyValue, writePropertyValue ) :
-          new TransferContext( properties.toArray(), getPropertyValue, setPropertyValue );
+          new ClientTransferContext( properties.toArray(), readPropertyValue, writePropertyValue ) :
+          new DataTransferContext( properties.toArray(), getPropertyValue, setPropertyValue );
     }
 
     function baseToDto() {
