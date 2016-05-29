@@ -57,7 +57,7 @@ class ClientTransferContext {
 
     /**
      * Array of property definitions that may appear on the transfer object.
-     * @type {Array.<bo.shared.PropertyInfo>}
+     * @member {Array.<bo.shared.PropertyInfo>} bo.shared.ClientTransferContext#properties
      * @readonly
      */
     this.properties = check( properties ).forOptional( 'properties' ).asArray( PropertyInfo );

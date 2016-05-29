@@ -57,7 +57,7 @@ class DataTransferContext {
 
     /**
      * Array of property definitions that may appear on the data transfer object.
-     * @type {Array.<bo.shared.PropertyInfo>}
+     * @member {Array.<bo.shared.PropertyInfo>} bo.shared.DataTransferContext#properties
      * @readonly
      */
     this.properties = check( properties ).forOptional( 'properties' ).asArray( PropertyInfo );
