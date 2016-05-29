@@ -67,7 +67,7 @@ class DataStore {
 
   //endregion
 
-  //region Instance methods
+  //region Methods
   
   /**
    * Initializes the value of a property in the store.

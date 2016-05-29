@@ -1,11 +1,15 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const PropertyInfo = require( '../shared/property-info.js' );
 const BrokenRule = require( './broken-rule.js' );
 const BrokenRulesOutput = require( './broken-rules-output.js' );
 const RuleNotice = require( './rule-notice.js' );
 const RuleSeverity = require( './rule-severity.js' );
+
+//endregion
 
 /**
  * Represents the lists of broken rules.
@@ -14,6 +18,8 @@ const RuleSeverity = require( './rule-severity.js' );
  */
 class BrokenRuleList extends Map {
 
+  //region Constructor
+  
   /**
    * Creates a new broken rule list instance.
    *
@@ -37,6 +43,10 @@ class BrokenRuleList extends Map {
     Object.freeze( this );
   }
 
+  //endregion
+
+  //region Methods
+  
   /**
    * Adds a broken rule to the list.
    *
@@ -164,6 +174,8 @@ class BrokenRuleList extends Map {
     }
     return data;
   }
+
+  //endregion
 }
 
 module.exports = BrokenRuleList;

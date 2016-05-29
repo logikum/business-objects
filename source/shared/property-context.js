@@ -1,12 +1,22 @@
 'use strict';
 
+//region Ipmorts
+
 const Argument = require( '../system/argument-check.js' );
 const ModelError = require( './model-error.js' );
 const PropertyInfo = require( './property-info.js' );
 
+//endregion
+
+//region Private variables
+
 const _getValue = new WeakMap();
 const _setValue = new WeakMap();
 const _primaryProperty = new WeakMap();
+
+//endregion
+
+//region Helper methods
 
 function getByName( name ) {
   for (let i = 0; i < this.properties.length; i++) {
@@ -16,12 +26,16 @@ function getByName( name ) {
   throw new ModelError( 'noProperty', this.modelName, name );
 }
 
+//endregion
+
 /**
  * Provides the context for custom property functions.
  *
  * @memberof bo.shared
  */
 class PropertyContext {
+
+  //region Constructor
 
   /**
    * Creates a new property context object.
@@ -66,6 +80,10 @@ class PropertyContext {
     Object.freeze( this );
   }
 
+  //endregion
+
+  //region Properties
+ 
   /**
    * The primary property of the custom function.
    * @member {bo.shared.PropertyInfo} bo.shared.PropertyContext#primaryProperty
@@ -74,6 +92,10 @@ class PropertyContext {
   get primaryProperty() {
     return _primaryProperty.get( this );
   }
+
+  //endregion
+
+  //region Methods
 
   /**
    * Sets the primary property of the custom function.
@@ -127,6 +149,8 @@ class PropertyContext {
     } else
       throw new ModelError( 'writeProperty', this.modelName, propertyName );
   }
+
+  //endregion
 }
 
 module.exports = PropertyContext;

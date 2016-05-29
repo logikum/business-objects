@@ -1,25 +1,37 @@
 'use strict';
 
+//region Imports
+
 const config = require( './../system/configuration-reader.js' );
 const Argument = require( '../system/argument-check.js' );
 const ModelError = require( './model-error.js' );
 const DataPortalContext = require( '../shared/data-portal-context.js' );
 
+//endregion
+
+//region Private variables
+
 const _methods = new WeakMap();
 const _otherMethods = new WeakMap();
 
-function getMethod( target, name ) {
-  const methods = _methods.get( target );
+//endregion
+
+//region Helper methods
+
+function getMethod( name ) {
+  const methods = _methods.get( this );
   return methods.get( name );
 }
-function setMethod( target, name, arity, value ) {
+
+function setMethod( name, arity, value ) {
+
   if (value && typeof value === 'function' && value.length == arity) {
-    const methods = _methods.get( target );
+    const methods = _methods.get( this );
     methods.set( name, value );
-    _methods.set( target, methods );
+    _methods.set( this, methods );
   }
   else {
-    const className = target.constructor.name;
+    const className = this.constructor.name;
     switch (arity) {
       case 0:
         throw new ModelError( 'propertyArg0', className, name );
@@ -31,6 +43,8 @@ function setMethod( target, name, arity, value ) {
   }
 }
 
+//endregion
+
 /**
  * Provides properties to customize models' behavior.
  *
@@ -38,6 +52,8 @@ function setMethod( target, name, arity, value ) {
  */
 class ExtensionManager {
 
+  //region Constructor
+  
   /**
    * Creates a new extension manager object.
    *
@@ -71,6 +87,8 @@ class ExtensionManager {
     Object.freeze( this );
   }
 
+  //endregion
+
   //region Properties for the custom methods
 
   /**
@@ -78,10 +96,10 @@ class ExtensionManager {
    * @member {external.daoBuilder} bo.shared.ExtensionManager#daoBuilder
    */
   get daoBuilder() {
-    return getMethod( this, 'daoBuilder' );
+    return getMethod.call( this, 'daoBuilder' );
   }
   set daoBuilder( value ) {
-    setMethod( this, 'daoBuilder', 3, value );
+    setMethod.call( this, 'daoBuilder', 3, value );
   }
 
   /**
@@ -89,10 +107,10 @@ class ExtensionManager {
    * @member {external.toDto} bo.shared.ExtensionManager#toDto
    */
   get toDto() {
-    return getMethod( this, 'toDto' );
+    return getMethod.call( this, 'toDto' );
   }
   set toDto( value ) {
-    setMethod( this, 'toDto', 1, value );
+    setMethod.call( this, 'toDto', 1, value );
   }
 
   /**
@@ -100,10 +118,10 @@ class ExtensionManager {
    * @member {external.fromDto} bo.shared.ExtensionManager#fromDto
    */
   get fromDto() {
-    return getMethod( this, 'fromDto' );
+    return getMethod.call( this, 'fromDto' );
   }
   set fromDto( value ) {
-    setMethod( this, 'fromDto', 2, value );
+    setMethod.call( this, 'fromDto', 2, value );
   }
 
   /**
@@ -111,10 +129,10 @@ class ExtensionManager {
    * @member {external.toCto} bo.shared.ExtensionManager#toCto
    */
   get toCto() {
-    return getMethod( this, 'toCto' );
+    return getMethod.call( this, 'toCto' );
   }
   set toCto( value ) {
-    setMethod( this, 'toCto', 1, value );
+    setMethod.call( this, 'toCto', 1, value );
   }
 
   /**
@@ -122,10 +140,10 @@ class ExtensionManager {
    * @member {external.fromCto} bo.shared.ExtensionManager#fromCto
    */
   get fromCto() {
-    return getMethod( this, 'fromCto' );
+    return getMethod.call( this, 'fromCto' );
   }
   set fromCto( value ) {
-    setMethod( this, 'fromCto', 2, value );
+    setMethod.call( this, 'fromCto', 2, value );
   }
 
   /**
@@ -133,10 +151,10 @@ class ExtensionManager {
    * @member {external.dataCreate} bo.shared.ExtensionManager#dataCreate
    */
   get dataCreate() {
-    return getMethod( this, 'dataCreate' );
+    return getMethod.call( this, 'dataCreate' );
   }
   set dataCreate( value ) {
-    setMethod( this, 'dataCreate', 1, value );
+    setMethod.call( this, 'dataCreate', 1, value );
   }
 
   /**
@@ -144,10 +162,10 @@ class ExtensionManager {
    * @member {external.dataFetch} bo.shared.ExtensionManager#dataFetch
    */
   get dataFetch() {
-    return getMethod( this, 'dataFetch' );
+    return getMethod.call( this, 'dataFetch' );
   }
   set dataFetch( value ) {
-    setMethod( this, 'dataFetch', 3, value );
+    setMethod.call( this, 'dataFetch', 3, value );
   }
 
   /**
@@ -155,10 +173,10 @@ class ExtensionManager {
    * @member {external.dataInsert} bo.shared.ExtensionManager#dataInsert
    */
   get dataInsert() {
-    return getMethod( this, 'dataInsert' );
+    return getMethod.call( this, 'dataInsert' );
   }
   set dataInsert( value ) {
-    setMethod( this, 'dataInsert', 1, value );
+    setMethod.call( this, 'dataInsert', 1, value );
   }
 
   /**
@@ -166,10 +184,10 @@ class ExtensionManager {
    * @member {external.dataUpdate} bo.shared.ExtensionManager#dataUpdate
    */
   get dataUpdate() {
-    return getMethod( this, 'dataUpdate' );
+    return getMethod.call( this, 'dataUpdate' );
   }
   set dataUpdate( value ) {
-    setMethod( this, 'dataUpdate', 1, value );
+    setMethod.call( this, 'dataUpdate', 1, value );
   }
 
   /**
@@ -177,10 +195,10 @@ class ExtensionManager {
    * @member {external.dataRemove} bo.shared.ExtensionManager#dataRemove
    */
   get dataRemove() {
-    return getMethod( this, 'dataRemove' );
+    return getMethod.call( this, 'dataRemove' );
   }
   set dataRemove( value ) {
-    setMethod( this, 'dataRemove', 1, value );
+    setMethod.call( this, 'dataRemove', 1, value );
   }
 
   /**
@@ -188,10 +206,10 @@ class ExtensionManager {
    * @member {external.dataExecute} bo.shared.ExtensionManager#dataExecute
    */
   get dataExecute() {
-    return getMethod( this, 'dataExecute' );
+    return getMethod.call( this, 'dataExecute' );
   }
   set dataExecute( value ) {
-    setMethod( this, 'dataExecute', 2, value );
+    setMethod.call( this, 'dataExecute', 2, value );
   }
 
   //endregion
@@ -236,6 +254,8 @@ class ExtensionManager {
 
   //endregion
 
+  //region Methods
+  
   /**
    * Gets the data access object instance of the model.
    *
@@ -269,7 +289,7 @@ class ExtensionManager {
     dpContext = check( dpContext ).forMandatory( 'dpContext' ).asType( DataPortalContext );
 
     methodName = 'data' + methodName[ 0 ].toUpperCase() + methodName.substr( 1 );
-    const method = getMethod( this, methodName );
+    const method = getMethod.call( this, methodName );
     if (method) {
 
       // Remove method name and execution context from arguments.
@@ -282,6 +302,8 @@ class ExtensionManager {
       } );
     }
   }
+
+  //endregion
 }
 
 module.exports = ExtensionManager;

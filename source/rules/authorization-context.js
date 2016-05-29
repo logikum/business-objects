@@ -2,7 +2,6 @@
 
 const config = require( '../system/configuration-reader.js' );
 const Argument = require( '../system/argument-check.js' );
-const UserInfo = require( '../system/user-info.js' );
 const BrokenRuleList = require( './broken-rule-list.js' );
 const AuthorizationAction = require( './authorization-action.js' );
 

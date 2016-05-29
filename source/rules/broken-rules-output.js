@@ -1,24 +1,36 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const RuleNotice = require( './rule-notice.js' );
+
+//endregion
+
+//region Private variables
 
 const _length = new WeakMap();
 const _count = new WeakMap();
 const _childObjects = new WeakMap();
 const _childCollections = new WeakMap();
 
-function incrementLength( target ) {
-  let length = _length.get( target );
+//endregion
+
+//region Helper methods
+
+function incrementLength() {
+  let length = _length.get( this );
   length++;
-  _length.set( target, length );
+  _length.set( this, length );
 }
 
-function incrementCount( target ) {
-  let count = _count.get( target );
+function incrementCount() {
+  let count = _count.get( this );
   count++;
-  _count.set( target, count );
+  _count.set( this, count );
 }
+
+//endregion
 
 /**
  * Represents the public format of broken rules. The output object
@@ -41,6 +53,8 @@ function incrementCount( target ) {
  * @memberof bo.rules
  */
 class BrokenRulesOutput {
+
+  //region Constructor
 
   /**
    * Creates a new broken rules output instance.
@@ -95,6 +109,10 @@ class BrokenRulesOutput {
     } );
   }
 
+  //endregion
+
+  //region Methods
+
   /**
    * Adds a rule notice to the response object.
    *
@@ -114,9 +132,9 @@ class BrokenRulesOutput {
       this[ propertyName ].push( notice );
     else {
       this[ propertyName ] = new Array( notice );
-      incrementLength( this );
+      incrementLength.call( this );
     }
-    incrementCount( this );
+    incrementCount.call( this );
   }
 
   /**
@@ -140,7 +158,7 @@ class BrokenRulesOutput {
     childObjects.push( propertyName );
     _childObjects.set( this, childObjects );
 
-    incrementLength( this );
+    incrementLength.call( this );
   }
 
   /**
@@ -170,8 +188,10 @@ class BrokenRulesOutput {
     childCollections.push( propertyName );
     _childCollections.set( this, childCollections );
 
-    incrementLength( this );
+    incrementLength.call( this );
   }
+
+  //endregion
 }
 
 module.exports = BrokenRulesOutput;

@@ -1,5 +1,7 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const ArgumentError = require( '../system/argument-error.js' );
 const PropertyInfo = require( '../shared/property-info.js' );
@@ -10,8 +12,16 @@ const AuthorizationResult = require( './authorization-result.js' );
 const AuthorizationError = require( './authorization-error.js' );
 const NoAccessBehavior = require( './no-access-behavior.js' );
 
+//endregion
+
+//region Private variables
+
 const _noAccessBehavior = new WeakMap();
 const _propertyName = new WeakMap();
+
+//endregion
+
+//region Helper methods
 
 function behaviorToSeverity( noAccessBehavior ) {
   switch (noAccessBehavior) {
@@ -24,6 +34,8 @@ function behaviorToSeverity( noAccessBehavior ) {
   }
 }
 
+//endregion
+
 /**
  * Represents an authorization rule.
  *
@@ -31,6 +43,8 @@ function behaviorToSeverity( noAccessBehavior ) {
  * @extends bo.rules.RuleBase
  */
 class AuthorizationRule extends RuleBase {
+
+  //region Constructor
 
   /**
    * Creates a new authorization rule object.
@@ -61,6 +75,10 @@ class AuthorizationRule extends RuleBase {
     Object.freeze( AuthorizationRule );
   }
 
+  //endregion
+
+  //region Properties
+  
   /**
    * The action to do when the rule fails.
    * @member {bo.rules.NoAccessBehavior} bo.rules.AuthorizationRule#noAccessBehavior
@@ -75,6 +93,10 @@ class AuthorizationRule extends RuleBase {
     _noAccessBehavior.set( this, value );
   }
 
+  //endregion
+
+  //region Methods
+  
   /**
    * Sets the properties of the rule.
    *
@@ -144,6 +166,8 @@ class AuthorizationRule extends RuleBase {
       return result;
     }
   }
+
+  //endregion
 }
 
 module.exports = AuthorizationRule;

@@ -1,5 +1,7 @@
 'use strict';
 
+//region Imports
+
 const fs = require( 'fs' );
 const path = require( 'path' );
 const ConfigurationError = require( './configuration-error.js' );
@@ -9,6 +11,10 @@ const NoAccessBehavior = require( '../rules/no-access-behavior.js' );
 const UserInfo = require( './user-info.js' );
 const Utility = require( './utility.js' );
 
+//endregion
+
+//region Private variables
+
 let _isInitialized = false;
 let _connectionManager = null;
 let _daoBuilder = daoBuilder;
@@ -16,6 +22,8 @@ let _userReader = null;
 let _getLocale = null;
 let _pathOfLocales = null;
 let _noAccessBehavior = NoAccessBehavior.throwError;
+
+//endregion
 
 /**
  * The configuration of business objects.

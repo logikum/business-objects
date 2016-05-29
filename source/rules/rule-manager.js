@@ -1,5 +1,7 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const MethodError = require( '../system/method-error.js' );
 const RuleList = require( './rule-list.js' );
@@ -11,9 +13,15 @@ const RuleSeverity = require( './rule-severity.js' );
 const NoAccessBehavior = require( './no-access-behavior.js' );
 const PropertyInfo = require( '../shared/property-info.js' );
 
+//endregion
+
+//region Private variables
+
 const _validationRules = new WeakMap();
 const _authorizationRules = new WeakMap();
 const _noAccessBehavior = new WeakMap();
+
+//endregion
 
 /**
  * Provides methods to manage the rules of a business object model.
@@ -22,6 +30,8 @@ const _noAccessBehavior = new WeakMap();
  */
 class RuleManager {
 
+  //region Constructor
+  
   /**
    * Creates a new rule manager object.
    *
@@ -42,6 +52,10 @@ class RuleManager {
     Object.freeze( this );
   }
 
+  //endregion
+
+  //region Properties
+  
   /**
    * Defines the default behavior for unauthorized operations.
    * @member {bo.rules.NoAccessBehavior} bo.rules.RuleManager#noAccessBehavior
@@ -57,6 +71,10 @@ class RuleManager {
         .check( value ).for().asEnumMember( NoAccessBehavior, NoAccessBehavior.throwError )
     );
   }
+
+  //endregion
+
+  //region Methods
 
   /**
    * Adds a new rule to the business object model.
@@ -185,6 +203,8 @@ class RuleManager {
     }
     return isAllowed;
   }
+
+  //endregion
 }
 
 module.exports = RuleManager;

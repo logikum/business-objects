@@ -1,10 +1,16 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const MethodError = require( '../system/method-error.js' );
 const PropertyInfo = require( './property-info.js' );
 const DataType = require( '../data-types/data-type.js' );
 const ModelError = require( './model-error.js' );
+
+//endregion
+
+//region Private variables
 
 const _items = new WeakMap();
 const _changed = new WeakMap(); // for children
@@ -12,16 +18,22 @@ const _children = new WeakMap();
 const _isFrozen = new WeakMap();
 const _modelName = new WeakMap();
 
-function checkChildren( target ) {
-  if (_changed.get( target )) {
-    const items = _items.get( target );
-    const children = items.filter( function ( item ) {
+//endregion
+
+//region Helper methods
+
+function checkChildren() {
+  if (_changed.get( this )) {
+    const items = _items.get( this );
+    const children = items.filter( item => {
       return !(item.type instanceof DataType);
     } );
-    _children.set( target, children );
-    _changed.set( target, false );
+    _children.set( this, children );
+    _changed.set( this, false );
   }
 }
+
+//endregion
 
 /**
  * Provides methods to manage the properties of a business object model.
@@ -29,6 +41,8 @@ function checkChildren( target ) {
  * @memberof bo.shared
  */
 class PropertyManager {
+
+  //region Constructor
 
   /**
    * Creates a new property manager object.
@@ -60,6 +74,10 @@ class PropertyManager {
     Object.freeze( this );
   }
 
+  //endregion
+
+  //region Properties
+
   get modelName() {
     return _modelName.get( this );
   }
@@ -69,6 +87,8 @@ class PropertyManager {
       .check( value ).forMandatory().asString();
     _modelName.set( this, modelName );
   }
+
+  //endregion
 
   //region Item management
 
@@ -233,7 +253,7 @@ class PropertyManager {
    * @returns {Array.<bo.shared.PropertyInfo>} - The array of the child properties.
    */
   children() {
-    checkChildren( this );
+    checkChildren.call( this );
     return _children.get( this );
   }
 
@@ -243,7 +263,7 @@ class PropertyManager {
    * @returns {Number} The count of the child properties.
    */
   childCount() {
-    checkChildren( this );
+    checkChildren.call( this );
     return _children.get( this ).length;
   }
 
@@ -261,7 +281,7 @@ class PropertyManager {
     allowedTypes = Argument.inMethod( PropertyManager.name, 'verifyChildTypes' )
       .check( allowedTypes ).forMandatory( 'allowedTypes' ).asArray( String );
 
-    checkChildren( this );
+    checkChildren.call( this );
 
     let children = _children.get( this );
 

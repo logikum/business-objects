@@ -1,10 +1,16 @@
 'use strict';
 
+//region Imports
+
 const config = require( './../system/configuration-reader.js' );
 const Argument = require( '../system/argument-check.js' );
 const DataPortalAction = require( './data-portal-action.js' );
 const DataPortalEvent = require( './data-portal-event.js' );
 const DataPortalError = require( './data-portal-error.js' );
+
+//endregion
+
+//region Helper methods
 
 function eventToAction( event ) {
   switch (event) {
@@ -32,6 +38,8 @@ function eventToAction( event ) {
       return null;
   }
 }
+
+//endregion
 
 /**
  * Provides the context for data portal events.

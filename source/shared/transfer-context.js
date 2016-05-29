@@ -1,11 +1,21 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const ModelError = require( './model-error.js' );
 const PropertyInfo = require( './property-info.js' );
 
+//endregion
+
+//region Private variables
+
 const _getValue = new WeakMap();
 const _setValue = new WeakMap();
+
+//endregion
+
+//region Helper methods
 
 function getByName( properties, name ) {
   for (let i = 0; i < properties.length; i++) {
@@ -15,12 +25,16 @@ function getByName( properties, name ) {
   throw new ModelError( 'noProperty', properties.name, name );
 }
 
+//endregion
+
 /**
  * Provides the context for custom transfer objects.
  *
  * @memberof bo.shared
  */
 class TransferContext {
+
+  //region Constructor
 
   /**
    * Creates a new transfer context object.
@@ -54,6 +68,10 @@ class TransferContext {
     // Immutable object.
     Object.freeze( this );
   }
+
+  //endregion
+
+  //region Methods
 
   /**
    * Gets the current value of a model property.
@@ -94,6 +112,8 @@ class TransferContext {
     } else
       throw new ModelError( 'setValue' );
   }
+
+  //endregion
 }
 
 module.exports = TransferContext;

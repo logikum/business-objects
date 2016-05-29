@@ -5,7 +5,6 @@
 // const util = require('util');
 const config = require( './system/configuration-reader.js' );
 const Argument = require( './system/argument-check.js' );
-const Enumeration = require( './system/enumeration.js' );
 
 const ModelBase = require( './model-base-2.js' );
 const ModelType = require( './model-type.js' );
@@ -15,7 +14,6 @@ const EventHandlerList = require( './shared/event-handler-list.js' );
 const DataStore = require( './shared/data-store.js' );
 const DataType = require( './data-types/data-type.js' );
 
-const PropertyInfo = require( './shared/property-info.js' );
 const PropertyManager = require( './shared/property-manager.js' );
 const PropertyContext = require( './shared/property-context.js' );
 const ValidationContext = require( './rules/validation-context.js' );
@@ -24,7 +22,6 @@ const TransferContext = require( './shared/transfer-context.js' );
 const RuleManager = require( './rules/rule-manager.js' );
 const DataTypeRule = require( './rules/data-type-rule.js' );
 const BrokenRuleList = require( './rules/broken-rule-list.js' );
-const RuleSeverity = require( './rules/rule-severity.js' );
 const AuthorizationAction = require( './rules/authorization-action.js' );
 const AuthorizationContext = require( './rules/authorization-context.js' );
 const BrokenRulesResponse = require( './rules/broken-rules-response.js' );

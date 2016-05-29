@@ -1,13 +1,21 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const RuleBase = require( './rule-base.js' );
 const RuleSeverity = require( './rule-severity.js' );
 const ValidationResult = require( './validation-result.js' );
 const PropertyInfo = require( '../shared/property-info.js' );
 
+//endregion
+
+//region Private variables
+
 const _inputProperties = new WeakMap();
 const _affectedProperties = new WeakMap();
+
+//endregion
 
 /**
  * Represents a validation rule.
@@ -17,6 +25,8 @@ const _affectedProperties = new WeakMap();
  */
 class ValidationRule extends RuleBase {
 
+  //region Constructor
+  
   /**
    * Creates a new validation rule object.
    * The rule instances should be frozen.
@@ -43,6 +53,10 @@ class ValidationRule extends RuleBase {
     Object.freeze( ValidationRule );
   }
 
+  //endregion
+
+  //region Methods
+  
   /**
    * Sets the properties of the rule.
    *
@@ -145,6 +159,8 @@ class ValidationRule extends RuleBase {
 
     return result;
   }
+
+  //endregion
 }
 
 module.exports = ValidationRule;
