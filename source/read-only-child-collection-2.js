@@ -99,15 +99,15 @@ class ReadOnlyChildCollection extends CollectionBase {
     return items ? items.length : 0;
   }
 
-  // /**
-  //  * The name of the model type.
-  //  *
-  //  * @member {string} ReadOnlyChildCollection.modelType
-  //  * @readonly
-  //  */
-  // static get modelType() {
-  //   return ModelType.ReadOnlyChildCollection;
-  // }
+  /**
+   * The name of the model type.
+   *
+   * @member {string} ReadOnlyChildCollection.modelType
+   * @readonly
+   */
+  static get modelType() {
+    return ModelType.ReadOnlyChildCollection;
+  }
 
   //endregion
 
@@ -122,7 +122,7 @@ class ReadOnlyChildCollection extends CollectionBase {
    */
   toCto() {
     const cto = [];
-    this.forEach( function ( item ) {
+    this.forEach( item => {
       cto.push( item.toCto() );
     } );
     return cto;
@@ -145,6 +145,7 @@ class ReadOnlyChildCollection extends CollectionBase {
   fetch( data ) {
     const self = this;
     return data instanceof Array && data.length ?
+
       Promise.all( data.map( dto => {
         let itemType = _itemType.get( self );
         const parent = _parent.get( self );
@@ -176,7 +177,7 @@ class ReadOnlyChildCollection extends CollectionBase {
    * @returns {boolean}
    */
   isValid() {
-    return this.every( function ( item ) {
+    return this.every( item => {
       return item.isValid();
     } )
   }
@@ -190,7 +191,7 @@ class ReadOnlyChildCollection extends CollectionBase {
    * @protected
    */
   checkRules() {
-    this.forEach( function ( item ) {
+    this.forEach( item => {
       item.checkRules();
     } );
   }
@@ -207,7 +208,7 @@ class ReadOnlyChildCollection extends CollectionBase {
    */
   getBrokenRules( namespace ) {
     const bro = [];
-    this.forEach( function ( item ) {
+    this.forEach( item => {
       const childBrokenRules = item.getBrokenRules( namespace );
       if (childBrokenRules)
         bro.push( childBrokenRules );
@@ -318,6 +319,8 @@ class ReadOnlyChildCollection extends CollectionBase {
  */
 class ReadOnlyChildCollectionFactory {
 
+  //region Constructor
+  
   /**
    * Creates a definition for a read-only child collection.
    *
@@ -346,8 +349,11 @@ class ReadOnlyChildCollectionFactory {
         itemType.prototype.name, itemType.modelType,
         ModelType.ReadOnlyChildCollection, ModelType.ReadOnlyChildObject );
 
+    // Create model definition.
     const Model = ReadOnlyChildCollection.bind( undefined, name, itemType );
 
+    //region Factory methods
+    
     /**
      * The name of the model type.
      *
@@ -356,10 +362,14 @@ class ReadOnlyChildCollectionFactory {
      */
     Model.modelType = ModelType.ReadOnlyChildCollection;
 
+    //endregion
+
     // Immutable definition class.
     Object.freeze( Model );
     return Model;
   }
+
+  //endregion
 }
 // Immutable factory class.
 Object.freeze( ReadOnlyChildCollectionFactory );

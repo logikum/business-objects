@@ -651,6 +651,9 @@ describe( 'Data portal method', () => {
         //endregion
 
         done();
+      } )
+      .catch( reason => {
+        let lof = reason.message;
       } );
   } );
 

@@ -167,18 +167,18 @@ function data_fetch( filter, method ) {
             // *** Standard fetch.
             dao.$runMethod( method, connection, filter );
         } )
-        .then( dto => {
+        .then( data => {
           // Get the count of all available items.
           let totalItems = _totalItems.get( self );
-          if (dto.totalItems &&
-            (typeof dto.totalItems === 'number' || dto.totalItems instanceof Number) &&
-            dto.totalItems % 1 === 0)
-            totalItems = dto.totalItems;
+          if (data.totalItems &&
+            (typeof data.totalItems === 'number' || data.totalItems instanceof Number) &&
+            data.totalItems % 1 === 0)
+            totalItems = data.totalItems;
           else
             totalItems = null;
           _totalItems.set( self, totalItems );
           // Load children.
-          return fetchChildren.call( self, dto )
+          return fetchChildren.call( self, data )
             .then( children => {
               let items = _items.get( self );
               children.forEach( child => {
@@ -418,16 +418,13 @@ class ReadOnlyRootCollection extends CollectionBase {
    */
   getBrokenRules( namespace ) {
     const brokenRules = _brokenRules.get( this );
-    var bro = brokenRules.output( namespace );
+    let bro = brokenRules.output( namespace );
 
-    var self = this;
     const items = _items.get( this );
     items.forEach( item => {
       const childBrokenRules = item.getBrokenRules( namespace );
       if (childBrokenRules)
-      // TODO - adding broken rules to objects and collections?
-      /* bro.addChild(property.name, childBrokenRules); */
-        bro.addChild( self.$modelName, childBrokenRules );
+        bro.addChild( this.$modelName, childBrokenRules );
     } );
 
     return bro.$length ? bro : null;
@@ -551,6 +548,8 @@ class ReadOnlyRootCollection extends CollectionBase {
  */
 class ReadOnlyRootCollectionFactory {
 
+  //region Constructor
+
   /**
    * Creates definition for a read-only root collection.
    *
@@ -582,18 +581,19 @@ class ReadOnlyRootCollectionFactory {
         itemType.prototype.name, itemType.modelType,
         ModelType.ReadOnlyRootCollection, ModelType.ReadOnlyChildObject );
 
+    // Create model definition.
     const Model = ReadOnlyRootCollection.bind( undefined, name, itemType, rules, extensions );
 
     //region Factory methods
 
-    // /**
-    //  * The name of the model type.
-    //  *
-    //  * @member {string} ReadOnlyRootCollection.modelType
-    //  * @default ReadOnlyRootCollection
-    //  * @readonly
-    //  */
-    // Model.modelType = ModelType.ReadOnlyRootCollection;
+    /**
+     * The name of the model type.
+     *
+     * @member {string} ReadOnlyRootCollection.modelType
+     * @default ReadOnlyRootCollection
+     * @readonly
+     */
+    Model.modelType = ModelType.ReadOnlyRootCollection;
 
     /**
      * Retrieves a read-only business object collection from the repository.
@@ -626,6 +626,8 @@ class ReadOnlyRootCollectionFactory {
     Object.freeze( Model );
     return Model;
   }
+
+  //endregion
 }
 // Immutable factory class.
 Object.freeze( ReadOnlyRootCollectionFactory );

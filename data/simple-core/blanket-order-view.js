@@ -46,7 +46,7 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const BlanketOrderView = bo.ReadOnlyRootObject( 'BlanketOrderView', properties, rules, extensions );
+const BlanketOrderView = new bo.ReadOnlyRootObject( 'BlanketOrderView', properties, rules, extensions );
 
 const BlanketOrderViewFactory = {
   get: function ( key, eventHandlers ) {
