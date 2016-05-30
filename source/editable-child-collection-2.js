@@ -2,19 +2,17 @@
 
 //region Imports
 
-var util = require('util');
-var Argument = require('./system/argument-check.js');
+const Argument = require('./system/argument-check.js');
 
-var CollectionBase = require('./collection-base-2.js');
+const CollectionBase = require('./collection-base-2.js');
 const ModelType = require( './model-type.js' );
-var ModelError = require('./shared/model-error.js');
-
-var MODEL_STATE = require('./shared/model-state.js');
-var CLASS_NAME = 'EditableChildCollection';
+const ModelError = require('./shared/model-error.js');
 
 //endregion
 
 //region Private variables
+
+const MODEL_STATE = require('./shared/model-state.js');
 
 const _itemType = new WeakMap();
 const _parent = new WeakMap();
@@ -24,7 +22,7 @@ const _items = new WeakMap();
 //endregion
 
 /**
- * Represents the definition of an asynchronous editable child collection.
+ * Represents the definition of an editable child collection.
  *
  * _The name of the model type available as:
  * __&lt;instance&gt;.constructor.modelType__, returns 'EditableChildCollection'._
@@ -37,7 +35,7 @@ class EditableChildCollection extends CollectionBase {
   //region Constructor
 
   /**
-   * Creates a new asynchronous editable child collection instance.
+   * Creates a new editable child collection instance.
    *
    * Valid parent model types are:
    *
@@ -125,7 +123,7 @@ class EditableChildCollection extends CollectionBase {
    * @returns {Array.<object>} The client transfer object.
    */
   toCto() {
-    var cto = [];
+    const cto = [];
     this.forEach( item => {
       cto.push(item.toCto());
     });
@@ -145,15 +143,15 @@ class EditableChildCollection extends CollectionBase {
     return new Promise( (fulfill, reject) => {
       if (cto instanceof Array) {
         const items = _items.get(self);
-        var ctoNew = cto.filter( d => { return true; }); // Deep copy.
-        var itemsLive = [];
-        var itemsLate = [];
-        var index;
+        const ctoNew = cto.filter( d => { return true; }); // Deep copy.
+        const itemsLive = [];
+        const itemsLate = [];
+        let index;
 
         // Discover changed items.
         for (index = 0; index < items.length; index++) {
-          var dataFound = false;
-          var i = 0;
+          let dataFound = false;
+          let i = 0;
           for (; i < ctoNew.length; i++) {
             if (items[ index ].keyEquals( cto[i] )) {
               itemsLive.push( { item: index, cto: i } );
@@ -178,6 +176,7 @@ class EditableChildCollection extends CollectionBase {
             const itemType = _itemType.get(self);
             const parent = _parent.get(self);
             const eventHandlers = _eventHandlers.get(self);
+
             Promise.all( ctoNew.map( cto => {
               return itemType.create( parent, eventHandlers )
             }))
@@ -218,7 +217,7 @@ class EditableChildCollection extends CollectionBase {
 
     return itemType.create( parent, eventHandlers )
       .then( item => {
-        var ix = parseInt( index || items.length, 10 );
+        let ix = parseInt( index || items.length, 10 );
         ix = isNaN( ix ) ? items.length : ix;
         items.splice( ix, 0, item );
         _items.set(this, items);
@@ -334,9 +333,9 @@ class EditableChildCollection extends CollectionBase {
    * @returns {Array.<bo.rules.BrokenRulesOutput>} The broken rules of the collection.
    */
   getBrokenRules(namespace) {
-    var bro = [];
+    const bro = [];
     this.forEach(function (item) {
-      var childBrokenRules = item.getBrokenRules(namespace);
+      const childBrokenRules = item.getBrokenRules(namespace);
       if (childBrokenRules)
         bro.push(childBrokenRules);
     });
@@ -440,7 +439,7 @@ class EditableChildCollection extends CollectionBase {
 }
 
 /**
- * Factory method to create definitions of asynchronous editable child collections.
+ * Factory method to create definitions of editable child collections.
  *
  * @name bo.EditableChildCollection
  */
@@ -457,7 +456,7 @@ class EditableChildCollectionFactory {
    *
    * @param {string} name - The name of the collection.
    * @param {EditableChildObject} itemType - The model type of the collection items.
-   * @returns {EditableChildCollection} The constructor of an asynchronous editable child collection.
+   * @returns {EditableChildCollection} The constructor of an editable child collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
    * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildObject.

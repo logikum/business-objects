@@ -295,7 +295,7 @@ class ReadOnlyRootCollection extends CollectionBase {
    */
   get count() {
     const items = _items.get( this );
-    return items ? items.length : 0;
+    return items.length;
   }
 
   /**
