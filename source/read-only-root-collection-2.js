@@ -575,7 +575,7 @@ class ReadOnlyRootCollectionFactory {
     rules = check( rules ).forMandatory( 'rules' ).asType( RuleManager );
     extensions = check( extensions ).forMandatory( 'extensions' ).asType( ExtensionManager );
 
-    // Verify the model type of the item type.
+    // Verify the model type of the items.
     if (itemType.modelType !== ModelType.ReadOnlyChildObject)
       throw new ModelError( 'invalidItem',
         itemType.prototype.name, itemType.modelType,

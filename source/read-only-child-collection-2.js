@@ -96,7 +96,7 @@ class ReadOnlyChildCollection extends CollectionBase {
    */
   get count() {
     const items = _items.get( this );
-    return items ? items.length : 0;
+    return items.length;
   }
 
   /**
@@ -340,7 +340,7 @@ class ReadOnlyChildCollectionFactory {
     name = Argument.inConstructor( ModelType.ReadOnlyChildCollection )
       .check( name ).forMandatory( 'name' ).asString();
 
-    // Verify the model type of the item type - when not a tree model.
+    // Verify the model type of the items - when not a tree model.
     if (
       typeof itemType !== 'string' &&
       itemType.modelType !== ModelType.ReadOnlyChildObject

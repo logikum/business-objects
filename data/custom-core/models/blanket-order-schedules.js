@@ -4,7 +4,7 @@ const bo = require( '../../../source/index.js' );
 
 const BlanketOrderSchedule = require( './blanket-order-schedule.js' );
 
-const BlanketOrderSchedules = bo.EditableChildCollection(
+const BlanketOrderSchedules = new bo.EditableChildCollection(
   'BlanketOrderSchedules',
   BlanketOrderSchedule
 );
