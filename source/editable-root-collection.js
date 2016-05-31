@@ -505,8 +505,8 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
       );
     }
 
-    function wrapError( error ) {
-      return new DataPortalError( MODEL_DESC, name, DataPortalAction.fetch, error );
+    function wrapError( action, error ) {
+      return new DataPortalError( MODEL_DESC, name, action, error );
     }
 
     //endregion
@@ -515,50 +515,6 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
 
     function data_create() {
       return new Promise( (fulfill, reject) => {
-
-        //var connection = null;
-        //// Open connection.
-        //config.connectionManager.openConnection( extensions.dataSource )
-        //  .then( dsc => {
-        //    connection = dsc;
-        //    // Launch start event.
-        //    /**
-        //     * The event arises before the business object collection will be initialized in the repository.
-        //     * @event EditableRootCollection#preCreate
-        //     * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-        //     * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
-        //     */
-        //    raiseEvent( DataPortalEvent.preCreate );
-        //    // Execute creation - nothing to do.
-        //    markAsCreated();
-        //    // Launch finish event.
-        //    /**
-        //     * The event arises after the business object collection has been initialized in the repository.
-        //     * @event EditableRootCollection#postCreate
-        //     * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
-        //     * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
-        //     */
-        //    raiseEvent( DataPortalEvent.postCreate );
-        //    // Close connection.
-        //    return config.connectionManager.closeConnection( extensions.dataSource, connection )
-        //      .then( none => {
-        //        // Return the new editable root collection.
-        //        fulfill( self );
-        //      });
-        //  })
-        //  .catch( reason => {
-        //    // Wrap the intercepted error.
-        //    var dpe = wrapError( DataPortalAction.create, reason );
-        //    // Launch finish event.
-        //    if (connection)
-        //      raiseEvent( DataPortalEvent.postCreate, null, dpe );
-        //    // Close connection.
-        //    config.connectionManager.closeConnection( extensions.dataSource, connection )
-        //      .then( none => {
-        //        // Pass the error.
-        //        reject( dpe );
-        //      });
-        //  });
 
         // Launch start event.
         /**
@@ -635,7 +591,7 @@ var EditableRootCollectionFactory = function (name, itemType, rules, extensions)
             })
             .catch( reason => {
               // Wrap the intercepted error.
-              var dpe = wrapError( reason );
+              var dpe = wrapError( DataPortalAction.fetch, reason );
               // Launch finish event.
               raiseEvent( DataPortalEvent.postFetch, method, dpe );
               // Close connection.

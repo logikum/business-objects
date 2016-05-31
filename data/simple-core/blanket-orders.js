@@ -13,7 +13,7 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const BlanketOrders = bo.EditableRootCollection(
+const BlanketOrders = new bo.EditableRootCollection(
   'BlanketOrders',
   BlanketOrderChild,
   rules,

@@ -60,6 +60,9 @@ describe( 'Asynchronous data portal method', () => {
         expect( cmd.result ).toBe( true );
 
         done();
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -85,6 +88,9 @@ describe( 'Asynchronous data portal method', () => {
         expect( cmd.result.shipDate ).toEqual( new Date( 2015, 1, 3 ) );
 
         done();
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 } );

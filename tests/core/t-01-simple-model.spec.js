@@ -247,6 +247,9 @@ describe( 'Data portal method', () => {
               done();
             } );
         }
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -383,6 +386,9 @@ describe( 'Data portal method', () => {
         //endregion
 
         done();
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -653,7 +659,7 @@ describe( 'Data portal method', () => {
         done();
       } )
       .catch( reason => {
-        let lof = reason.message;
+        console.log( reason );
       } );
   } );
 
@@ -720,6 +726,9 @@ describe( 'Data portal method', () => {
         //endregion
 
         done();
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -870,6 +879,9 @@ describe( 'Data portal method', () => {
               done();
             } );
         }
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -895,6 +907,9 @@ describe( 'Data portal method', () => {
 
             done();
           } );
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 } );

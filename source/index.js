@@ -6,7 +6,7 @@ const ModelComposer = require( './model-composer.js' );
 
 const EditableRootObject = require( './editable-root-object.js' );
 const EditableChildObject = require( './editable-child-object.js' );
-const EditableRootCollection = require( './editable-root-collection.js' );
+const EditableRootCollection = require( './editable-root-collection-2.js' );
 const EditableChildCollection = require( './editable-child-collection-2.js' );
 const ReadOnlyRootObject = require( './read-only-root-object-2.js' );
 const ReadOnlyChildObject = require( './read-only-child-object-2.js' );

@@ -247,6 +247,9 @@ describe( 'Asynchronous data portal method', () => {
               done();
             } );
         }
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -383,6 +386,9 @@ describe( 'Asynchronous data portal method', () => {
         //endregion
 
         done();
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -651,6 +657,9 @@ describe( 'Asynchronous data portal method', () => {
         //endregion
 
         done();
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -717,6 +726,9 @@ describe( 'Asynchronous data portal method', () => {
         //endregion
 
         done();
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -867,6 +879,9 @@ describe( 'Asynchronous data portal method', () => {
               done();
             } );
         }
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 
@@ -892,6 +907,9 @@ describe( 'Asynchronous data portal method', () => {
 
             done();
           } );
+      } )
+      .catch( reason => {
+        console.log( reason );
       } );
   } );
 } );
