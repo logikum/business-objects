@@ -10,7 +10,6 @@ const ModelType = require( './model-type.js' );
 const ModelError = require( './shared/model-error.js' );
 const ExtensionManager = require( './shared/extension-manager.js' );
 const EventHandlerList = require( './shared/event-handler-list.js' );
-const DataStore = require( './shared/data-store.js' );
 
 const ClientTransferContext = require( './shared/client-transfer-context.js' );
 
@@ -39,10 +38,10 @@ const _itemType = new WeakMap();
 const _rules = new WeakMap();
 const _extensions = new WeakMap();
 const _eventHandlers = new WeakMap();
-const _brokenRules = new WeakMap();
 const _state = new WeakMap();
 const _isDirty = new WeakMap();
 const _isValidated = new WeakMap();
+const _brokenRules = new WeakMap();
 const _dataContext = new WeakMap();
 const _dao = new WeakMap();
 const _items = new WeakMap();
@@ -623,10 +622,10 @@ class EditableRootCollection extends CollectionBase {
     _rules.set( this, rules );
     _extensions.set( this, extensions );
     _eventHandlers.set( this, eventHandlers );
-    _brokenRules.set( this, new BrokenRuleList( name ) );
     _state.set( this, null );
     _isDirty.set( this, false );
     _isValidated.set( this, false );
+    _brokenRules.set( this, new BrokenRuleList( name ) );
     _dataContext.set( this, null );
     _items.set( this, [] );
 

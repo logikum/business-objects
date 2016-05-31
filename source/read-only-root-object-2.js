@@ -368,8 +368,6 @@ class ReadOnlyRootObject extends ModelBase {
     _propertyContext.set( this, null );
     _dataContext.set( this, null );
 
-    const store = new DataStore();
-
     // Get data access object.
     _dao.set( this, extensions.getDataAccessObject( name ) );
 
@@ -387,6 +385,8 @@ class ReadOnlyRootObject extends ModelBase {
     // Set up event handlers.
     if (eventHandlers)
       eventHandlers.setup( this );
+
+    const store = new DataStore();
 
     //region Create properties
 

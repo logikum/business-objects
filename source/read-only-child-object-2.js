@@ -302,7 +302,7 @@ function data_fetch( dto, method ) {
 //endregion
 
 /**
- * Represents the definition of an asynchronous read-only child object.
+ * Represents the definition of a read-only child object.
  *
  * @name ReadOnlyChildObject
  * @extends ModelBase
@@ -315,7 +315,7 @@ class ReadOnlyChildObject extends ModelBase {
   //region Constructor
 
   /**
-   * Creates a new asynchronous read-only child object instance.
+   * Creates a new read-only child object instance.
    *
    * _The name of the model type available as:
    * __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyChildObject'._
@@ -358,12 +358,10 @@ class ReadOnlyChildObject extends ModelBase {
     _parent.set( this, parent );
     _eventHandlers.set( this, eventHandlers );
     // _store.set( this, store );
-    _brokenRules.set( this, new BrokenRuleList( name ) );
-    _isValidated.set( this, false );
     _propertyContext.set( this, null );
+    _isValidated.set( this, false );
+    _brokenRules.set( this, new BrokenRuleList( name ) );
     _dataContext.set( this, null );
-
-    const store = new DataStore();
 
     /**
      * The name of the model. However, it can be hidden by a model property with the same name.
@@ -379,6 +377,8 @@ class ReadOnlyChildObject extends ModelBase {
     // Set up event handlers.
     if (eventHandlers)
       eventHandlers.setup( this );
+
+    const store = new DataStore();
 
     //region Create properties
 
@@ -567,7 +567,6 @@ class ReadOnlyChildObjectFactory {
    *      * ReadOnlyChildCollection
    *      * ReadOnlyChildObject
    *
-   * @function bo.ReadOnlyChildObject
    * @param {string} name - The name of the model.
    * @param {bo.shared.PropertyManager} properties - The property definitions.
    * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
