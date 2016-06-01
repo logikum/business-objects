@@ -1157,7 +1157,7 @@ var EditableRootObjectFactory = function (name, properties, rules, extensions) {
       else
       {
         // Create child element and initialize property value.
-        store.initValue( property, new property.type( self, eventHandlers ));
+        store.initValue( property, property.type.empty( self, eventHandlers ));
 
         // Create child element property.
         Object.defineProperty( self, property.name, {

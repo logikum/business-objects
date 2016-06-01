@@ -38,6 +38,6 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const BlanketOrderSchedule = bo.EditableChildObject( 'BlanketOrderSchedule', properties, rules, extensions );
+const BlanketOrderSchedule = new bo.EditableChildObject( 'BlanketOrderSchedule', properties, rules, extensions );
 
 module.exports = BlanketOrderSchedule;

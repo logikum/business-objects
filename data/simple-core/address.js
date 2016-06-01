@@ -39,6 +39,6 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const Address = bo.EditableChildObject( 'Address', properties, rules, extensions );
+const Address = new bo.EditableChildObject( 'Address', properties, rules, extensions );
 
 module.exports = Address;

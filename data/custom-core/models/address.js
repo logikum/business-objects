@@ -170,6 +170,6 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-const Address = bo.EditableChildObject( 'Address', properties, rules, extensions );
+const Address = new bo.EditableChildObject( 'Address', properties, rules, extensions );
 
 module.exports = Address;

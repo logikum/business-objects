@@ -78,7 +78,7 @@ const _items = new WeakMap();
 function markAsPristine() {
   const state = _state.get( this );
   if (state === MODEL_STATE.markedForRemoval || state === MODEL_STATE.removed)
-    illegal( MODEL_STATE.pristine );
+    illegal.call( this, MODEL_STATE.pristine );
   else if (state !== MODEL_STATE.pristine) {
     _state.set( this, MODEL_STATE.pristine );
     _isDirty.set( this, false );
@@ -92,7 +92,7 @@ function markAsCreated() {
     _isDirty.set( this, true );
   }
   else if (state !== MODEL_STATE.created)
-    illegal( MODEL_STATE.created );
+    illegal.call( this, MODEL_STATE.created );
 }
 
 function markAsChanged( itself ) {
@@ -108,7 +108,7 @@ function markAsChanged( itself ) {
     _isValidated.set( this, false );
   }
   else if (state === MODEL_STATE.removed)
-    illegal( MODEL_STATE.changed );
+    illegal.call( this, MODEL_STATE.changed );
 }
 
 function markForRemoval() {
@@ -121,7 +121,7 @@ function markForRemoval() {
   else if (state === MODEL_STATE.created)
     _state.set( this, MODEL_STATE.removed );
   else if (state !== MODEL_STATE.markedForRemoval)
-    illegal( MODEL_STATE.markedForRemoval );
+    illegal.call( this, MODEL_STATE.markedForRemoval );
 }
 
 function markAsRemoved() {
@@ -131,7 +131,7 @@ function markAsRemoved() {
     _isDirty.set( this, false );
   }
   else if (state !== MODEL_STATE.removed)
-    illegal( MODEL_STATE.removed );
+    illegal.call( this, MODEL_STATE.removed );
 }
 
 function illegal( newState ) {

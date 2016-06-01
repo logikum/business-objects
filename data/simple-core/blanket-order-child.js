@@ -52,6 +52,6 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const BlanketOrderChild = bo.EditableChildObject( 'BlanketOrderChild', properties, rules, extensions );
+const BlanketOrderChild = new bo.EditableChildObject( 'BlanketOrderChild', properties, rules, extensions );
 
 module.exports = BlanketOrderChild;

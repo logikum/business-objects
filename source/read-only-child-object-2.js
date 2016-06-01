@@ -385,7 +385,7 @@ class ReadOnlyChildObject extends ModelBase {
     properties.map( property => {
 
       if (property.type instanceof DataType) {
-        // Normal property
+        // Initialize normal property.
         store.initValue( property );
         // Add data type check.
         rules.add( new DataTypeRule( property ) );

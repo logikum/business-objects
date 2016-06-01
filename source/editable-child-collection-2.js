@@ -488,6 +488,20 @@ class EditableChildCollectionFactory {
      */
     Model.modelType = ModelType.EditableChildCollection;
 
+    /**
+     * Creates a new uninitialized editable child collection instance.
+     * <br/>_This method is called by the parent object._
+     *
+     * @function EditableChildCollection.empty
+     * @protected
+     * @param {object} parent - The parent business object.
+     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @returns {Promise.<EditableChildCollection>} Returns a promise to the new editable child collection.
+     */
+    Model.empty = function ( parent, eventHandlers ) {
+      return new Model( parent, eventHandlers );
+    };
+
     //endregion
 
     // Immutable definition class.

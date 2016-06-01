@@ -393,13 +393,13 @@ class ReadOnlyRootObject extends ModelBase {
     properties.map( property => {
 
       if (property.type instanceof DataType) {
-        // Normal property
+        // Initialize normal property.
         store.initValue( property );
         // Add data type check.
         rules.add( new DataTypeRule( property ) );
       }
       else
-      // Create child item/collection.
+        // Create child item/collection.
         store.initValue( property, new property.type( this, eventHandlers ) );
 
       Object.defineProperty( this, property.name, {

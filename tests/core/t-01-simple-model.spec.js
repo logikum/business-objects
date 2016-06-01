@@ -768,7 +768,7 @@ describe( 'Data portal method', () => {
 
             const schedule1 = item2.schedules.at( 0 );
             schedule1.remove();
-
+        
             const schedule2 = item2.schedules.at( 1 );
 
             schedule2.quantity = 4;
