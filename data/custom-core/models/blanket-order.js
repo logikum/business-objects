@@ -193,7 +193,7 @@ extensions.dataInsert = dataInsert;
 extensions.dataUpdate = dataUpdate;
 extensions.dataRemove = dataRemove;
 
-const BlanketOrder = bo.EditableRootObject( 'BlanketOrder', properties, rules, extensions );
+const BlanketOrder = new bo.EditableRootObject( 'BlanketOrder', properties, rules, extensions );
 
 const BlanketOrderFactory = {
   create: function ( eventHandlers ) {

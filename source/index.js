@@ -4,7 +4,7 @@
 
 const ModelComposer = require( './model-composer.js' );
 
-const EditableRootObject = require( './editable-root-object.js' );
+const EditableRootObject = require( './editable-root-object-2.js' );
 const EditableChildObject = require( './editable-child-object-2.js' );
 const EditableRootCollection = require( './editable-root-collection-2.js' );
 const EditableChildCollection = require( './editable-child-collection-2.js' );
