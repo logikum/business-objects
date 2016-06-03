@@ -2,10 +2,8 @@
 
 //region Imports
 
-const util = require('util');
 const config = require('./system/configuration-reader.js');
 const Argument = require('./system/argument-check.js');
-const Enumeration = require('./system/enumeration.js');
 
 const ModelBase = require('./model-base-2.js');
 const ModelType = require( './model-type.js' );
@@ -15,7 +13,6 @@ const EventHandlerList = require('./shared/event-handler-list.js');
 const DataStore = require('./shared/data-store.js');
 const DataType = require('./data-types/data-type.js');
 
-const PropertyInfo = require('./shared/property-info.js');
 const PropertyManager = require('./shared/property-manager.js');
 const PropertyContext = require('./shared/property-context.js');
 const ValidationContext = require('./rules/validation-context.js');
@@ -24,7 +21,6 @@ const DataTransferContext = require('./shared/data-transfer-context.js');
 const RuleManager = require('./rules/rule-manager.js');
 const DataTypeRule = require('./rules/data-type-rule.js');
 const BrokenRuleList = require('./rules/broken-rule-list.js');
-const RuleSeverity = require('./rules/rule-severity.js');
 const AuthorizationAction = require('./rules/authorization-action.js');
 const AuthorizationContext = require('./rules/authorization-context.js');
 const BrokenRulesResponse = require('./rules/broken-rules-response.js');
@@ -55,9 +51,311 @@ const _dao = new WeakMap();
 
 //endregion
 
+//region Helper methods
+
+//region Transfer object methods
+
+function getTransferContext () {
+  const properties = _properties.get( this );
+  return new DataTransferContext(
+      properties.toArray(),
+      getPropertyValue.bind( this ),
+      setPropertyValue.bind( this )
+    );
+}
+
+function baseToDto() {
+  const dto = {};
+  const properties = _properties.get( this );
+  properties.filter( property => {
+    return property.isOnDto;
+  } ).forEach( property => {
+    dto[ property.name ] = getPropertyValue.call( this, property );
+  } );
+  return dto;
+}
+
+function toDto () {
+  const extensions = _extensions.get( this );
+  if (extensions.toDto)
+    return extensions.toDto.call( this, getTransferContext.call( this ) );
+  else
+    return baseToDto.call( this );
+}
+
+function baseFromDto(dto) {
+  const properties = _properties.get( this );
+  properties.filter( property => {
+    return property.isOnDto;
+  } ).forEach( property => {
+    if (dto.hasOwnProperty( property.name ) && typeof dto[ property.name ] !== 'function') {
+      setPropertyValue.call( this, property, dto[ property.name ] );
+    }
+  } );
+}
+
+function fromDto (dto) {
+  const extensions = _extensions.get( this );
+  if (extensions.fromDto)
+    extensions.fromDto.call( this, getTransferContext.call( this ), dto );
+  else
+    baseFromDto.call( this, dto );
+}
+
+//endregion
+
+//region Permissions
+
+function getAuthorizationContext(action, targetName) {
+  return new AuthorizationContext( action, targetName || '', _brokenRules.get( this ) );
+}
+
+function canBeRead (property) {
+  const rules = _rules.get( this );
+  return rules.hasPermission(
+    getAuthorizationContext.call( this, AuthorizationAction.readProperty, property.name )
+  );
+}
+
+function canBeWritten (property) {
+  const rules = _rules.get( this );
+  return rules.hasPermission(
+    getAuthorizationContext.call( this, AuthorizationAction.writeProperty, property.name )
+  );
+}
+
+function canDo (action) {
+  const rules = _rules.get( this );
+  return rules.hasPermission(
+    getAuthorizationContext.call( this, action )
+  );
+}
+
+function canExecute (methodName) {
+  const rules = _rules.get( this );
+  return rules.hasPermission(
+    getAuthorizationContext.call( this, AuthorizationAction.executeMethod, methodName )
+  );
+}
+
+//endregion
+
+//region Child methods
+
+function fetchChildren( dto ) {
+  const self = this;
+  const properties = _properties.get( this );
+  return Promise.all( properties.children().map( property => {
+    const child = getPropertyValue.call( self, property );
+    return child.fetch( dto[ property.name ] );
+  } ) );
+}
+
+function childrenAreValid() {
+  const properties = _properties.get( this );
+  return properties.children().every( property => {
+    const child = getPropertyValue.call( this, property );
+    return child.isValid();
+  } );
+}
+
+function checkChildRules() {
+  const properties = _properties.get( this );
+  properties.children().forEach( property => {
+    const child = getPropertyValue.call( this, property );
+    child.checkRules();
+  } );
+}
+
+function getChildBrokenRules (namespace, bro) {
+  const properties = _properties.get( this );
+  properties.children().forEach( property => {
+    const child = getPropertyValue.call( this, property );
+    const childBrokenRules = child.getBrokenRules( namespace );
+    if (childBrokenRules) {
+      if (childBrokenRules instanceof Array)
+        bro.addChildren( property.name, childBrokenRules );
+      else
+        bro.addChild( property.name, childBrokenRules );
+    }
+  } );
+  return bro;
+}
+
+//endregion
+
+//region Properties
+
+function getPropertyValue(property) {
+  const store = _store.get( this );
+  return store.getValue( property );
+}
+
+function setPropertyValue(property, value) {
+  const store = _store.get( this );
+  store.setValue( property, value );
+  _store.set( this, store );
+}
+
+function readPropertyValue(property) {
+  if (canBeRead.call( this, property )) {
+    const store = _store.get( this );
+    return property.getter ?
+      property.getter( getPropertyContext.call( this, property ) ) :
+      store.getValue( property );
+  }
+  else
+    return null;
+}
+
+function writePropertyValue(property, value) {
+  if (canBeWritten.call( this, property )) {
+    if (property.setter)
+      property.setter( getPropertyContext.call( this, property ), value );
+    else {
+      const store = _store.get( this );
+      store.setValue( property, value );
+      _store.set( this, store );
+    }
+  }
+}
+
+function getPropertyContext(primaryProperty) {
+  let propertyContext = _propertyContext.get( this );
+  if (!propertyContext) {
+    const properties = _properties.get( this );
+    propertyContext = new PropertyContext(
+      this.$modelName,
+      properties.toArray(),
+      readPropertyValue.bind( this ),
+      writePropertyValue.bind( this )
+    );
+    _propertyContext.set( this, propertyContext );
+  }
+  return propertyContext.with( primaryProperty );
+}
+
+//endregion
+
+//endregion
+
+//region Data portal methods
+
+//region Helper
+
+function getDataContext( connection ) {
+  let dataContext = _dataContext.get( this );
+  if (!dataContext) {
+    const properties = _properties.get( this );
+    dataContext = new DataPortalContext(
+      _dao.get( this ),
+      properties.toArray(),
+      getPropertyValue.bind( this ),
+      setPropertyValue.bind( this )
+    );
+    _dataContext.set( this, dataContext );
+  }
+  return dataContext.setState( connection, false );
+}
+
+function raiseEvent( event, methodName, error ) {
+  this.emit(
+    DataPortalEvent.getName( event ),
+    new DataPortalEventArgs( event, this.$modelName, null, methodName, error )
+  );
+}
+
+function wrapError( error ) {
+  return new DataPortalError( MODEL_DESC, this.$modelName, DataPortalAction.execute, error );
+}
+
+//endregion
+
+//region Execute
+
+function data_execute( method, isTransaction ) {
+  return new Promise( (fulfill, reject) => {
+    const self = this;
+    // Check permissions.
+    if (method === M_EXECUTE ?
+        canDo.call( self, AuthorizationAction.executeCommand ) :
+        canExecute.call( self, method )) {
+
+      let connection = null;
+      const extensions = _extensions.get( self );
+      (isTransaction ?
+        config.connectionManager.beginTransaction( extensions.dataSource ) :
+        config.connectionManager.openConnection( extensions.dataSource ))
+        .then( dsc => {
+          connection = dsc;
+          // Launch start event.
+          /**
+           * The event arises before the command object will be executed in the repository.
+           * @event CommandObject#preExecute
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {CommandObject} oldObject - The instance of the model before the data portal action.
+           */
+          raiseEvent.call( self, DataPortalEvent.preExecute, method );
+          // Execute command.
+          const dao = _dao.get( self );
+          return extensions.dataExecute ?
+            // *** Custom execute.
+            extensions.$runMethod( 'execute', self, getDataContext.call( self, connection ), method ) :
+            // *** Standard execute.
+            dao.$runMethod( method, connection, /* dto = */ toDto.call( self ))
+              .then( dto => {
+                // Load property values.
+                fromDto.call( self, dto );
+                return dto;
+              });
+        })
+        .then( dto => {
+          // Fetch children as well.
+          return fetchChildren.call( self, dto );
+        })
+        .then( none => {
+          // Launch finish event.
+          /**
+           * The event arises after the command object has been executed in the repository.
+           * @event CommandObject#postExecute
+           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {CommandObject} newObject - The instance of the model after the data portal action.
+           */
+          raiseEvent.call( self, DataPortalEvent.postExecute, method );
+          // Close connection/Finish transaction.
+          (isTransaction ?
+            config.connectionManager.commitTransaction( extensions.dataSource, connection ) :
+            config.connectionManager.closeConnection( extensions.dataSource, connection ))
+            .then( none => {
+              // Returns the executed command object.
+              fulfill( self );
+            });
+        })
+        .catch( reason => {
+          // Wrap the intercepted error.
+          const dpe = wrapError.call( self, reason );
+          // Launch finish event.
+          if (connection)
+            raiseEvent.call( self, DataPortalEvent.postExecute, method, dpe );
+          // Close connection/Undo transaction.
+          (isTransaction ?
+            config.connectionManager.rollbackTransaction( extensions.dataSource, connection ) :
+            config.connectionManager.closeConnection( extensions.dataSource, connection ))
+            .then( none => {
+              // Pass the error.
+              reject( dpe );
+            });
+        });
+    }
+  });
+}
+
+//endregion
+
+//endregion
 
 /**
- * Represents the definition of an asynchronous command object model.
+ * Represents the definition of a command object model.
  *
  * @name CommandObject
  * @extends ModelBase
@@ -70,7 +368,7 @@ class CommandObject extends ModelBase {
   //region Constructor
 
   /**
-   * Creates a new asynchronous command object model instance.
+   * Creates a new command object model instance.
    *
    * _The name of the model type available as:
    * __&lt;instance&gt;.constructor.modelType__, returns 'CommandObject'._
@@ -117,7 +415,7 @@ class CommandObject extends ModelBase {
 
     const store = new DataStore();
 
-    //region Properties
+    //region Create properties
 
     properties.map( property => {
 
@@ -146,6 +444,9 @@ class CommandObject extends ModelBase {
       } );
     } );
 
+    // Add other execute methods to the instance.
+    extensions.buildOtherMethods( this, false );
+
     //endregion
 
     _store.set( this, store );
@@ -168,6 +469,112 @@ class CommandObject extends ModelBase {
    */
   static get modelType() {
     return ModelType.CommandObject;
+  }
+
+  //endregion
+
+  //region Actions
+
+  /**
+   * Executes the business object's statements in the repository.
+   * <br/>_If method is not an empty string, &lt;instance&gt;.execute(method)
+   * can be called as &lt;instance&gt;.method() as well._
+   *
+   * @function CommandObject#execute
+   * @param {string} [method] - An alternative execute method of the data access object.
+   * @param {boolean} [isTransaction] - Indicates whether transaction is required.
+   * @returns {Promise.<CommandObject>} Returns a promise to the command object with the result.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The method must be a string or null.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The transaction indicator must be a Boolean value or null.
+   * @throws {@link bo.system.ArgumentError Argument error}:
+   *      The callback must be a function.
+   * @throws {@link bo.rules.AuthorizationError Authorization error}:
+   *      The user has no permission to execute the action.
+   */
+  execute( method, isTransaction ) {
+    const check = Argument.inMethod( this.$modelName, 'execute' );
+
+    if (typeof method === 'boolean' || method instanceof Boolean) {
+      isTransaction = method;
+      method = M_EXECUTE;
+    }
+
+    method = check( method ).forOptional( 'method' ).asString();
+    isTransaction = check( isTransaction ).forOptional( 'isTransaction' ).asBoolean();
+
+    return data_execute.call( this, method || M_EXECUTE, isTransaction);
+  }
+
+  //endregion
+
+  //region Validation
+
+  /**
+   * Indicates whether all the validation rules of the command object, including
+   * the ones of its child objects, succeeds. A valid command object may have
+   * broken rules with severity of success, information and warning.
+   *
+   * @function CommandObject#isValid
+   * @returns {boolean} True when the command object is valid, otherwise false.
+   */
+  isValid() {
+    if (!_isValidated.get( this ))
+      this.checkRules();
+
+    const brokenRules = _brokenRules.get( this );
+    return brokenRules.isValid() && childrenAreValid.call( this );
+  }
+
+  /**
+   * Executes all the validation rules of the command object, including the ones
+   * of its child objects.
+   *
+   * @function CommandObject#checkRules
+   */
+  checkRules() {
+    const brokenRules = _brokenRules.get( this );
+    brokenRules.clear();
+    _brokenRules.set( this, brokenRules );
+
+    const context = new ValidationContext( _store.get( this ), brokenRules );
+    const properties = _properties.get( this );
+    const rules = _rules.get( this );
+    properties.forEach( property => {
+      rules.validate( property, context );
+    } );
+    checkChildRules.call( this );
+
+    _isValidated.set( this, true );
+  }
+
+  /**
+   * Gets the broken rules of the command object.
+   *
+   * @function CommandObject#getBrokenRules
+   * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+   * @returns {bo.rules.BrokenRulesOutput} The broken rules of the business object.
+   */
+  getBrokenRules(namespace) {
+    const brokenRules = _brokenRules.get( this );
+    let bro = brokenRules.output( namespace );
+    bro = getChildBrokenRules.call( this, namespace, bro );
+    return bro.$length ? bro : null;
+  }
+
+  /**
+   * Gets the response to send to the client in case of broken rules.
+   *
+   * @function CommandObject#getResponse
+   * @param {string} [message] - Human-readable description of the reason of the failure.
+   * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
+   * @returns {bo.rules.BrokenRulesResponse} The broken rules response to send to the client.
+   */
+  getResponse(message, namespace) {
+    const output = this.getBrokenRules( namespace );
+    return output ? new BrokenRulesResponse( output, message ) : null;
   }
 
   //endregion

@@ -32,6 +32,6 @@ const rules = new Rules(
 
 const extensions = new Extensions( 'dao', __filename );
 
-const ClearScheduleCommand = bo.CommandObject( 'ClearScheduleCommand', properties, rules, extensions );
+const ClearScheduleCommand = new bo.CommandObject( 'ClearScheduleCommand', properties, rules, extensions );
 
 module.exports = ClearScheduleCommand;

@@ -400,7 +400,7 @@ class ReadOnlyRootObject extends ModelBase {
       }
       else
         // Create child item/collection.
-        store.initValue( property, new property.type( this, eventHandlers ) );
+        store.initValue( property, property.type.empty( this, eventHandlers ) );
 
       Object.defineProperty( this, property.name, {
         get: function () {

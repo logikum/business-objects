@@ -1274,7 +1274,7 @@ class EditableChildObjectFactory {
      * @protected
      * @param {object} parent - The parent business object.
      * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
-     * @returns {Promise.<EditableChildObject>} Returns a promise to the new editable child object.
+     * @returns {EditableChildObject} Returns a new editable child object.
      */
     Model.empty = function ( parent, eventHandlers ) {
       const instance = new Model( parent, eventHandlers );

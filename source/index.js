@@ -12,7 +12,7 @@ const ReadOnlyRootObject = require( './read-only-root-object-2.js' );
 const ReadOnlyChildObject = require( './read-only-child-object-2.js' );
 const ReadOnlyRootCollection = require( './read-only-root-collection-2.js' );
 const ReadOnlyChildCollection = require( './read-only-child-collection-2.js' );
-const CommandObject = require( './command-object.js' );
+const CommandObject = require( './command-object-2.js' );
 
 const commonRules = require( './common-rules/index.js' );
 const dataAccess = require( './data-access/index.js' );

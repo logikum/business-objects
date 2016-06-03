@@ -891,7 +891,7 @@ class EditableRootObject extends ModelBase {
 
     const store = new DataStore();
 
-    //region Properties
+    //region Create properties
 
     properties.map( property => {
 

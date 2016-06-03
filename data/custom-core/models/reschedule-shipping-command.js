@@ -63,6 +63,6 @@ extensions.daoBuilder = daoBuilder;
 extensions.dataExecute = dataExecute;
 extensions.addOtherMethod( 'reschedule' );
 
-const RescheduleShippingCommand = bo.CommandObject( 'RescheduleShippingCommand', properties, rules, extensions );
+const RescheduleShippingCommand = new bo.CommandObject( 'RescheduleShippingCommand', properties, rules, extensions );
 
 module.exports = RescheduleShippingCommand;

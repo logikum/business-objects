@@ -392,7 +392,7 @@ class ReadOnlyChildObject extends ModelBase {
       }
       else
         // Create child item/collection.
-        store.initValue( property, new property.type( this, eventHandlers ) );
+        store.initValue( property, property.type.empty( this, eventHandlers ) );
 
       Object.defineProperty( this, property.name, {
         get: function () {
@@ -609,6 +609,20 @@ class ReadOnlyChildObjectFactory {
      * @readonly
      */
     Model.modelType = ModelType.ReadOnlyChildObject;
+
+    /**
+     * Creates a new uninitialized read-only child object instance.
+     * <br/>_This method is called by the parent object._
+     *
+     * @function ReadOnlyChildObject.empty
+     * @protected
+     * @param {object} parent - The parent business object.
+     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @returns {ReadOnlyChildObject} Returns a new read-only child object.
+     */
+    Model.empty = function ( parent, eventHandlers ) {
+      return new Model( parent, eventHandlers );
+    };
 
     /**
      * Initializes a read-only business object width data retrieved from the repository.
