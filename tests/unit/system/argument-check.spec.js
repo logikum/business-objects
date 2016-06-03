@@ -9,7 +9,7 @@ const ConstructorError = read( 'system/constructor-error.js' );
 const MethodError = read( 'system/method-error.js' );
 const PropertyError = read( 'system/property-error.js' );
 const Enumeration = read( 'system/enumeration.js' );
-const ModelBase = read( 'model-base.js' );
+const ModelBase = read( 'common/model-base.js' );
 
 const ClearScheduleCommand = require( '../../../data/simple-core/clear-schedule-command.js' );
 

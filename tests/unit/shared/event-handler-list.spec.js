@@ -4,7 +4,7 @@ function read ( filename ) {
   return require( '../../../source/' + filename );
 }
 const EventHandlerList = read( 'shared/event-handler-list.js' );
-const ModelBase = read( 'model-base.js' );
+const ModelBase = read( 'common/model-base.js' );
 const DataPortalEventArgs = read( 'shared/data-portal-event-args.js' );
 const DataPortalEvent = read( 'shared/data-portal-event.js' );
 

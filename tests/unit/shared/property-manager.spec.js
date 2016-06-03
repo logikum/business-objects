@@ -8,8 +8,8 @@ const PropertyInfo = read( 'shared/property-info.js' );
 const F = read( 'shared/property-flag.js' );
 const Text = read( 'data-types/text.js' );
 const DateTime = read( 'data-types/date-time.js' );
-const CollectionBase = read( 'collection-base.js' );
-const ModelBase = read( 'model-base.js' );
+const CollectionBase = read( 'common/collection-base.js' );
+const ModelBase = read( 'common/model-base.js' );
 
 describe( 'Property manager', () => {
 

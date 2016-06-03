@@ -4,8 +4,8 @@
 
 const Argument = require( '../system/argument-check.js' );
 const PropertyInfo = require( './property-info.js' );
-const CollectionBase = require( '../collection-base.js' );
-const ModelBase = require( '../model-base.js' );
+const CollectionBase = require( '../common/collection-base.js' );
+const ModelBase = require( '../common/model-base.js' );
 
 //endregion
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const Enumeration = require( './system/enumeration.js' );
+const Enumeration = require( './../system/enumeration.js' );
 
 class ModelType extends Enumeration {
 

@@ -8,7 +8,7 @@ const PropertyInfo = read( 'shared/property-info.js' );
 const F = read( 'shared/property-flag.js' );
 const Text = read( 'data-types/text.js' );
 const Integer = read( 'data-types/integer.js' );
-const ModelBase = read( 'model-base.js' );
+const ModelBase = read( 'common/model-base.js' );
 
 describe( 'Data store', () => {
 

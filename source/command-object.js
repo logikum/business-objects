@@ -5,8 +5,8 @@
 const config = require('./system/configuration-reader.js');
 const Argument = require('./system/argument-check.js');
 
-const ModelBase = require('./model-base.js');
-const ModelType = require( './model-type.js' );
+const ModelBase = require('./common/model-base.js');
+const ModelType = require( './common/model-type.js' );
 const ModelError = require('./shared/model-error.js');
 const ExtensionManager = require('./shared/extension-manager.js');
 const EventHandlerList = require('./shared/event-handler-list.js');

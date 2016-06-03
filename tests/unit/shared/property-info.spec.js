@@ -7,7 +7,7 @@ const PropertyInfo = read( 'shared/property-info.js' );
 const F = read( 'shared/property-flag.js' );
 const DataType = read( 'data-types/data-type.js' );
 const Text = read( 'data-types/text.js' );
-const CollectionBase = read( 'collection-base.js' );
+const CollectionBase = read( 'common/collection-base.js' );
 
 describe( 'Property description', () => {
 

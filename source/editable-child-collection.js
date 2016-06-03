@@ -4,8 +4,8 @@
 
 const Argument = require('./system/argument-check.js');
 
-const CollectionBase = require('./collection-base.js');
-const ModelType = require( './model-type.js' );
+const CollectionBase = require('./common/collection-base.js');
+const ModelType = require( './common/model-type.js' );
 const ModelError = require('./shared/model-error.js');
 
 //endregion
