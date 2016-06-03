@@ -3,13 +3,13 @@
 //region Imports
 
 const EditableRootObject = require( './editable-root-object.js' );
-const EditableChildObject = require( './editable-child-object-2.js' );
-const EditableRootCollection = require( './editable-root-collection-2.js' );
-const EditableChildCollection = require( './editable-child-collection-2.js' );
-const ReadOnlyRootObject = require( './read-only-root-object-2.js' );
-const ReadOnlyChildObject = require( './read-only-child-object-2.js' );
-const ReadOnlyRootCollection = require( './read-only-root-collection-2.js' );
-const ReadOnlyChildCollection = require( './read-only-child-collection-2.js' );
+const EditableChildObject = require( './editable-child-object.js' );
+const EditableRootCollection = require( './editable-root-collection.js' );
+const EditableChildCollection = require( './editable-child-collection.js' );
+const ReadOnlyRootObject = require( './read-only-root-object.js' );
+const ReadOnlyChildObject = require( './read-only-child-object.js' );
+const ReadOnlyRootCollection = require( './read-only-root-collection.js' );
+const ReadOnlyChildCollection = require( './read-only-child-collection.js' );
 const CommandObject = require( './command-object.js' );
 
 const PropertyManager = require( './shared/property-manager.js' );

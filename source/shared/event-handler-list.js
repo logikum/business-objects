@@ -2,10 +2,8 @@
 
 const Argument = require( '../system/argument-check.js' );
 const DataPortalEvent = require( './data-portal-event.js' );
-const ModalBase = require( '../model-base.js' );
-const ModalBase2 = require( '../model-base-2.js' );
+const ModelBase = require( '../model-base.js' );
 const CollectionBase = require( '../collection-base.js' );
-const CollectionBase2 = require( '../collection-base-2.js' );
 
 /**
  * Provides methods to manage the event handlers of a business object instance.
@@ -46,10 +44,8 @@ class EventHandlerList extends Set {
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
    */
   setup( target ) {
-    // TODO
     target = Argument.inMethod( EventHandlerList.name, 'setup' )
-      .check( target ).forMandatory( 'target' ).asType( [ 
-        ModalBase, ModalBase2, CollectionBase, CollectionBase2 ] );
+      .check( target ).forMandatory( 'target' ).asType( [ ModelBase, CollectionBase ] );
 
     for (const item of this) {
       if (item.modelName === target.$modelName)

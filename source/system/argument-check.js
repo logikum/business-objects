@@ -403,8 +403,7 @@ function asType( type, message, ...messageParams ) {
     if (this.value === undefined)
       this.value = null;
     if (this.value !== null && !(types.some( function ( option ) {
-        // TODO
-        return self.value && (self.value instanceof option || self.value.super_ === option);
+        return self.value && (self.value instanceof option);
       } )))
       this.exception( 'optType', typeNames( types ), message, ...messageParams );
   }

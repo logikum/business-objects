@@ -5,9 +5,7 @@
 const Argument = require( '../system/argument-check.js' );
 const PropertyInfo = require( './property-info.js' );
 const CollectionBase = require( '../collection-base.js' );
-const CollectionBase2 = require( '../collection-base-2.js' );
 const ModelBase = require( '../model-base.js' );
-const ModelBase2 = require( '../model-base-2.js' );
 
 //endregion
 
@@ -82,9 +80,7 @@ class DataStore {
     const check = Argument.inMethod( DataStore.name, 'initValue' );
 
     property = check( property ).forMandatory( 'property' ).asType( PropertyInfo );
-    // TODO
-    value = check( value ).forOptional( 'value' ).asType( [
-      CollectionBase, CollectionBase2, ModelBase, ModelBase2 ] );
+    value = check( value ).forOptional( 'value' ).asType( [ CollectionBase, ModelBase ] );
 
     setPropertyValue.call( this, property.name, value );
     setValidity.call( this, property.name, true );

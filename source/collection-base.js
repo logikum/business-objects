@@ -1,19 +1,20 @@
 'use strict';
 
-var events = require('events');
-var util = require('util');
+const events = require( 'events' );
 
 /**
- * @classdesc Serves as the base class for colections.
- * @description Creates a base collection instance.
- *
- * @constructor
+ * Serves as the base class for collections.
  *
  * @extends EventEmitter
  */
-function CollectionBase () {
-  events.EventEmitter.call(this);
+class CollectionBase extends events.EventEmitter {
+
+  /**
+   * Creates a base collection instance.
+   */
+  constructor() {
+    super();
+  }
 }
-util.inherits(CollectionBase, events.EventEmitter);
 
 module.exports = CollectionBase;
