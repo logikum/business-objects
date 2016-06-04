@@ -9,7 +9,7 @@ const CollectionBase = require( './collection-base.js' );
 /**
  * Defines a property of a business object model.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class PropertyInfo {
 
@@ -27,7 +27,7 @@ class PropertyInfo {
    *
    * @param {string} name - The name of the property.
    * @param {*} type - The data type of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    *
@@ -117,7 +117,7 @@ class PropertyInfo {
      * Checks if value has the appropriate type and it is not null,
      * and not empty in case of Text data type.
      *
-     * @function bo.shared.PropertyInfo#hasValue
+     * @function bo.common.PropertyInfo#hasValue
      * @param {data} value - The value to check.
      * @returns {boolean} True if the value is neither null nor empty, otherwise false.
      */

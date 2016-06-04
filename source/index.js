@@ -18,7 +18,7 @@ const commonRules = require( './common-rules/index.js' );
 const dataAccess = require( './data-access/index.js' );
 const dataTypes = require( './data-types/index.js' );
 const rules = require( './rules/index.js' );
-const shared = require( './common/index.js' );
+const common = require( './common/index.js' );
 const system = require( './system/index.js' );
 
 const configuration = require( './system/configuration-reader.js' );
@@ -39,13 +39,13 @@ const i18n = require( './locales/i18n.js' );
  *      contains data type components and definitions.
  * @property {namespace} rules - {@link bo.rules Rules namespace}
  *      contains components of validation and authorization rules.
- * @property {namespace} shared - {@link bo.shared Shared namespace}
+ * @property {namespace} common - {@link bo.common Common namespace}
  *      contains components used by models, collections and other components.
  * @property {namespace} system - {@link bo.system System namespace}
  *      contains general components.
  *
  * @property {object} configuration - Object containing
- *      {@link bo.shared~configuration configuration} data of the business objects.
+ *      {@link bo.common~configuration configuration} data of the business objects.
  * @property {function} i18n - {@link bo.i18n Internationalization}
  *      constructor to create new a message localizer object.
  */
@@ -69,7 +69,7 @@ const index = {
   dataAccess: dataAccess,
   dataTypes: dataTypes,
   rules: rules,
-  shared: shared,
+  common: common,
   system: system,
 
   configuration: configuration,

@@ -3,7 +3,7 @@
 const bo = require( '../../source/index.js' );
 
 const Rules = bo.rules.RuleManager;
-const Extensions = bo.shared.ExtensionManager;
+const Extensions = bo.common.ExtensionManager;
 const cr = bo.commonRules;
 
 const BlanketOrderListItem = require( './blanket-order-list-item.js' );

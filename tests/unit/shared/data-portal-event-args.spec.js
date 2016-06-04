@@ -1,4 +1,4 @@
-console.log( 'Testing shared/data-portal-event-args.js...' );
+console.log( 'Testing common/data-portal-event-args.js...' );
 
 function read ( filename ) {
   return require( '../../../source/' + filename );

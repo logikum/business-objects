@@ -133,7 +133,7 @@ class RuleManager {
   /**
    * Validates a property - executes all validation rules of the property.
    *
-   * @param {bo.shared.PropertyInfo} property - The model property to validate.
+   * @param {bo.common.PropertyInfo} property - The model property to validate.
    * @param {bo.rules.ValidationContext} context - The context of the property validation.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.

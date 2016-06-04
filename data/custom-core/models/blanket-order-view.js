@@ -3,12 +3,12 @@
 const bo = require( '../../../source/index.js' );
 const daoBuilder = require( '../dao-builder.js' );
 
-const Properties = bo.shared.PropertyManager;
+const Properties = bo.common.PropertyManager;
 const Rules = bo.rules.RuleManager;
 const Action = bo.rules.AuthorizationAction;
-const Extensions = bo.shared.ExtensionManager;
-const Property = bo.shared.PropertyInfo;
-const F = bo.shared.PropertyFlag;
+const Extensions = bo.common.ExtensionManager;
+const Property = bo.common.PropertyInfo;
+const F = bo.common.PropertyFlag;
 const dt = bo.dataTypes;
 const cr = bo.commonRules;
 

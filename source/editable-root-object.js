@@ -458,7 +458,7 @@ function data_create() {
           /**
            * The event arises before the business object instance will be initialized in the repository.
            * @event EditableRootObject#preCreate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preCreate );
@@ -482,7 +482,7 @@ function data_create() {
           /**
            * The event arises after the business object instance has been initialized in the repository.
            * @event EditableRootObject#postCreate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postCreate );
@@ -534,7 +534,7 @@ function data_fetch( filter, method ) {
           /**
            * The event arises before the business object instance will be retrieved from the repository.
            * @event EditableRootObject#preFetch
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preFetch, method );
@@ -561,7 +561,7 @@ function data_fetch( filter, method ) {
           /**
            * The event arises after the business object instance has been retrieved from the repository.
            * @event EditableRootObject#postFetch
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postFetch, method );
@@ -609,7 +609,7 @@ function data_insert() {
           /**
            * The event arises before the business object instance will be created in the repository.
            * @event EditableRootObject#preInsert
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preInsert );
@@ -633,7 +633,7 @@ function data_insert() {
           /**
            * The event arises after the business object instance has been created in the repository.
            * @event EditableRootObject#postInsert
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postInsert );
@@ -685,7 +685,7 @@ function data_update() {
           /**
            * The event arises before the business object instance will be updated in the repository.
            * @event EditableRootObject#preUpdate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preUpdate );
@@ -710,7 +710,7 @@ function data_update() {
           /**
            * The event arises after the business object instance has been updated in the repository.
            * @event EditableRootObject#postUpdate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postUpdate );
@@ -761,7 +761,7 @@ function data_remove() {
           /**
            * The event arises before the business object instance will be removed from the repository.
            * @event EditableRootObject#preRemove
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preRemove );
@@ -784,7 +784,7 @@ function data_remove() {
           /**
            * The event arises after the business object instance has been removed from the repository.
            * @event EditableRootObject#postRemove
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postRemove );
@@ -848,7 +848,7 @@ class EditableRootObject extends ModelBase {
    * _The name of the model type available as:
    * __&lt;instance&gt;.constructor.modelType__, returns 'EditableRootObject'._
    *
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The event handlers must be an EventHandlerList object or null.
@@ -1113,7 +1113,7 @@ class EditableRootObject extends ModelBase {
    *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Creating the business object has failed.
    */
   create() {
@@ -1136,7 +1136,7 @@ class EditableRootObject extends ModelBase {
    *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Fetching the business object has failed.
    */
   fetch( filter, method ) {
@@ -1155,11 +1155,11 @@ class EditableRootObject extends ModelBase {
    *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Inserting the business object has failed.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Updating the business object has failed.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Deleting the business object has failed.
    */
   save() {
@@ -1172,7 +1172,7 @@ class EditableRootObject extends ModelBase {
          * The event is followed by a preInsert, preUpdate or preRemove event depending on the
          * state of the business object instance.
          * @event EditableRootObject#preSave
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableRootObject} oldObject - The instance of the model before the data portal action.
          */
         switch (state) {
@@ -1202,7 +1202,7 @@ class EditableRootObject extends ModelBase {
          * The event is preceded by a postInsert, postUpdate or postRemove event depending on the
          * state of the business object instance.
          * @event EditableRootObject#postSave
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableRootObject} newObject - The instance of the model after the data portal action.
          */
       }
@@ -1308,9 +1308,9 @@ class EditableRootObjectFactory {
    *      * EditableChildObject
    *
    * @param {string} name - The name of the model.
-   * @param {bo.shared.PropertyManager} properties - The property definitions.
-   * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
-   * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+   * @param {bo.common.PropertyManager} properties - The property definitions.
+   * @param {bo.common.RuleManager} rules - The validation and authorization rules.
+   * @param {bo.common.ExtensionManager} extensions - The customization of the model.
    * @returns {EditableRootObject} The constructor of an asynchronous editable root object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
@@ -1318,7 +1318,7 @@ class EditableRootObjectFactory {
    * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
    * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
    *
-   * @throws {@link bo.shared.ModelError Model error}:
+   * @throws {@link bo.common.ModelError Model error}:
    *    The child objects must be EditableChildCollection or EditableChildObject instances.
    */
   constructor( name, properties, rules, extensions ) {
@@ -1354,7 +1354,7 @@ class EditableRootObjectFactory {
      * Creates a new editable root object instance.
      *
      * @function EditableRootObject.create
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<EditableRootObject>} Returns a promise to the new editable root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
@@ -1363,7 +1363,7 @@ class EditableRootObjectFactory {
      *      The callback must be a function.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
-     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     * @throws {@link bo.common.DataPortalError Data portal error}:
      *      Creating the root object has failed.
      */
     Model.create = function ( eventHandlers ) {
@@ -1377,7 +1377,7 @@ class EditableRootObjectFactory {
      * @function EditableRootObject.fetch
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<EditableRootObject>} Returns a promise to the retrieved editable root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
@@ -1388,7 +1388,7 @@ class EditableRootObjectFactory {
      *      The callback must be a function.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
-     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     * @throws {@link bo.common.DataPortalError Data portal error}:
      *      Fetching the business object has failed.
      */
     Model.fetch = function ( filter, method, eventHandlers ) {

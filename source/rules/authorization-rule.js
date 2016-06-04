@@ -101,7 +101,7 @@ class AuthorizationRule extends RuleBase {
    * Sets the properties of the rule.
    *
    * @param {bo.rules.AuthorizationAction} action - The action to be authorized.
-   * @param {(bo.shared.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
+   * @param {(bo.common.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=100] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
@@ -147,7 +147,7 @@ class AuthorizationRule extends RuleBase {
    * @param {bo.rules.RuleSeverity} severity - The severity of the failed rule.
    * @returns {bo.rules.AuthorizationResult} The result of the authorization rule.
    *
-   * @throws {@link bo.shared.AuthorizationError Authorization error}: The user has no permission to execute the action.
+   * @throws {@link bo.common.AuthorizationError Authorization error}: The user has no permission to execute the action.
    */
   result( message, severity ) {
 

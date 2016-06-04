@@ -38,7 +38,7 @@ function checkChildren() {
 /**
  * Provides methods to manage the properties of a business object model.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class PropertyManager {
 
@@ -47,7 +47,7 @@ class PropertyManager {
   /**
    * Creates a new property manager object.
    *
-   * @param {Array.<bo.shared.PropertyInfo>} [properties] - Description of a model property.
+   * @param {Array.<bo.common.PropertyInfo>} [properties] - Description of a model property.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
    */
@@ -95,10 +95,10 @@ class PropertyManager {
   /**
    * Adds a new property to the business object model.
    *
-   * @param {bo.shared.PropertyInfo} property - Description of the model property to add.
+   * @param {bo.common.PropertyInfo} property - Description of the model property to add.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
-   * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.
+   * @throws {@link bo.common.ModelError Model error}: Cannot change the definition after creation.
    */
   add( property ) {
     if (_isFrozen.get( this ))
@@ -128,13 +128,13 @@ class PropertyManager {
    *
    * @param {string} name - The name of the property.
    * @param {*} type - The data type of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
-   * @returns {bo.shared.PropertyInfo} The definition of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
+   * @returns {bo.common.PropertyInfo} The definition of the property.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The type must be a data type, a model or a collection.
    * @throws {@link bo.system.ArgumentError Argument error}: The flags must be PropertyFlag items.
-   * @throws {@link bo.shared.ModelError Model error}: Cannot change the definition after creation.
+   * @throws {@link bo.common.ModelError Model error}: Cannot change the definition after creation.
    */
   create( name, type, flags ) {
     if (_isFrozen.get( this ))
@@ -154,7 +154,7 @@ class PropertyManager {
   /**
    * Determines whether a property belongs to the business object model.
    *
-   * @param {bo.shared.PropertyInfo} property - Property definition to be checked.
+   * @param {bo.common.PropertyInfo} property - Property definition to be checked.
    * @returns {boolean} True if the model contains the property, otherwise false.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be PropertyInfo object.
@@ -174,7 +174,7 @@ class PropertyManager {
    *
    * @param {string} name - The name of the property.
    * @param {string} [message] - The error message in case of not finding the property.
-   * @returns {bo.shared.PropertyInfo} The requested property definition.
+   * @returns {bo.common.PropertyInfo} The requested property definition.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The business object has no property
@@ -196,7 +196,7 @@ class PropertyManager {
   /**
    * Gets the property definitions of the business object model as an array.
    *
-   * @returns {Array.<bo.shared.PropertyInfo>} The array of model properties.
+   * @returns {Array.<bo.common.PropertyInfo>} The array of model properties.
    */
   toArray() {
     return _items.get( this )
@@ -225,7 +225,7 @@ class PropertyManager {
    * @param {external.cbCollectionItem} callback - Function to test each element of the properties,
    *    taking three arguments: property, index, array.
    *    Return true to keep the property definition, false otherwise.
-   * @returns {Array.<bo.shared.PropertyInfo>} A new array with all properties that passed the test.
+   * @returns {Array.<bo.common.PropertyInfo>} A new array with all properties that passed the test.
    */
   filter( callback ) {
     return _items.get( this ).filter( callback );
@@ -250,7 +250,7 @@ class PropertyManager {
   /**
    * Gets the child objects and collections of the current model.
    *
-   * @returns {Array.<bo.shared.PropertyInfo>} - The array of the child properties.
+   * @returns {Array.<bo.common.PropertyInfo>} - The array of the child properties.
    */
   children() {
     checkChildren.call( this );
@@ -274,7 +274,7 @@ class PropertyManager {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The allowed types must be
    *      an array of string values or a single string value.
-   * @throws {@link bo.shared.ModelError Model error}: The type of a model property
+   * @throws {@link bo.common.ModelError Model error}: The type of a model property
    *      should be an allowed type.
    */
   verifyChildTypes( allowedTypes ) {

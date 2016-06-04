@@ -2,7 +2,7 @@
 
 const bo = require( '../../source/index.js' );
 const Model = bo.ModelComposer;
-const F = bo.shared.PropertyFlag;
+const F = bo.common.PropertyFlag;
 const cr = bo.commonRules;
 
 const Address = require( './address.js' );

@@ -20,11 +20,11 @@ class Utility {
    * @param {error} errorType - The type of the error to throw in case of failure.
    * @returns {function} The required function.
    *
-   * @throws {@link bo.shared.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
+   * @throws {@link bo.common.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
    *    The property value of business objects' configuration must be a string.
-   * @throws {@link bo.shared.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
+   * @throws {@link bo.common.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
    *    The property value of business objects' configuration is not a valid file path.
-   * @throws {@link bo.shared.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
+   * @throws {@link bo.common.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
    *    The file defined by the property of business objects' configuration must return a function.
    */
   static getFunction( relativePath, name, errorType ) {
@@ -54,9 +54,9 @@ class Utility {
    * @param {error} errorType - The type of the error to throw in case of failure.
    * @returns {string} The full path of a directory.
    *
-   * @throws {@link bo.shared.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
+   * @throws {@link bo.common.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
    *    The property value of business objects' configuration must be a string.
-   * @throws {@link bo.shared.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
+   * @throws {@link bo.common.ConfigurationError Configuration} {@link bo.locales.I18nError I18n} error:
    *    The property value of business objects' configuration is not a valid directory path.
    */
   static getDirectory( relativePath, name, errorType ) {
@@ -82,8 +82,8 @@ class Utility {
    * @param {error} errorType - The type of the error to throw in case of failure.
    * @returns {number} The checked value.
    *
-   * @throws {@link bo.shared.ConfigurationError Configuration error}: Type is not an enumeration type.
-   * @throws {@link bo.shared.ConfigurationError Configuration error}: The argument must be an enumeration type item.
+   * @throws {@link bo.common.ConfigurationError Configuration error}: Type is not an enumeration type.
+   * @throws {@link bo.common.ConfigurationError Configuration error}: The argument must be an enumeration type item.
    */
   static isEnumMember( value, enumType, name, errorType ) {
 

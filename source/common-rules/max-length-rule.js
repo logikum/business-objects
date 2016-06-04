@@ -15,7 +15,7 @@ class MaxLengthRule extends ValidationRule {
   /**
    * Creates a new max-length rule object.
    *
-   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {bo.common.PropertyInfo} primaryProperty - The property definition the rule relates to.
    * @param {number} maxLength - The maximum length of the property value.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.

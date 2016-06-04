@@ -1,4 +1,4 @@
-console.log( 'Testing shared/property-manager.js...' );
+console.log( 'Testing common/property-manager.js...' );
 
 function read( filename ) {
   return require( '../../../source/' + filename );

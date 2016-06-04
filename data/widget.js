@@ -2,11 +2,11 @@
 
 const bo = require( '../source/index.js' );
 
-const Properties = bo.shared.PropertyManager;
+const Properties = bo.common.PropertyManager;
 const Rules = bo.rules.RuleManager;
-const Extensions = bo.shared.ExtensionManagerSync;
-const Property = bo.shared.PropertyInfo;
-const F = bo.shared.PropertyFlag;
+const Extensions = bo.common.ExtensionManagerSync;
+const Property = bo.common.PropertyInfo;
+const F = bo.common.PropertyFlag;
 const dt = bo.dataTypes;
 const cr = bo.commonRules;
 

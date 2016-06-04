@@ -5,7 +5,7 @@ const t = require( '../locales/i18n-bo.js' )( 'ModelError' );
 /**
  * Represents a model error.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  * @extends {Error}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error Error} for further information.
  */
@@ -22,14 +22,14 @@ class ModelError extends Error {
 
     /**
      * The name of the error type.
-     * @member {string} bo.shared.ModelError#name
+     * @member {string} bo.common.ModelError#name
      * @default ModelError
      */
     this.name = ModelError.name;
 
     /**
      * Human-readable description of the error.
-     * @member {string} bo.shared.ModelError#message
+     * @member {string} bo.common.ModelError#message
      */
     this.message = t( ...arguments );
   }

@@ -285,7 +285,7 @@ function data_create() {
     /**
      * The event arises before the business object collection will be initialized in the repository.
      * @event EditableRootCollection#preCreate
-     * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+     * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
      * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
      */
     raiseEvent.call( self, DataPortalEvent.preCreate );
@@ -295,7 +295,7 @@ function data_create() {
     /**
      * The event arises after the business object collection has been initialized in the repository.
      * @event EditableRootCollection#postCreate
-     * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+     * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
      * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
      */
     raiseEvent.call( self, DataPortalEvent.postCreate );
@@ -326,7 +326,7 @@ function data_fetch( filter, method ) {
           /**
            * The event arises before the collection instance will be retrieved from the repository.
            * @event EditableRootCollection#preFetch
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootCollection} oldObject - The collection instance before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preFetch, method );
@@ -349,7 +349,7 @@ function data_fetch( filter, method ) {
           /**
            * The event arises after the collection instance has been retrieved from the repository.
            * @event EditableRootCollection#postFetch
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootCollection} newObject - The collection instance after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postFetch, method );
@@ -397,7 +397,7 @@ function data_insert() {
           /**
            * The event arises before the business object collection will be created in the repository.
            * @event EditableRootCollection#preInsert
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preInsert );
@@ -411,7 +411,7 @@ function data_insert() {
           /**
            * The event arises after the business object collection has been created in the repository.
            * @event EditableRootCollection#postInsert
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postInsert );
@@ -463,7 +463,7 @@ function data_update() {
           /**
            * The event arises before the business object collection will be updated in the repository.
            * @event EditableRootCollection#preUpdate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preUpdate );
@@ -477,7 +477,7 @@ function data_update() {
           /**
            * The event arises after the business object collection has been updated in the repository.
            * @event EditableRootCollection#postUpdate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postUpdate );
@@ -529,7 +529,7 @@ function data_remove() {
           /**
            * The event arises before the business object collection will be removed from the repository.
            * @event EditableRootCollection#preRemove
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preRemove );
@@ -543,7 +543,7 @@ function data_remove() {
           /**
            * The event arises after the business object collection has been removed from the repository.
            * @event EditableRootCollection#postRemove
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postRemove );
@@ -607,7 +607,7 @@ class EditableRootCollection extends CollectionBase {
    * _The name of the model type available as:
    * __&lt;instance&gt;.constructor.modelType__, returns 'EditableRootCollection'._
    *
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The event handlers must be an EventHandlerList object or null.
@@ -878,7 +878,7 @@ class EditableRootCollection extends CollectionBase {
    *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Creating the business object collection has failed.
    */
   create() {
@@ -924,7 +924,7 @@ class EditableRootCollection extends CollectionBase {
    *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Fetching the business object collection has failed.
    */
   fetch( filter, method ) {
@@ -943,11 +943,11 @@ class EditableRootCollection extends CollectionBase {
    *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Inserting the business object collection has failed.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Updating the business object collection has failed.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Deleting the business object collection has failed.
    */
   save() {
@@ -968,7 +968,7 @@ class EditableRootCollection extends CollectionBase {
          * The event is followed by a preInsert, preUpdate or preRemove event depending on the
          * state of the business object collection.
          * @event EditableRootCollection#preSave
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableRootCollection} oldObject - The instance of the collection before the data portal action.
          */
         let state = _state.get( self );
@@ -1001,7 +1001,7 @@ class EditableRootCollection extends CollectionBase {
          * The event is preceded by a postInsert, postUpdate or postRemove event depending on the
          * state of the business object collection.
          * @event EditableRootCollection#postSave
-         * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+         * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
          * @param {EditableRootCollection} newObject - The instance of the collection after the data portal action.
          */
       }
@@ -1200,14 +1200,14 @@ class EditableRootCollectionFactory {
    *
    * @param {string} name - The name of the collection.
    * @param {EditableChildObject} itemType - The model type of the collection items.
-   * @param {bo.shared.RuleManager} rules - The authorization rules.
-   * @param {bo.shared.ExtensionManager} extensions - The customization of the collection.
+   * @param {bo.common.RuleManager} rules - The authorization rules.
+   * @param {bo.common.ExtensionManager} extensions - The customization of the collection.
    * @returns {EditableRootCollection} The constructor of an asynchronous editable root collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
    * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
-   * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildObject.
+   * @throws {@link bo.common.ModelError Model error}: The item type must be an EditableChildObject.
    */
   constructor( name, itemType, rules, extensions ) {
     const check = Argument.inConstructor( ModelType.EditableRootCollection );
@@ -1240,14 +1240,14 @@ class EditableRootCollectionFactory {
      * Creates a new editable business object collection.
      *
      * @function EditableRootCollection.create
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<EditableRootCollection>} Returns a promise to the new editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
      *      The event handlers must be an EventHandlerList object or null.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
-     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     * @throws {@link bo.common.DataPortalError Data portal error}:
      *      Creating the business object collection has failed.
      */
     Model.create = function ( eventHandlers ) {
@@ -1261,7 +1261,7 @@ class EditableRootCollectionFactory {
      * @function EditableRootCollection.fetch
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<EditableRootCollection>} Returns a promise to the retrieved editable root collection.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
@@ -1270,7 +1270,7 @@ class EditableRootCollectionFactory {
      *      The event handlers must be an EventHandlerList object or null.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
-     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     * @throws {@link bo.common.DataPortalError Data portal error}:
      *      Fetching the business object collection has failed.
      */
     Model.fetch = function ( filter, method, eventHandlers ) {

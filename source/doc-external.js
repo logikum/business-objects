@@ -72,7 +72,7 @@ const external = {
    *
    * @typedef external.propertyGetter
    * @type {function}
-   * @param {bo.shared.PropertyContext} context - The context for custom property functions.
+   * @param {bo.common.PropertyContext} context - The context for custom property functions.
    * @returns {*} The current value of the property.
    */
 
@@ -81,7 +81,7 @@ const external = {
    *
    * @typedef external.propertySetter
    * @type {function}
-   * @param {bo.shared.PropertyContext} context - The context for custom property functions.
+   * @param {bo.common.PropertyContext} context - The context for custom property functions.
    * @param {*} value - The new value of the property.
    * @returns {boolean} True if the value of the property has been changed, otherwise false.
    */
@@ -96,7 +96,7 @@ const external = {
    * @typedef external.toDto
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.TransferContext} context - The context for custom transfer object conversions.
+   * @param {bo.common.TransferContext} context - The context for custom transfer object conversions.
    * @returns {object} The data transfer object.
    */
 
@@ -106,7 +106,7 @@ const external = {
    * @typedef external.fromDto
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.TransferContext} context - The context for custom transfer object conversions.
+   * @param {bo.common.TransferContext} context - The context for custom transfer object conversions.
    * @param {object} dto - The data transfer object.
    */
 
@@ -116,7 +116,7 @@ const external = {
    * @typedef external.toCto
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.TransferContext} context - The context for custom transfer object conversions.
+   * @param {bo.common.TransferContext} context - The context for custom transfer object conversions.
    * @returns {object} The client transfer object.
    */
 
@@ -126,7 +126,7 @@ const external = {
    * @typedef external.fromCto
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.TransferContext} context - The context for custom transfer object conversions.
+   * @param {bo.common.TransferContext} context - The context for custom transfer object conversions.
    * @param {object} cto - The client transfer object.
    */
 
@@ -140,7 +140,7 @@ const external = {
    * @typedef external.dataCreate
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.DataPortalContext} context - The context for custom data portal conversions.
+   * @param {bo.common.DataPortalContext} context - The context for custom data portal conversions.
    * @param {function} callback - Callback function to return error (in asynchronous models).
    */
 
@@ -150,7 +150,7 @@ const external = {
    * @typedef external.dataFetch
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.DataPortalContext} context - The context for custom data portal conversions.
+   * @param {bo.common.DataPortalContext} context - The context for custom data portal conversions.
    * @param {*} filter - The criteria of the selection.
    * @param {string} method - The name of the selection method, defaults to 'fetch'.
    * @param {function} callback - Callback function to return child values or error (in asynchronous models).
@@ -163,7 +163,7 @@ const external = {
    * @typedef external.dataInsert
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.DataPortalContext} context - The context for custom data portal conversions.
+   * @param {bo.common.DataPortalContext} context - The context for custom data portal conversions.
    * @param {function} callback - Callback function to return error (in asynchronous models).
    */
 
@@ -173,7 +173,7 @@ const external = {
    * @typedef external.dataUpdate
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.DataPortalContext} context - The context for custom data portal conversions.
+   * @param {bo.common.DataPortalContext} context - The context for custom data portal conversions.
    * @param {function} callback - Callback function to return error (in asynchronous models).
    */
 
@@ -183,7 +183,7 @@ const external = {
    * @typedef external.dataRemove
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.DataPortalContext} context - The context for custom data portal conversions.
+   * @param {bo.common.DataPortalContext} context - The context for custom data portal conversions.
    * @param {function} callback - Callback function to return error (in asynchronous models).
    */
 
@@ -193,7 +193,7 @@ const external = {
    * @typedef external.dataExecute
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.DataPortalContext} context - The context for custom data portal conversions.
+   * @param {bo.common.DataPortalContext} context - The context for custom data portal conversions.
    * @param {string} method - The name of the execution method, defaults to 'execute'.
    * @param {function} callback - Callback function to return child values or error (in asynchronous models).
    * @returns {object} Plain object holding child values (in synchronous models).
@@ -216,7 +216,7 @@ const external = {
    * that calls an asynchronous data portal action.
    *
    * @callback external.cbDataPortal
-   * @param {(bo.shared.DataPortalError|bo.rules.AuthorizationError)} err - The error that occurred in the data portal action.
+   * @param {(bo.common.DataPortalError|bo.rules.AuthorizationError)} err - The error that occurred in the data portal action.
    * @param {object} result - The business object instance with the new state.
    */
 
@@ -259,7 +259,7 @@ const external = {
    * @typedef external.eventHandler
    * @type {function}
    * @this ModelBase
-   * @param {bo.shared.DataPortalEventArgs} context - The context for data portal events.
+   * @param {bo.common.DataPortalEventArgs} context - The context for data portal events.
    */
 
   //endregion

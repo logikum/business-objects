@@ -16,7 +16,7 @@ class DataTypeRule extends ValidationRule {
   /**
    * Creates a new data type rule object.
    *
-   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {bo.common.PropertyInfo} primaryProperty - The property definition the rule relates to.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The primary property must be a PropertyInfo object.

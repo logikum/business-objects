@@ -1,4 +1,4 @@
-console.log( 'Testing shared/event-handler-list.js...' );
+console.log( 'Testing common/event-handler-list.js...' );
 
 function read ( filename ) {
   return require( '../../../source/' + filename );

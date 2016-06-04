@@ -1,4 +1,4 @@
-console.log( 'Testing shared/extension-methods.js...' );
+console.log( 'Testing common/extension-methods.js...' );
 
 function read( filename ) {
   return require( '../../../source/' + filename );

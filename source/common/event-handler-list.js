@@ -8,7 +8,7 @@ const CollectionBase = require( './collection-base.js' );
 /**
  * Provides methods to manage the event handlers of a business object instance.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  * @extends Set
  */
 class EventHandlerList extends Set {
@@ -17,7 +17,7 @@ class EventHandlerList extends Set {
    * Adds a new event handler to to list.
    *
    * @param {string} modelName - The name of the business object model.
-   * @param {bo.shared.DataPortalEvent} event - The event to listen.
+   * @param {bo.common.DataPortalEvent} event - The event to listen.
    * @param {external.eventHandler} handler - A function to be invoked when the event is emitted.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.

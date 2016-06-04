@@ -255,7 +255,7 @@ function data_fetch( dto, method ) {
       /**
        * The event arises before the business object instance will be retrieved from the repository.
        * @event ReadOnlyChildObject#preFetch
-       * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+       * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
        * @param {ReadOnlyChildObject} oldObject - The instance of the model before the data portal action.
        */
       raiseEvent.call( self, DataPortalEvent.preFetch, method );
@@ -278,7 +278,7 @@ function data_fetch( dto, method ) {
           /**
            * The event arises after the business object instance has been retrieved from the repository.
            * @event ReadOnlyChildObject#postFetch
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyChildObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postFetch, method );
@@ -329,7 +329,7 @@ class ReadOnlyChildObject extends ModelBase {
    *   * CommandObject
    *
    * @param {object} parent - The parent business object.
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be a ReadOnlyRootCollection, ReadOnlyChildCollection,
@@ -568,9 +568,9 @@ class ReadOnlyChildObjectFactory {
    *      * ReadOnlyChildObject
    *
    * @param {string} name - The name of the model.
-   * @param {bo.shared.PropertyManager} properties - The property definitions.
-   * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
-   * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+   * @param {bo.common.PropertyManager} properties - The property definitions.
+   * @param {bo.common.RuleManager} rules - The validation and authorization rules.
+   * @param {bo.common.ExtensionManager} extensions - The customization of the model.
    * @returns {ReadOnlyChildObject} The constructor of an asynchronous read-only child object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
@@ -578,7 +578,7 @@ class ReadOnlyChildObjectFactory {
    * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
    * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
    *
-   * @throws {@link bo.shared.ModelError Model error}:
+   * @throws {@link bo.common.ModelError Model error}:
    *    The child objects must be ReadOnlyChildCollection or ReadOnlyChildObject instances.
    */
   constructor( name, properties, rules, extensions ) {
@@ -617,7 +617,7 @@ class ReadOnlyChildObjectFactory {
      * @function ReadOnlyChildObject.empty
      * @protected
      * @param {object} parent - The parent business object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {ReadOnlyChildObject} Returns a new read-only child object.
      */
     Model.empty = function ( parent, eventHandlers ) {
@@ -632,7 +632,7 @@ class ReadOnlyChildObjectFactory {
      * @protected
      * @param {object} parent - The parent business object.
      * @param {object} data - The data to load into the business object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<ReadOnlyChildObject>} Returns a promise to the retrieved read-only child object.
      *
      * @throws {@link bo.rules.AuthorizationError Authorization error}:

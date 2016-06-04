@@ -48,7 +48,7 @@ function setMethod( name, arity, value ) {
 /**
  * Provides properties to customize models' behavior.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class ExtensionManager {
 
@@ -68,14 +68,14 @@ class ExtensionManager {
 
     /**
      * The name of the data source.
-     * @member {string} bo.shared.ExtensionManager#dataSource
+     * @member {string} bo.common.ExtensionManager#dataSource
      * @readonly
      */
     this.dataSource = check( dataSource ).forMandatory( 'dataSource' ).asString();
 
     /**
      * The path of the model definition.
-     * @member {string} bo.shared.ExtensionManager#modelPath
+     * @member {string} bo.common.ExtensionManager#modelPath
      * @readonly
      */
     this.modelPath = check( modelPath ).forMandatory( 'modelPath' ).asString();
@@ -93,7 +93,7 @@ class ExtensionManager {
 
   /**
    * Factory method to create the data access object for a model instance.
-   * @member {external.daoBuilder} bo.shared.ExtensionManager#daoBuilder
+   * @member {external.daoBuilder} bo.common.ExtensionManager#daoBuilder
    */
   get daoBuilder() {
     return getMethod.call( this, 'daoBuilder' );
@@ -104,7 +104,7 @@ class ExtensionManager {
 
   /**
    * Converts the model instance to data transfer object.
-   * @member {external.toDto} bo.shared.ExtensionManager#toDto
+   * @member {external.toDto} bo.common.ExtensionManager#toDto
    */
   get toDto() {
     return getMethod.call( this, 'toDto' );
@@ -115,7 +115,7 @@ class ExtensionManager {
 
   /**
    * Converts the data transfer object to model instance.
-   * @member {external.fromDto} bo.shared.ExtensionManager#fromDto
+   * @member {external.fromDto} bo.common.ExtensionManager#fromDto
    */
   get fromDto() {
     return getMethod.call( this, 'fromDto' );
@@ -126,7 +126,7 @@ class ExtensionManager {
 
   /**
    * Converts the model instance to client transfer object.
-   * @member {external.toCto} bo.shared.ExtensionManager#toCto
+   * @member {external.toCto} bo.common.ExtensionManager#toCto
    */
   get toCto() {
     return getMethod.call( this, 'toCto' );
@@ -137,7 +137,7 @@ class ExtensionManager {
 
   /**
    * Converts the client transfer object to model instance.
-   * @member {external.fromCto} bo.shared.ExtensionManager#fromCto
+   * @member {external.fromCto} bo.common.ExtensionManager#fromCto
    */
   get fromCto() {
     return getMethod.call( this, 'fromCto' );
@@ -148,7 +148,7 @@ class ExtensionManager {
 
   /**
    * Returns the property values of a new instance from the data source.
-   * @member {external.dataCreate} bo.shared.ExtensionManager#dataCreate
+   * @member {external.dataCreate} bo.common.ExtensionManager#dataCreate
    */
   get dataCreate() {
     return getMethod.call( this, 'dataCreate' );
@@ -159,7 +159,7 @@ class ExtensionManager {
 
   /**
    * Returns the property values of an existing instance from the data source.
-   * @member {external.dataFetch} bo.shared.ExtensionManager#dataFetch
+   * @member {external.dataFetch} bo.common.ExtensionManager#dataFetch
    */
   get dataFetch() {
     return getMethod.call( this, 'dataFetch' );
@@ -170,7 +170,7 @@ class ExtensionManager {
 
   /**
    * Saves a new instance into the data source.
-   * @member {external.dataInsert} bo.shared.ExtensionManager#dataInsert
+   * @member {external.dataInsert} bo.common.ExtensionManager#dataInsert
    */
   get dataInsert() {
     return getMethod.call( this, 'dataInsert' );
@@ -181,7 +181,7 @@ class ExtensionManager {
 
   /**
    * Saves an existing instance into the data source.
-   * @member {external.dataUpdate} bo.shared.ExtensionManager#dataUpdate
+   * @member {external.dataUpdate} bo.common.ExtensionManager#dataUpdate
    */
   get dataUpdate() {
     return getMethod.call( this, 'dataUpdate' );
@@ -192,7 +192,7 @@ class ExtensionManager {
 
   /**
    * Deletes an existing instance from the data source.
-   * @member {external.dataRemove} bo.shared.ExtensionManager#dataRemove
+   * @member {external.dataRemove} bo.common.ExtensionManager#dataRemove
    */
   get dataRemove() {
     return getMethod.call( this, 'dataRemove' );
@@ -203,7 +203,7 @@ class ExtensionManager {
 
   /**
    * Executes a command on the data source.
-   * @member {external.dataExecute} bo.shared.ExtensionManager#dataExecute
+   * @member {external.dataExecute} bo.common.ExtensionManager#dataExecute
    */
   get dataExecute() {
     return getMethod.call( this, 'dataExecute' );
@@ -259,7 +259,7 @@ class ExtensionManager {
   /**
    * Gets the data access object instance of the model.
    *
-   * @function bo.shared.ExtensionManager#getDataAccessObject
+   * @function bo.common.ExtensionManager#getDataAccessObject
    * @protected
    * @param {string} modelName - The name of the model.
    * @returns {bo.dataAccess.DaoBase} The data access object instance of the model.
@@ -276,7 +276,7 @@ class ExtensionManager {
    * @param {string} methodName - The short name of the data portal method to execute.
    * @param {object} thisArg - The business object that executes the data portal method.
    *      E.g. 'update' for 'dataUpdate'.
-   * @param {bo.shared.DataPortalContext} dpContext - Tha data portal context
+   * @param {bo.common.DataPortalContext} dpContext - Tha data portal context
    *      of the custom data portal method.
    * @param {...*} [dpParams] - More optional parameters of the data portal method.
    * @returns {Promise.<object>} Returns a promise to the result of the custom data portal method.

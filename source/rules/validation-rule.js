@@ -41,7 +41,7 @@ class ValidationRule extends RuleBase {
 
     /**
      * The definition of the property the rule relates to.
-     * @member {bo.shared.PropertyInfo} bo.rules.ValidationRule#primaryProperty
+     * @member {bo.common.PropertyInfo} bo.rules.ValidationRule#primaryProperty
      * @readonly
      */
     this.primaryProperty = null;
@@ -60,7 +60,7 @@ class ValidationRule extends RuleBase {
   /**
    * Sets the properties of the rule.
    *
-   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {bo.common.PropertyInfo} primaryProperty - The property definition the rule relates to.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.
@@ -80,7 +80,7 @@ class ValidationRule extends RuleBase {
   /**
    * Adds an additional property to the rule that will use its value.
    *
-   * @param {bo.shared.PropertyInfo} property - An input property that value is used by the rule of.
+   * @param {bo.common.PropertyInfo} property - An input property that value is used by the rule of.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The input property must be a PropertyInfo object.
    */
@@ -97,7 +97,7 @@ class ValidationRule extends RuleBase {
   /**
    * Adds an additional property that is influenced by the rule.
    *
-   * @param {bo.shared.PropertyInfo} property - An affected property influenced by the rule.
+   * @param {bo.common.PropertyInfo} property - An affected property influenced by the rule.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The affected property must be a PropertyInfo object.
    */

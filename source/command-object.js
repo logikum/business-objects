@@ -292,7 +292,7 @@ function data_execute( method, isTransaction ) {
           /**
            * The event arises before the command object will be executed in the repository.
            * @event CommandObject#preExecute
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {CommandObject} oldObject - The instance of the model before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preExecute, method );
@@ -318,7 +318,7 @@ function data_execute( method, isTransaction ) {
           /**
            * The event arises after the command object has been executed in the repository.
            * @event CommandObject#postExecute
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {CommandObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postExecute, method );
@@ -373,7 +373,7 @@ class CommandObject extends ModelBase {
    * _The name of the model type available as:
    * __&lt;instance&gt;.constructor.modelType__, returns 'CommandObject'._
    *
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The event handlers must be an EventHandlerList object or null.
@@ -598,9 +598,9 @@ class CommandObjectFactory {
    *      * ReadOnlyChildCollection
    *
    * @param {string} name - The name of the command.
-   * @param {bo.shared.PropertyManager} properties - The property definitions.
-   * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
-   * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+   * @param {bo.common.PropertyManager} properties - The property definitions.
+   * @param {bo.common.RuleManager} rules - The validation and authorization rules.
+   * @param {bo.common.ExtensionManager} extensions - The customization of the model.
    * @returns {CommandObject} The constructor of an asynchronous command object model.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The command name must be a non-empty string.
@@ -608,7 +608,7 @@ class CommandObjectFactory {
    * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
    * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
    *
-   * @throws {@link bo.shared.ModelError Model error}:
+   * @throws {@link bo.common.ModelError Model error}:
    *    The child objects must be ReadOnlyChildObject or ReadOnlyChildCollection instances.
    */
   constructor(name, properties, rules, extensions) {
@@ -644,7 +644,7 @@ class CommandObjectFactory {
      * Creates a new command object instance.
      *
      * @function CommandObject.create
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {CommandObject} Returns a new command object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:

@@ -1,4 +1,4 @@
-console.log( 'Testing shared/property-flag.js...' );
+console.log( 'Testing common/property-flag.js...' );
 
 function read ( filename ) {
   return require( '../../../source/' + filename );

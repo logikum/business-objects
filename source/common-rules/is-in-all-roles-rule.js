@@ -17,7 +17,7 @@ class IsInAllRolesRule extends AuthorizationRule {
    * Creates a new is-in-all-roles rule object.
    *
    * @param {bo.rules.AuthorizationAction} action - The action to be authorized.
-   * @param {(bo.shared.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
+   * @param {(bo.common.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
    * @param {Array.<string>} roles - The names of the roles the user is member of.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=100] - The priority of the rule.

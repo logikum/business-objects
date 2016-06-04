@@ -27,7 +27,7 @@ describe( 'Business object index', () => {
     expect( bo.dataAccess ).toEqual( jasmine.any( Object ) );
     expect( bo.dataTypes ).toEqual( jasmine.any( Object ) );
     expect( bo.rules ).toEqual( jasmine.any( Object ) );
-    expect( bo.shared ).toEqual( jasmine.any( Object ) );
+    expect( bo.common ).toEqual( jasmine.any( Object ) );
     expect( bo.system ).toEqual( jasmine.any( Object ) );
 
     expect( bo.configuration ).toEqual( jasmine.any( Function ) );

@@ -43,7 +43,7 @@ class EditableChildCollection extends CollectionBase {
    *   * EditableChildObject
    *
    * @param {object} parent - The parent business object.
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be an EditableRootObject or EditableChildObject instance.
@@ -463,7 +463,7 @@ class EditableChildCollectionFactory {
    * @returns {EditableChildCollection} The constructor of an editable child collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
-   * @throws {@link bo.shared.ModelError Model error}: The item type must be an EditableChildObject.
+   * @throws {@link bo.common.ModelError Model error}: The item type must be an EditableChildObject.
    */
   constructor(name, itemType) {
 
@@ -499,7 +499,7 @@ class EditableChildCollectionFactory {
      * @function EditableChildCollection.empty
      * @protected
      * @param {object} parent - The parent business object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<EditableChildCollection>} Returns a promise to the new editable child collection.
      */
     Model.empty = function ( parent, eventHandlers ) {

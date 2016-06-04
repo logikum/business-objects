@@ -14,7 +14,7 @@ class RequiredRule extends ValidationRule {
   /**
    * Creates a new required rule object.
    *
-   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {bo.common.PropertyInfo} primaryProperty - The property definition the rule relates to.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=50] - The priority of the rule.
    * @param {boolean} [stopsProcessing=false] - Indicates the rule behavior in case of failure.

@@ -31,7 +31,7 @@ function getByName( name ) {
 /**
  * Provides the context for custom property functions.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class PropertyContext {
 
@@ -45,7 +45,7 @@ class PropertyContext {
    * for custom property functions.</i>
    *
    * @param {string} modelName - The name of the business object model.
-   * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
+   * @param {Array.<bo.common.PropertyInfo>} properties - An array of property definitions.
    * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
    * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
    *
@@ -60,14 +60,14 @@ class PropertyContext {
 
     /**
      * The name of the business object model.
-     * @member {string} bo.shared.PropertyContext#modelName
+     * @member {string} bo.common.PropertyContext#modelName
      * @readonly
      */
     this.modelName = check( modelName ).forMandatory( 'modelName' ).asString();
 
     /**
      * Array of property definitions that may used by the custom function.
-     * @member {Array.<bo.shared.PropertyInfo>} bo.shared.PropertyContext#properties
+     * @member {Array.<bo.common.PropertyInfo>} bo.common.PropertyContext#properties
      * @readonly
      */
     this.properties = check( properties ).forOptional( 'properties' ).asArray( PropertyInfo );
@@ -86,7 +86,7 @@ class PropertyContext {
  
   /**
    * The primary property of the custom function.
-   * @member {bo.shared.PropertyInfo} bo.shared.PropertyContext#primaryProperty
+   * @member {bo.common.PropertyInfo} bo.common.PropertyContext#primaryProperty
    * @readonly
    */
   get primaryProperty() {
@@ -100,8 +100,8 @@ class PropertyContext {
   /**
    * Sets the primary property of the custom function.
    *
-   * @param {bo.shared.PropertyInfo} property - The primary property of the custom function.
-   * @returns {bo.shared.PropertyContext} The property context object itself.
+   * @param {bo.common.PropertyInfo} property - The primary property of the custom function.
+   * @returns {bo.common.PropertyContext} The property context object itself.
    */
   with( property ) {
     _primaryProperty.set( this, Argument.inMethod( PropertyContext.name, 'with' )
@@ -117,7 +117,7 @@ class PropertyContext {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The model has no property with the given name.
-   * @throws {@link bo.shared.ModelError Model error}: The property cannot be read.
+   * @throws {@link bo.common.ModelError Model error}: The property cannot be read.
    */
   getValue( propertyName ) {
     propertyName = Argument.inMethod( PropertyContext.name, 'getValue' )
@@ -137,7 +137,7 @@ class PropertyContext {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The model has no property with the given name.
-   * @throws {@link bo.shared.ModelError Model error}: The property cannot be written.
+   * @throws {@link bo.common.ModelError Model error}: The property cannot be written.
    */
   setValue( propertyName, value ) {
     propertyName = Argument.inMethod( PropertyContext.name, 'setValue' )

@@ -17,7 +17,7 @@ class IsInRoleRule extends AuthorizationRule {
    * Creates a new is-in-role rule object.
    *
    * @param {bo.rules.AuthorizationAction} action - The action to be authorized.
-   * @param {(bo.shared.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
+   * @param {(bo.common.PropertyInfo|string|null)} [target] - Eventual parameter of the authorization action.
    * @param {string} role - The name of the role the user is member of.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=100] - The priority of the rule.

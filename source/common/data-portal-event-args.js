@@ -44,7 +44,7 @@ function eventToAction( event ) {
 /**
  * Provides the context for data portal events.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class DataPortalEventArgs {
 
@@ -54,11 +54,11 @@ class DataPortalEventArgs {
    * <i><b>Warning:</b> Data portal event arguments are created in models internally.
    * They are intended only to make publicly available the context for data portal events.</i>
    *
-   * @param {bo.shared.DataPortalEvent} event - The data portal event.
+   * @param {bo.common.DataPortalEvent} event - The data portal event.
    * @param {string} modelName - The name of the business object model.
-   * @param {bo.shared.DataPortalAction} [action] - The type of the data portal operation.
+   * @param {bo.common.DataPortalAction} [action] - The type of the data portal operation.
    * @param {string} [methodName] - The name of the data access object method called.
-   * @param {bo.shared.DataPortalError} [error] - The eventual error occurred in data portal action.
+   * @param {bo.common.DataPortalError} [error] - The eventual error occurred in data portal action.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The event must be a DataPortalEvent item.
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
@@ -74,44 +74,44 @@ class DataPortalEventArgs {
 
     /**
      * The name of the data portal event.
-     * @member {string} bo.shared.DataPortalEventArgs#eventName
+     * @member {string} bo.common.DataPortalEventArgs#eventName
      * @readonly
      */
     this.eventName = DataPortalEvent.getName( event );
     /**
      * The name of the business object model.
-     * @member {string} bo.shared.DataPortalEventArgs#modelName
+     * @member {string} bo.common.DataPortalEventArgs#modelName
      * @readonly
      */
     this.modelName = check( modelName ).forMandatory( 'modelName' ).asString();
     /**
      * The type of the data portal operation.
-     * @member {bo.shared.DataPortalAction} bo.shared.DataPortalEventArgs#action
+     * @member {bo.common.DataPortalAction} bo.common.DataPortalEventArgs#action
      * @readonly
      */
     this.action = check( action ).for( 'action' ).asEnumMember( DataPortalAction, eventToAction( event ) );
     /**
      * The name of the data access object method called.
-     * @member {string} bo.shared.DataPortalEventArgs#methodName
+     * @member {string} bo.common.DataPortalEventArgs#methodName
      * @readonly
      */
     this.methodName = methodName || DataPortalAction.getName( this.action );
     /**
      * The error occurred in data portal action, otherwise null.
-     * @member {bo.shared.DataPortalError} bo.shared.DataPortalEventArgs#error
+     * @member {bo.common.DataPortalError} bo.common.DataPortalEventArgs#error
      * @readonly
      */
     this.error = check( error ).forOptional( 'error' ).asType( DataPortalError );
 
     /**
      * The current user.
-     * @member {bo.system.UserInfo} bo.shared.DataPortalEventArgs#user
+     * @member {bo.system.UserInfo} bo.common.DataPortalEventArgs#user
      * @readonly
      */
     this.user = config.getUser();
     /**
      * The current locale.
-     * @member {string} bo.shared.DataPortalEventArgs#locale
+     * @member {string} bo.common.DataPortalEventArgs#locale
      * @readonly
      */
     this.locale = config.getLocale();

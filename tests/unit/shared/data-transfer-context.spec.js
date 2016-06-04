@@ -1,4 +1,4 @@
-console.log( 'Testing shared/data-transfer-context.js...' );
+console.log( 'Testing common/data-transfer-context.js...' );
 
 function read ( filename ) {
   return require( '../../../source/' + filename );

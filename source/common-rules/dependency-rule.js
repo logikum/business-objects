@@ -18,8 +18,8 @@ class DependencyRule extends ValidationRule {
   /**
    * Creates a new dependency rule object.
    *
-   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
-   * @param {(bo.shared.PropertyInfo|Array.<bo.shared.PropertyInfo>)} dependencies -
+   * @param {bo.common.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {(bo.common.PropertyInfo|Array.<bo.common.PropertyInfo>)} dependencies -
    *    A single dependent property or an array of them.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=-100] - The priority of the rule.

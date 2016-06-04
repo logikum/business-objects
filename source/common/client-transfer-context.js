@@ -30,7 +30,7 @@ function getByName( properties, name ) {
 /**
  * Provides the context for custom client transfer objects.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class ClientTransferContext {
 
@@ -43,7 +43,7 @@ class ClientTransferContext {
    * They are intended only to make publicly available the values of model properties
    * for custom client transfer objects.</i>
    *
-   * @param {Array.<bo.shared.PropertyInfo>} [properties] - An array of property definitions.
+   * @param {Array.<bo.common.PropertyInfo>} [properties] - An array of property definitions.
    * @param {internal~readValue} [readValue] - A function that returns the current value of a property.
    * @param {internal~writeValue} [writeValue] - A function that changes the current value of a property.
    *
@@ -57,7 +57,7 @@ class ClientTransferContext {
 
     /**
      * Array of property definitions that may appear on the transfer object.
-     * @member {Array.<bo.shared.PropertyInfo>} bo.shared.ClientTransferContext#properties
+     * @member {Array.<bo.common.PropertyInfo>} bo.common.ClientTransferContext#properties
      * @readonly
      */
     this.properties = check( properties ).forOptional( 'properties' ).asArray( PropertyInfo );

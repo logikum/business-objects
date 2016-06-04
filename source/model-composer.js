@@ -377,7 +377,7 @@ class ModelComposer {
    *
    * @function ModelComposer#boolean
    * @param {string} propertyName - The name of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposer}
@@ -404,7 +404,7 @@ class ModelComposer {
    *
    * @function ModelComposer#text
    * @param {string} propertyName - The name of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposer}
@@ -431,7 +431,7 @@ class ModelComposer {
    *
    * @function ModelComposer#email
    * @param {string} propertyName - The name of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposer}
@@ -458,7 +458,7 @@ class ModelComposer {
    *
    * @function ModelComposer#integer
    * @param {string} propertyName - The name of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposer}
@@ -485,7 +485,7 @@ class ModelComposer {
    *
    * @function ModelComposer#decimal
    * @param {string} propertyName - The name of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposer}
@@ -512,7 +512,7 @@ class ModelComposer {
    *
    * @function ModelComposer#enum
    * @param {string} propertyName - The name of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposer}
@@ -539,7 +539,7 @@ class ModelComposer {
    *
    * @function ModelComposer#dateTime
    * @param {string} propertyName - The name of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposer}
@@ -566,7 +566,7 @@ class ModelComposer {
    * @function ModelComposer#property
    * @param {string} propertyName - The name of the property.
    * @param {function} typeCtor - The data type of the property.
-   * @param {bo.shared.PropertyFlag} [flags] - Other attributes of the property.
+   * @param {bo.common.PropertyFlag} [flags] - Other attributes of the property.
    * @param {external.propertyGetter} [getter] - Custom function to read the value of the property.
    * @param {external.propertySetter} [setter] - Custom function to write the value of the property.
    * @returns {ModelComposer}
@@ -791,7 +791,7 @@ class ModelComposer {
    *      * {@link CommandObject}
    *
    * @function ModelComposer#dependency
-   * @param {(bo.shared.PropertyInfo|Array.<bo.shared.PropertyInfo>)} dependencies -
+   * @param {(bo.common.PropertyInfo|Array.<bo.common.PropertyInfo>)} dependencies -
    *    A single dependent property or an array of them.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=-100] - The priority of the rule.
@@ -1426,7 +1426,7 @@ class ModelComposer {
   /**
    * Adds a new instance method to the business object that
    * will call a custom execute method on a command object instance.
-   * See {@link bo.shared.ExtensionManager#addOtherMethod addOtherMethod}
+   * See {@link bo.common.ExtensionManager#addOtherMethod addOtherMethod}
    * method of ExtensionManagerBase class.
    *
    *    The function is valid for the following model type:

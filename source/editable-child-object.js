@@ -463,7 +463,7 @@ function data_create( connection ) {
           /**
            * The event arises before the business object instance will be initialized in the repository.
            * @event EditableChildObject#preCreate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preCreate );
@@ -487,7 +487,7 @@ function data_create( connection ) {
           /**
            * The event arises after the business object instance has been initialized in the repository.
            * @event EditableChildObject#postCreate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postCreate );
@@ -531,7 +531,7 @@ function data_fetch( data, method ) {
       /**
        * The event arises before the business object instance will be retrieved from the repository.
        * @event EditableChildObject#preFetch
-       * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+       * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
        * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
        */
       raiseEvent.call( self, DataPortalEvent.preFetch, method );
@@ -555,7 +555,7 @@ function data_fetch( data, method ) {
           /**
            * The event arises after the business object instance has been retrieved from the repository.
            * @event EditableChildObject#postFetch
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postFetch, method );
@@ -587,7 +587,7 @@ function data_insert( connection ) {
       /**
        * The event arises before the business object instance will be created in the repository.
        * @event EditableChildObject#preInsert
-       * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+       * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
        * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
        */
       raiseEvent.call( self, DataPortalEvent.preInsert );
@@ -624,7 +624,7 @@ function data_insert( connection ) {
           /**
            * The event arises after the business object instance has been created in the repository.
            * @event EditableChildObject#postInsert
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postInsert );
@@ -656,7 +656,7 @@ function data_update( connection ) {
       /**
        * The event arises before the business object instance will be updated in the repository.
        * @event EditableChildObject#preUpdate
-       * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+       * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
        * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
        */
       raiseEvent.call( self, DataPortalEvent.preUpdate );
@@ -685,7 +685,7 @@ function data_update( connection ) {
           /**
            * The event arises after the business object instance has been updated in the repository.
            * @event EditableChildObject#postUpdate
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postUpdate );
@@ -717,7 +717,7 @@ function data_remove( connection ) {
       /**
        * The event arises before the business object instance will be removed from the repository.
        * @event EditableChildObject#preRemove
-       * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+       * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
        * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
        */
       raiseEvent.call( self, DataPortalEvent.preRemove );
@@ -740,7 +740,7 @@ function data_remove( connection ) {
           /**
            * The event arises after the business object instance has been removed from the repository.
            * @event EditableChildObject#postRemove
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {EditableChildObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postRemove );
@@ -798,7 +798,7 @@ class EditableChildObject extends ModelBase {
    *   * EditableChildObject
    *
    * @param {object} parent - The parent business object.
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be an EditableChildCollection, EditableRootObject or
@@ -1224,9 +1224,9 @@ class EditableChildObjectFactory {
    *      * ReadOnlyChildObject
    *
    * @param {string} name - The name of the model.
-   * @param {bo.shared.PropertyManager} properties - The property definitions.
-   * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
-   * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+   * @param {bo.common.PropertyManager} properties - The property definitions.
+   * @param {bo.common.RuleManager} rules - The validation and authorization rules.
+   * @param {bo.common.ExtensionManager} extensions - The customization of the model.
    * @returns {EditableChildObject} The constructor of an asynchronous editable child object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
@@ -1234,7 +1234,7 @@ class EditableChildObjectFactory {
    * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
    * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
    *
-   * @throws {@link bo.shared.ModelError Model error}:
+   * @throws {@link bo.common.ModelError Model error}:
    *    The child objects must be EditableChildCollection or EditableChildObject instances.
    */
   constructor( name, properties, rules, extensions ) {
@@ -1273,7 +1273,7 @@ class EditableChildObjectFactory {
      * @function EditableChildObject.empty
      * @protected
      * @param {object} parent - The parent business object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {EditableChildObject} Returns a new editable child object.
      */
     Model.empty = function ( parent, eventHandlers ) {
@@ -1289,12 +1289,12 @@ class EditableChildObjectFactory {
      * @function EditableChildObject.create
      * @protected
      * @param {object} parent - The parent business object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<EditableChildObject>} Returns a promise to the new editable child object.
      *
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
-     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     * @throws {@link bo.common.DataPortalError Data portal error}:
      *      Creating the business object has failed.
      */
     Model.create = function ( parent, eventHandlers ) {
@@ -1310,7 +1310,7 @@ class EditableChildObjectFactory {
      * @protected
      * @param {object} parent - The parent business object.
      * @param {object} data - The data to load into the business object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<EditableChildObject>} Returns a promise to the retrieved editable child object.
      *
      * @throws {@link bo.rules.AuthorizationError Authorization error}:

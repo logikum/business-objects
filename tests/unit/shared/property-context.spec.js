@@ -1,4 +1,4 @@
-console.log('Testing shared/property-context.js...');
+console.log('Testing common/property-context.js...');
 
 function read( filename ) {
   return require( '../../../source/' + filename );

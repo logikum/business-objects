@@ -1,4 +1,4 @@
-console.log( 'Testing shared/model-error.js...' );
+console.log( 'Testing common/model-error.js...' );
 
 function read ( filename ) {
   return require( '../../../source/' + filename );

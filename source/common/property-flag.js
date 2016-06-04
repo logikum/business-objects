@@ -4,9 +4,9 @@ const Enumeration = require( '../system/enumeration.js' );
 
 /**
  * Represents the eligible attributes of
- * a {@link bo.shared.PropertyInfo property definition}.
+ * a {@link bo.common.PropertyInfo property definition}.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  * @extends bo.system.Enumeration
  */
 class PropertyFlag extends Enumeration {
@@ -19,37 +19,37 @@ class PropertyFlag extends Enumeration {
 
     /**
      * None of the property flags.
-     * @constant {number} bo.shared.PropertyFlag#none
+     * @constant {number} bo.common.PropertyFlag#none
      * @default 0
      */
     this.none = 0;
     /**
      * The model property cannot be set.
-     * @constant {number} bo.shared.PropertyFlag#readOnly
+     * @constant {number} bo.common.PropertyFlag#readOnly
      * @default 1
      */
     this.readOnly = 1;
     /**
      * The model property is a key element of the model.
-     * @constant {number} bo.shared.PropertyFlag#key
+     * @constant {number} bo.common.PropertyFlag#key
      * @default 2
      */
     this.key = 2;
     /**
      * The model property is a key element of the parent model.
-     * @constant {number} bo.shared.PropertyFlag#parentKey
+     * @constant {number} bo.common.PropertyFlag#parentKey
      * @default 4
      */
     this.parentKey = 4;
     /**
      * The value of the model property will be used on the client transfer object only.
-     * @constant {number} bo.shared.PropertyFlag#onCtoOnly
+     * @constant {number} bo.common.PropertyFlag#onCtoOnly
      * @default 8
      */
     this.onCtoOnly = 8;
     /**
      * The value of the model property will be used on the data transfer object only.
-     * @constant {number} bo.shared.PropertyFlag#onDtoOnly
+     * @constant {number} bo.common.PropertyFlag#onDtoOnly
      * @default 16
      */
     this.onDtoOnly = 16;

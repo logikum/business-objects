@@ -30,7 +30,7 @@ class ValidationResult extends ResultBase {
 
     /**
      * An array of properties that are affected by the rule.
-     * @member {Array.<bo.shared.PropertyInfo>} bo.rules.ValidationResult#affectedProperties
+     * @member {Array.<bo.common.PropertyInfo>} bo.rules.ValidationResult#affectedProperties
      * @readonly
      */
     this.affectedProperties = null;

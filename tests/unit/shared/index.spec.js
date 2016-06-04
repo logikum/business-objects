@@ -1,9 +1,9 @@
-console.log( 'Testing shared/index.js...' );
+console.log( 'Testing common/index.js...' );
 
 function read( filename ) {
   return require( '../../../source/' + filename );
 }
-const shared = read( 'common/index.js' );
+const common = read( 'common/index.js' );
 const Text = read( 'data-types/text.js' );
 
 const ExtensionManager = read( 'common/extension-manager.js' );
@@ -43,23 +43,23 @@ describe( 'Shared component index', () => {
 
   it( 'properties return correct components', () => {
 
-    expect( new shared.ExtensionManager( 'data_source', '/model/path' ) ).toEqual( jasmine.any( ExtensionManager ) );
-    expect( new shared.EventHandlerList() ).toEqual( jasmine.any( EventHandlerList ) );
-    expect( new shared.DataStore() ).toEqual( jasmine.any( DataStore ) );
-    expect( shared.ModelState ).toEqual( jasmine.any( Enumeration ) );
-    expect( new shared.ModelError( 'message' ) ).toEqual( jasmine.any( ModelError ) );
+    expect( new common.ExtensionManager( 'data_source', '/model/path' ) ).toEqual( jasmine.any( ExtensionManager ) );
+    expect( new common.EventHandlerList() ).toEqual( jasmine.any( EventHandlerList ) );
+    expect( new common.DataStore() ).toEqual( jasmine.any( DataStore ) );
+    expect( common.ModelState ).toEqual( jasmine.any( Enumeration ) );
+    expect( new common.ModelError( 'message' ) ).toEqual( jasmine.any( ModelError ) );
 
-    expect( new shared.PropertyInfo( 'property', text ) ).toEqual( jasmine.any( PropertyInfo ) );
-    expect( shared.PropertyFlag ).toBe( PropertyFlag );
-    expect( new shared.PropertyManager() ).toEqual( jasmine.any( PropertyManager ) );
-    expect( new shared.PropertyContext( 'model', [], getValue, setValue ) ).toEqual( jasmine.any( PropertyContext ) );
-    expect( new shared.ClientTransferContext( [], getValue, setValue ) ).toEqual( jasmine.any( ClientTransferContext ) );
-    expect( new shared.DataTransferContext( [], getValue, setValue ) ).toEqual( jasmine.any( DataTransferContext ) );
+    expect( new common.PropertyInfo( 'property', text ) ).toEqual( jasmine.any( PropertyInfo ) );
+    expect( common.PropertyFlag ).toBe( PropertyFlag );
+    expect( new common.PropertyManager() ).toEqual( jasmine.any( PropertyManager ) );
+    expect( new common.PropertyContext( 'model', [], getValue, setValue ) ).toEqual( jasmine.any( PropertyContext ) );
+    expect( new common.ClientTransferContext( [], getValue, setValue ) ).toEqual( jasmine.any( ClientTransferContext ) );
+    expect( new common.DataTransferContext( [], getValue, setValue ) ).toEqual( jasmine.any( DataTransferContext ) );
 
-    expect( shared.DataPortalAction ).toBe( DataPortalAction );
-    expect( new shared.DataPortalContext( dao, [], getValue, setValue ) ).toEqual( jasmine.any( DataPortalContext ) );
-    expect( shared.DataPortalEvent ).toBe( DataPortalEvent );
-    expect( new shared.DataPortalEventArgs( DataPortalEvent.preCreate, 'model' ) ).toEqual( jasmine.any( DataPortalEventArgs ) );
-    expect( new shared.DataPortalError( 'type', 'name', 0, {} ) ).toEqual( jasmine.any( DataPortalError ) );
+    expect( common.DataPortalAction ).toBe( DataPortalAction );
+    expect( new common.DataPortalContext( dao, [], getValue, setValue ) ).toEqual( jasmine.any( DataPortalContext ) );
+    expect( common.DataPortalEvent ).toBe( DataPortalEvent );
+    expect( new common.DataPortalEventArgs( DataPortalEvent.preCreate, 'model' ) ).toEqual( jasmine.any( DataPortalEventArgs ) );
+    expect( new common.DataPortalError( 'type', 'name', 0, {} ) ).toEqual( jasmine.any( DataPortalError ) );
   } );
 } );

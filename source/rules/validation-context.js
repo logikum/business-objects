@@ -18,7 +18,7 @@ class ValidationContext {
    * They are intended only to make publicly available the context
    * for custom validation rules.</i>
    *
-   * @param {bo.shared.DataStore} dataStore - The storage of the property values.
+   * @param {bo.common.DataStore} dataStore - The storage of the property values.
    * @param {bo.rules.BrokenRuleList} brokenRules - The list of the broken rules.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The data store must be a DataStore object.

@@ -271,7 +271,7 @@ function data_fetch( filter, method ) {
           /**
            * The event arises before the business object instance will be retrieved from the repository.
            * @event ReadOnlyRootObject#preFetch
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyRootObject} oldObject - The instance of the model before the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.preFetch, method );
@@ -297,7 +297,7 @@ function data_fetch( filter, method ) {
           /**
            * The event arises after the business object instance has been retrieved from the repository.
            * @event ReadOnlyRootObject#postFetch
-           * @param {bo.shared.DataPortalEventArgs} eventArgs - Data portal event arguments.
+           * @param {bo.common.DataPortalEventArgs} eventArgs - Data portal event arguments.
            * @param {ReadOnlyRootObject} newObject - The instance of the model after the data portal action.
            */
           raiseEvent.call( self, DataPortalEvent.postFetch, method );
@@ -347,7 +347,7 @@ class ReadOnlyRootObject extends ModelBase {
    * _The name of the model type available as:
    * __&lt;instance&gt;.constructor.modelType__, returns 'ReadOnlyRootObject'._
    *
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The event handlers must be an EventHandlerList object or null.
@@ -484,7 +484,7 @@ class ReadOnlyRootObject extends ModelBase {
    *      The callback must be a function.
    * @throws {@link bo.rules.AuthorizationError Authorization error}:
    *      The user has no permission to execute the action.
-   * @throws {@link bo.shared.DataPortalError Data portal error}:
+   * @throws {@link bo.common.DataPortalError Data portal error}:
    *      Fetching the business object has failed.
    */
   fetch( filter, method ) {
@@ -593,9 +593,9 @@ class ReadOnlyRootObjectFactory {
    *      * ReadOnlyChildObject
    *
    * @param {string} name - The name of the model.
-   * @param {bo.shared.PropertyManager} properties - The property definitions.
-   * @param {bo.shared.RuleManager} rules - The validation and authorization rules.
-   * @param {bo.shared.ExtensionManager} extensions - The customization of the model.
+   * @param {bo.common.PropertyManager} properties - The property definitions.
+   * @param {bo.common.RuleManager} rules - The validation and authorization rules.
+   * @param {bo.common.ExtensionManager} extensions - The customization of the model.
    * @returns {ReadOnlyRootObject} The constructor of an asynchronous read-only root object.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The model name must be a non-empty string.
@@ -603,7 +603,7 @@ class ReadOnlyRootObjectFactory {
    * @throws {@link bo.system.ArgumentError Argument error}: The rules must be a RuleManager object.
    * @throws {@link bo.system.ArgumentError Argument error}: The extensions must be a ExtensionManager object.
    *
-   * @throws {@link bo.shared.ModelError Model error}:
+   * @throws {@link bo.common.ModelError Model error}:
    *    The child objects must be ReadOnlyChildCollection or ReadOnlyChildObject instances.
    */
   constructor( name, properties, rules, extensions ) {
@@ -641,7 +641,7 @@ class ReadOnlyRootObjectFactory {
      * @function ReadOnlyRootObject.fetch
      * @param {*} [filter] - The filter criteria.
      * @param {string} [method] - An alternative fetch method of the data access object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {Promise.<ReadOnlyRootObject>} Returns a promise to the retrieved read-only root object.
      *
      * @throws {@link bo.system.ArgumentError Argument error}:
@@ -652,7 +652,7 @@ class ReadOnlyRootObjectFactory {
      *      The callback must be a function.
      * @throws {@link bo.rules.AuthorizationError Authorization error}:
      *      The user has no permission to execute the action.
-     * @throws {@link bo.shared.DataPortalError Data portal error}:
+     * @throws {@link bo.common.DataPortalError Data portal error}:
      *      Fetching the business object has failed.
      */
     Model.fetch = function ( filter, method, eventHandlers ) {

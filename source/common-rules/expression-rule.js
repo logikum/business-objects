@@ -16,7 +16,7 @@ class ExpressionRule extends ValidationRule {
   /**
    * Creates a new expression rule object.
    *
-   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {bo.common.PropertyInfo} primaryProperty - The property definition the rule relates to.
    * @param {RegExp} regex - The regular expression that specifies the rule.
    * @param {bo.commonRules.NullResultOption} option - The action to execute when the value is null.
    * @param {string} message - Human-readable description of the rule failure.

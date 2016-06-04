@@ -42,7 +42,7 @@ class ReadOnlyChildCollection extends CollectionBase {
    *   * CommandObject
    *
    * @param {object} parent - The parent business object.
-   * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+   * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
    *
    * @throws {@link bo.system.ArgumentError Argument error}:
    *    The parent object must be an ReadOnlyRootObject, ReadOnlyChildObject
@@ -337,7 +337,7 @@ class ReadOnlyChildCollectionFactory {
    * @returns {ReadOnlyChildCollection} The constructor of a read-only child collection.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The collection name must be a non-empty string.
-   * @throws {@link bo.shared.ModelError Model error}: The item type must be an ReadOnlyChildObject.
+   * @throws {@link bo.common.ModelError Model error}: The item type must be an ReadOnlyChildObject.
    */
   constructor( name, itemType ) {
 
@@ -373,7 +373,7 @@ class ReadOnlyChildCollectionFactory {
      * @function ReadOnlyChildCollection.empty
      * @protected
      * @param {object} parent - The parent business object.
-     * @param {bo.shared.EventHandlerList} [eventHandlers] - The event handlers of the instance.
+     * @param {bo.common.EventHandlerList} [eventHandlers] - The event handlers of the instance.
      * @returns {ReadOnlyChildCollection} Returns a new read-only child collection.
      */
     Model.empty = function ( parent, eventHandlers ) {

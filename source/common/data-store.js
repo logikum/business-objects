@@ -45,7 +45,7 @@ function setValidity( propertyName, value ) {
 /**
  * Provides methods to manage the values of business object model's properties.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class DataStore {
 
@@ -70,7 +70,7 @@ class DataStore {
   /**
    * Initializes the value of a property in the store.
    *
-   * @param {bo.shared.PropertyInfo} property - The definition of the model property.
+   * @param {bo.common.PropertyInfo} property - The definition of the model property.
    * @param {*} value - The default value of the property (null or a child object).
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
@@ -89,7 +89,7 @@ class DataStore {
   /**
    * Gets the value of a model property.
    *
-   * @param {bo.shared.PropertyInfo} property - The definition of the model property.
+   * @param {bo.common.PropertyInfo} property - The definition of the model property.
    * @returns {*} The current value of the property.
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The property must be a PropertyInfo object.
@@ -105,7 +105,7 @@ class DataStore {
   /**
    * Sets the value of a model property.
    *
-   * @param {bo.shared.PropertyInfo} property - The definition of the model property.
+   * @param {bo.common.PropertyInfo} property - The definition of the model property.
    * @param {*} value - The new value of the property.
    * @returns {boolean} True if the value of the property has been changed, otherwise false.
    *
@@ -142,7 +142,7 @@ class DataStore {
   /**
    * Indicates whether a property has a valid value.
    *
-   * @param {bo.shared.PropertyInfo} property - The definition of the model property.
+   * @param {bo.common.PropertyInfo} property - The definition of the model property.
    * @returns {boolean} True if the property has a valid value, otherwise false.
    */
   hasValidValue( property ) {

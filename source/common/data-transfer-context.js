@@ -30,7 +30,7 @@ function getByName( properties, name ) {
 /**
  * Provides the context for custom data transfer objects.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class DataTransferContext {
 
@@ -43,7 +43,7 @@ class DataTransferContext {
    * They are intended only to make publicly available the values of model properties
    * for custom data transfer objects._
    *
-   * @param {Array.<bo.shared.PropertyInfo>} [properties] - An array of property definitions.
+   * @param {Array.<bo.common.PropertyInfo>} [properties] - An array of property definitions.
    * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
    * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
    *
@@ -57,7 +57,7 @@ class DataTransferContext {
 
     /**
      * Array of property definitions that may appear on the data transfer object.
-     * @member {Array.<bo.shared.PropertyInfo>} bo.shared.DataTransferContext#properties
+     * @member {Array.<bo.common.PropertyInfo>} bo.common.DataTransferContext#properties
      * @readonly
      */
     this.properties = check( properties ).forOptional( 'properties' ).asArray( PropertyInfo );

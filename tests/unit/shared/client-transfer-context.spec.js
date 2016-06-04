@@ -1,4 +1,4 @@
-console.log( 'Testing shared/client-transfer-context.js...' );
+console.log( 'Testing common/client-transfer-context.js...' );
 
 function read ( filename ) {
   return require( '../../../source/' + filename );

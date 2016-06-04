@@ -35,7 +35,7 @@ function getByName( properties, name ) {
 /**
  * Provides the context for custom data portal actions.
  *
- * @memberof bo.shared
+ * @memberof bo.common
  */
 class DataPortalContext {
 
@@ -49,7 +49,7 @@ class DataPortalContext {
    * for custom data portal actions.</i>
    *
    * @param {object} dao - The data access object of the current model.
-   * @param {Array.<bo.shared.PropertyInfo>} properties - An array of property definitions.
+   * @param {Array.<bo.common.PropertyInfo>} properties - An array of property definitions.
    * @param {internal~getValue} [getValue] - A function that returns the current value of a property.
    * @param {internal~setValue} [setValue] - A function that changes the current value of a property.
    *
@@ -64,14 +64,14 @@ class DataPortalContext {
 
     /**
      * The data access object of the current model.
-     * @member {object} bo.shared.DataPortalContext#dao
+     * @member {object} bo.common.DataPortalContext#dao
      * @readonly
      */
     this.dao = check( dao || {} ).forMandatory( 'dao' ).asObject();
 
     /**
      * Array of property definitions that may appear on the data transfer object.
-     * @member {Array.<bo.shared.PropertyInfo>} bo.shared.DataPortalContext#properties
+     * @member {Array.<bo.common.PropertyInfo>} bo.common.DataPortalContext#properties
      * @readonly
      */
     this.properties = check( properties ).forOptional( 'properties' ).asArray( PropertyInfo );
@@ -94,7 +94,7 @@ class DataPortalContext {
 
   /**
    * The current user.
-   * @member {bo.system.UserInfo} bo.shared.DataPortalContext#user
+   * @member {bo.system.UserInfo} bo.common.DataPortalContext#user
    * @readonly
    */
   get user() {
@@ -103,7 +103,7 @@ class DataPortalContext {
 
   /**
    * The current locale.
-   * @member {string} bo.shared.DataPortalContext#locale
+   * @member {string} bo.common.DataPortalContext#locale
    * @readonly
    */
   get locale() {
@@ -112,7 +112,7 @@ class DataPortalContext {
 
   /**
    * The connection object for the data source.
-   * @member {object} bo.shared.DataPortalContext#connection
+   * @member {object} bo.common.DataPortalContext#connection
    * @readonly
    */
   get connection() {
@@ -121,7 +121,7 @@ class DataPortalContext {
 
   /**
    * Indicates whether the current model itself has been changed.
-   * @member {boolean} bo.shared.DataPortalContext#isSelfDirty
+   * @member {boolean} bo.common.DataPortalContext#isSelfDirty
    * @readonly
    */
   get isSelfDirty() {
@@ -131,7 +131,7 @@ class DataPortalContext {
   /**
    * The fulfilling function of the promise when extension manager
    * calls a custom data portal method.
-   * @member {function} bo.shared.DataPortalContext#fulfill
+   * @member {function} bo.common.DataPortalContext#fulfill
    * @readonly
    */
   get fulfill() {
@@ -141,7 +141,7 @@ class DataPortalContext {
   /**
    * The rejecting function of the promise when extension manager
    * calls a custom data portal method.
-   * @member {function} bo.shared.DataPortalContext#reject
+   * @member {function} bo.common.DataPortalContext#reject
    * @readonly
    */
   get reject() {
@@ -157,7 +157,7 @@ class DataPortalContext {
    *
    * @param {object} [connection] - The current connection for the data store.
    * @param {boolean} [isSelfDirty] - Indicates whether the current model itself has been changed.
-   * @returns {bo.shared.DataPortalContext} The data context object itself.
+   * @returns {bo.common.DataPortalContext} The data context object itself.
    */
   setState( connection, isSelfDirty ) {
     _connection.set( this, connection || null );
@@ -185,7 +185,7 @@ class DataPortalContext {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The model has no property with the given name.
-   * @throws {@link bo.shared.ModelError Model error}: Cannot read the properties of a collection.
+   * @throws {@link bo.common.ModelError Model error}: Cannot read the properties of a collection.
    */
   getValue( propertyName ) {
     propertyName = Argument.inMethod( DataPortalContext.name, 'getValue' )
@@ -205,7 +205,7 @@ class DataPortalContext {
    *
    * @throws {@link bo.system.ArgumentError Argument error}: The name must be a non-empty string.
    * @throws {@link bo.system.ArgumentError Argument error}: The model has no property with the given name.
-   * @throws {@link bo.shared.ModelError Model error}: Cannot write the properties of a collection.
+   * @throws {@link bo.common.ModelError Model error}: Cannot write the properties of a collection.
    */
   setValue( propertyName, value ) {
     propertyName = Argument.inMethod( DataPortalContext.name, 'setValue' )

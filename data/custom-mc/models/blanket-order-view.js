@@ -3,7 +3,7 @@
 const bo = require( '../../../source/index.js' );
 const daoBuilder = require( '../dao-builder.js' );
 const Model = bo.ModelComposer;
-const F = bo.shared.PropertyFlag;
+const F = bo.common.PropertyFlag;
 const cr = bo.commonRules;
 
 const AddressView = require( './address-view.js' );

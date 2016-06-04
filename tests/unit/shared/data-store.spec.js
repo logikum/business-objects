@@ -1,4 +1,4 @@
-console.log( 'Testing shared/data-store.js...' );
+console.log( 'Testing common/data-store.js...' );
 
 function read( filename ) {
   return require( '../../../source/' + filename );

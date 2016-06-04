@@ -15,7 +15,7 @@ class MinValueRule extends ValidationRule {
   /**
    * Creates a new min-value rule object.
    *
-   * @param {bo.shared.PropertyInfo} primaryProperty - The property definition the rule relates to.
+   * @param {bo.common.PropertyInfo} primaryProperty - The property definition the rule relates to.
    * @param {number} minValue - The minimum value of the property.
    * @param {string} message - Human-readable description of the rule failure.
    * @param {number} [priority=10] - The priority of the rule.
