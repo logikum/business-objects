@@ -2,6 +2,10 @@
 
 //region Imports
 
+const ModelType = require( './model-type.js' );
+const ModelBase = require( './model-base.js' );
+const CollectionBase = require( './collection-base.js' );
+
 const ExtensionManager = require( './extension-manager.js' );
 const EventHandlerList = require( './event-handler-list.js' );
 const DataStore = require( './data-store.js' );
@@ -27,6 +31,13 @@ const DataPortalError = require( './data-portal-error.js' );
  * Contains components used by models, collections and other components.
  *
  * @namespace bo.common
+ *
+ * @property {function} ModelType - {@link bo.common.ModelType Model type}
+ *      object specifies the types of the models and collections.
+ * @property {function} ModelBase - {@link bo.common.ModelBase Model base}
+ *      serves as the base class for models.
+ * @property {function} CollectionBase - {@link bo.common.CollectionBase Collection base}
+ *      serves as the base class for collections.
  *
  * @property {function} ExtensionManager - {@link bo.common.ExtensionManager Extension manager}
  *      constructor to create new a new extension manager object.
@@ -66,6 +77,10 @@ const DataPortalError = require( './data-portal-error.js' );
  *
  */
 const index = {
+  ModelType: ModelType,
+  ModelBase: ModelBase,
+  CollectionBase: CollectionBase,
+
   ExtensionManager: ExtensionManager,
   EventHandlerList: EventHandlerList,
   DataStore: DataStore,

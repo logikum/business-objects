@@ -109,7 +109,6 @@ class Enumeration {
    * @function bo.system.Enumeration#check
    * @param {number} value - The value to check.
    * @param {string} [message] - Human-readable description of the error.
-   * @param {...*} [messageParams] - Optional interpolation parameters of the message.
    *
    * @throws {@link bo.system.EnumerationError Enumeration error}: The passed value is not an enumeration item.
    */
