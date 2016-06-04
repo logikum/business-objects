@@ -12,8 +12,8 @@ const AuthorizationAction = read( 'rules/authorization-action.js' );
 const NoAccessBehavior = read( 'rules/no-access-behavior.js' );
 const BrokenRuleList = read( 'rules/broken-rule-list.js' );
 const Text = read( 'data-types/text.js' );
-const DataStore = read( 'shared/data-store.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
+const DataStore = read( 'common/data-store.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 
 describe( 'Rule manager', () => {
 

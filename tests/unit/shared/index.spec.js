@@ -3,27 +3,27 @@ console.log( 'Testing shared/index.js...' );
 function read( filename ) {
   return require( '../../../source/' + filename );
 }
-const shared = read( 'shared/index.js' );
+const shared = read( 'common/index.js' );
 const Text = read( 'data-types/text.js' );
 
-const ExtensionManager = read( 'shared/extension-manager.js' );
-const EventHandlerList = read( 'shared/event-handler-list.js' );
-const DataStore = read( 'shared/data-store.js' );
-//const ModelState = read( 'shared/model-state.js');
-const ModelError = read( 'shared/model-error.js' );
+const ExtensionManager = read( 'common/extension-manager.js' );
+const EventHandlerList = read( 'common/event-handler-list.js' );
+const DataStore = read( 'common/data-store.js' );
+//const ModelState = read( 'common/model-state.js');
+const ModelError = read( 'common/model-error.js' );
 
-const PropertyInfo = read( 'shared/property-info.js' );
-const PropertyFlag = read( 'shared/property-flag.js' );
-const PropertyManager = read( 'shared/property-manager.js' );
-const PropertyContext = read( 'shared/property-context.js' );
-const ClientTransferContext = read( 'shared/client-transfer-context.js' );
-const DataTransferContext = read( 'shared/data-transfer-context.js' );
+const PropertyInfo = read( 'common/property-info.js' );
+const PropertyFlag = read( 'common/property-flag.js' );
+const PropertyManager = read( 'common/property-manager.js' );
+const PropertyContext = read( 'common/property-context.js' );
+const ClientTransferContext = read( 'common/client-transfer-context.js' );
+const DataTransferContext = read( 'common/data-transfer-context.js' );
 
-const DataPortalAction = read( 'shared/data-portal-action.js' );
-const DataPortalContext = read( 'shared/data-portal-context.js' );
-const DataPortalEvent = read( 'shared/data-portal-event.js' );
-const DataPortalEventArgs = read( 'shared/data-portal-event-args.js' );
-const DataPortalError = read( 'shared/data-portal-error.js' );
+const DataPortalAction = read( 'common/data-portal-action.js' );
+const DataPortalContext = read( 'common/data-portal-context.js' );
+const DataPortalEvent = read( 'common/data-portal-event.js' );
+const DataPortalEventArgs = read( 'common/data-portal-event-args.js' );
+const DataPortalError = read( 'common/data-portal-error.js' );
 
 const Enumeration = read( 'system/enumeration.js' );
 

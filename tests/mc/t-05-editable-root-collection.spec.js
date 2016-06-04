@@ -3,8 +3,8 @@
 const BlanketOrders = require( '../../data/simple-mc/blanket-orders.js' );
 const BlanketOrderChild = require( '../../data/simple-mc/blanket-order-child.js' );
 
-const DataPortalEvent = require( '../../source/shared/data-portal-event.js' );
-const EventHandlerList = require( '../../source/shared/event-handler-list.js' );
+const DataPortalEvent = require( '../../source/common/data-portal-event.js' );
+const EventHandlerList = require( '../../source/common/event-handler-list.js' );
 
 //endregion
 

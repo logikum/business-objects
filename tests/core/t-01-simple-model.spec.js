@@ -4,8 +4,8 @@ const BlanketOrder = require( '../../data/simple-core/blanket-order.js' );
 const BlanketOrderView = require( '../../data/simple-core/blanket-order-view.js' );
 const BlanketOrderList = require( '../../data/simple-core/blanket-order-list.js' );
 
-const DataPortalEvent = require( '../../source/shared/data-portal-event.js' );
-const EventHandlerList = require( '../../source/shared/event-handler-list.js' );
+const DataPortalEvent = require( '../../source/common/data-portal-event.js' );
+const EventHandlerList = require( '../../source/common/event-handler-list.js' );
 
 //endregion
 

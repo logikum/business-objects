@@ -5,7 +5,7 @@ function read ( filename ) {
 }
 const cr = read( 'common-rules/index.js' );
 
-const PropertyInfo = read( 'shared/property-info.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 const Text = read( 'data-types/text.js' );
 const AuthorizationAction = read( 'rules/authorization-action.js' );
 

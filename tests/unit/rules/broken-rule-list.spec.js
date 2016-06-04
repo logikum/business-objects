@@ -6,7 +6,7 @@ function read( filename ) {
 const BrokenRuleList = read( 'rules/broken-rule-list.js' );
 const BrokenRule = read( 'rules/broken-rule.js' );
 const RuleSeverity = read( 'rules/rule-severity.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 const Text = read( 'data-types/text.js' );
 
 describe( 'Broken rule list', () => {

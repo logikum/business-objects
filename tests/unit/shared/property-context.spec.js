@@ -3,8 +3,8 @@ console.log('Testing shared/property-context.js...');
 function read( filename ) {
   return require( '../../../source/' + filename );
 }
-const PropertyContext = read( 'shared/property-context.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
+const PropertyContext = read( 'common/property-context.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 const Text = read( 'data-types/text.js' );
 
 describe( 'Property context', () => {

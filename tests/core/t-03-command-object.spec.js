@@ -4,8 +4,8 @@ const ClearScheduleCommand = require( '../../data/simple-core/clear-schedule-com
 const RescheduleShippingCommand = require( '../../data/custom-core/models/reschedule-shipping-command.js' );
 const RescheduleShippingResult = require( '../../data/custom-core/models/reschedule-shipping-result.js' );
 
-const DataPortalEvent = require( '../../source/shared/data-portal-event.js' );
-const EventHandlerList = require( '../../source/shared/event-handler-list.js' );
+const DataPortalEvent = require( '../../source/common/data-portal-event.js' );
+const EventHandlerList = require( '../../source/common/event-handler-list.js' );
 
 //endregion
 

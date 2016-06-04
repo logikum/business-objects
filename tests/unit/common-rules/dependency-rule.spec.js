@@ -4,8 +4,8 @@ function read ( filename ) {
   return require( '../../../source/' + filename );
 }
 const DependencyRule = read( 'common-rules/dependency-rule.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
-const F = read( 'shared/property-flag.js' );
+const PropertyInfo = read( 'common/property-info.js' );
+const F = read( 'common/property-flag.js' );
 const Text = read( 'data-types/text.js' );
 const ValidationRule = read( 'rules/validation-rule.js' );
 const ValidationResult = read( 'rules/validation-result.js' );

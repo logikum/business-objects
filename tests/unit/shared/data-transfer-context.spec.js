@@ -3,8 +3,8 @@ console.log( 'Testing shared/data-transfer-context.js...' );
 function read ( filename ) {
   return require( '../../../source/' + filename );
 }
-const DataTransferContext = read( 'shared/data-transfer-context.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
+const DataTransferContext = read( 'common/data-transfer-context.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 const Text = read( 'data-types/text.js' );
 
 describe( 'Transfer context', () => {

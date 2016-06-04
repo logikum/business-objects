@@ -7,11 +7,11 @@ const Argument = require( './system/argument-check.js' );
 
 const CollectionBase = require( './common/collection-base.js' );
 const ModelType = require( './common/model-type.js' );
-const ModelError = require( './shared/model-error.js' );
-const ExtensionManager = require( './shared/extension-manager.js' );
-const EventHandlerList = require( './shared/event-handler-list.js' );
+const ModelError = require( './common/model-error.js' );
+const ExtensionManager = require( './common/extension-manager.js' );
+const EventHandlerList = require( './common/event-handler-list.js' );
 
-const ClientTransferContext = require( './shared/client-transfer-context.js' );
+const ClientTransferContext = require( './common/client-transfer-context.js' );
 
 const RuleManager = require( './rules/rule-manager.js' );
 const BrokenRuleList = require( './rules/broken-rule-list.js' );
@@ -19,11 +19,11 @@ const AuthorizationAction = require( './rules/authorization-action.js' );
 const AuthorizationContext = require( './rules/authorization-context.js' );
 const BrokenRulesResponse = require( './rules/broken-rules-response.js' );
 
-const DataPortalAction = require( './shared/data-portal-action.js' );
-const DataPortalContext = require( './shared/data-portal-context.js' );
-const DataPortalEvent = require( './shared/data-portal-event.js' );
-const DataPortalEventArgs = require( './shared/data-portal-event-args.js' );
-const DataPortalError = require( './shared/data-portal-error.js' );
+const DataPortalAction = require( './common/data-portal-action.js' );
+const DataPortalContext = require( './common/data-portal-context.js' );
+const DataPortalEvent = require( './common/data-portal-event.js' );
+const DataPortalEventArgs = require( './common/data-portal-event-args.js' );
+const DataPortalError = require( './common/data-portal-error.js' );
 
 //endregion
 

@@ -3,8 +3,8 @@ console.log( 'Testing shared/data-portal-context.js...' );
 function read( filename ) {
   return require( '../../../source/' + filename );
 }
-const DataPortalContext = read( 'shared/data-portal-context.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
+const DataPortalContext = read( 'common/data-portal-context.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 const Text = read( 'data-types/text.js' );
 const UserInfo = read( 'system/user-info.js' );
 

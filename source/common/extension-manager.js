@@ -5,7 +5,7 @@
 const config = require( './../system/configuration-reader.js' );
 const Argument = require( '../system/argument-check.js' );
 const ModelError = require( './model-error.js' );
-const DataPortalContext = require( '../shared/data-portal-context.js' );
+const DataPortalContext = require( './data-portal-context.js' );
 
 //endregion
 

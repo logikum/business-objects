@@ -30,8 +30,8 @@ const BrokenRulesOutput = read( 'rules/broken-rules-output.js' );
 const BrokenRulesResponse = read( 'rules/broken-rules-response.js' );
 
 const Text = read( 'data-types/text.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
-const DataStore = read( 'shared/data-store.js' );
+const PropertyInfo = read( 'common/property-info.js' );
+const DataStore = read( 'common/data-store.js' );
 const Enumeration = read( 'system/enumeration.js' );
 
 describe( 'Rule component index', () => {

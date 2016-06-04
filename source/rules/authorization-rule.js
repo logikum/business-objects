@@ -4,7 +4,7 @@
 
 const Argument = require( '../system/argument-check.js' );
 const ArgumentError = require( '../system/argument-error.js' );
-const PropertyInfo = require( '../shared/property-info.js' );
+const PropertyInfo = require( '../common/property-info.js' );
 const RuleBase = require( './rule-base.js' );
 const RuleSeverity = require( './rule-severity.js' );
 const AuthorizationAction = require( './authorization-action.js' );

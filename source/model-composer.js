@@ -12,14 +12,14 @@ const ReadOnlyRootCollection = require( './read-only-root-collection.js' );
 const ReadOnlyChildCollection = require( './read-only-child-collection.js' );
 const CommandObject = require( './command-object.js' );
 
-const PropertyManager = require( './shared/property-manager.js' );
+const PropertyManager = require( './common/property-manager.js' );
 const RuleManager = require( './rules/rule-manager.js' );
-const ExtensionManager = require( './shared/extension-manager.js' );
+const ExtensionManager = require( './common/extension-manager.js' );
 
 const Action = require( './rules/authorization-action.js' );
 const cr = require( './common-rules/index.js' );
 
-const PropertyInfo = require( './shared/property-info.js' );
+const PropertyInfo = require( './common/property-info.js' );
 const dt = require( './data-types/index.js' );
 
 const ComposerError = require( './system/composer-error.js' );

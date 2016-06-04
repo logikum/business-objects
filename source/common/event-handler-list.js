@@ -2,8 +2,8 @@
 
 const Argument = require( '../system/argument-check.js' );
 const DataPortalEvent = require( './data-portal-event.js' );
-const ModelBase = require( '../common/model-base.js' );
-const CollectionBase = require( '../common/collection-base.js' );
+const ModelBase = require( './model-base.js' );
+const CollectionBase = require( './collection-base.js' );
 
 /**
  * Provides methods to manage the event handlers of a business object instance.

@@ -3,7 +3,7 @@ console.log( 'Testing shared/property-flag.js...' );
 function read ( filename ) {
   return require( '../../../source/' + filename );
 }
-const PropertyFlag = read( 'shared/property-flag.js' );
+const PropertyFlag = read( 'common/property-flag.js' );
 
 describe( 'Property flag', () => {
 

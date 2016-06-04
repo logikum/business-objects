@@ -6,7 +6,7 @@ function read( filename ) {
 const RuleList = read( 'rules/rule-list.js' );
 const InformationRule = read( 'common-rules/information-rule.js' );
 const RequiredRule = read( 'common-rules/required-rule.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 const Text = read( 'data-types/text.js' );
 
 describe( 'Rule list', () => {

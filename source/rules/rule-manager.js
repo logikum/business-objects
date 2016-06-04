@@ -11,7 +11,7 @@ const AuthorizationRule = require( './authorization-rule.js' );
 const AuthorizationContext = require( './authorization-context.js' );
 const RuleSeverity = require( './rule-severity.js' );
 const NoAccessBehavior = require( './no-access-behavior.js' );
-const PropertyInfo = require( '../shared/property-info.js' );
+const PropertyInfo = require( '../common/property-info.js' );
 
 //endregion
 

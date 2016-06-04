@@ -9,7 +9,7 @@ const AuthorizationAction = read( 'rules/authorization-action.js' );
 const AuthorizationResult = read( 'rules/authorization-result.js' );
 const RuleSeverity = read( 'rules/rule-severity.js' );
 const NoAccessBehavior = read( 'rules/no-access-behavior.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 const Text = read( 'data-types/text.js' );
 
 describe( 'Authorization rule', () => {

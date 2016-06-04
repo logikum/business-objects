@@ -5,7 +5,7 @@ function read ( filename ) {
 }
 const Enum = read( 'data-types/enum.js' );
 const DataType = read( 'data-types/data-type.js' );
-const ModelState = read( 'shared/model-state.js' );
+const ModelState = read( 'common/model-state.js' );
 
 describe( 'Enum type', () => {
   const dt = new Enum( ModelState );

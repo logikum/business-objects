@@ -3,9 +3,9 @@ console.log( 'Testing shared/property-manager.js...' );
 function read( filename ) {
   return require( '../../../source/' + filename );
 }
-const PropertyManager = read( 'shared/property-manager.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
-const F = read( 'shared/property-flag.js' );
+const PropertyManager = read( 'common/property-manager.js' );
+const PropertyInfo = read( 'common/property-info.js' );
+const F = read( 'common/property-flag.js' );
 const Text = read( 'data-types/text.js' );
 const DateTime = read( 'data-types/date-time.js' );
 const CollectionBase = read( 'common/collection-base.js' );

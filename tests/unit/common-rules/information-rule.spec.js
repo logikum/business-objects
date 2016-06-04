@@ -4,7 +4,7 @@ function read ( filename ) {
   return require( '../../../source/' + filename );
 }
 const InformationRule = read( 'common-rules/information-rule.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
+const PropertyInfo = read( 'common/property-info.js' );
 const Text = read( 'data-types/text.js' );
 const ValidationRule = read( 'rules/validation-rule.js' );
 const ValidationResult = read( 'rules/validation-result.js' );

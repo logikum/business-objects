@@ -3,7 +3,7 @@
 //region Imports
 
 const Argument = require( '../system/argument-check.js' );
-const PropertyInfo = require( '../shared/property-info.js' );
+const PropertyInfo = require( '../common/property-info.js' );
 const BrokenRule = require( './broken-rule.js' );
 const BrokenRulesOutput = require( './broken-rules-output.js' );
 const RuleNotice = require( './rule-notice.js' );

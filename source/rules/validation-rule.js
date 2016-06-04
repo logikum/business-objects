@@ -6,7 +6,7 @@ const Argument = require( '../system/argument-check.js' );
 const RuleBase = require( './rule-base.js' );
 const RuleSeverity = require( './rule-severity.js' );
 const ValidationResult = require( './validation-result.js' );
-const PropertyInfo = require( '../shared/property-info.js' );
+const PropertyInfo = require( '../common/property-info.js' );
 
 //endregion
 

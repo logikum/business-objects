@@ -4,9 +4,9 @@ function read( filename ) {
   return require( '../../../source/' + filename );
 }
 const path = require( 'path' );
-const ExtensionManager = read( 'shared/extension-manager.js' );
+const ExtensionManager = read( 'common/extension-manager.js' );
 const DaoBase = read( 'data-access/dao-base.js' );
-const DataPortalContext = read( 'shared/data-portal-context.js' );
+const DataPortalContext = read( 'common/data-portal-context.js' );
 
 const DaoBuilder = require( '../../../data/custom-core/dao-builder.js' );
 

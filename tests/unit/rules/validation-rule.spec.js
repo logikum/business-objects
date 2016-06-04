@@ -7,9 +7,9 @@ const ValidationRule = read( 'rules/validation-rule.js' );
 const RuleBase = read( 'rules/rule-base.js' );
 const ValidationResult = read( 'rules/validation-result.js' );
 const RuleSeverity = read( 'rules/rule-severity.js' );
-const DataStore = read( 'shared/data-store.js' );
-const PropertyInfo = read( 'shared/property-info.js' );
-const PropertyManager = read( 'shared/property-manager.js' );
+const DataStore = read( 'common/data-store.js' );
+const PropertyInfo = read( 'common/property-info.js' );
+const PropertyManager = read( 'common/property-manager.js' );
 const Text = read( 'data-types/text.js' );
 
 describe( 'Validation rule', () => {
