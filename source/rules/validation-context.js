@@ -1,7 +1,7 @@
 'use strict';
 
 const Argument = require( '../system/argument-check.js' );
-const DataStore = require( '../shared/data-store.js' );
+const DataStore = require( '../common/data-store.js' );
 const BrokenRuleList = require( './broken-rule-list.js' );
 
 /**

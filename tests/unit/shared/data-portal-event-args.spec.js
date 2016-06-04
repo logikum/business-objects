@@ -3,10 +3,10 @@ console.log( 'Testing shared/data-portal-event-args.js...' );
 function read ( filename ) {
   return require( '../../../source/' + filename );
 }
-const DataPortalEventArgs = read( 'shared/data-portal-event-args.js' );
-const DataPortalEvent = read( 'shared/data-portal-event.js' );
-const DataPortalAction = read( 'shared/data-portal-action.js' );
-const DataPortalError = read( 'shared/data-portal-error.js' );
+const DataPortalEventArgs = read( 'common/data-portal-event-args.js' );
+const DataPortalEvent = read( 'common/data-portal-event.js' );
+const DataPortalAction = read( 'common/data-portal-action.js' );
+const DataPortalError = read( 'common/data-portal-error.js' );
 const UserInfo = read( 'system/user-info.js' );
 
 describe( 'Data portal event arguments', () => {

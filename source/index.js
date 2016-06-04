@@ -18,7 +18,7 @@ const commonRules = require( './common-rules/index.js' );
 const dataAccess = require( './data-access/index.js' );
 const dataTypes = require( './data-types/index.js' );
 const rules = require( './rules/index.js' );
-const shared = require( './shared/index.js' );
+const shared = require( './common/index.js' );
 const system = require( './system/index.js' );
 
 const configuration = require( './system/configuration-reader.js' );

@@ -3,7 +3,7 @@ console.log( 'Testing shared/data-portal-event.js...' );
 function read ( filename ) {
   return require( '../../../source/' + filename );
 }
-const DataPortalEvent = read( 'shared/data-portal-event.js' );
+const DataPortalEvent = read( 'common/data-portal-event.js' );
 
 describe( 'Data portal event enumeration', () => {
 

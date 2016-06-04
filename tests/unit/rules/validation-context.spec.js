@@ -5,7 +5,7 @@ function read( filename ) {
 }
 const ValidationContext = read( 'rules/validation-context.js' );
 const BrokenRuleList = read( 'rules/broken-rule-list.js' );
-const DataStore = read( 'shared/data-store.js' );
+const DataStore = read( 'common/data-store.js' );
 
 describe( 'Validation context', () => {
 
