@@ -104,6 +104,17 @@ function fetchChildren( data ) {
     Promise.resolve( [] );
 }
 
+function getChildBrokenRules( namespace, bro ) {
+  const items = _items.get( this );
+  items.forEach( ( item, index ) => {
+    const childBrokenRules = item.getBrokenRules( namespace );
+    if (childBrokenRules) {
+      bro.addItem( index, childBrokenRules );
+    }
+  } );
+  return bro;
+}
+
 //endregion
 
 //endregion
@@ -423,13 +434,14 @@ class ReadOnlyRootCollection extends CollectionBase {
     const brokenRules = _brokenRules.get( this );
     let bro = brokenRules.output( namespace );
 
-    const items = _items.get( this );
-    items.forEach( item => {
-      const childBrokenRules = item.getBrokenRules( namespace );
-      if (childBrokenRules)
-        bro.addChild( this.$modelName, childBrokenRules );
-    } );
+    // const items = _items.get( this );
+    // items.forEach( item => {
+    //   const childBrokenRules = item.getBrokenRules( namespace );
+    //   if (childBrokenRules)
+    //     bro.addChild( this.$modelName, childBrokenRules );
+    // } );
 
+    bro = getChildBrokenRules.call( this, namespace, bro );
     return bro.$length ? bro : null;
   }
 

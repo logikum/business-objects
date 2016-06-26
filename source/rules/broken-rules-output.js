@@ -30,6 +30,10 @@ function incrementCount() {
   _count.set( this, count );
 }
 
+function getName( index ) {
+  return ('00000' + index.toString()).slice( -5 );
+}
+
 //endregion
 
 /**
@@ -88,14 +92,15 @@ class BrokenRulesOutput {
         let total = _count.get( this );
 
         // Add notice counts of child objects.
+        const self = this;
         const childObjects = _childObjects.get( this );
-        childObjects.forEach( function ( childName ) {
+        childObjects.forEach( childName => {
           total += self[ childName ].$count;
         } );
 
         // Add notice counts of child collection items.
         const childCollections = _childCollections.get( this );
-        childCollections.forEach( function ( collectionName ) {
+        childCollections.forEach( collectionName => {
           const collection = self[ collectionName ];
           for (const index in collection) {
             if (collection.hasOwnProperty( index ))
@@ -138,7 +143,8 @@ class BrokenRulesOutput {
   }
 
   /**
-   * Adds a child response object to the response object.
+   * Adds a child response object to the response object
+   * when the child object is not a collection.
    *
    * @param {string} propertyName - The name of the property.
    * @param {bo.rules.BrokenRulesOutput} output - The response object of a child property.
@@ -162,7 +168,35 @@ class BrokenRulesOutput {
   }
 
   /**
-   * Adds child response objects to the response object.
+   * Adds child response objects to the response object
+   * when the child object belongs to a root collection.
+   *
+   * @param {number} index - The position of the child object in the collection.
+   * @param {bo.rules.BrokenRulesOutput} output - The response object of a child property.
+   *
+   * @throws {@link bo.system.ArgumentError Argument error}: The index must be an integer.
+   * @throws {@link bo.system.ArgumentError Argument error}: The output must be a BrokenRulesOutput object.
+   */
+  addItem( index, output ) {
+    const check = Argument.inMethod( this.constructor.name, 'addChild' );
+
+    index = check( index ).forMandatory( 'index' ).asInteger();
+    output = check( output ).forMandatory( 'output' ).asType( BrokenRulesOutput );
+
+    const indexName = getName( index );
+    output.$index = index;
+    this[ indexName ] = output;
+
+    const childObjects = _childObjects.get( this );
+    childObjects.push( indexName );
+    _childObjects.set( this, childObjects );
+
+    incrementLength.call( this );
+  }
+
+  /**
+   * Adds child response objects to the response object
+   * when the child object belongs to a child collection.
    *
    * @param {string} propertyName - The name of the property.
    * @param {Array.<bo.rules.BrokenRulesOutput>} outputs - The response objects of a child collection property.
@@ -179,8 +213,7 @@ class BrokenRulesOutput {
 
     let list = {};
     outputs.forEach( ( output, index ) => {
-      list[ ('00000' + index.toString()).slice( -5 ) ] = output;
-      //list[index.toString()] = output;
+      list[ getName( output.$index ) ] = output;
     } );
     this[ propertyName ] = list;
 

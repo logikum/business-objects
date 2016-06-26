@@ -78,6 +78,14 @@ class BrokenRulesResponse {
      */
     this.count = brokenRules.$count;
 
+    /**
+     * The count of properties that have broken rules.
+     * @member {number} bo.rules.BrokenRulesResponse#length
+     * @default
+     * @read-only
+     */
+    this.length = brokenRules.$length;
+
     // Immutable object.
     Object.freeze( this );
   }

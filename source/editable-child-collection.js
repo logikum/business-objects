@@ -338,10 +338,12 @@ class EditableChildCollection extends CollectionBase {
    */
   getBrokenRules(namespace) {
     const bro = [];
-    this.forEach(function (item) {
-      const childBrokenRules = item.getBrokenRules(namespace);
-      if (childBrokenRules)
-        bro.push(childBrokenRules);
+    this.forEach( ( item, index) => {
+      let childBrokenRules = item.getBrokenRules(namespace);
+      if (childBrokenRules) {
+        childBrokenRules.$index = index;
+        bro.push( childBrokenRules );
+      }
     });
     return bro.length ? bro : null;
   }

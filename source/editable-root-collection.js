@@ -238,6 +238,17 @@ function checkChildRules() {
   } );
 }
 
+function getChildBrokenRules( namespace, bro ) {
+  const items = _items.get( this );
+  items.forEach( ( item, index ) => {
+    const childBrokenRules = item.getBrokenRules( namespace );
+    if (childBrokenRules) {
+      bro.addItem( index, childBrokenRules );
+    }
+  } );
+  return bro;
+}
+
 //endregion
 
 //endregion
@@ -1062,14 +1073,8 @@ class EditableRootCollection extends CollectionBase {
    */
   getBrokenRules( namespace ) {
     const brokenRules = _brokenRules.get( this );
-    const bro = brokenRules.output( namespace );
-
-    this.forEach( item => {
-      const childBrokenRules = item.getBrokenRules( namespace );
-      if (childBrokenRules)
-        bro.addChild( this.$modelName, childBrokenRules );
-    } );
-
+    let bro = brokenRules.output( namespace );
+    bro = getChildBrokenRules.call( this, namespace, bro );
     return bro.$length ? bro : null;
   };
 

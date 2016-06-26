@@ -212,10 +212,12 @@ class ReadOnlyChildCollection extends CollectionBase {
    */
   getBrokenRules( namespace ) {
     const bro = [];
-    this.forEach( item => {
+    this.forEach( ( item, index ) => {
       const childBrokenRules = item.getBrokenRules( namespace );
-      if (childBrokenRules)
+      if (childBrokenRules) {
+        childBrokenRules.$index = index;
         bro.push( childBrokenRules );
+      }
     } );
     return bro.length ? bro : null;
   }

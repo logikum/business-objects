@@ -335,7 +335,7 @@ function checkChildRules() {
 
 function getChildBrokenRules( namespace, bro ) {
   const properties = _properties.get( this );
-  properties.children().forEach( property => {
+  properties.children().forEach( ( property, index ) => {
     const child = getPropertyValue.call( this, property );
     const childBrokenRules = child.getBrokenRules( namespace );
     if (childBrokenRules) {
