@@ -251,6 +251,41 @@ function getChildBrokenRules( namespace, bro ) {
 
 //endregion
 
+//region Initialization
+
+function initialize( name, itemType, rules, extensions, eventHandlers ) {
+
+  eventHandlers = Argument.inConstructor( name )
+    .check( eventHandlers ).forOptional( 'eventHandlers' ).asType( EventHandlerList );
+
+  // Set up business rules.
+  rules.initialize( config.noAccessBehavior );
+
+  // Set up event handlers.
+  if (eventHandlers)
+    eventHandlers.setup( this );
+
+  // Initialize instance state.
+  _itemType.set( this, itemType );
+  _rules.set( this, rules );
+  _extensions.set( this, extensions );
+  _eventHandlers.set( this, eventHandlers );
+  _state.set( this, null );
+  _isDirty.set( this, false );
+  _isValidated.set( this, false );
+  _brokenRules.set( this, new BrokenRuleList( name ) );
+  _dataContext.set( this, null );
+  _items.set( this, [] );
+
+  // Get data access object.
+  _dao.set( this, extensions.getDataAccessObject( name ) );
+
+  // Immutable definition object.
+  Object.freeze( this );
+}
+
+//endregion
+
 //endregion
 
 //region Data portal methods
@@ -626,23 +661,6 @@ class EditableRootCollection extends CollectionBase {
   constructor( name, itemType, rules, extensions, eventHandlers ) {
     super();
 
-    eventHandlers = Argument.inConstructor( name )
-      .check( eventHandlers ).forOptional( 'eventHandlers' ).asType( EventHandlerList );
-
-    _itemType.set( this, itemType );
-    _rules.set( this, rules );
-    _extensions.set( this, extensions );
-    _eventHandlers.set( this, eventHandlers );
-    _state.set( this, null );
-    _isDirty.set( this, false );
-    _isValidated.set( this, false );
-    _brokenRules.set( this, new BrokenRuleList( name ) );
-    _dataContext.set( this, null );
-    _items.set( this, [] );
-
-    // Get data access object.
-    _dao.set( this, extensions.getDataAccessObject( name ) );
-
     /**
      * The name of the model.
      *
@@ -651,15 +669,8 @@ class EditableRootCollection extends CollectionBase {
      */
     this.$modelName = name;
 
-    // Set up business rules.
-    rules.initialize( config.noAccessBehavior );
-
-    // Set up event handlers.
-    if (eventHandlers)
-      eventHandlers.setup( this );
-
-    // Immutable definition object.
-    Object.freeze( this );
+    // Initialize the instance.
+    initialize.call( this, name, itemType, rules, extensions, eventHandlers );
   }
 
   //endregion

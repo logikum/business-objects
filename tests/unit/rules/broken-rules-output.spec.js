@@ -49,6 +49,17 @@ describe( 'Broken rules output', () => {
     expect( bro.$count ).toBe( 1 );
   } );
 
+  it( 'has $index property', () => {
+
+    const bro = new BrokenRulesOutput();
+
+    expect( bro.$index ).toBeNull();
+
+    bro.$index = 1001;
+
+    expect( bro.$index ).toBe( 1001 );
+  } );
+
   it( 'add method expects two non-empty string and a severity argument', () => {
 
     const bro = new BrokenRulesOutput();
@@ -110,10 +121,35 @@ describe( 'Broken rules output', () => {
     expect( add08 ).toThrow();
   } );
 
+  it( 'addItem method expects two arguments', () => {
+
+    const bro = new BrokenRulesOutput();
+    const broChild = new BrokenRulesOutput();
+
+    const add01 = function () { bro.addItem(); };
+    const add02 = function () { bro.addItem( 777 ); };
+    const add03 = function () { bro.addItem( 10, 20 ); };
+    const add04 = function () { bro.addItem( 'property', broChild ); };
+    const add05 = function () { bro.addItem( broChild ); };
+    const add06 = function () { bro.addItem( broChild, 128 ); };
+    const add07 = function () { bro.addItem( '', broChild ); };
+    const add08 = function () { bro.addItem( 1, broChild ); };
+
+    expect( add01 ).toThrow();
+    expect( add02 ).toThrow();
+    expect( add03 ).toThrow();
+    expect( add04 ).toThrow();
+    expect( add05 ).toThrow();
+    expect( add06 ).toThrow();
+    expect( add07 ).toThrow();
+    expect( add08 ).not.toThrow();
+  } );
+
   it( 'addChildren method expects two arguments', () => {
 
     const bro = new BrokenRulesOutput();
     const broChild = new BrokenRulesOutput();
+    broChild.$index = 7;
     const broChildren = [ broChild ];
 
     const add01 = function () { bro.addChildren(); };

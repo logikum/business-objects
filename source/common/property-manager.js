@@ -78,6 +78,10 @@ class PropertyManager {
 
   //region Properties
 
+  /**
+   * The name of the model.
+   * @member {string} bo.common.PropertyManager#modelName
+   */
   get modelName() {
     return _modelName.get( this );
   }

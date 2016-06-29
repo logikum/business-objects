@@ -145,8 +145,8 @@ describe( 'Business object validation for', () => {
           expect( brr.name ).toBe( 'BrokenRules' );
           expect( brr.status ).toBe( 422 );
           expect( brr.message ).toBe( 'Review your data and correct them where necessary!' );
-          expect( brr.count ).toBe( 5 );
           expect( brr.length ).toBe( 3 );
+          expect( brr.count ).toBe( 5 );
           expect( brr.data ).toEqual( bro );
 
           console.log( '  > Broken rules response\n' + JSON.stringify( brr ) );
@@ -333,8 +333,8 @@ describe( 'Business object validation for', () => {
         expect( brr.name ).toBe( 'BrokenRules' );
         expect( brr.status ).toBe( 422 );
         expect( brr.message ).toBe( 'Review your data and correct them where necessary!' );
-        expect( brr.count ).toBe( 6 );
         expect( brr.length ).toBe( 1 );
+        expect( brr.count ).toBe( 6 );
         expect( brr.data ).toEqual( bro );
 
         console.log( '  > Broken rules response\n' + JSON.stringify( brr ) );
@@ -404,8 +404,8 @@ describe( 'Business object validation for', () => {
         expect( brr.name ).toBe( 'BrokenRules' );
         expect( brr.status ).toBe( 422 );
         expect( brr.message ).toBe( 'Review your data and correct them where necessary!' );
-        expect( brr.count ).toBe( 5 );
         expect( brr.length ).toBe( 3 );
+        expect( brr.count ).toBe( 5 );
         expect( brr.data ).toEqual( bro );
 
         console.log( '  > Broken rules response\n' + JSON.stringify( brr ) );
@@ -481,8 +481,8 @@ describe( 'Business object validation for', () => {
         expect( brr.name ).toBe( 'BrokenRules' );
         expect( brr.status ).toBe( 422 );
         expect( brr.message ).toBe( 'Review your data and correct them where necessary!' );
-        expect( brr.count ).toBe( 6 );
         expect( brr.length ).toBe( 1 );
+        expect( brr.count ).toBe( 6 );
         expect( brr.data ).toEqual( bro );
 
         console.log( '  > Broken rules response\n' + JSON.stringify( brr ) );

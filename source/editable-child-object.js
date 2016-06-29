@@ -406,6 +406,76 @@ function getPropertyContext( primaryProperty ) {
   return propertyContext.with( primaryProperty );
 }
 
+function initialize( name, properties, rules, extensions, parent, eventHandlers ) {
+  const check = Argument.inConstructor( name );
+
+  // Verify the model type of the parent model.
+  parent = check( parent ).for( 'parent' ).asModelType( [
+    ModelType.EditableRootCollection,
+    ModelType.EditableChildCollection,
+    ModelType.EditableRootObject,
+    ModelType.EditableChildObject
+  ] );
+
+  eventHandlers = check( eventHandlers ).forOptional( 'eventHandlers' ).asType( EventHandlerList );
+
+  // Set up business rules.
+  rules.initialize( config.noAccessBehavior );
+
+  // Set up event handlers.
+  if (eventHandlers)
+    eventHandlers.setup( this );
+
+  // Create properties.
+  const store = new DataStore();
+  properties.map( property => {
+
+    const isNormal = property.type instanceof DataType; // Not child element.
+    if (isNormal) {
+      // Initialize normal property.
+      store.initValue( property );
+      // Add data type check.
+      rules.add( new DataTypeRule( property ) );
+    }
+    else
+    // Create child item/collection.
+      store.initValue( property, property.type.empty( this, eventHandlers ) );
+
+    // Create property.
+    Object.defineProperty( this, property.name, {
+      get: () => {
+        return readPropertyValue.call( this, property );
+      },
+      set: value => {
+        if (!isNormal || property.isReadOnly)
+          throw new ModelError( 'readOnly', name, property.name );
+        writePropertyValue.call( this, property, value );
+      },
+      enumerable: true
+    } );
+  } );
+
+  // Initialize instance state.
+  _properties.set( this, properties );
+  _rules.set( this, rules );
+  _extensions.set( this, extensions );
+  _parent.set( this, parent );
+  _eventHandlers.set( this, eventHandlers );
+  _store.set( this, store );
+  _propertyContext.set( this, null );
+  _state.set( this, null );
+  _isDirty.set( this, false );
+  _isValidated.set( this, false );
+  _brokenRules.set( this, new BrokenRuleList( name ) );
+  _dataContext.set( this, null );
+
+  // Get data access object.
+  _dao.set( this, extensions.getDataAccessObject( name ) );
+
+  // Immutable definition object.
+  Object.freeze( this );
+}
+
 //endregion
 
 //endregion
@@ -808,33 +878,6 @@ class EditableChildObject extends ModelBase {
    */
   constructor( name, properties, rules, extensions, parent, eventHandlers ) {
     super();
-    const check = Argument.inConstructor( name );
-
-    // Verify the model type of the parent model.
-    parent = check( parent ).for( 'parent' ).asModelType( [
-      ModelType.EditableRootCollection,
-      ModelType.EditableChildCollection,
-      ModelType.EditableRootObject,
-      ModelType.EditableChildObject
-    ] );
-
-    eventHandlers = check( eventHandlers ).forOptional( 'eventHandlers' ).asType( EventHandlerList );
-
-    _properties.set( this, properties );
-    // _rules.set( this, rules );
-    _extensions.set( this, extensions );
-    _parent.set( this, parent );
-    _eventHandlers.set( this, eventHandlers );
-    // _store.set( this, store );
-    _propertyContext.set( this, null );
-    _state.set( this, null );
-    _isDirty.set( this, false );
-    _isValidated.set( this, false );
-    _brokenRules.set( this, new BrokenRuleList( name ) );
-    _dataContext.set( this, null );
-
-    // Get data access object.
-    _dao.set( this, extensions.getDataAccessObject( name ) );
 
     /**
      * The name of the model. However, it can be hidden by a model property with the same name.
@@ -844,51 +887,8 @@ class EditableChildObject extends ModelBase {
      */
     this.$modelName = name;
 
-    // Set up business rules.
-    rules.initialize( config.noAccessBehavior );
-
-    // Set up event handlers.
-    if (eventHandlers)
-      eventHandlers.setup( this );
-
-    const store = new DataStore();
-
-    //region Create properties
-
-    properties.map( property => {
-
-      const isNormal = property.type instanceof DataType; // Not child element.
-      if (isNormal) {
-        // Initialize normal property.
-        store.initValue( property );
-        // Add data type check.
-        rules.add( new DataTypeRule( property ) );
-      }
-      else
-      // Create child item/collection.
-        store.initValue( property, property.type.empty( this, eventHandlers ) );
-
-      // Create property.
-      Object.defineProperty( this, property.name, {
-        get: () => {
-          return readPropertyValue.call( this, property );
-        },
-        set: value => {
-          if (!isNormal || property.isReadOnly)
-            throw new ModelError( 'readOnly', name, property.name );
-          writePropertyValue.call( this, property, value );
-        },
-        enumerable: true
-      } );
-    } );
-
-    //endregion
-
-    _store.set( this, store );
-    _rules.set( this, rules );
-
-    // Immutable definition object.
-    Object.freeze( this );
+    // Initialize the instance.
+    initialize.call( this, name, properties, rules, extensions, parent, eventHandlers );
   }
 
   //endregion

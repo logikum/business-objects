@@ -11,6 +11,7 @@ const RuleNotice = require( './rule-notice.js' );
 
 const _length = new WeakMap();
 const _count = new WeakMap();
+const _index = new WeakMap();
 const _childObjects = new WeakMap();
 const _childCollections = new WeakMap();
 
@@ -31,6 +32,8 @@ function incrementCount() {
 }
 
 function getName( index ) {
+  if (index === undefined || index === null || typeof index !== 'number')
+    index = 0;
   return ('00000' + index.toString()).slice( -5 );
 }
 
@@ -67,51 +70,64 @@ class BrokenRulesOutput {
 
     _length.set( this, 0 );
     _count.set( this, 0 );
+    _index.set( this, null );
     _childObjects.set( this, [] );
     _childCollections.set( this, [] );
+  }
 
-    /**
-     * Returns the count of properties that have broken rules.
-     * @member {number} bo.rules.BrokenRulesOutput#$length
-     * @readonly
-     */
-    Object.defineProperty( this, '$length', {
-      get: function () {
-        return _length.get( this );
-      },
-      enumerable: false
+  //endregion
+
+  //region Properties
+
+  /**
+   * Returns the count of properties that have broken rules.
+   * @member {number} bo.rules.BrokenRulesOutput#$length
+   * @readonly
+   */
+  get $length() {
+    return _length.get( this );
+  }
+
+  /**
+   * Returns the count of broken rules.
+   * @member {number} bo.rules.BrokenRulesOutput#$count
+   * @readonly
+   */
+  get $count() {
+    let total = _count.get( this );
+
+    // Add notice counts of child objects.
+    const self = this;
+    const childObjects = _childObjects.get( this );
+    childObjects.forEach( childName => {
+      total += self[ childName ].$count;
     } );
 
-    /**
-     * Returns the count of broken rules.
-     * @member {number} bo.rules.BrokenRulesOutput#$count
-     * @readonly
-     */
-    Object.defineProperty( this, '$count', {
-      get: function () {
-        let total = _count.get( this );
-
-        // Add notice counts of child objects.
-        const self = this;
-        const childObjects = _childObjects.get( this );
-        childObjects.forEach( childName => {
-          total += self[ childName ].$count;
-        } );
-
-        // Add notice counts of child collection items.
-        const childCollections = _childCollections.get( this );
-        childCollections.forEach( collectionName => {
-          const collection = self[ collectionName ];
-          for (const index in collection) {
-            if (collection.hasOwnProperty( index ))
-              total += collection[ index ].$count;
-          }
-        } );
-
-        return total;
-      },
-      enumerable: false
+    // Add notice counts of child collection items.
+    const childCollections = _childCollections.get( this );
+    childCollections.forEach( collectionName => {
+      const collection = self[ collectionName ];
+      for (const index in collection) {
+        if (collection.hasOwnProperty( index ))
+          total += collection[ index ].$count;
+      }
     } );
+
+    return total;
+  }
+
+  /**
+   * The position of the model instance in the collection.
+   * @member {number} bo.rules.BrokenRulesOutput#$index
+   */
+  get $index() {
+    return _index.get( this );
+  }
+
+  set $index( value ) {
+    const index = Argument.inProperty( BrokenRulesOutput.$index, '$index' )
+      .check( value ).forOptional().asInteger();
+    _index.set( this, index );
   }
 
   //endregion
@@ -212,7 +228,7 @@ class BrokenRulesOutput {
     outputs = check( outputs ).forMandatory( 'outputs' ).asArray( BrokenRulesOutput );
 
     let list = {};
-    outputs.forEach( ( output, index ) => {
+    outputs.forEach( ( output ) => {
       list[ getName( output.$index ) ] = output;
     } );
     this[ propertyName ] = list;
