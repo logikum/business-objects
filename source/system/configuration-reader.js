@@ -8,6 +8,7 @@ const ConfigurationError = require( './configuration-error.js' );
 const ConnectionManagerBase = require( '../data-access/connection-manager-base.js' );
 const daoBuilder = require( '../data-access/dao-builder.js' );
 const NoAccessBehavior = require( '../rules/no-access-behavior.js' );
+const BrokenRulesResponse = require( '../rules/broken-rules-response.js' );
 const UserInfo = require( './user-info.js' );
 const Utility = require( './utility.js' );
 
@@ -22,6 +23,7 @@ let _userReader = null;
 let _getLocale = null;
 let _pathOfLocales = null;
 let _noAccessBehavior = NoAccessBehavior.throwError;
+let _brokenRulesResponse = null;
 
 //endregion
 
@@ -31,6 +33,8 @@ let _noAccessBehavior = NoAccessBehavior.throwError;
  * @name bo.system.configuration
  */
 class Configuration {
+
+  //region Properties
 
   /**
    * The connection manager instance.
@@ -125,6 +129,20 @@ class Configuration {
   }
 
   /**
+   * The constructor of the response object for a broken rules request.
+   * The default value is {@link bo.rules.BrokenRulesResponse}.
+   * @member {bo.rules.BrokenRulesResponse} bo.system.configuration.brokenRulesResponse
+   * @readonly
+   * @static
+   * @default bo.rules.BrokenRulesResponse
+   */
+  static get brokenRulesResponse() {
+    return _brokenRulesResponse || BrokenRulesResponse;
+  }
+
+  //endregion
+
+  /**
    * Reads the configuration of business objects.
    *
    * @function bo.system.configuration.initialize
@@ -186,6 +204,11 @@ class Configuration {
         _noAccessBehavior = Utility.isEnumMember(
           cfg.noAccessBehavior, NoAccessBehavior, 'noAccessBehavior', ConfigurationError
         );
+      }
+
+      // Evaluate the broken rules response.
+      if (cfg.brokenRulesResponse) {
+        _brokenRulesResponse = Utility.getFunction( cfg.brokenRulesResponse, 'brokenRulesResponse', ConfigurationError );
       }
     }
     _isInitialized = true;

@@ -24,7 +24,6 @@ const DataTypeRule = require( './rules/data-type-rule.js' );
 const BrokenRuleList = require( './rules/broken-rule-list.js' );
 const AuthorizationAction = require( './rules/authorization-action.js' );
 const AuthorizationContext = require( './rules/authorization-context.js' );
-const BrokenRulesResponse = require( './rules/broken-rules-response.js' );
 
 const DataPortalAction = require( './common/data-portal-action.js' );
 const DataPortalContext = require( './common/data-portal-context.js' );
@@ -1280,11 +1279,11 @@ class EditableRootObject extends ModelBase {
    * @function EditableRootObject#getResponse
    * @param {string} [message] - Human-readable description of the reason of the failure.
    * @param {string} [namespace] - The namespace of the message keys when messages are localizable.
-   * @returns {bo.rules.BrokenRulesResponse} The broken rules response to send to the client.
+   * @returns {*|bo.rules.BrokenRulesResponse} The broken rules response to send to the client.
    */
   getResponse( message, namespace ) {
     const output = this.getBrokenRules( namespace );
-    return output ? new BrokenRulesResponse( output, message ) : null;
+    return output ? new config.brokenRulesResponse( output, message ) : null;
   }
 
   //endregion

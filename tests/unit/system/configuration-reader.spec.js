@@ -6,6 +6,8 @@ function read( filename ) {
 
 const configuration = read( 'system/configuration-reader.js' );
 const NoAccessBehavior = read( 'rules/no-access-behavior.js' );
+const BrokenRulesOutput = read( 'rules/broken-rules-output.js' );
+const BrokenRulesResponse = read( 'rules/broken-rules-response.js' );
 const daoBuilder = read( 'data-access/dao-builder.js' );
 
 const ConnectionManager = require( '../../../data/connection-manager.js' );
@@ -95,6 +97,20 @@ describe( 'Business objects configuration reader object', () => {
     const locale = configuration.getLocale();
 
     expect( locale ).toBe( 'hu-HU' );
+  } );
+
+  it( 'has a broken rules response method', () => {
+
+    expect( configuration.brokenRulesResponse ).toEqual( jasmine.any( Function ) );
+
+    const bro = new BrokenRulesOutput();
+    const brr = new configuration.brokenRulesResponse( bro, 'Error occurred!' );
+
+    expect( brr ).toEqual( jasmine.any( BrokenRulesResponse ) );
+    expect( brr.name ).toBe( 'BrokenRules' );
+    expect( brr.status ).toBe( 422 );
+    expect( brr.message ).toBe( 'Error occurred!' );
+    expect( brr.data ).toBe( bro );
   } );
 
   it( 'is immutable', () => {
