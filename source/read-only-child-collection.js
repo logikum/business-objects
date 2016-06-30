@@ -19,6 +19,42 @@ const _items = new WeakMap();
 
 //endregion
 
+//region Helper methods
+
+function initialize( name, itemType, parent, eventHandlers ) {
+
+  // Verify the model type of the parent model.
+  parent = Argument.inConstructor( name )
+    .check( parent ).for( 'parent' ).asModelType( [
+      ModelType.ReadOnlyRootObject,
+      ModelType.ReadOnlyChildObject,
+      ModelType.CommandObject
+    ] );
+
+  // Resolve tree reference.
+  if (typeof itemType === 'string') {
+    if (itemType === parent.$modelName)
+      itemType = parent.constructor;
+    else
+      throw new ModelError( 'invalidTree', itemType, parent.$modelName );
+  }
+
+  // Set up event handlers.
+  if (eventHandlers)
+    eventHandlers.setup( this );
+
+  // Initialize instance state.
+  _itemType.set( this, itemType );
+  _parent.set( this, parent );
+  _eventHandlers.set( this, eventHandlers );
+  _items.set( this, [] );
+
+  // Immutable definition object.
+  Object.freeze( this );
+}
+
+//endregion
+
 /**
  * Represents the definition of a read-only child collection.
  *
@@ -51,27 +87,6 @@ class ReadOnlyChildCollection extends CollectionBase {
   constructor( name, itemType, parent, eventHandlers ) {
     super();
 
-    // Verify the model type of the parent model.
-    parent = Argument.inConstructor( name )
-      .check( parent ).for( 'parent' ).asModelType( [
-        ModelType.ReadOnlyRootObject,
-        ModelType.ReadOnlyChildObject,
-        ModelType.CommandObject
-      ] );
-
-    // Resolve tree reference.
-    if (typeof itemType === 'string') {
-      if (itemType === parent.$modelName)
-        itemType = parent.constructor;
-      else
-        throw new ModelError( 'invalidTree', itemType, parent.$modelName );
-    }
-
-    _itemType.set( this, itemType );
-    _parent.set( this, parent );
-    _eventHandlers.set( this, eventHandlers );
-    _items.set( this, [] );
-
     /**
      * The name of the model.
      *
@@ -80,12 +95,8 @@ class ReadOnlyChildCollection extends CollectionBase {
      */
     this.$modelName = name;
 
-    // Set up event handlers.
-    if (eventHandlers)
-      eventHandlers.setup( this );
-
-    // Immutable definition object.
-    Object.freeze( this );
+    // Initialize the instance.
+    initialize.call( this, name, itemType, parent, eventHandlers );
   }
 
   //endregion

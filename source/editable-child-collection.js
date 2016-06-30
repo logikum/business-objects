@@ -32,10 +32,6 @@ function initialize( name, itemType, parent, eventHandlers ) {
       ModelType.EditableChildObject
     ]);
 
-  // Set up event handlers.
-  if (eventHandlers)
-    eventHandlers.setup( this );
-
   // Resolve tree reference.
   if (typeof itemType === 'string') {
     if (itemType === parent.$modelName)
@@ -43,6 +39,10 @@ function initialize( name, itemType, parent, eventHandlers ) {
     else
       throw new ModelError('invalidTree', itemType, parent.$modelName);
   }
+
+  // Set up event handlers.
+  if (eventHandlers)
+    eventHandlers.setup( this );
 
   // Initialize instance state.
   _itemType.set( this, itemType );

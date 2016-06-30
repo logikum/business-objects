@@ -208,6 +208,68 @@ function readPropertyValue( property ) {
     return null;
 }
 
+function initialize( name, properties, rules, extensions, parent, eventHandlers ) {
+  const check = Argument.inConstructor( name );
+
+  // Verify the model type of the parent model.
+  parent = check( parent ).for( 'parent' ).asModelType( [
+    ModelType.ReadOnlyRootCollection,
+    ModelType.ReadOnlyChildCollection,
+    ModelType.ReadOnlyRootObject,
+    ModelType.ReadOnlyChildObject,
+    ModelType.CommandObject
+  ] );
+
+  eventHandlers = check( eventHandlers ).forOptional( 'eventHandlers' ).asType( EventHandlerList );
+
+  // Set up business rules.
+  rules.initialize( config.noAccessBehavior );
+
+  // Set up event handlers.
+  if (eventHandlers)
+    eventHandlers.setup( this );
+
+  // Create properties.
+  const store = new DataStore();
+  properties.map( property => {
+
+    if (property.type instanceof DataType) {
+      // Initialize normal property.
+      store.initValue( property );
+      // Add data type check.
+      rules.add( new DataTypeRule( property ) );
+    }
+    else
+    // Create child item/collection.
+      store.initValue( property, property.type.empty( this, eventHandlers ) );
+
+    Object.defineProperty( this, property.name, {
+      get: function () {
+        return readPropertyValue.call( this, property );
+      },
+      set: function ( value ) {
+        throw new ModelError( 'readOnly', name, property.name );
+      },
+      enumerable: true
+    } );
+  } );
+
+  // Initialize instance state.
+  _properties.set( this, properties );
+  _rules.set( this, rules );
+  _extensions.set( this, extensions );
+  _parent.set( this, parent );
+  _eventHandlers.set( this, eventHandlers );
+  _store.set( this, store );
+  _propertyContext.set( this, null );
+  _isValidated.set( this, false );
+  _brokenRules.set( this, new BrokenRuleList( name ) );
+  _dataContext.set( this, null );
+
+  // Immutable definition object.
+  Object.freeze( this );
+}
+
 //endregion
 
 //endregion
@@ -339,29 +401,6 @@ class ReadOnlyChildObject extends ModelBase {
    */
   constructor( name, properties, rules, extensions, parent, eventHandlers ) {
     super();
-    const check = Argument.inConstructor( name );
-
-    // Verify the model type of the parent model.
-    parent = check( parent ).for( 'parent' ).asModelType( [
-      ModelType.ReadOnlyRootCollection,
-      ModelType.ReadOnlyChildCollection,
-      ModelType.ReadOnlyRootObject,
-      ModelType.ReadOnlyChildObject,
-      ModelType.CommandObject
-    ] );
-
-    eventHandlers = check( eventHandlers ).forOptional( 'eventHandlers' ).asType( EventHandlerList );
-
-    _properties.set( this, properties );
-    // _rules.set( this, rules );
-    _extensions.set( this, extensions );
-    _parent.set( this, parent );
-    _eventHandlers.set( this, eventHandlers );
-    // _store.set( this, store );
-    _propertyContext.set( this, null );
-    _isValidated.set( this, false );
-    _brokenRules.set( this, new BrokenRuleList( name ) );
-    _dataContext.set( this, null );
 
     /**
      * The name of the model. However, it can be hidden by a model property with the same name.
@@ -371,47 +410,8 @@ class ReadOnlyChildObject extends ModelBase {
      */
     this.$modelName = name;
 
-    // Set up business rules.
-    rules.initialize( config.noAccessBehavior );
-
-    // Set up event handlers.
-    if (eventHandlers)
-      eventHandlers.setup( this );
-
-    const store = new DataStore();
-
-    //region Create properties
-
-    properties.map( property => {
-
-      if (property.type instanceof DataType) {
-        // Initialize normal property.
-        store.initValue( property );
-        // Add data type check.
-        rules.add( new DataTypeRule( property ) );
-      }
-      else
-      // Create child item/collection.
-        store.initValue( property, property.type.empty( this, eventHandlers ) );
-
-      Object.defineProperty( this, property.name, {
-        get: function () {
-          return readPropertyValue.call( this, property );
-        },
-        set: function ( value ) {
-          throw new ModelError( 'readOnly', name, property.name );
-        },
-        enumerable: true
-      } );
-    } );
-
-    //endregion
-
-    _store.set( this, store );
-    _rules.set( this, rules );
-
-    // Immutable definition object.
-    Object.freeze( this );
+    // Initialize the instance.
+    initialize.call( this, name, properties, rules, extensions, parent, eventHandlers );
   }
 
   //endregion
