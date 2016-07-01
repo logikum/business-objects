@@ -1,11 +1,25 @@
 # Release History
 
+* __v2.0.0__  
+  2016.07.01.  
+  The library is rewritten in EcmaScript 2015 (JavaScript 6).  
+  Requires Node.js v6.0.0 or newer.  
+  Improving broken rules handling.
+
+* __v1.5.1__  
+  2016.05.06.  
+  Fixing a bug in localization.
+
 * __v1.5.0__  
   2016.05.03.  
   The library uses promises instead of callback functions.  
   Synchronous models are removed.  
   Requires Node.js v4.2.0 (LTS) or newer.
   
+* __v1.2.3__  
+  2016.05.06.  
+  Fixing a bug in localization.
+
 * __v1.2.2__  
   2016.04.21.  
   Fixing a bug in data portal update methods.
