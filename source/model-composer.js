@@ -1083,7 +1083,7 @@ class ModelComposer {
 
   /**
    * Adds an authorization rule to the business object that determines
-   * whether the user can execute a custom fetch or a custom command.
+   * whether the user can execute a custom fetch or a custom execute command.
    * See {@link bo.commonRules common rules} to find authorization ones.
    *
    *    The function is valid for the following model types:
