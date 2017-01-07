@@ -1,5 +1,9 @@
 # Release History
 
+* __v2.0.1__  
+  2017.01.07.  
+  Fixing a bug in dataCreate method of editable child object.
+  
 * __v2.0.0__  
   2016.07.01.  
   The library is rewritten in EcmaScript 2015 (JavaScript 6).  

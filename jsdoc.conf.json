@@ -5,9 +5,9 @@
   "plugins": ["plugins/markdown"],
 
   "templates": {
-    "systemName"            : "business-objects v2.0.0",
+    "systemName"            : "business-objects v2.0.1",
     "footer"                : "<center>If you find bugs or have feature requests, please <a href=https://github.com/logikum/business-objects/issues>let us know</a>.</center>",
-    "copyright"             : "JavaScript business objects ♦ Copyright © 2014-2016 Logikum, Ltd.",
+    "copyright"             : "JavaScript business objects ♦ Copyright © 2014-2017 Logikum, Ltd.",
     "navType"               : "vertical",
     "theme"                 : "united",
     "linenums"              : true,

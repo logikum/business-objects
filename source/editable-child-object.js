@@ -540,7 +540,7 @@ function data_create( connection ) {
           // Execute creation.
           return extensions.dataCreate ?
             // *** Custom creation.
-            extensions.dataCreate( getDataContext.call( self, connection ) ) :
+            extensions.$runMethod( 'create', self, getDataContext.call( self, connection ) ) :
             // *** Standard creation.
             dao.$runMethod( 'create', connection )
               .then( dto => {
