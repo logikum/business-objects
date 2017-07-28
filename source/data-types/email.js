@@ -1,6 +1,6 @@
 'use strict';
 
-const DataType = require('./data-type.js');
+const DataType = require( './data-type.js' );
 
 const reEmail = /^(([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+)?$/;
 

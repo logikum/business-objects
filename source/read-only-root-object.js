@@ -84,7 +84,7 @@ function fromDto( dto ) {
 }
 
 function baseToCto() {
-  var cto = {};
+  const cto = {};
   const self = this;
   const properties = _properties.get( this );
 
@@ -135,7 +135,7 @@ function fetchChildren( dto ) {
 
   return properties.childCount() ?
     Promise.all( properties.children().map( property => {
-      var child = getPropertyValue.call( self, property );
+      const child = getPropertyValue.call( self, property );
       return child.fetch( dto[ property.name ] );
     } ) ) :
     Promise.resolve( null );
@@ -146,7 +146,7 @@ function childrenAreValid() {
   const properties = _properties.get( this );
 
   return properties.children().every( property => {
-    var child = getPropertyValue.call( self, property );
+    const child = getPropertyValue.call( self, property );
     return child.isValid();
   } );
 }
@@ -156,7 +156,7 @@ function checkChildRules() {
   const properties = _properties.get( this );
 
   properties.children().forEach( property => {
-    var child = getPropertyValue.call( self, property );
+    const child = getPropertyValue.call( self, property );
     child.checkRules();
   } );
 }
@@ -166,8 +166,8 @@ function getChildBrokenRules( namespace, bro ) {
   const properties = _properties.get( this );
 
   properties.children().forEach( property => {
-    var child = getPropertyValue.call( self, property );
-    var childBrokenRules = child.getBrokenRules( namespace );
+    const child = getPropertyValue.call( self, property );
+    const childBrokenRules = child.getBrokenRules( namespace );
     if (childBrokenRules) {
       if (childBrokenRules instanceof Array)
         bro.addChildren( property.name, childBrokenRules );
@@ -447,7 +447,7 @@ class ReadOnlyRootObject extends ModelBase {
    * @returns {object} The client transfer object.
    */
   toCto() {
-    var cto = {};
+    let cto = {};
     const extensions = _extensions.get( this );
     if (extensions.toCto)
       cto = extensions.toCto.call( this, getTransferContext.call( this, true ) );
@@ -457,7 +457,7 @@ class ReadOnlyRootObject extends ModelBase {
     const self = this;
     const properties = _properties.get( this );
     properties.children().forEach( property => {
-      var child = getPropertyValue.call( self, property );
+      const child = getPropertyValue.call( self, property );
       cto[ property.name ] = child.toCto();
     } );
     return cto;

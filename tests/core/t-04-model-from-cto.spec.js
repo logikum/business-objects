@@ -408,7 +408,7 @@ describe( 'Using fromCto method', () => {
                   done();
                 } );
             else
-              var br = order.getBrokenRules();
+              const br = order.getBrokenRules();
           } );
       } )
       .catch( reason => {

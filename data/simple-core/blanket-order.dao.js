@@ -57,7 +57,7 @@ class BlanketOrderDao extends DaoBase {
     console.log( '--- Blanket order DAO.fetchByName' );
 
     let found = false;
-    for (var key in global.orders) {
+    for (let key in global.orders) {
       if (global.orders.hasOwnProperty( key )) {
         let order = global.orders[ key ];
         if (order.vendorName === filter) {

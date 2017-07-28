@@ -466,7 +466,7 @@ class ReadOnlyRootCollection extends CollectionBase {
    * @returns {bo.rules.BrokenRulesResponse} The broken rules response to send to the client.
    */
   getResponse( message, namespace ) {
-    var output = this.getBrokenRules( namespace );
+    const output = this.getBrokenRules( namespace );
     return output ? new config.brokenRulesResponse( output, message ) : null;
   };
 
@@ -641,7 +641,7 @@ class ReadOnlyRootCollectionFactory {
      *      Fetching the business object collection has failed.
      */
     Model.fetch = function ( filter, method, eventHandlers ) {
-      var instance = new Model( eventHandlers );
+      const instance = new Model( eventHandlers );
       return instance.fetch( filter, method );
     };
 

@@ -25,7 +25,7 @@ class BlanketOrderItemDao extends DaoBase {
     console.log( '--- Blanket order item DAO.fetchForOrder' );
 
     const items = [];
-    for (var key in global.items) {
+    for (let key in global.items) {
       if (global.items.hasOwnProperty( key )) {
         const item = global.items[ key ];
         if (item.orderKey === filter)

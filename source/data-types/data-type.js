@@ -1,6 +1,6 @@
 'use strict';
 
-const NotImplementedError = require('../system/not-implemented-error.js');
+const NotImplementedError = require( '../system/not-implemented-error.js' );
 
 /**
  * Serves as the base class for data type definitions.

@@ -1,4 +1,4 @@
-var bo = require( '../../source/index.js' );
+const bo = require( '../../source/index.js' );
 
 function showTitle() {
   console.log( '' );

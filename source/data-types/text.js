@@ -1,6 +1,6 @@
 'use strict';
 
-const DataType = require('./data-type.js');
+const DataType = require( './data-type.js' );
 
 /**
  * Provide methods to work with Text data.

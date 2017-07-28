@@ -22,7 +22,7 @@ class BlanketOrdersDao extends DaoBase {
     const orders = [];
     let totalOrders = 0;
 
-    for (var key in global.orders) {
+    for (let key in global.orders) {
       if (global.orders.hasOwnProperty( key )) {
         const order = global.orders[ key ];
         orders.push( order );
@@ -73,7 +73,7 @@ class BlanketOrdersDao extends DaoBase {
     }
 
     if (orders.length) {
-      var promises = orders.map( order => {
+      const promises = orders.map( order => {
         return daoAddress.$runMethod( 'fetchForOrder', ctx.connection, order.orderKey )
           .then( address => {
             order.address = address;
@@ -86,7 +86,7 @@ class BlanketOrdersDao extends DaoBase {
                     return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
                   } ) )
                   .then( schedules => {
-                    for (var i = 0; i < schedules.length; i++) {
+                    for (let i = 0; i < schedules.length; i++) {
                       order.items[ i ].schedules = schedules[ i ];
                     }
                   } );

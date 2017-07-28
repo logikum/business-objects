@@ -1,8 +1,8 @@
 'use strict';
 
-const DataType = require('./data-type.js');
-const Enumeration = require('../system/enumeration.js');
-const Argument = require('../system/argument-check.js');
+const DataType = require( './data-type.js' );
+const Enumeration = require( '../system/enumeration.js' );
+const Argument = require( '../system/argument-check.js' );
 
 /**
  * Provide methods to work with enumeration data.

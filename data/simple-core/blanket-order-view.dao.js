@@ -51,7 +51,7 @@ class BlanketOrderViewDao extends DaoBase {
     console.log( '--- Blanket order view DAO.fetchByName' );
 
     let found = false;
-    for (var key in global.orders) {
+    for (let key in global.orders) {
       if (global.orders.hasOwnProperty( key )) {
         let order = global.orders[ key ];
         if (order.vendorName === filter) {
@@ -69,7 +69,7 @@ class BlanketOrderViewDao extends DaoBase {
                       return daoOrderSchedule.$runMethod( 'fetchForItem', ctx.connection, item.orderItemKey );
                     } ) )
                     .then( values => {
-                      for (var i = 0; i < values.length; i++) {
+                      for (let i = 0; i < values.length; i++) {
                         order.items[ i ].schedules = values[ i ];
                       }
                       ctx.fulfill( order );
