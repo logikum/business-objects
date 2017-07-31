@@ -1,7 +1,11 @@
 'use strict';
 
+//region Imports
+
 const t = require( '../locales/i18n-bo.js' )( 'Rules' );
 const ValidationRule = require( '../rules/validation-rule.js' );
+
+//endregion
 
 /**
  * The rule ensures that the property value exists.

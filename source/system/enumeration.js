@@ -1,7 +1,11 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( './argument-check.js' );
 const EnumerationError = require( './enumeration-error.js' );
+
+//endregion
 
 /**
  * Serves as the base class for enumerations.

@@ -1,8 +1,12 @@
 'use strict';
 
+//region Imports
+
 const DataType = require( './data-type.js' );
 const Enumeration = require( '../system/enumeration.js' );
 const Argument = require( '../system/argument-check.js' );
+
+//endregion
 
 /**
  * Provide methods to work with enumeration data.

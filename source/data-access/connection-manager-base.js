@@ -1,6 +1,6 @@
 'use strict';
 
-const NotImplementedError = require('../system/not-implemented-error.js');
+const NotImplementedError = require( '../system/not-implemented-error.js' );
 
 /**
  * @classdesc Serves as the base class to manage connections of several data sources.

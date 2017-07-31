@@ -1,7 +1,11 @@
 'use strict';
 
+//region Imports
+
 const fs = require( 'fs' );
 const path = require( 'path' );
+
+//endregion
 
 /**
  * Provides static methods for configuration and internationalization.

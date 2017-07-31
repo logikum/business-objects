@@ -1,10 +1,14 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const DataType = require( '../data-types/data-type.js' );
 const PropertyFlag = require( './property-flag.js' );
 const ModelBase = require( './model-base.js' );
 const CollectionBase = require( './collection-base.js' );
+
+//endregion
 
 /**
  * Defines a property of a business object model.

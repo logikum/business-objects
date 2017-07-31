@@ -1,6 +1,6 @@
 'use strict';
 
-const events = require('events');
+const events = require( 'events' );
 
 /**
  * Serves as the base class for models.

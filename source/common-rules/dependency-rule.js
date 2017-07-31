@@ -1,10 +1,14 @@
 'use strict';
 
+//region Imports
+
 const t = require( '../locales/i18n-bo.js' )( 'Rules' );
 const Argument = require( '../system/argument-check.js' );
 const ValidationRule = require( '../rules/validation-rule.js' );
 const RuleSeverity = require( '../rules/rule-severity.js' );
 const PropertyInfo = require( '../common/property-info.js' );
+
+//endregion
 
 /**
  * The rule ensures that the changes of the property value start

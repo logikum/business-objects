@@ -1,7 +1,11 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const ResultBase = require( './result-base.js' );
+
+//endregion
 
 /**
  * Represents the failed result of executing a validation rule.

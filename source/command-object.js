@@ -2,34 +2,34 @@
 
 //region Imports
 
-const config = require('./system/configuration-reader.js');
-const Argument = require('./system/argument-check.js');
+const config = require( './system/configuration-reader.js' );
+const Argument = require( './system/argument-check.js' );
 
-const ModelBase = require('./common/model-base.js');
+const ModelBase = require( './common/model-base.js' );
 const ModelType = require( './common/model-type.js' );
-const ModelError = require('./common/model-error.js');
-const ExtensionManager = require('./common/extension-manager.js');
-const EventHandlerList = require('./common/event-handler-list.js');
-const DataStore = require('./common/data-store.js');
-const DataType = require('./data-types/data-type.js');
+const ModelError = require( './common/model-error.js' );
+const ExtensionManager = require( './common/extension-manager.js' );
+const EventHandlerList = require( './common/event-handler-list.js' );
+const DataStore = require( './common/data-store.js' );
+const DataType = require( './data-types/data-type.js' );
 
-const PropertyManager = require('./common/property-manager.js');
-const PropertyContext = require('./common/property-context.js');
-const ValidationContext = require('./rules/validation-context.js');
-const DataTransferContext = require('./common/data-transfer-context.js');
+const PropertyManager = require( './common/property-manager.js' );
+const PropertyContext = require( './common/property-context.js' );
+const ValidationContext = require( './rules/validation-context.js' );
+const DataTransferContext = require( './common/data-transfer-context.js' );
 
-const RuleManager = require('./rules/rule-manager.js');
-const DataTypeRule = require('./rules/data-type-rule.js');
-const BrokenRuleList = require('./rules/broken-rule-list.js');
-const AuthorizationAction = require('./rules/authorization-action.js');
-const AuthorizationContext = require('./rules/authorization-context.js');
-const BrokenRulesResponse = require('./rules/broken-rules-response.js');
+const RuleManager = require( './rules/rule-manager.js' );
+const DataTypeRule = require( './rules/data-type-rule.js' );
+const BrokenRuleList = require( './rules/broken-rule-list.js' );
+const AuthorizationAction = require( './rules/authorization-action.js' );
+const AuthorizationContext = require( './rules/authorization-context.js' );
+const BrokenRulesResponse = require( './rules/broken-rules-response.js' );
 
-const DataPortalAction = require('./common/data-portal-action.js');
-const DataPortalContext = require('./common/data-portal-context.js');
-const DataPortalEvent = require('./common/data-portal-event.js');
-const DataPortalEventArgs = require('./common/data-portal-event-args.js');
-const DataPortalError = require('./common/data-portal-error.js');
+const DataPortalAction = require( './common/data-portal-action.js' );
+const DataPortalContext = require( './common/data-portal-context.js' );
+const DataPortalEvent = require( './common/data-portal-event.js' );
+const DataPortalEventArgs = require( './common/data-portal-event-args.js' );
+const DataPortalError = require( './common/data-portal-error.js' );
 
 //endregion
 

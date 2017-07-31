@@ -1,8 +1,12 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const ValidationRule = require( '../rules/validation-rule.js' );
 const RuleSeverity = require( '../rules/rule-severity.js' );
+
+//endregion
 
 /**
  * The rule ensures that an information is given for the property.

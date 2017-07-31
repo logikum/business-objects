@@ -1,8 +1,12 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const DataPortalAction = require( './data-portal-action.js' );
 const t = require( '../locales/i18n-bo.js' )( 'DataPortalError' );
+
+//endregion
 
 /**
  * Represents a data portal error error.

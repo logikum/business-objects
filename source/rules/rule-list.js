@@ -1,8 +1,12 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const AuthorizationRule = require( './authorization-rule.js' );
 const ValidationRule = require( './validation-rule.js' );
+
+//endregion
 
 // Rules are sorted descending by priority.
 function sortByPriority( a, b ) {

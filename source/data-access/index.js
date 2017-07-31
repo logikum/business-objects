@@ -1,10 +1,14 @@
 'use strict';
 
+//region Imports
+
 const ConnectionManagerBase = require( './connection-manager-base.js' );
 const DaoBase = require( './dao-base.js' );
 const DaoContext = require( './dao-context.js' );
 const daoBuilder = require( './dao-builder.js' );
 const DaoError = require( './dao-error.js' );
+
+//endregion
 
 /**
  * Contains data access components.

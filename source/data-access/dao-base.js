@@ -1,7 +1,11 @@
 'use strict';
 
+//region Imports
+
 const DaoContext = require( './dao-context.js' );
 const DaoError = require( './dao-error.js' );
+
+//endregion
 
 /**
  * Serves as the base class for data access objects.

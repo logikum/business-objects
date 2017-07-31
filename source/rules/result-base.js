@@ -1,8 +1,12 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const BrokenRule = require( './broken-rule.js' );
 const RuleSeverity = require( './rule-severity.js' );
+
+//endregion
 
 /**
  * Serves as the base class for the failed result of executing a rule.

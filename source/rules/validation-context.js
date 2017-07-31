@@ -1,8 +1,12 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const DataStore = require( '../common/data-store.js' );
 const BrokenRuleList = require( './broken-rule-list.js' );
+
+//endregion
 
 /**
  * Provides the context for custom validation rules.

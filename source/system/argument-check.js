@@ -28,11 +28,16 @@
  *
  * value = check( value ).for( VALUE_NAME ).asEnumMember( Action, Action.Save, msg ); // two additional attributes
  */
+"use strict";
+
+//region Imports
 
 const ArgumentError = require( './argument-error.js' );
 const ConstructorError = require( './constructor-error.js' );
 const MethodError = require( './method-error.js' );
 const PropertyError = require( './property-error.js' );
+
+//endregion
 
 //region Argument group
 

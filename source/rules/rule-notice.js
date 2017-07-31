@@ -1,7 +1,11 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const RuleSeverity = require( './rule-severity.js' );
+
+//endregion
 
 /**
  * Represents the public information of a failed rule.

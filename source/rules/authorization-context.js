@@ -1,9 +1,13 @@
 'use strict';
 
+//region Imports
+
 const config = require( '../system/configuration-reader.js' );
 const Argument = require( '../system/argument-check.js' );
 const BrokenRuleList = require( './broken-rule-list.js' );
 const AuthorizationAction = require( './authorization-action.js' );
+
+//endregion
 
 /**
  * Provides the context for custom authorization rules.

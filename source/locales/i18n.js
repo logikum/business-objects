@@ -1,9 +1,13 @@
 'use strict';
 
+//region Imports
+
 const fs = require( 'fs' );
 const path = require( 'path' );
 const util = require( 'util' );
 const Utility = require( '../system/utility.js' );
+
+//endregion
 
 const NEUTRAL = 'default';
 const NS_ROOT = '$default';

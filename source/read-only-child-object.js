@@ -16,8 +16,8 @@ const DataType = require( './data-types/data-type.js' );
 const PropertyManager = require( './common/property-manager.js' );
 const PropertyContext = require( './common/property-context.js' );
 const ValidationContext = require( './rules/validation-context.js' );
-const ClientTransferContext = require('./common/client-transfer-context.js');
-const DataTransferContext = require('./common/data-transfer-context.js');
+const ClientTransferContext = require( './common/client-transfer-context.js' );
+const DataTransferContext = require( './common/data-transfer-context.js' );
 
 const RuleManager = require( './rules/rule-manager.js' );
 const DataTypeRule = require( './rules/data-type-rule.js' );

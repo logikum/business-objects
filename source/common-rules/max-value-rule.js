@@ -1,8 +1,12 @@
 'use strict';
 
+//region Imports
+
 const t = require( '../locales/i18n-bo.js' )( 'Rules' );
 const Argument = require( '../system/argument-check.js' );
 const ValidationRule = require( '../rules/validation-rule.js' );
+
+//endregion
 
 /**
  * The rule ensures that the value of the property does not exceed a given value.

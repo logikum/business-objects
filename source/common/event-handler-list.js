@@ -1,9 +1,13 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
 const DataPortalEvent = require( './data-portal-event.js' );
 const ModelBase = require( './model-base.js' );
 const CollectionBase = require( './collection-base.js' );
+
+//endregion
 
 /**
  * Provides methods to manage the event handlers of a business object instance.

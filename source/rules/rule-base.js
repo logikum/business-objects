@@ -1,9 +1,12 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( '../system/argument-check.js' );
-const ArgumentError = require( '../system/argument-error.js' );
 const ConstructorError = require( '../system/constructor-error.js' );
 const NotImplementedError = require( '../system/not-implemented-error.js' );
+
+//endregion
 
 /**
  * Serves as the base class for rules.

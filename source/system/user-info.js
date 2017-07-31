@@ -1,7 +1,11 @@
 'use strict';
 
+//region Imports
+
 const Argument = require( './argument-check.js' );
 const NotImplementedError = require( './not-implemented-error.js' );
+
+//endregion
 
 const _userCode = new WeakMap();
 

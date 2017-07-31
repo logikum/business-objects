@@ -1,5 +1,7 @@
 'use strict';
 
+//region Imports
+
 const DataType = require( './data-type.js' );
 const Boolean = require( './boolean.js' );
 const Text = require( './text.js' );
@@ -8,6 +10,8 @@ const Integer = require( './integer.js' );
 const Decimal = require( './decimal.js' );
 const Enum = require( './enum.js' );
 const DateTime = require( './date-time.js' );
+
+//endregion
 
 /**
  * Contains data type components and definitions.
