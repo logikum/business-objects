@@ -1105,19 +1105,19 @@ class EditableChildObject extends ModelBase {
         const state = _state.get( self );
         switch (state) {
           case MODEL_STATE.created:
-            data_insert.call( self )
+            data_insert.call( self, connection )
               .then( inserted => {
                 fulfill( inserted );
               } );
             break;
           case MODEL_STATE.changed:
-            data_update.call( self )
+            data_update.call( self, connection )
               .then( updated => {
                 fulfill( updated );
               } );
             break;
           case MODEL_STATE.markedForRemoval:
-            data_remove.call( self )
+            data_remove.call( self, connection )
               .then( removed => {
                 fulfill( removed );
               } );
