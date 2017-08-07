@@ -505,6 +505,7 @@ function wrapError( action, error ) {
 function data_create() {
   const self = this;
   return new Promise( ( fulfill, reject ) => {
+
     const dao = _dao.get( self );
     const extensions = _extensions.get( self );
     // Does it have initializing method?
@@ -530,7 +531,7 @@ function data_create() {
             dao.$runMethod( 'create', connection )
               .then( dto => {
                 fromDto.call( self, dto );
-              } )
+              } );
         } )
         .then( none => {
           // Create children as well.
@@ -551,7 +552,7 @@ function data_create() {
             .then( none => {
               // Return the new editable root object.
               fulfill( self );
-            } )
+            } );
         } )
         .catch( reason => {
           // Wrap the intercepted error.
@@ -564,8 +565,8 @@ function data_create() {
             .then( none => {
               // Pass the error.
               reject( dpe );
-            } )
-        } )
+            } );
+        } );
     } else
     // Nothing to do.
       fulfill( self );
@@ -609,7 +610,7 @@ function data_fetch( filter, method ) {
               .then( dto => {
                 fromDto.call( self, dto );
                 return dto;
-              } )
+              } );
         } )
         .then( dto => {
           // Fetch children as well.
@@ -658,6 +659,7 @@ function data_insert() {
   return new Promise( ( fulfill, reject ) => {
     // Check permissions.
     if (canDo.call( self, AuthorizationAction.createObject )) {
+
       let connection = null;
       // Open connection.
       const extensions = _extensions.get( self );
@@ -734,6 +736,7 @@ function data_update() {
   return new Promise( ( fulfill, reject ) => {
     // Check permissions.
     if (canDo.call( self, AuthorizationAction.updateObject )) {
+
       let connection = null;
       // Start transaction.
       const extensions = _extensions.get( self );
@@ -810,6 +813,7 @@ function data_remove() {
   return new Promise( ( fulfill, reject ) => {
     // Check permissions.
     if (canDo.call( self, AuthorizationAction.removeObject )) {
+
       let connection = null;
       const extensions = _extensions.get( self );
       // Start transaction.
@@ -836,7 +840,7 @@ function data_remove() {
             // Custom removal.
             extensions.$runMethod( 'remove', self, getDataContext.call( self, connection ) ) :
             // Standard removal.
-            dao.$runMethod( 'remove', connection, /* filter = */ properties.getKey( getPropertyValue.bind( self ) ) );
+            dao.$runMethod( 'remove', connection, properties.getKey( getPropertyValue.bind( self ) ) );
         } )
         .then( none => {
           markAsRemoved.call( self );

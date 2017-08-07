@@ -302,7 +302,7 @@ function data_execute( method, isTransaction ) {
             // *** Custom execute.
             extensions.$runMethod( 'execute', self, getDataContext.call( self, connection ), method ) :
             // *** Standard execute.
-            dao.$runMethod( method, connection, /* dto = */ toDto.call( self ))
+            dao.$runMethod( method, connection, toDto.call( self ))
               .then( dto => {
                 // Load property values.
                 fromDto.call( self, dto );

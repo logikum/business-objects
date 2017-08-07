@@ -413,7 +413,7 @@ function data_fetch( filter, method ) {
           // Close connection.
           config.connectionManager.closeConnection( extensions.dataSource, connection )
             .then( none => {
-              // Paa the error.
+              // Pass the error.
               reject( dpe );
             } );
         } );

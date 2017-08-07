@@ -517,6 +517,7 @@ function wrapError( action, error ) {
 function data_create( connection ) {
   const self = this;
   return new Promise( ( fulfill, reject ) => {
+
     const dao = _dao.get( self );
     const extensions = _extensions.get( self );
     // Does it have initializing method?
@@ -545,7 +546,7 @@ function data_create( connection ) {
             dao.$runMethod( 'create', connection )
               .then( dto => {
                 fromDto.call( self, dto );
-              } )
+              } );
         } )
         .then( none => {
           // Create children as well.
@@ -564,8 +565,9 @@ function data_create( connection ) {
           // Close connection.
           config.connectionManager.closeConnection( extensions.dataSource, connection )
             .then( none => {
+              // Return the new editable child object.
               fulfill( self );
-            } )
+            } );
         } )
         .catch( reason => {
           // Wrap the intercepted error.
@@ -576,9 +578,10 @@ function data_create( connection ) {
           // Close connection.
           return config.connectionManager.closeConnection( extensions.dataSource, connection )
             .then( none => {
+              // Pass the error.
               reject( dpe );
-            } )
-        } )
+            } );
+        } );
     } else
     // Nothing to do.
       fulfill( self );
@@ -653,6 +656,7 @@ function data_insert( connection ) {
   return new Promise( ( fulfill, reject ) => {
     // Check permissions.
     if (canDo.call( self, AuthorizationAction.createObject )) {
+
       // Launch start event.
       /**
        * The event arises before the business object instance will be created in the repository.
@@ -661,6 +665,7 @@ function data_insert( connection ) {
        * @param {EditableChildObject} oldObject - The instance of the model before the data portal action.
        */
       raiseEvent.call( self, DataPortalEvent.preInsert );
+
       // Copy the values of parent keys.
       const properties = _properties.get( self );
       const references = properties.filter( property => {
@@ -708,7 +713,7 @@ function data_insert( connection ) {
           raiseEvent.call( self, DataPortalEvent.postInsert, null, dpe );
           // Pass the error.
           reject( dpe );
-        } )
+        } );
     }
   } );
 }
@@ -783,6 +788,7 @@ function data_remove( connection ) {
   return new Promise( ( fulfill, reject ) => {
     // Check permissions.
     if (canDo.call( self, AuthorizationAction.removeObject )) {
+
       // Launch start event.
       /**
        * The event arises before the business object instance will be removed from the repository.
@@ -794,7 +800,7 @@ function data_remove( connection ) {
       // Remove children first.
       saveChildren.call( self, connection )
         .then( none => {
-          // Execute delete.
+          // Execute removal.
           const dao = _dao.get( self );
           const properties = _properties.get( self );
           const extensions = _extensions.get( self );
@@ -802,7 +808,7 @@ function data_remove( connection ) {
             // *** Custom removal.
             extensions.$runMethod( 'remove', self, getDataContext.call( self, connection ) ) :
             // *** Standard removal.
-            dao.$runMethod( 'remove', connection, /* filter = */ properties.getKey( getPropertyValue.bind( self ) ) );
+            dao.$runMethod( 'remove', connection, properties.getKey( getPropertyValue.bind( self ) ) );
         } )
         .then( none => {
           markAsRemoved.call( self );
