@@ -173,6 +173,7 @@ function propagateRemoval() {
 
 function getTransferContext( authorize ) {
   const properties = _properties.get( this );
+
   return authorize ?
     new ClientTransferContext(
       properties.toArray(),
@@ -188,17 +189,22 @@ function getTransferContext( authorize ) {
 
 function baseToDto() {
   const dto = {};
+  const self = this;
   const properties = _properties.get( this );
-  properties.filter( property => {
-    return property.isOnDto;
-  } ).forEach( property => {
-    dto[ property.name ] = getPropertyValue.call( this, property );
-  } );
+
+  properties
+    .filter( property => {
+      return property.isOnDto;
+    } )
+    .forEach( property => {
+      dto[ property.name ] = getPropertyValue.call( self, property );
+    } );
   return dto;
 }
 
 function toDto() {
   const extensions = _extensions.get( this );
+
   if (extensions.toDto)
     return extensions.toDto.call( this, getTransferContext.call( this, false ) );
   else
@@ -206,18 +212,23 @@ function toDto() {
 }
 
 function baseFromDto( dto ) {
+  const self = this;
   const properties = _properties.get( this );
-  properties.filter( property => {
-    return property.isOnDto;
-  } ).forEach( property => {
-    if (dto.hasOwnProperty( property.name ) && typeof dto[ property.name ] !== 'function') {
-      setPropertyValue.call( this, property, dto[ property.name ] );
-    }
-  } );
+
+  properties
+    .filter( property => {
+      return property.isOnDto;
+    } )
+    .forEach( property => {
+      if (dto.hasOwnProperty( property.name ) && typeof dto[ property.name ] !== 'function') {
+        setPropertyValue.call( self, property, dto[ property.name ] );
+      }
+    } );
 }
 
 function fromDto( dto ) {
   const extensions = _extensions.get( this );
+
   if (extensions.fromDto)
     extensions.fromDto.call( this, getTransferContext.call( this, false ), dto );
   else
@@ -226,25 +237,33 @@ function fromDto( dto ) {
 
 function baseToCto() {
   const cto = {};
+  const self = this;
   const properties = _properties.get( this );
-  properties.filter( property => {
-    return property.isOnCto;
-  } ).forEach( property => {
-    cto[ property.name ] = readPropertyValue.call( this, property );
-  } );
+
+  properties
+    .filter( property => {
+      return property.isOnCto;
+    } )
+    .forEach( property => {
+      cto[ property.name ] = readPropertyValue.call( self, property );
+    } );
   return cto;
 }
 
 function baseFromCto( cto ) {
   if (cto && typeof cto === 'object') {
+    const self = this;
     const properties = _properties.get( this );
-    properties.filter( property => {
-      return property.isOnCto;
-    } ).forEach( property => {
-      if (cto.hasOwnProperty( property.name ) && typeof cto[ property.name ] !== 'function') {
-        writePropertyValue.call( this, property, cto[ property.name ] );
-      }
-    } );
+
+    properties
+      .filter( property => {
+        return property.isOnCto;
+      } )
+      .forEach( property => {
+        if (cto.hasOwnProperty( property.name ) && typeof cto[ property.name ] !== 'function') {
+          writePropertyValue.call( self, property, cto[ property.name ] );
+        }
+      } );
   }
 }
 

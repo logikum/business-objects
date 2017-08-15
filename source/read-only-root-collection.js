@@ -215,8 +215,9 @@ function data_fetch( filter, method ) {
           // Get the count of all available items.
           let totalItems = _totalItems.get( self );
           if (data.totalItems &&
-            (typeof data.totalItems === 'number' || data.totalItems instanceof Number) &&
-            data.totalItems % 1 === 0)
+             (typeof data.totalItems === 'number' || data.totalItems instanceof Number) &&
+             data.totalItems % 1 === 0
+          )
             totalItems = data.totalItems;
           else
             totalItems = null;
