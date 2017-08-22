@@ -1,5 +1,12 @@
 # Release History
 
+* __v2.0.2__  
+  2017.08.22.  
+  Fixing a bug in dataCreate method of editable child object.  
+  Fixing editable child object for missing connection pass.  
+  Fixing 'this' in data transfer helper methods.  
+  Fixing a bug in fromCto method of editable collections.
+  
 * __v2.0.1__  
   2017.01.07.  
   Fixing a bug in dataCreate method of editable child object.
