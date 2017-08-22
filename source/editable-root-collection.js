@@ -830,6 +830,7 @@ class EditableRootCollection extends CollectionBase {
       if (cto instanceof Array) {
         const items = _items.get( self );
         const ctoNew = cto.filter( d => { return true; } ); // Deep copy.
+        const ctoMap = [ ...Array( cto.length ).keys() ];
         const itemsLive = [];
         const itemsLate = [];
         let index;
@@ -839,14 +840,17 @@ class EditableRootCollection extends CollectionBase {
           let dataFound = false;
           let i = 0;
           for (; i < ctoNew.length; i++) {
-            if (items[ index ].keyEquals( cto[ i ] )) {
-              itemsLive.push( { item: index, cto: i } );
+            if (items[ index ].keyEquals( ctoNew[ i ] )) {
+              itemsLive.push( { item: index, cto: ctoMap[ i ] } );
               dataFound = true;
               break;
             }
           }
-          dataFound ?
-            ctoNew.splice( i, 1 ) :
+          if (dataFound) {
+            ctoNew.splice( i, 1 );
+            ctoMap.splice( i, 1 );
+          }
+          else
             itemsLate.push( index );
         }
         // Update existing items.

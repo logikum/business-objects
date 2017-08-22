@@ -155,10 +155,11 @@ class EditableChildCollection extends CollectionBase {
    */
   fromCto( cto ) {
     const self = this;
-    return new Promise( (fulfill, reject) => {
+    return new Promise( ( fulfill, reject ) => {
       if (cto instanceof Array) {
-        const items = _items.get(self);
-        const ctoNew = cto.filter( d => { return true; }); // Deep copy.
+        const items = _items.get( self );
+        const ctoNew = cto.filter( d => { return true; } ); // Deep copy.
+        const ctoMap = [ ...Array( cto.length ).keys() ];
         const itemsLive = [];
         const itemsLate = [];
         let index;
@@ -168,49 +169,52 @@ class EditableChildCollection extends CollectionBase {
           let dataFound = false;
           let i = 0;
           for (; i < ctoNew.length; i++) {
-            if (items[ index ].keyEquals( cto[i] )) {
-              itemsLive.push( { item: index, cto: i } );
+            if (items[ index ].keyEquals( ctoNew[ i ] )) {
+              itemsLive.push( { item: index, cto: ctoMap[ i ] } );
               dataFound = true;
               break;
             }
           }
-          dataFound ?
-            ctoNew.splice(i, 1) :
-            itemsLate.push(index);
+          if (dataFound) {
+            ctoNew.splice( i, 1 );
+            ctoMap.splice( i, 1 );
+          }
+          else
+            itemsLate.push( index );
         }
         // Update existing items.
         Promise.all( itemsLive.map( live => {
           return items[ live.item ].fromCto( cto[ live.cto ] );
-        }))
+        } ) )
           .then( values => {
             // Remove non existing items.
             for (index = 0; index < itemsLate.length; index++) {
-              items[ itemsLate[ index ]].remove();
+              items[ itemsLate[ index ] ].remove();
             }
             // Insert non existing items.
-            const itemType = _itemType.get(self);
-            const parent = _parent.get(self);
-            const eventHandlers = _eventHandlers.get(self);
+            const itemType = _itemType.get( self );
+            const parent = _parent.get( self );
+            const eventHandlers = _eventHandlers.get( self );
 
             Promise.all( ctoNew.map( cto => {
               return itemType.create( parent, eventHandlers )
-            }))
+            } ) )
               .then( newItems => {
                 items.push.apply( items, newItems );
-                Promise.all( newItems.map( (newItem, j) => {
-                  return newItem.fromCto( ctoNew[j] );
-                }))
+                Promise.all( newItems.map( ( newItem, j ) => {
+                  return newItem.fromCto( ctoNew[ j ] );
+                } ) )
                   .then( values => {
-                    _items.set(self, items);
+                    _items.set( self, items );
                     // Finished.
                     fulfill( self );
-                  })
-              });
-          });
+                  } )
+              } );
+          } );
       } else
       // Nothing to do.
         fulfill( self );
-    });
+    } );
   }
 
   //endregion
