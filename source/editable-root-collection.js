@@ -210,7 +210,6 @@ function fetchChildren( data ) {
           items.push( item );
         } );
         _items.set( self, items );
-        const itemType = _itemType.get( this );
         // Nothing to return.
         return null;
       } ) :

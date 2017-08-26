@@ -1021,17 +1021,21 @@ class EditableChildObject extends ModelBase {
    */
   toCto() {
     let cto = {};
+
+    // Export self properties.
     const extensions = _extensions.get( this );
     if (extensions.toCto)
       cto = extensions.toCto.call( this, getTransferContext.call( this, true ) );
     else
       cto = baseToCto.call( this );
 
+    // Export children.
     const properties = _properties.get( this );
     properties.children().forEach( property => {
       const child = getPropertyValue.call( this, property );
       cto[ property.name ] = child.toCto();
     } );
+
     return cto;
   }
 

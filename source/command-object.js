@@ -113,6 +113,38 @@ function fromDto (dto) {
     baseFromDto.call( this, dto );
 }
 
+function baseToCto() {
+  const cto = {};
+  const self = this;
+  const properties = _properties.get( this );
+
+  properties
+    .filter( property => {
+      return property.isOnCto;
+    } )
+    .forEach( property => {
+      cto[ property.name ] = readPropertyValue.call( self, property );
+    } );
+  return cto;
+}
+
+function baseFromCto( cto ) {
+  if (cto && typeof cto === 'object') {
+    const self = this;
+    const properties = _properties.get( this );
+
+    properties
+      .filter( property => {
+        return property.isOnCto;
+      } )
+      .forEach( property => {
+        if (cto.hasOwnProperty( property.name ) && typeof cto[ property.name ] !== 'function') {
+          writePropertyValue.call( self, property, cto[ property.name ] );
+        }
+      } );
+  }
+}
+
 //endregion
 
 //region Permissions
@@ -480,6 +512,57 @@ class CommandObject extends ModelBase {
    */
   static get modelType() {
     return ModelType.CommandObject;
+  }
+
+  //endregion
+
+  //region Transfer object methods
+
+  /**
+   * Transforms the business object to a plain object to send to the client.
+   *
+   * @function EditableRootObject#toCto
+   * @returns {object} The client transfer object.
+   */
+  toCto() {
+    let cto = {};
+
+    // Export self properties.
+    const extensions = _extensions.get( this );
+    if (extensions.toCto)
+      cto = extensions.toCto.call( this, getTransferContext.call( this, true ) );
+    else
+      cto = baseToCto.call( this );
+
+    // Export children.
+    const properties = _properties.get( this );
+    properties.children().forEach( property => {
+      const child = getPropertyValue.call( this, property );
+      cto[ property.name ] = child.toCto();
+    } );
+
+    return cto;
+  }
+
+  /**
+   * Rebuilds the business object from a plain object sent by the client.
+   *
+   * @function EditableRootObject#fromCto
+   * @param {object} cto - The client transfer object.
+   * @returns {Promise.<EditableRootObject>} Returns a promise to the editable root object rebuilt.
+   */
+  fromCto( cto ) {
+    const self = this;
+    return new Promise( ( fulfill, reject ) => {
+
+      // Set self properties.
+      const extensions = _extensions.get( self );
+      extensions.fromCto ?
+        extensions.fromCto.call( self, getTransferContext.call( self, true ), cto ) :
+        baseFromCto.call( self, cto );
+
+      fulfill( self );
+    } );
   }
 
   //endregion
