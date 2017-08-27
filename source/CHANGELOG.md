@@ -1,5 +1,9 @@
 # Release History
 
+* __v2.0.3__  
+  2017.08.27.  
+  Adding missing client transfer methods to command object.
+
 * __v2.0.2__  
   2017.08.22.  
   Fixing a bug in dataCreate method of editable child object.  
