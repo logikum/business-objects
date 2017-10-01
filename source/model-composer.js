@@ -1135,11 +1135,8 @@ class ModelComposer {
    *      * {@link EditableRootObject}
    *      * {@link EditableRootCollection}
    *      * {@link EditableChildObject}
-   *      * {@link EditableChildCollection}
    *      * {@link ReadOnlyRootObject}
    *      * {@link ReadOnlyRootCollection}
-   *      * {@link ReadOnlyChildObject}
-   *      * {@link ReadOnlyChildCollection}
    *      * {@link CommandObject}
    *
    * @function ModelComposer#daoBuilder
