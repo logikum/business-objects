@@ -25,7 +25,7 @@
     "ink-docstrap": "^1.1.4",
     "jasmine-node": "^1.14.5",
     "jsdoc": "^3.4.0",
-    "jsdoc-baseline": "https://github.com/hegemonic/baseline/tarball/master"
+    "jsdoc-baseline": "https://github.com/hegemonic/baseline/tarball/222e13a"
   },
   "repository": {
     "type": "git",
